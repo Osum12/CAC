@@ -1,0 +1,46 @@
+# Congressional App Challenge Readiness
+
+Checked 2026-10-21 against the official 2026 rulebook: https://www.congressionalappchallenge.us/wp-content/uploads/2026/05/2026-CAC-Rules.pdf (linked from https://www.congressionalappchallenge.us/students/rules/). Re-read the rulebook yourselves. Your district's Member of Congress may change the judging.
+
+## Key rules
+
+| Topic | Rule (2026 rulebook) |
+|---|---|
+| **Deadline** | **12:00 pm EDT, Monday, October 26, 2026.** The submission can't be changed after that. |
+| Eligibility | In middle or high school on Oct 26, 2026; U.S. resident; teams of up to 4. At least half the team must live in, or go to school in, the same participating district. One app per student per year. |
+| Originality | The app must be created after Oct 30, 2025. It must be "original and solely created by the contestant"; open-source libraries are allowed but "must be clearly documented." |
+| AI | Allowed only if "fully disclosed". It "must not constitute the entirety of the technical development". Students must show "significant individual contributions and technical understanding." |
+| Demo video | 1–3 minutes, public on YouTube or Vimeo. Must cover: participant names, app name, the app's purpose in one sentence, target audience, tools and languages used, and a demo of the functionality. |
+| Written answers | Title, purpose, inspiration, a technical difficulty and how you solved it, what you learned, and what a 2.0 version would change. |
+| Code | Judges may request the app and source code. Failing to provide them means disqualification. |
+| Judging | Quality of the idea, implementation (including UX and design), and demonstrated excellence of coding and programming skills. |
+
+## Status of the app (verified 2026-10-22)
+
+- All P0 pages work with the fixture data. `npm test` (39 tests), typecheck, lint and build all pass.
+- Every route checked at 375px and 1366px, in light and dark mode: no horizontal overflow, no console errors.
+- **The data is 100% fictional.** The app is honest about this, but a civic app that only shows "MOCK ONLY" records will look weaker to judges. Replacing even 3–5 records with verified real ones would strengthen it a lot.
+
+## Must do before submitting (student team)
+
+1. **Make and document real student technical work** (required by the AI rule). Each item below is a meaningful, self-contained piece of work:
+   - Research 3–5 real Alpharetta council or planning items and convert them to curated records (see `README.md`). This needs real research skill and is core to the product.
+   - Build the P1 search box using the existing `searchRecords()` in `src/services/civicData.ts`.
+   - Add the topic/category filter to Citywide or Archive.
+   - Write tests for whatever you add.
+2. **Read and understand the code** well enough to explain it to a judge: the data flow (`page → civicData.ts → JSON`), how Near Me ranking works (`nearMe.ts`), and why null URLs are never links (`SourceAction.tsx`).
+3. **Fill in `AI_ASSISTANCE.md`** honestly, and put a matching disclosure in the submission form.
+4. **List open-source libraries** in the submission: React, React Router, Leaflet, OpenStreetMap data, Vite, Vitest, Testing Library, ESLint, Google Fonts (Fraunces, Public Sans).
+5. **Record the demo video** (1–3 min). Say aloud that the records are sample data unless you've replaced them.
+6. **Confirm eligibility**: grades, residency, district, team size ≤ 4.
+7. **Merge to `main`** only after the team reviews `integration`, if the team wants `main` to be the submitted version.
+
+## Honest demo script (about 2½ minutes)
+
+1. **0:00–0:20.** Team names, "Alpharetta Civic", the one-sentence purpose (understand what Alpharetta's government is considering, with a path to the source), and the target audience (Alpharetta residents).
+2. **0:20–0:50 Citywide.** Point out the sample-data banner. Open a featured issue and show its status, the "as of" date, the related meeting and documents, and "No official source added yet".
+3. **0:50–1:30 Near Me.** Choose Demo point 1. The list re-sorts by distance, each item explains why it's listed, and selecting a pin highlights the matching card. Note that the issue with no location stays in the list without a pin. Type an address to show the app honestly says lookup isn't connected.
+4. **1:30–2:00 Archive.** Switch between filters, open a meeting, and show "Recording not available" as plain text rather than a broken link. Follow a link back to an issue.
+5. **2:00–2:30 Tools and learning.** React, TypeScript, Vite, Leaflet/OpenStreetMap, Vitest. Name the technical challenge your team actually solved, and disclose AI use.
+
+Do not say the data is live, official or complete, or that distance means an issue affects someone's home.
