@@ -60,6 +60,13 @@ describe('Citywide', () => {
     expect(upcoming.map((x) => x.id)).toEqual(['b']);
     expect(recent.map((x) => x.id)).toEqual(['c', 'a']);
   });
+
+  it('does not list a "scheduled" meeting whose date has passed as upcoming', () => {
+    const m = (id: string, date: string | null, status: string) => ({ id, date, status }) as Meeting;
+    const { upcoming, recent } = splitMeetings([m('old', '2026-10-27', 'scheduled'), m('tbd', null, 'scheduled')], '2026-11-01');
+    expect(upcoming.map((x) => x.id)).toEqual(['tbd']);
+    expect(recent.map((x) => x.id)).toEqual(['old']);
+  });
 });
 
 describe('Issue detail', () => {
@@ -126,6 +133,8 @@ describe('Near Me', () => {
     renderAt('/near-me');
     const markers = await screen.findByRole('list', { name: 'map markers' });
     expect(within(markers).getAllByRole('listitem')).toHaveLength(4); // issue-mock-004 has no location
+    // Pins are numbered 1..4 with no gaps, even though the unlocated issue sits mid-list.
+    expect(within(markers).getAllByRole('button').map((b) => b.textContent?.match(/marker (\d)/)?.[1])).toEqual(['1', '2', '3', '4']);
     expect(screen.getByText(/no map location, so it is listed as a citywide item/)).toBeInTheDocument();
 
     await userEvent.click(screen.getByRole('radio', { name: /Demo point 1/ }));

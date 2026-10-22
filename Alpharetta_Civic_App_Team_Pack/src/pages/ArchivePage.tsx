@@ -41,7 +41,7 @@ export function buildArchiveEntries(meetings: Meeting[], documents: CivicDocumen
       groups: ['all', AGENDA_TYPES.has(d.documentType) ? 'agendas' : 'documents'] as ArchiveFilter[],
     })),
   ];
-  return entries.sort((a, b) => (b.date ?? '').localeCompare(a.date ?? '') || a.kind.localeCompare(b.kind));
+  return entries.sort((a, b) => (b.date ?? '').localeCompare(a.date ?? '') || b.kind.localeCompare(a.kind)); // same date: meeting before its documents
 }
 
 const EMPTY_COPY: Record<ArchiveFilter, string> = {

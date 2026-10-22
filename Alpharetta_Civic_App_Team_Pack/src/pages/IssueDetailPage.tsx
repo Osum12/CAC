@@ -46,7 +46,7 @@ export function IssueDetailPage() {
           <span className="muted">{issue.statusAsOf ? `Status as of ${formatDate(issue.statusAsOf)}` : 'No status date recorded'}</span>
         </div>
       </header>
-      <MockNotice record={issue} />
+      <MockNotice record={issue} kind="issue" />
 
       <div className="detail__grid">
         <div className="detail__main">
@@ -96,7 +96,7 @@ export function IssueDetailPage() {
             {issue.sourceUrls.length ? (
               <ul className="plain-list">
                 {issue.sourceUrls.map((url, i) => (
-                  <li key={url}>
+                  <li key={i}>
                     <SourceAction url={url} label={`Official source ${i + 1}`} unavailableText="Source link is not valid" />
                   </li>
                 ))}

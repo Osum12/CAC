@@ -41,7 +41,7 @@ export function DocumentDetailPage() {
         <h1 className="detail__title">{doc.title}</h1>
         <p className="muted">Published {formatDate(doc.publishedDate, 'date not provided')}</p>
       </header>
-      <MockNotice record={doc} />
+      <MockNotice record={doc} kind="document" />
 
       <div className="detail__grid">
         <div className="detail__main">

@@ -71,29 +71,32 @@ async function loadDataset(): Promise<Dataset> {
 
 const asArray = (v: unknown): string[] => (Array.isArray(v) ? v.filter((x) => typeof x === 'string') : []);
 
-/** Defends pages against malformed rows: missing arrays become [], bad flags are treated as mock. */
+/**
+ * Defends pages against malformed rows: missing arrays become [], unclear provenance is
+ * treated as mock, and mock rows never carry links (so a sample record can't look sourced).
+ */
 function normalize(raw: Dataset): Dataset {
   const isCurated = (r: { dataMode?: unknown; mockOnly?: unknown }) =>
     r.dataMode === 'curated' && r.mockOnly === false;
+  const MOCK = { dataMode: 'mock' as const, mockOnly: true };
   return {
     meetings: (raw.meetings ?? []).map((m) => ({
       ...m,
       agendaDocumentIds: asArray(m.agendaDocumentIds),
       issueIds: asArray(m.issueIds),
-      ...(isCurated(m) ? {} : { dataMode: 'mock' as const, mockOnly: true }),
+      ...(isCurated(m) ? {} : { ...MOCK, officialPageUrl: null, recordingUrl: null }),
     })),
     issues: (raw.issues ?? []).map((i) => ({
       ...i,
       meetingIds: asArray(i.meetingIds),
       documentIds: asArray(i.documentIds),
-      sourceUrls: asArray(i.sourceUrls),
       status: ISSUE_STATUSES.includes(i.status) ? i.status : 'unknown',
-      ...(isCurated(i) ? {} : { dataMode: 'mock' as const, mockOnly: true }),
+      ...(isCurated(i) ? { sourceUrls: asArray(i.sourceUrls) } : { ...MOCK, sourceUrls: [] }),
     })),
     documents: (raw.documents ?? []).map((d) => ({
       ...d,
       issueIds: asArray(d.issueIds),
-      ...(isCurated(d) ? {} : { dataMode: 'mock' as const, mockOnly: true }),
+      ...(isCurated(d) ? {} : { ...MOCK, url: null }),
     })),
   };
 }

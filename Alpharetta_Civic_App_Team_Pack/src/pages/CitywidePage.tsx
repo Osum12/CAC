@@ -4,6 +4,7 @@ import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
 import { IssueCard, MeetingCard } from '../components/Cards';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
+import { isMock } from '../components/MockBadge';
 import type { Meeting } from '../types/civic';
 
 const todayIso = () => {
@@ -11,10 +12,13 @@ const todayIso = () => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 };
 
-/** Upcoming = explicitly scheduled, or dated today or later and not canceled/held. */
+/**
+ * Upcoming = not held or canceled, and dated today or later. A "scheduled" meeting with no
+ * date counts as upcoming; a "scheduled" meeting whose date has passed does not.
+ */
 export function splitMeetings(meetings: Meeting[], today = todayIso()) {
   const isUpcoming = (m: Meeting) =>
-    m.status === 'scheduled' || (m.status !== 'completed' && m.status !== 'canceled' && !!m.date && m.date >= today);
+    m.status !== 'completed' && m.status !== 'canceled' && (m.date ? m.date >= today : m.status === 'scheduled');
   const upcoming = meetings.filter(isUpcoming).sort((a, b) => (a.date ?? '9999').localeCompare(b.date ?? '9999'));
   const recent = meetings.filter((m) => !isUpcoming(m)).sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''));
   return { upcoming, recent };
@@ -49,6 +53,9 @@ export function CitywidePage() {
               <dd>{state.data[2].length}</dd>
             </div>
           </dl>
+        )}
+        {state.status === 'ready' && [...state.data[0], ...state.data[1], ...state.data[2]].some(isMock) && (
+          <p className="hero__note">These counts are of the sample records in this prototype, not city totals.</p>
         )}
       </section>
 
@@ -95,7 +102,7 @@ function CitywideContent({ meetings, issues }: { meetings: Meeting[]; issues: Aw
             <h3 className="subhead">More issues</h3>
             <div className="card-grid">
               {others.map((i) => (
-                <IssueCard key={i.id} issue={i} />
+                <IssueCard key={i.id} issue={i} headingLevel={4} />
               ))}
             </div>
           </>

@@ -47,7 +47,7 @@ export function MeetingDetailPage() {
           </span>
         </div>
       </header>
-      <MockNotice record={meeting} />
+      <MockNotice record={meeting} kind="meeting" />
 
       <div className="detail__grid">
         <div className="detail__main">

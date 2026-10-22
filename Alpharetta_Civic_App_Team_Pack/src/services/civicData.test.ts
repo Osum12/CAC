@@ -83,6 +83,15 @@ describe('civicData service (defensive behavior)', () => {
     expect((await getIssueById('i1'))?.dataMode).toBe('mock');
   });
 
+  it('never exposes links on mock records', async () => {
+    setDataLoader(async () => ({
+      meetings: [],
+      issues: [issue({ dataMode: 'mock', mockOnly: true, sourceUrls: ['https://example.org/looks-official'] })],
+      documents: [],
+    }));
+    expect((await getIssueById('i1'))?.sourceUrls).toEqual([]);
+  });
+
   it('surfaces load errors and allows a retry', async () => {
     let calls = 0;
     setDataLoader(async (): Promise<Dataset> => {

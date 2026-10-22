@@ -7,7 +7,7 @@ import { IssueStatusBadge, MeetingStatusBadge } from './StatusBadge';
 // Cards use a "stretched link": the title is the only link, and CSS expands its
 // click area over the whole card. Screen readers hear one clear link per card.
 
-export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLevel?: 2 | 3 }) {
+export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLevel?: 2 | 3 | 4 }) {
   const H = `h${headingLevel}` as const;
   return (
     <article className="card card--issue">

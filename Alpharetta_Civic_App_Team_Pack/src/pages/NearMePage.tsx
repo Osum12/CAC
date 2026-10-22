@@ -26,14 +26,15 @@ export function NearMePage() {
 
   const issues = state.status === 'ready' ? state.data : null;
   const ranked = useMemo(() => (issues ? rankIssuesForLocation(issues, origin) : []), [issues, origin]);
+  // Pin numbers count only issues that have coordinates, so pins read 1, 2, 3… with no gaps.
   const points: MapPoint[] = useMemo(
     () =>
       ranked
-        .map((r, i) => ({ r, number: i + 1 }))
-        .filter(({ r }) => r.coords)
-        .map(({ r, number }) => ({ id: r.issue.id, title: r.issue.title, number, coords: r.coords!, sample: isMock(r.issue) || !r.issue.location?.verified })),
+        .filter((r) => r.coords)
+        .map((r, i) => ({ id: r.issue.id, title: r.issue.title, number: i + 1, coords: r.coords!, sample: isMock(r.issue) || !r.issue.location?.verified })),
     [ranked],
   );
+  const pinNumber = (id: string) => points.find((p) => p.id === id)?.number ?? null;
 
   // When a marker is chosen, bring its card into view.
   const listRef = useRef<HTMLOListElement>(null);
@@ -81,11 +82,11 @@ export function NearMePage() {
               </h2>
               {!origin && <p className="muted">Pick a demo point above to sort this list by distance.</p>}
               <ol className="feed" ref={listRef}>
-                {ranked.map((r, i) => (
+                {ranked.map((r) => (
                   <li key={r.issue.id}>
                     <FeedItem
                       ranked={r}
-                      number={i + 1}
+                      number={pinNumber(r.issue.id)}
                       selected={r.issue.id === selectedId}
                       onShowOnMap={() => updateParam('issue', r.issue.id === selectedId ? null : r.issue.id)}
                     />
@@ -177,13 +178,20 @@ function LocationPicker({ originId, onChoose }: { originId: string | null; onCho
   );
 }
 
-function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIssue; number: number; selected: boolean; onShowOnMap: () => void }) {
+function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIssue; number: number | null; selected: boolean; onShowOnMap: () => void }) {
   const { issue, coords, reason } = ranked;
   return (
     <article className={`feed-item${selected ? ' feed-item--selected' : ''}`} data-issue-id={issue.id}>
-      <span className={`feed-item__num${coords ? '' : ' feed-item__num--none'}`} aria-hidden="true">
-        {coords ? number : '—'}
-      </span>
+      {number !== null ? (
+        <span className="feed-item__num">
+          <span className="visually-hidden">Map pin </span>
+          {number}
+        </span>
+      ) : (
+        <span className="feed-item__num feed-item__num--none" aria-hidden="true">
+          —
+        </span>
+      )}
       <div className="feed-item__body">
         <div className="card__meta">
           <span className="eyebrow">{humanize(issue.category)}</span>

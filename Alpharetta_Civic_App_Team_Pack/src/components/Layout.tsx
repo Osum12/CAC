@@ -31,12 +31,15 @@ export function Layout() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      {info.status === 'ready' && info.data.containsMock && (
+      {/* Shown unless the dataset is confirmed to contain no mock records (fails safe on load errors). */}
+      {!(info.status === 'ready' && !info.data.containsMock) && (
         <div className="data-banner" role="note">
           <strong>Prototype · Sample data.</strong>{' '}
           <span>
-            {info.data.mockRecords === info.data.totalRecords ? 'All' : info.data.mockRecords} records shown are fictional test
-            content, not official City of Alpharetta records.
+            {info.status === 'ready' && info.data.mockRecords < info.data.totalRecords
+              ? `${info.data.mockRecords} of ${info.data.totalRecords} records shown are fictional test content`
+              : 'Records shown are fictional test content'}
+            , not official City of Alpharetta records.
           </span>
         </div>
       )}
