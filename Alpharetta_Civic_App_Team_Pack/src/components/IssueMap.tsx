@@ -138,7 +138,7 @@ export function IssueMap({ points, origin, selectedId, onSelect }: Props) {
       if (hadFocus) next?.focus();
     }
     const sel = selectedId ? markersRef.current.get(selectedId) : undefined;
-    if (sel && mapRef.current) mapRef.current.panTo(sel.marker.getLatLng());
+    if (sel && mapRef.current) mapRef.current.panInside(sel.marker.getLatLng(), { padding: [48, 48] });
   }, [selectedId]);
 
   return (

@@ -46,8 +46,18 @@ Durable record of the AI-assisted build session (Claude Code) started 2026-10-21
 | 2026-10-22 | Final visual pass: tests, typecheck, lint, build, 7 routes x 6 widths | 67 passed; all passed; 0 overflow, 0 console errors |
 | 2026-10-22 | Clarity redesign: tests, typecheck, lint, build, 7 routes x 6 widths, dark mode check | 67 passed; all passed; 0 overflow, 0 console errors; fixed low-contrast dark-mode search button |
 | 2026-10-22 | Date filters: `npm test`, typecheck, lint, build, 6-width sweep | 67 tests passed; all others passed; 0 overflow, 0 console errors |
+| 2026-10-22 | Compliance audit (independent AI reviewer): data vs official PDFs | 5/5 issue statuses and 5/5 meeting dates/times supported by quoted source text; no mismatches |
+| 2026-10-22 | Audit defects fixed | High: search boxes dropped typed characters (now local state + URL hook; re-verified in Edge with 4x CPU throttling, 0 and 150 ms per key). Medium: Near Me cards overflowed at 320/375px; selected radio unclear in dark mode; pins pushed out of view; "Show on map" invisible on phones. Low: meeting search by "Oct 26" |
+| 2026-10-22 | Georgia Civic: directory from Census 2020 files | 159 counties; 538 municipalities (536 active incorporated places + 2 consolidated balances); 53 multi-county cities; tests compare against the source files |
+| 2026-10-22 | Georgia Civic review (independent AI reviewer) | 0 high; 3 medium, 7 low. Fixed: search box kept old text after nav links; old filtered `/?topic=` links lost; coverage comment claimed a missing test (now a tripwire test); header/county mismatch; letter case in county links; multi-county Change link; chooser border contrast (now 3.9:1); duplicate announcements. Not fixed: directory is 2020-only (documented) |
+| 2026-10-22 | County model (user decision): one Fulton County page, cities Coming Soon, city dropdown kept, "available now" signs removed | `npm test` 8 files, 119 passed; typecheck, lint, build passed |
+| 2026-10-22 | Sweep: 16 routes x 320/375/430/768/1024/1440 (Edge) | 0 horizontal overflow, 0 console errors. Flags are exempt: inline text links, the Near Me radio (whole card is the target), decorative badge dots |
+| 2026-10-22 | Keyboard check of the chooser (Edge) | Tab order logical; type-ahead selects county and city; Enter opens the page and moves focus to main; 3px focus ring |
 
 ## Known limitations
+
+- Only Fulton County has a page, and its records are all from the City of Alpharetta (labelled). Fulton County government and the other 14 Fulton cities have no records yet. Every other county and every city shows Coming Soon.
+- The Georgia directory is the Census 2020 list: places incorporated since (e.g. Mableton, 2023; Mulberry, 2024) are missing.
 
 - 2026-10-22: replaced the fictional records with 19 curated real records (see `data/README.md`). The fictional pack moved to `src/test/fixtures/` for tests. Each fact was checked against downloaded official minutes, agendas or packets. The team should still open every source link themselves.
 - Map points for real issues are approximate (U.S. Census geocoder, from addresses in city documents) and labelled as such.

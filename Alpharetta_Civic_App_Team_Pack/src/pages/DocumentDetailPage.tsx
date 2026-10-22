@@ -9,8 +9,10 @@ import { SourceAction } from '../components/SourceAction';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import { BackLink } from '../components/BackLink';
+import { usePlaceHref } from '../services/placeContext';
 
 export function DocumentDetailPage() {
+  const href = usePlaceHref();
   const { documentId = '' } = useParams();
   const state = useAsync(async () => {
     const document = await getDocumentById(documentId);
@@ -31,7 +33,7 @@ export function DocumentDetailPage() {
 
   return (
     <article className="page detail">
-      <BackLink fallbackTo="/archive" fallbackLabel="Archive" />
+      <BackLink fallbackTo={href('/archive')} fallbackLabel="Archive" />
       <header className="detail__header">
         <div className="card__top">
           <span className="tag">{humanize(doc.documentType)}</span>

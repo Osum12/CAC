@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useUrlParams } from '../services/useUrlParams';
 import { getIssues } from '../services/civicData';
 import { humanize } from '../services/format';
 import { DEMO_LOCATIONS, pointKind, rankIssuesForLocation, type RankedIssue } from '../services/nearMe';
@@ -9,19 +10,17 @@ import { IssueMap, type MapPoint } from '../components/IssueMap';
 import { MockBadge, isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
+import { usePlaceHref } from '../services/placeContext';
 
 export function NearMePage() {
   usePageTitle('Near Me');
-  const [params, setParams] = useSearchParams();
+  const { params, setParam } = useUrlParams();
   const origin = DEMO_LOCATIONS.find((l) => l.id === params.get('loc')) ?? null;
   const selectedId = params.get('issue');
   const state = useAsync(() => getIssues(), []);
 
   const updateParam = (key: string, value: string | null) => {
-    const p = new URLSearchParams(params);
-    if (value) p.set(key, value);
-    else p.delete(key);
-    setParams(p, { replace: true });
+    setParam(key, value);
   };
 
   const issues = state.status === 'ready' ? state.data : null;
@@ -36,10 +35,22 @@ export function NearMePage() {
   );
   const pinNumber = (id: string) => points.find((p) => p.id === id)?.number ?? null;
 
-  // When a marker is chosen, bring its card into view.
+  // When a marker is chosen, bring its card into view. When the choice came from a card's
+  // "Show on map" button on the stacked layout, bring the map into view instead.
   const listRef = useRef<HTMLOListElement>(null);
+  const mapRef = useRef<HTMLElement>(null);
+  const fromFeed = useRef(false);
   useEffect(() => {
     if (!selectedId) return;
+    const stacked = window.matchMedia?.('(max-width: 900px)').matches;
+    if (fromFeed.current) {
+      fromFeed.current = false;
+      if (stacked) {
+        const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+        mapRef.current?.scrollIntoView?.({ block: 'start', behavior: reduce ? 'auto' : 'smooth' });
+      }
+      return;
+    }
     const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     listRef.current
       ?.querySelector(`[data-issue-id="${CSS.escape(selectedId)}"]`)
@@ -51,7 +62,7 @@ export function NearMePage() {
       <header className="page-header">
         <h1>Near Me</h1>
         <p className="page-header__lede">
-          See which issues have a map point close to a location. Every Alpharetta issue stays in the list. Distance helps you sort them, but
+          See which issues have a map point close to a location. Every issue stays in the list. Distance helps you sort them, but
           it doesn’t tell you whether an issue affects a particular home.
         </p>
       </header>
@@ -65,7 +76,7 @@ export function NearMePage() {
           <EmptyState title="No issues are in the dataset yet." />
         ) : (
           <div className="nearme">
-            <section className="nearme__map" aria-labelledby="map-h">
+            <section className="nearme__map" aria-labelledby="map-h" ref={mapRef}>
               <h2 id="map-h" className="visually-hidden">
                 Map
               </h2>
@@ -78,7 +89,7 @@ export function NearMePage() {
             </section>
             <section className="nearme__feed" aria-labelledby="feed-h">
               <h2 id="feed-h" className="nearme__feed-title">
-                {origin ? `Sorted by distance from ${origin.label}` : 'All Alpharetta issues'}
+                {origin ? `Sorted by distance from ${origin.label}` : 'All issues'}
               </h2>
               {!origin && <p className="muted">Choose a starting location above to sort this list by distance.</p>}
               <ol className="feed" ref={listRef}>
@@ -88,7 +99,10 @@ export function NearMePage() {
                       ranked={r}
                       number={pinNumber(r.issue.id)}
                       selected={r.issue.id === selectedId}
-                      onShowOnMap={() => updateParam('issue', r.issue.id === selectedId ? null : r.issue.id)}
+                      onShowOnMap={() => {
+                        fromFeed.current = r.issue.id !== selectedId;
+                        updateParam('issue', r.issue.id === selectedId ? null : r.issue.id);
+                      }}
                     />
                   </li>
                 ))}
@@ -179,6 +193,7 @@ function LocationPicker({ originId, onChoose }: { originId: string | null; onCho
 }
 
 function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIssue; number: number | null; selected: boolean; onShowOnMap: () => void }) {
+  const href = usePlaceHref();
   const { issue, coords, reason } = ranked;
   return (
     <article className={`feed-item${selected ? ' feed-item--selected' : ''}`} data-issue-id={issue.id}>
@@ -198,7 +213,7 @@ function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIss
           <IssueStatusBadge status={issue.status} />
         </div>
         <h3 className="feed-item__title">
-          <Link to={`/issues/${encodeURIComponent(issue.id)}`}>{issue.title}</Link>
+          <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)}>{issue.title}</Link>
         </h3>
         <p className="feed-item__reason">
           <span className="visually-hidden">Why it’s listed: </span>

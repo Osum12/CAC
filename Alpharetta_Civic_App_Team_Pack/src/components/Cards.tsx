@@ -4,6 +4,7 @@ import { formatCompactDate, formatDate, formatShortDate, formatTime, formatWeekd
 import { getValidCoordinates } from '../services/nearMe';
 import { MockBadge, isMock } from './MockBadge';
 import { IssueStatusBadge, MeetingStatusBadge } from './StatusBadge';
+import { usePlaceHref } from '../services/placeContext';
 
 // Cards use a "stretched link": the title link's click area covers the whole card,
 // so screen readers hear one clear link per card. Secondary actions (map, source,
@@ -27,6 +28,7 @@ export function ExternalAction({ href, children, context }: { href: string; chil
 }
 
 export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLevel?: HeadingLevel }) {
+  const href = usePlaceHref();
   const H = `h${headingLevel}` as const;
   const source = isMock(issue) ? null : primarySource(issue.sourceUrls);
   const mappable = getValidCoordinates(issue) !== null;
@@ -37,7 +39,7 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
         {isMock(issue) && <MockBadge record={issue} />}
       </div>
       <H className="card__title">
-        <Link to={`/issues/${encodeURIComponent(issue.id)}`} className="card__link">
+        <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)} className="card__link">
           {issue.title}
         </Link>
       </H>
@@ -57,7 +59,7 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
       </dl>
       <div className="card__actions">
         {mappable && (
-          <Link className="card__action" to={`/near-me?issue=${encodeURIComponent(issue.id)}`}>
+          <Link className="card__action" to={href(`/near-me?issue=${encodeURIComponent(issue.id)}`)}>
             <span aria-hidden="true" className="icon-lead">⌖</span>View on map<span className="visually-hidden">: {issue.title}</span>
           </Link>
         )}
@@ -83,6 +85,7 @@ export function MeetingCard({
   agenda?: CivicDocument | null;
   headingLevel?: HeadingLevel;
 }) {
+  const href = usePlaceHref();
   const H = `h${headingLevel}` as const;
   const short = formatShortDate(meeting.date);
   const weekday = formatWeekday(meeting.date);
@@ -104,7 +107,7 @@ export function MeetingCard({
       <div className="card__body">
         <span className="tag">{meetingTypeLabel(meeting.meetingType)}</span>
         <H className="card__title">
-          <Link to={`/meetings/${encodeURIComponent(meeting.id)}`} className="card__link">
+          <Link to={href(`/meetings/${encodeURIComponent(meeting.id)}`)} className="card__link">
             {meeting.title}
           </Link>
         </H>
@@ -139,6 +142,7 @@ export function MeetingCard({
 }
 
 export function DocumentCard({ document, headingLevel = 3 }: { document: CivicDocument; headingLevel?: HeadingLevel }) {
+  const href = usePlaceHref();
   const H = `h${headingLevel}` as const;
   const url = isMock(document) ? null : safeUrl(document.url);
   return (
@@ -148,7 +152,7 @@ export function DocumentCard({ document, headingLevel = 3 }: { document: CivicDo
         {isMock(document) && <MockBadge record={document} />}
       </div>
       <H className="card__title">
-        <Link to={`/documents/${encodeURIComponent(document.id)}`} className="card__link">
+        <Link to={href(`/documents/${encodeURIComponent(document.id)}`)} className="card__link">
           {document.title}
         </Link>
       </H>

@@ -1,5 +1,6 @@
 import { useRef, type ReactNode, type RefObject } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
 import { DATE_RANGE_LABELS, filterIssues, isFiltering, statusesIn, topicsIn, type DateRange, type IssueFilterState } from '../services/filters';
 import { formatDate, formatTime, formatWeekdayDate, humanize, ISSUE_STATUS_LABELS, safeUrl, todayIso } from '../services/format';
@@ -11,6 +12,7 @@ import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
+import { usePlace, usePlaceHref, useRecordSources } from '../services/placeContext';
 
 /**
  * Upcoming = not held or canceled, and dated today or later. A "scheduled" meeting with no
@@ -40,11 +42,16 @@ function lastChecked(meetings: Meeting[]): string | null {
 }
 
 export function CitywidePage() {
-  usePageTitle('Citywide');
+  const href = usePlaceHref();
+  usePageTitle('Countywide');
+  const place = usePlace();
+  const sources = useRecordSources();
   const state = useAsync(() => Promise.all([getMeetings(), getIssues(), getDocuments()]), []);
   const issuesHeading = useRef<HTMLHeadingElement>(null);
   const meetingsHeading = useRef<HTMLHeadingElement>(null);
-  const [params, setParams] = useSearchParams();
+  const { params, setParam } = useUrlParams();
+  // The search box keeps its own text so fast typing is never lost; the URL follows it.
+  const [query, onQuery] = useUrlText(params, setParam, 'q');
 
   // In-page jumps also move keyboard focus, so screen-reader users land where sighted users do.
   const jumpTo = (el: HTMLElement | null) => {
@@ -63,9 +70,9 @@ export function CitywidePage() {
       <section className="hero hero--cover" aria-labelledby="citywide-title">
         <div className="hero__inner">
           <div className="hero__main">
-            <p className="hero__place">Alpharetta, Georgia</p>
+            <p className="hero__place">{place?.name}, Georgia</p>
             <h1 id="citywide-title" className="hero__title">
-              <span className="hero__line">What’s on the table</span> <span className="hero__line">at City Hall</span>
+              <span className="hero__line">What’s on the table</span> <span className="hero__line">in {place?.name}</span>
             </h1>
             <p className="hero__lede">Recent proposals, decisions, and public meetings, explained in plain language with a link to every official source.</p>
             <form
@@ -83,14 +90,9 @@ export function CitywidePage() {
               <input
                 id="hero-q"
                 type="search"
-                value={params.get('q') ?? ''}
+                value={query}
                 placeholder="Search issues, e.g. speed limit"
-                onChange={(e) => {
-                  const p = new URLSearchParams(params);
-                  if (e.target.value) p.set('q', e.target.value);
-                  else p.delete('q');
-                  setParams(p, { replace: true });
-                }}
+                onChange={(e) => onQuery(e.target.value)}
               />
               <button type="submit" className="hero-search__button">
                 Search
@@ -100,7 +102,7 @@ export function CitywidePage() {
               <p className="hero__note">
                 {anyMock
                   ? 'These records include sample data and are not city totals.'
-                  : `A selected set of recent records, not every city item.${checked ? ` Meeting records last checked against official city documents on ${formatDate(checked)}.` : ''}`}
+                  : `A selected set of recent records from the ${sources}. Other ${place?.name} cities and the county government aren’t included yet.${checked ? ` Meeting records last checked against official documents on ${formatDate(checked)}.` : ''}`}
               </p>
             )}
           </div>
@@ -112,10 +114,10 @@ export function CitywidePage() {
         <nav className="quicklinks" aria-label="Shortcuts">
           <ul>
             <li>
-              <Link to={`/near-me?loc=${DEMO_LOCATIONS[0].id}`} className="quicklink">
+              <Link to={href(`/near-me?loc=${DEMO_LOCATIONS[0].id}`)} className="quicklink">
                 <QuickIcon name="pin" />
                 <span className="quicklink__label">Find issues near me</span>
-                <span className="quicklink__hint">Sorted by distance from City Hall</span>
+                <span className="quicklink__hint">Sorted by distance from {DEMO_LOCATIONS[0].label}</span>
               </Link>
             </li>
             <li>
@@ -126,14 +128,14 @@ export function CitywidePage() {
               </button>
             </li>
             <li>
-              <Link to="/archive?type=videos" className="quicklink">
+              <Link to={href('/archive?type=videos')} className="quicklink">
                 <QuickIcon name="play" />
                 <span className="quicklink__label">Meeting recordings</span>
                 <span className="quicklink__hint">{plural(ready[0].filter((m) => safeUrl(m.recordingUrl)).length, 'video')} on the city portal</span>
               </Link>
             </li>
             <li>
-              <Link to="/archive" className="quicklink">
+              <Link to={href('/archive')} className="quicklink">
                 <QuickIcon name="document" />
                 <span className="quicklink__label">Agendas and minutes</span>
                 <span className="quicklink__hint">{plural(ready[2].length, 'official document')}</span>
@@ -167,7 +169,9 @@ type ContentProps = {
 };
 
 function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsHeading }: ContentProps) {
-  const [params, setParams] = useSearchParams();
+  const sources = useRecordSources();
+  const href = usePlaceHref();
+  const { params, setParam, clearParams } = useUrlParams();
   // Values from the URL are only honored if they exist in the data, so a stale or mistyped
   // link never filters by something the dropdowns can't show.
   const rawTopic = params.get('topic') ?? '';
@@ -180,12 +184,11 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
     when: (ISSUE_DATE_RANGES as string[]).includes(rawWhen) ? (rawWhen as DateRange) : '',
   };
   const setFilter = (key: keyof IssueFilterState, value: string) => {
-    const p = new URLSearchParams(params);
-    if (value) p.set(key, value);
-    else p.delete(key);
-    setParams(p, { replace: true });
+    setParam(key, value);
   };
-  const clearFilters = () => setParams(new URLSearchParams(), { replace: true });
+  const clearFilters = () => {
+    clearParams();
+  };
 
   if (!meetings.length && !issues.length) {
     return (
@@ -204,9 +207,10 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
       <section className="section" aria-labelledby="issues-heading">
         <div className="section__head">
           <h2 id="issues-heading" ref={issuesHeading} tabIndex={-1}>
-            City issues
+            Issues
           </h2>
-          <Link to="/near-me" className="text-link">
+          <p className="section__source">From the {sources}</p>
+          <Link to={href('/near-me')} className="text-link">
             See them on the map
           </Link>
         </div>
@@ -243,9 +247,10 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
         <h2 id="meetings-heading" ref={meetingsHeading} tabIndex={-1}>
           Meetings
         </h2>
+        <p className="section__source">From the {sources}</p>
         <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="No upcoming meetings in this dataset." />
         <MeetingGroup title="Recent" meetings={recent} documents={documents} empty="No past meetings in this dataset." />
-        <Link to="/archive" className="text-link">
+        <Link to={href('/archive')} className="text-link">
           Browse all meetings and documents
         </Link>
       </aside>
@@ -369,10 +374,12 @@ function QuickIcon({ name }: { name: 'pin' | 'calendar' | 'play' | 'document' })
 }
 
 /**
- * "Next at City Hall": the next scheduled meeting, what is on its agenda, and the most
+ * "Next at <meeting place>": the next scheduled meeting, what is on its agenda, and the most
  * recent recorded decision. Everything shown comes from the dataset; nothing is invented.
  */
 function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: Issue[]; documents: CivicDocument[] }) {
+  const href = usePlaceHref();
+  const meetingPlace = usePlace()?.recordSources[0]?.meetingPlace ?? 'City Hall';
   const next = splitMeetings(meetings).upcoming[0] ?? null;
   const onAgenda = next ? issues.filter((i) => next.issueIds.includes(i.id)) : [];
   const decided = issues
@@ -381,16 +388,16 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
   const agenda = next ? agendaFor(next, documents) : null;
   if (!next && !decided) return null;
   return (
-    <aside className="docket" aria-label="Next at City Hall">
+    <aside className="docket" aria-label={`Next at ${meetingPlace}`}>
       {next && (
         <div className="docket__block">
-          <p className="docket__kicker">Next at City Hall</p>
+          <p className="docket__kicker">Next at {meetingPlace}</p>
           <p className="docket__date">
             <time dateTime={next.date ?? undefined}>{formatWeekdayDate(next.date)}</time>
             {next.startTime && <span className="docket__time">{formatTime(next.startTime)}</span>}
           </p>
           <p className="docket__title">
-            <Link to={`/meetings/${encodeURIComponent(next.id)}`}>{next.title}</Link>
+            <Link to={href(`/meetings/${encodeURIComponent(next.id)}`)}>{next.title}</Link>
           </p>
           {onAgenda.length > 0 && (
             <>
@@ -398,7 +405,7 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
               <ul className="docket__list">
                 {onAgenda.map((i) => (
                   <li key={i.id}>
-                    <Link to={`/issues/${encodeURIComponent(i.id)}`}>{i.title}</Link>
+                    <Link to={href(`/issues/${encodeURIComponent(i.id)}`)}>{i.title}</Link>
                   </li>
                 ))}
               </ul>
@@ -415,7 +422,7 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
         <div className="docket__block docket__block--decided">
           <p className="docket__kicker">Latest decision</p>
           <p className="docket__title docket__title--small">
-            <Link to={`/issues/${encodeURIComponent(decided.id)}`}>{decided.title}</Link>
+            <Link to={href(`/issues/${encodeURIComponent(decided.id)}`)}>{decided.title}</Link>
           </p>
           <p className="docket__meta">
             <IssueStatusBadge status={decided.status} /> on {formatDate(decided.statusAsOf)}

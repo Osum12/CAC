@@ -12,8 +12,10 @@ import { IssueStatusBadge } from '../components/StatusBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import type { Issue, Meeting } from '../types/civic';
+import { usePlaceHref } from '../services/placeContext';
 
 export function IssueDetailPage() {
+  const href = usePlaceHref();
   const { issueId = '' } = useParams();
   const state = useAsync(async () => {
     const issue = await getIssueById(issueId);
@@ -33,7 +35,7 @@ export function IssueDetailPage() {
 
   return (
     <article className="page detail">
-      <BackLink fallbackTo="/" fallbackLabel="All city issues" />
+      <BackLink fallbackTo={href('/')} fallbackLabel="All issues" />
       <header className="detail__header">
         <div className="card__top">
           <span className="tag">{humanize(issue.category)}</span>
@@ -113,6 +115,7 @@ export function IssueDetailPage() {
 
 /** Related meetings in date order, so readers can follow the issue's path through city hall. */
 function MeetingTimeline({ meetings }: { meetings: Meeting[] }) {
+  const href = usePlaceHref();
   const sorted = [...meetings].sort((a, b) => (a.date ?? '9999').localeCompare(b.date ?? '9999'));
   return (
     <ol className="timeline">
@@ -125,7 +128,7 @@ function MeetingTimeline({ meetings }: { meetings: Meeting[] }) {
               {time ? ` at ${time}` : ''}
             </p>
             <p className="timeline__title">
-              <Link to={`/meetings/${encodeURIComponent(m.id)}`}>{m.title}</Link>
+              <Link to={href(`/meetings/${encodeURIComponent(m.id)}`)}>{m.title}</Link>
             </p>
             <p className="timeline__meta">
               {meetingTypeLabel(m.meetingType)} meeting, {meetingStatusLabel(m.status).toLowerCase()}
@@ -144,6 +147,7 @@ function MeetingTimeline({ meetings }: { meetings: Meeting[] }) {
 }
 
 function LocationPanel({ issue }: { issue: Issue }) {
+  const href = usePlaceHref();
   const loc = issue.location;
   const coords = getValidCoordinates(issue);
   return (
@@ -165,7 +169,7 @@ function LocationPanel({ issue }: { issue: Issue }) {
                   : 'The exact location has not been mapped.'}
           </p>
           {coords ? (
-            <Link to={`/near-me?issue=${encodeURIComponent(issue.id)}`} className="button button--small">
+            <Link to={href(`/near-me?issue=${encodeURIComponent(issue.id)}`)} className="button button--small">
               <span aria-hidden="true" className="icon-lead">⌖</span>View on map
             </Link>
           ) : (

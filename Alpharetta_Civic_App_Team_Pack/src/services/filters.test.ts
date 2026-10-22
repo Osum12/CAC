@@ -1,4 +1,4 @@
-import { filterIssues, isFiltering, matchesQuery, statusesIn, topicsIn } from './filters';
+import { filterIssues, isFiltering, matchesQuery, meetingMatches, statusesIn, topicsIn } from './filters';
 import { mockDataset } from '../test/mockDataset';
 
 const issues = mockDataset.issues;
@@ -59,5 +59,13 @@ describe('date ranges', () => {
       'issue-mock-005',
     ]);
     expect(filterIssues(issues, { q: '', topic: '', status: '', when: '30d' }, '2026-12-30')).toEqual([]);
+  });
+});
+
+describe('meeting search', () => {
+  it('finds a meeting by its date as people write it', () => {
+    const m = { ...mockDataset.meetings[0], date: '2026-10-26' };
+    for (const q of ['2026-10-26', 'October 26', 'Oct 26', 'oct 26, 2026']) expect(meetingMatches(m, q)).toBe(true);
+    expect(meetingMatches(m, 'Oct 27')).toBe(false);
   });
 });

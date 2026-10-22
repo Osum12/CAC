@@ -1,4 +1,4 @@
-/* Alpharetta Civic design system.
+/* Georgia Civic design system.
    Direction: a modern civic "public notice" look. Warm paper, deep evergreen ink,
    a brick accent, editorial serif headings (Fraunces) over the calm, humanist
    text face Source Sans 3. All colors are tokens so dark mode is a token swap. */
@@ -2360,4 +2360,415 @@ h2 {
   .quicklinks ul {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+/* ---------- Georgia Civic layer ----------
+   Statewide front door, location chooser, header place bar and the coming-soon pages.
+   Same identity: forest green, warm ivory, burnt orange, editorial serif. */
+
+/* Header: brand, then the current place, then the city's pages. */
+.placebar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 auto 0 4px;
+  padding: 3px 3px 3px 12px;
+  border: 1px solid rgb(244 237 224 / 0.22);
+  border-radius: 999px;
+  font-size: 0.95rem;
+  min-width: 0;
+}
+.placebar__icon {
+  flex: none;
+  color: var(--ember);
+}
+.placebar__name {
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+.placebar__change {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.1);
+  color: var(--on-evergreen);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.18s var(--ease);
+}
+.placebar__change:hover {
+  background: rgb(255 255 255 / 0.2);
+}
+.masthead :focus-visible {
+  outline-color: var(--ivory);
+}
+
+/* ---- Statewide hero ---- */
+.hero--state .hero__inner {
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+}
+/* ---- Location chooser: an ivory card on the green hero, fixed colors in both themes ---- */
+.chooser {
+  background: #fbf7ee;
+  color: #17231f;
+  border-radius: 18px;
+  padding: clamp(22px, 2.6vw, 30px);
+  box-shadow: 0 14px 40px rgb(0 0 0 / 0.26);
+}
+.hero--cover .chooser {
+  animation: hero-rise 0.8s cubic-bezier(0.16, 0.8, 0.24, 1) 0.4s both;
+}
+.chooser__title {
+  font-size: 1.55rem;
+  line-height: 1.15;
+  margin: 0 0 var(--space-4);
+  color: #17231f;
+}
+.chooser__field + .chooser__field {
+  margin-top: var(--space-4);
+}
+.chooser__field label {
+  display: block;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 6px;
+  color: #17231f;
+}
+.chooser__optional {
+  font-weight: 400;
+  color: #4d5a55;
+}
+.chooser__control {
+  position: relative;
+}
+.chooser__icon {
+  position: absolute;
+  left: 13px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #a8461f;
+  pointer-events: none;
+}
+.chooser select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  min-height: 50px;
+  padding: 10px 44px 10px 14px;
+  border: 1.5px solid #8a7f6c; /* 3:1 against the white field and the ivory card */
+  border-radius: 10px;
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%231d3b34' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") no-repeat right 16px center;
+  color: #17231f;
+  font: inherit;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+.chooser__icon + select {
+  padding-left: 40px;
+}
+.chooser select:hover:not(:disabled) {
+  border-color: #1d3b34;
+}
+.chooser select:focus-visible {
+  outline: 3px solid #1f6feb;
+  outline-offset: 2px;
+  border-color: #1d3b34;
+}
+.chooser select:disabled {
+  background-color: #f1ece1;
+  color: #5f6b66;
+  cursor: not-allowed;
+}
+.chooser select[aria-invalid='true'] {
+  border-color: #8a2418;
+}
+.chooser select option,
+.chooser select optgroup {
+  color: #17231f;
+  background: #fff;
+}
+.chooser__status {
+  margin: var(--space-4) 0;
+  min-height: 2.9em;
+  font-size: 0.97rem;
+  line-height: 1.45;
+  color: #3c4a45;
+}
+.chooser__status--error {
+  color: #8a2418;
+  font-weight: 700;
+}
+.chooser__go {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 20px;
+  border: 0;
+  border-radius: 12px;
+  background: #a8461f;
+  color: #fff;
+  font: inherit;
+  font-size: 1.08rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.18s var(--ease);
+}
+.chooser__go:hover {
+  background: #8a3815;
+}
+.chooser__go:focus-visible {
+  outline: 3px solid #1f6feb;
+  outline-offset: 3px;
+}
+.chooser__arrow {
+  transition: transform 0.2s var(--ease);
+}
+.chooser__go:hover .chooser__arrow {
+  transform: translateX(3px);
+}
+
+/* ---- Available-now section ---- */
+.statewide__note {
+  margin-top: var(--space-6);
+  max-width: 72ch;
+}
+
+/* ---- Coming soon ---- */
+.soon {
+  margin: -28px calc(50% - 50vw) var(--space-6);
+  padding: clamp(40px, 6vw, 88px) 0;
+  background: var(--evergreen);
+  color: var(--ivory);
+  border-bottom: 1px solid var(--hero-edge, transparent);
+}
+.soon__inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+  gap: clamp(24px, 5vw, 72px);
+  align-items: center;
+}
+.soon__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 14px;
+  border: 1.5px solid var(--ember);
+  border-radius: 999px;
+  color: var(--ember);
+  font-weight: 700;
+}
+.soon__where {
+  margin: var(--space-4) 0 var(--space-2);
+  font-weight: 600;
+  opacity: 0.82;
+}
+.soon__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.3rem, 5vw, 4.1rem);
+  font-weight: 600;
+  line-height: 1.03;
+  letter-spacing: -0.016em;
+  font-variation-settings: 'opsz' 144;
+  color: var(--ivory);
+  margin: 0 0 var(--space-4);
+  max-width: 18ch;
+  text-wrap: balance;
+  overflow-wrap: anywhere;
+}
+.soon__lede,
+.soon__detail {
+  font-size: clamp(1.05rem, 1.5vw, 1.22rem);
+  line-height: 1.55;
+  max-width: 54ch;
+  margin: 0 0 var(--space-3);
+  opacity: 0.88;
+}
+.soon__detail {
+  font-size: 1.02rem;
+  opacity: 0.8;
+}
+.soon__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: var(--space-5);
+}
+.soon__primary,
+.soon__secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 50px;
+  padding: 0 24px;
+  border-radius: 999px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 0.18s var(--ease), border-color 0.18s var(--ease);
+}
+.soon__primary {
+  background: var(--ember);
+  color: #17231f;
+}
+.soon__primary:hover {
+  background: #f3bb9b;
+}
+.soon__secondary {
+  border: 1.5px solid rgb(244 237 224 / 0.55);
+  color: var(--ivory);
+}
+.soon__secondary:hover {
+  border-color: var(--ivory);
+  background: rgb(255 255 255 / 0.06);
+}
+.soon :focus-visible {
+  outline-color: var(--ivory);
+}
+.soon__motif {
+  width: 100%;
+  max-width: 240px;
+  justify-self: end;
+  color: var(--ember);
+}
+.soon__main > * {
+  animation: hero-rise 0.7s cubic-bezier(0.16, 0.8, 0.24, 1) both;
+}
+.soon__main > :nth-child(n + 3) {
+  animation-delay: 0.12s;
+}
+.page:has(.soon) {
+  animation: none;
+}
+.soon-more__title {
+  font-size: clamp(1.45rem, 2.4vw, 1.8rem);
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.soon-places {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 150px), 1fr));
+  gap: 10px;
+}
+.soon-place {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: 64px;
+  padding: 12px 16px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+.soon-place:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--shadow);
+}
+.soon-place__name {
+  font-weight: 700;
+  font-size: 1.05rem;
+  overflow-wrap: anywhere;
+}
+.soon-place__status {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.soon-place--live {
+  border-left: 4px solid var(--accent);
+}
+.soon-place--live .soon-place__status {
+  color: var(--tag-ink);
+  font-weight: 700;
+}
+.soon__why {
+  margin-top: var(--space-6);
+  max-width: 72ch;
+}
+
+@media (max-width: 900px) {
+  .hero--state .hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+@media (max-width: 720px) {
+  .soon__inner {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .soon__motif {
+    display: none;
+  }
+}
+@media (max-width: 560px) {
+  .placebar {
+    order: 3;
+    width: 100%;
+    margin: 0;
+  }
+  .primary-nav {
+    order: 4;
+  }
+  .placebar__name {
+    flex: 1;
+  }
+  .soon__actions > * {
+    flex: 1 1 100%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero--cover .chooser,
+  .soon__main > * {
+    animation: none;
+  }
+  .chooser__arrow {
+    transition: none;
+  }
+}
+
+/* ---------- Audit fixes ---------- */
+/* M1: the starting-location cards fit on phones (two columns, long names wrap). */
+@media (max-width: 560px) {
+  .locator__options {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 130px), 1fr));
+  }
+  .radio-card__label {
+    overflow-wrap: anywhere;
+  }
+}
+/* M2: the chosen starting location is clear in dark mode too (evergreen is near-black there). */
+.radio-card input {
+  accent-color: var(--btn-bg);
+}
+.radio-card:has(input:checked) {
+  border-color: var(--btn-bg);
+  box-shadow: inset 0 0 0 1px var(--btn-bg);
+}
+
+/* Where the records on a county page come from (e.g. "From the City of Alpharetta"). */
+.section__source {
+  margin: 0;
+  color: var(--muted);
+  font-weight: 600;
+}
+.section__head .section__source {
+  order: 3;
+  flex-basis: 100%;
+}
+#meetings-heading + .section__source {
+  margin: calc(-1 * var(--space-3)) 0 var(--space-4);
 }

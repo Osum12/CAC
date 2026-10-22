@@ -37,10 +37,11 @@ Checked 2026-10-21 against the official 2026 rulebook: https://www.congressional
 7. **Merge to `main`** only after the team reviews `integration`, if the team wants `main` to be the submitted version.
 8. **Update Royal 400 after the Oct 26, 2026 City Council vote** (status, `statusAsOf`, the official minutes as source) before any later demo.
 9. **Check the data yourselves** against the linked PDFs. An AI did the research and an AI reviewer re-checked it, but the team should be able to vouch for every record.
+10. **Explain the statewide scope honestly.** The app lists every Georgia county and city, but only Fulton County has a page, and its records all come from the City of Alpharetta (the page says so). Say this in the video and the written answers, and be ready to explain how a new place would be added (its own verified dataset, then one entry in `src/config/coverage.ts`). A good student contribution: research and verify records for Fulton County government or another Fulton city.
 
 ## Honest demo script (about 2½ minutes)
 
-1. **0:00–0:20.** Team names, "Alpharetta Civic", the one-sentence purpose (understand what Alpharetta's government is considering, with a path to the source), and the target audience (Alpharetta residents).
+1. **0:00–0:20.** Team names, "Georgia Civic", the one-sentence purpose (understand what your local government is considering, with a path to the source), and the audience. On the home page choose Fulton County, keep "All of Fulton County", and say plainly that the records come from the City of Alpharetta and that other places show "Coming soon".
 2. **0:20–0:50 Citywide.** Open the Royal 400 Data Center issue: status "Under consideration", the Planning Commission recommendation, and the upcoming Oct 26 Council meeting. Then open the North Main Street item and click through to the official minutes PDF.
 3. **0:50–1:30 Near Me.** Choose Alpharetta City Hall. The list re-sorts by distance, each item explains why it's listed, and selecting a pin highlights the matching card. Point out that pins are approximate, and that items with no street address stay in the list without a pin.
 4. **1:30–2:00 Archive.** Switch to Videos and open the Sept 14 City Council meeting recording on the city portal. Open a meeting and follow its links to issues and documents.

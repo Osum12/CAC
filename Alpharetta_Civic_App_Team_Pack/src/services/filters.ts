@@ -2,7 +2,7 @@
 // Pure functions over already-loaded records, so they are easy to test and need no backend.
 
 import type { CivicDocument, Issue, IssueStatus, Meeting } from '../types/civic';
-import { parseIsoDate, todayIso } from './format';
+import { formatCompactDate, formatDate, parseIsoDate, todayIso } from './format';
 
 /** Relative date windows. 'upcoming' means today or later; the others look back from today. */
 export type DateRange = '' | 'upcoming' | '30d' | '90d' | 'year';
@@ -68,7 +68,8 @@ export function statusesIn(issues: Issue[]): IssueStatus[] {
   return [...new Set(issues.map((i) => i.status))];
 }
 
-export const meetingMatches = (m: Meeting, q: string) => matchesQuery(q, m.title, m.summary, m.meetingType.replace(/_/g, ' '), m.date);
+export const meetingMatches = (m: Meeting, q: string) =>
+  matchesQuery(q, m.title, m.summary, m.meetingType.replace(/_/g, ' '), m.date, formatDate(m.date, ''), formatCompactDate(m.date, ''));
 
 export const documentMatches = (d: CivicDocument, q: string) =>
   matchesQuery(q, d.title, d.description, d.documentType.replace(/_/g, ' '), d.sourceName, d.publishedDate);

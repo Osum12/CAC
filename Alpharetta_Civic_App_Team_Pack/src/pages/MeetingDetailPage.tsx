@@ -10,8 +10,10 @@ import { MeetingStatusBadge } from '../components/StatusBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import { BackLink } from '../components/BackLink';
+import { usePlaceHref } from '../services/placeContext';
 
 export function MeetingDetailPage() {
+  const href = usePlaceHref();
   const { meetingId = '' } = useParams();
   const state = useAsync(async () => {
     const meeting = await getMeetingById(meetingId);
@@ -31,7 +33,7 @@ export function MeetingDetailPage() {
 
   return (
     <article className="page detail">
-      <BackLink fallbackTo="/archive" fallbackLabel="Archive" />
+      <BackLink fallbackTo={href('/archive')} fallbackLabel="Archive" />
       <header className="detail__header">
         <div className="card__top">
           <span className="tag">{meetingTypeLabel(meeting.meetingType)}</span>

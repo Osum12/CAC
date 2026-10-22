@@ -1,4 +1,5 @@
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getMeetings } from '../services/civicData';
 import { formatDate, formatTime, humanize, meetingTypeLabel, safeUrl } from '../services/format';
 import { DATE_RANGE_LABELS, documentMatches, inDateRange, isDateRange, meetingMatches, type DateRange } from '../services/filters';
@@ -9,6 +10,7 @@ import { usePageTitle } from '../services/usePageTitle';
 import { MockBadge, isMock } from '../components/MockBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import type { CivicDocument, Meeting } from '../types/civic';
+import { usePlaceHref } from '../services/placeContext';
 
 export type ArchiveFilter = 'all' | 'videos' | 'agendas' | 'documents';
 
@@ -61,26 +63,23 @@ const EMPTY_COPY: Record<ArchiveFilter, string> = {
 
 export function ArchivePage() {
   usePageTitle('Archive');
-  const [params, setParams] = useSearchParams();
+  const { params, setParam: setUrlParam, clearParams } = useUrlParams();
   const raw = params.get('type');
   const filter: ArchiveFilter = FILTERS.some((f) => f.id === raw) ? (raw as ArchiveFilter) : 'all';
   const state = useAsync(() => Promise.all([getMeetings(), getDocuments()]), []);
 
   const setFilter = (next: ArchiveFilter) => {
-    const p = new URLSearchParams(params);
-    if (next === 'all') p.delete('type');
-    else p.set('type', next);
-    setParams(p, { replace: true });
+    setUrlParam('type', next === 'all' ? null : next);
   };
 
   const q = params.get('q') ?? '';
+  // The search box keeps its own text so fast typing is never lost; the URL follows it.
+  const [query, setQuery] = useUrlText(params, setUrlParam, 'q');
   const rawWhen = params.get('when') ?? '';
   const when: DateRange = isDateRange(rawWhen) ? rawWhen : '';
   const setParam = (key: 'q' | 'when', next: string) => {
-    const p = new URLSearchParams(params);
-    if (next) p.set(key, next);
-    else p.delete(key);
-    setParams(p, { replace: true });
+    if (key === 'q') setQuery(next);
+    else setUrlParam(key, next);
   };
 
   const entries = state.status === 'ready' ? buildArchiveEntries(state.data[0], state.data[1]).filter((e) => entryMatches(e, q) && inDateRange(e.date, when)) : [];
@@ -99,7 +98,7 @@ export function ArchivePage() {
       <form className="filters filters--compact" role="search" aria-label="Search the archive" onSubmit={(e) => e.preventDefault()}>
         <div className="filters__field filters__field--grow">
           <label htmlFor="archive-q">Search meetings and documents</label>
-          <input id="archive-q" type="search" value={q} placeholder="e.g. minutes, Planning Commission, September" onChange={(e) => setParam('q', e.target.value)} />
+          <input id="archive-q" type="search" value={query} placeholder="e.g. minutes, Planning Commission, September" onChange={(e) => setParam('q', e.target.value)} />
         </div>
         <div className="filters__field">
           <label htmlFor="archive-when">Date</label>
@@ -158,7 +157,7 @@ export function ArchivePage() {
                     </button>
                   )}
                   {(q || when || filter !== 'all') && (
-                    <button type="button" className="button button--ghost" onClick={() => setParams(new URLSearchParams(), { replace: true })}>
+                    <button type="button" className="button button--ghost" onClick={clearParams}>
                       Show all records
                     </button>
                   )}
@@ -185,8 +184,9 @@ function emptyTitle(filter: ArchiveFilter, q: string, matchesInAll: number): str
 const entryMatches = (e: ArchiveEntry, q: string) => (e.kind === 'meeting' ? meetingMatches(e.record, q) : documentMatches(e.record, q));
 
 function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
+  const href = usePlaceHref();
   const isMeeting = entry.kind === 'meeting';
-  const to = isMeeting ? `/meetings/${encodeURIComponent(entry.id)}` : `/documents/${encodeURIComponent(entry.id)}`;
+  const to = href(isMeeting ? `/meetings/${encodeURIComponent(entry.id)}` : `/documents/${encodeURIComponent(entry.id)}`);
   const typeLabel = isMeeting ? `${meetingTypeLabel(entry.record.meetingType)} meeting` : humanize(entry.record.documentType);
   const mock = isMock(entry.record);
   const recording = isMeeting && !mock ? safeUrl(entry.record.recordingUrl) : null;

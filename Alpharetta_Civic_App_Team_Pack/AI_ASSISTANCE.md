@@ -41,6 +41,9 @@ On 2026-10-22, also at the session runner's request, Claude Code did a UI/UX ref
 - Did an editorial redesign: a full-width green cover hero with a serif headline, a "Next at City Hall" panel built from the data, warm ivory pages and serif section titles.
 - Ran a requirements-compliance audit with an independent AI reviewer, re-checked the data against the official PDFs, and fixed the defects found (see `PROGRESS.md`). Archive documents are now dated by their meeting.
 
+- Expanded the app into "Georgia Civic": a county → city chooser over all 159 Georgia counties and 538 municipalities (generated from U.S. Census Bureau files), one Fulton County page showing the City of Alpharetta records (labelled with that source), Coming Soon pages for every other county and for every city, a single coverage config, redirects from the old links, and tests that no other place shows or loads records. An independent AI reviewer checked the expansion; its findings were fixed (search boxes now follow nav links, old filtered links redirect, county links ignore letter case, multi-county cities return to the right county, stronger chooser borders, fewer duplicate screen-reader announcements, a test tripwire on the coverage list).
+- Fixed audit defects: search boxes dropping typed characters, Near Me location cards overflowing on phones, the selected radio hard to see in dark mode, map pins pushed out of view on selection, "Show on map" with no visible result on phones, and meeting search not matching dates like "Oct 26".
+
 The AI did not change the PRDs and did not deploy anything.
 
 ## Student contributions (TO BE COMPLETED BY THE TEAM)

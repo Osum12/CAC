@@ -36,10 +36,10 @@ afterEach(() => setDataLoader(null));
 
 describe('Citywide', () => {
   it('shows the sample-data banner, featured issues, and meetings from the service', async () => {
-    renderAt('/');
+    renderAt('/county/fulton');
     expect(await screen.findByText('Sample data.')).toBeInTheDocument();
-    const issues = screen.getByRole('heading', { name: 'City issues' }).closest('section')!;
-    expect(within(issues).getByRole('link', { name: /^MOCK ONLY: Sample Pedestrian Crossing Review$/ })).toHaveAttribute('href', '/issues/issue-mock-001');
+    const issues = screen.getByRole('heading', { name: 'Issues' }).closest('section')!;
+    expect(within(issues).getByRole('link', { name: /^MOCK ONLY: Sample Pedestrian Crossing Review$/ })).toHaveAttribute('href', '/county/fulton/issues/issue-mock-001');
     expect(screen.getAllByText('Sample data').length).toBeGreaterThan(3);
     const meetings = screen.getByRole('heading', { name: 'Meetings' }).closest('aside')!;
     expect(within(meetings).getByRole('link', { name: /Sample Transportation Update/ })).toBeInTheDocument();
@@ -51,7 +51,7 @@ describe('Citywide', () => {
       if (fail) throw new Error('offline');
       return { meetings: [], issues: [], documents: [] };
     });
-    renderAt('/');
+    renderAt('/county/fulton');
     expect(await screen.findByText(/couldn’t load these records/i)).toBeInTheDocument();
     fail = false;
     await userEvent.click(screen.getByRole('button', { name: 'Try again' }));
@@ -78,8 +78,8 @@ describe('Issue detail', () => {
     renderAt('/issues/issue-mock-001');
     expect(await screen.findByRole('heading', { level: 1, name: /Pedestrian Crossing Review/ })).toBeInTheDocument();
     expect(screen.getByText('Under consideration')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Sample City Council Meeting/ })).toHaveAttribute('href', '/meetings/meeting-mock-001');
-    expect(screen.getByRole('link', { name: /Sample Council Agenda Packet/ })).toHaveAttribute('href', '/documents/document-mock-001');
+    expect(screen.getByRole('link', { name: /Sample City Council Meeting/ })).toHaveAttribute('href', '/county/fulton/meetings/meeting-mock-001');
+    expect(screen.getByRole('link', { name: /Sample Council Agenda Packet/ })).toHaveAttribute('href', '/county/fulton/documents/document-mock-001');
     expect(screen.getByText(/No official source has been added/)).toBeInTheDocument();
     expect(document.querySelectorAll('a[target="_blank"]')).toHaveLength(0);
   });
@@ -121,7 +121,7 @@ describe('Archive and meeting detail', () => {
     expect(screen.getByText('Recording not available')).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /Watch the recording/ })).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Sample Planning Staff Report/ })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /^MOCK ONLY: Sample Land-Use Application$/ })).toHaveAttribute('href', '/issues/issue-mock-003');
+    expect(screen.getByRole('link', { name: /^MOCK ONLY: Sample Land-Use Application$/ })).toHaveAttribute('href', '/county/fulton/issues/issue-mock-003');
   });
 
   it('shows a document with its meeting and related issues', async () => {
@@ -168,15 +168,18 @@ describe('With the real curated records in /data', () => {
   beforeEach(() => setDataLoader(null));
 
   it('shows no sample-data labels and keeps unfinished decisions marked as such', async () => {
-    renderAt('/');
+    renderAt('/county/fulton');
     expect((await screen.findAllByRole('link', { name: /^Royal 400 Data Center/ })).length).toBeGreaterThan(0);
     expect(screen.queryByText(/Sample data/)).not.toBeInTheDocument();
     // Every issue card links to a real city document, never a made-up URL.
     const records = screen.getAllByRole('link', { name: /^Official record/ });
     expect(records).toHaveLength(5);
     for (const a of records) expect(a.getAttribute('href')).toMatch(/^https:\/\/alpharettaga\.api\.civicclerk\.com\//);
-    expect(screen.getByText(/not every city item/)).toBeInTheDocument();
-    expect(screen.getByText(/Meeting records last checked against official city documents on October 22, 2026/)).toBeInTheDocument();
+    // The county page says plainly whose records these are, and what is not included.
+    expect(screen.getByText(/A selected set of recent records from the City of Alpharetta. Other Fulton County cities and the county government aren’t included yet./)).toBeInTheDocument();
+    expect(screen.getByText(/Meeting records last checked against official documents on October 22, 2026/)).toBeInTheDocument();
+    expect(screen.getAllByText('From the City of Alpharetta')).toHaveLength(2);
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('What’s on the table in Fulton County');
     // Meeting cards link to their real agenda PDFs.
     expect(screen.getAllByRole('link', { name: /^Agenda \(PDF\)/ }).length).toBe(5);
   });
@@ -205,11 +208,11 @@ describe('With the real curated records in /data', () => {
 
 describe('Citywide search, filters, and map links', () => {
   it('filters issues by keyword, topic and status, and can clear them', async () => {
-    renderAt('/');
+    renderAt('/county/fulton');
     const search = await screen.findByLabelText('Search city issues');
     await userEvent.type(search, 'corridor');
     expect(screen.getByText('1 of 5 issues match')).toBeInTheDocument();
-    const issuesSection = screen.getByRole('heading', { name: 'City issues' }).closest('section')!;
+    const issuesSection = screen.getByRole('heading', { name: 'Issues' }).closest('section')!;
     expect(within(issuesSection).getByRole('link', { name: /^MOCK ONLY: Sample Road Corridor Study$/ })).toBeInTheDocument();
 
     await userEvent.clear(search);
@@ -226,21 +229,21 @@ describe('Citywide search, filters, and map links', () => {
   });
 
   it('offers map links only for issues with coordinates, pointing at the right selection', async () => {
-    renderAt('/');
+    renderAt('/county/fulton');
     const mapLinks = await screen.findAllByRole('link', { name: /^View on map/ });
     expect(mapLinks).toHaveLength(4); // issue-mock-004 has no location
-    expect(screen.getByRole('link', { name: 'View on map: MOCK ONLY: Sample Road Corridor Study' })).toHaveAttribute('href', '/near-me?issue=issue-mock-005');
+    expect(screen.getByRole('link', { name: 'View on map: MOCK ONLY: Sample Road Corridor Study' })).toHaveAttribute('href', '/county/fulton/near-me?issue=issue-mock-005');
   });
 
   it('has a hero search that jumps to the results, and working shortcuts', async () => {
-    renderAt('/');
+    renderAt('/county/fulton');
     await userEvent.type(await screen.findByLabelText('Search city issues'), 'corridor{Enter}');
-    expect(screen.getByRole('heading', { name: 'City issues' })).toHaveFocus();
+    expect(screen.getByRole('heading', { name: 'Issues' })).toHaveFocus();
     expect(screen.getByText('1 of 5 issues match')).toBeInTheDocument();
 
-    expect(screen.getByRole('link', { name: /Find issues near me/ })).toHaveAttribute('href', '/near-me?loc=city-hall');
-    expect(screen.getByRole('link', { name: /Meeting recordings/ })).toHaveAttribute('href', '/archive?type=videos');
-    expect(screen.getByRole('link', { name: /Agendas and minutes/ })).toHaveAttribute('href', '/archive');
+    expect(screen.getByRole('link', { name: /Find issues near me/ })).toHaveAttribute('href', '/county/fulton/near-me?loc=city-hall');
+    expect(screen.getByRole('link', { name: /Meeting recordings/ })).toHaveAttribute('href', '/county/fulton/archive?type=videos');
+    expect(screen.getByRole('link', { name: /Agendas and minutes/ })).toHaveAttribute('href', '/county/fulton/archive');
     await userEvent.click(screen.getByRole('button', { name: /Upcoming meetings/ }));
     expect(screen.getByRole('heading', { name: 'Meetings' })).toHaveFocus();
   });
@@ -255,8 +258,8 @@ describe('Issue detail timeline and archive search', () => {
   it('lists related meetings in date order', async () => {
     renderAt('/issues/issue-mock-001');
     const timeline = (await screen.findByRole('heading', { name: 'Timeline' })).closest('section')!;
-    expect(within(timeline).getByRole('link', { name: /Sample City Council Meeting/ })).toHaveAttribute('href', '/meetings/meeting-mock-001');
-    expect(screen.getByRole('link', { name: /All city issues/ })).toHaveAttribute('href', '/');
+    expect(within(timeline).getByRole('link', { name: /Sample City Council Meeting/ })).toHaveAttribute('href', '/county/fulton/meetings/meeting-mock-001');
+    expect(screen.getByRole('link', { name: /All issues/ })).toHaveAttribute('href', '/county/fulton');
   });
 
   it('searches the archive and combines search with type filters', async () => {
@@ -282,14 +285,14 @@ describe('Next at City Hall docket', () => {
 
   it('shows the next real meeting, its agenda items, and the latest decision', async () => {
     setDataLoader(null);
-    renderAt('/');
-    const docket = await screen.findByRole('complementary', { name: 'Next at City Hall' });
+    renderAt('/county/fulton');
+    const docket = await screen.findByRole('complementary', { name: 'Next at Alpharetta City Hall' });
     expect(within(docket).getByText('Monday, October 26')).toBeInTheDocument();
     expect(within(docket).getByRole('link', { name: 'City Council Meeting & Public Hearing, October 26, 2026' })).toHaveAttribute(
       'href',
-      '/meetings/meeting-2026-10-26-cc',
+      '/county/fulton/meetings/meeting-2026-10-26-cc',
     );
-    expect(within(docket).getByRole('link', { name: /^Royal 400 Data Center/ })).toHaveAttribute('href', '/issues/issue-mp-26-13-royal-400');
+    expect(within(docket).getByRole('link', { name: /^Royal 400 Data Center/ })).toHaveAttribute('href', '/county/fulton/issues/issue-mp-26-13-royal-400');
     expect(within(docket).getByRole('link', { name: /Read the agenda \(PDF\)/ }).getAttribute('href')).toMatch(/fileId=11623/);
     // Latest decision = most recent approved/denied status date in the data (Sept 28 vet clinic).
     expect(within(docket).getByRole('link', { name: /Veterinary dental clinic/ })).toBeInTheDocument();
@@ -298,7 +301,7 @@ describe('Next at City Hall docket', () => {
 
 describe('Review fixes', () => {
   it('ignores filter values in the URL that are not in the data', async () => {
-    renderAt('/?topic=bogus&status=denied');
+    renderAt('/county/fulton?topic=bogus&status=denied');
     expect(await screen.findByText('5 issues')).toBeInTheDocument();
     expect(screen.getByLabelText('Topic')).toHaveValue('');
   });
@@ -330,7 +333,7 @@ describe('Date filters', () => {
   afterEach(() => vi.useRealTimers());
 
   it('filters Citywide issues by when their status was updated', async () => {
-    renderAt('/');
+    renderAt('/county/fulton');
     await userEvent.selectOptions(await screen.findByLabelText('Updated'), '30d');
     expect(screen.getByText('4 of 5 issues match')).toBeInTheDocument(); // the undated issue drops out
     expect(screen.queryByRole('link', { name: /^MOCK ONLY: Sample Neighborhood Design Discussion$/ })).not.toBeInTheDocument();
@@ -353,8 +356,38 @@ describe('Date filters', () => {
 });
 
 describe('Routing', () => {
-  it('shows a not-found page for unknown routes', async () => {
-    renderAt('/nowhere');
+  it('shows a not-found page for unknown pages inside a city', async () => {
+    renderAt('/county/fulton/nowhere');
     expect(await screen.findByRole('heading', { name: 'Page not found' })).toBeInTheDocument();
+  });
+
+  it('treats an unknown first segment as an unknown location, not a fallback city', async () => {
+    renderAt('/nowhere');
+    expect(await screen.findByRole('heading', { name: 'Location not found' })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Choose a location' })).toHaveAttribute('href', '/');
+  });
+});
+
+describe('Search boxes (audit H1)', () => {
+  it('keeps every typed character and follows the URL', async () => {
+    renderAt('/county/fulton');
+    const box = await screen.findByRole('searchbox', { name: 'Search city issues' });
+    await userEvent.type(box, 'planning commission', { delay: null });
+    expect(box).toHaveValue('planning commission');
+  });
+
+  it('empties the hero search box when filters are cleared', async () => {
+    renderAt('/county/fulton?q=crossing');
+    const box = await screen.findByRole('searchbox', { name: 'Search city issues' });
+    expect(box).toHaveValue('crossing');
+    await userEvent.click(screen.getAllByRole('button', { name: /Clear/ })[0]);
+    expect(box).toHaveValue('');
+  });
+
+  it('keeps every typed character in the archive search', async () => {
+    renderAt('/county/fulton/archive');
+    const box = await screen.findByRole('searchbox', { name: 'Search meetings and documents' });
+    await userEvent.type(box, 'planning commission', { delay: null });
+    expect(box).toHaveValue('planning commission');
   });
 });

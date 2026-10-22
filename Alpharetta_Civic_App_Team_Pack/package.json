@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "lint": "eslint .",
     "test": "vitest run",
-    "validate:data": "vitest run src/services/dataIntegrity.test.ts"
+    "validate:data": "vitest run src/services/dataIntegrity.test.ts",
+    "build:directory": "node scripts/build-georgia-directory.mjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",

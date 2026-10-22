@@ -1,18 +1,34 @@
 import { useEffect, useRef } from 'react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
-import { getDatasetInfo } from '../services/civicData';
-import { useAsync } from '../services/useAsync';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
+import { chooserPath, countyPath, getCounty, getMunicipality, placeLabel } from '../services/jurisdictions';
+import { PinIcon } from './PinIcon';
 
-const NAV = [
-  { to: '/', label: 'Citywide', end: true },
-  { to: '/near-me', label: 'Near Me', end: false },
-  { to: '/archive', label: 'Archive', end: false },
+const COUNTY_NAV = [
+  { path: '/', label: 'Countywide', end: true },
+  { path: '/near-me', label: 'Near Me', end: false },
+  { path: '/archive', label: 'Archive', end: false },
 ];
 
+/** The place the current URL is about, if any: /county/fulton/… is a county, /roswell a city. */
+function placeFromPath(pathname: string) {
+  const [first, second] = pathname
+    .split('/')
+    .slice(1)
+    .map((s) => {
+      try {
+        return decodeURIComponent(s);
+      } catch {
+        return s;
+      }
+    });
+  return first === 'county' ? getCounty(second) : getMunicipality(first);
+}
+
 export function Layout() {
-  const info = useAsync(getDatasetInfo, []);
   const { pathname } = useLocation();
   const mainRef = useRef<HTMLElement>(null);
+  const place = placeFromPath(pathname);
+  const covered = place?.level === 'county' && place.civicDataAvailable ? place : null;
 
   // On route change, move focus to the main region so keyboard and screen-reader
   // users start at the new page content; scroll back to the top. Comparing with the
@@ -31,37 +47,39 @@ export function Layout() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      {/* Shown unless the dataset is confirmed to contain no mock records (fails safe on load errors). */}
-      {!(info.status === 'ready' && !info.data.containsMock) && (
-        <div className="data-banner" role="note">
-          <strong>Sample data.</strong>{' '}
-          <span>
-            {info.status === 'ready' && info.data.mockRecords < info.data.totalRecords
-              ? `${info.data.mockRecords} of ${info.data.totalRecords} records shown are fictional test content`
-              : 'Records shown are fictional test content'}
-            , not official City of Alpharetta records.
-          </span>
-        </div>
-      )}
       <header className="masthead">
         <div className="masthead__inner">
-          <NavLink to="/" className="brand" aria-label="Alpharetta Civic, Citywide home">
+          <NavLink to="/" className="brand" aria-label="Georgia Civic, choose a location" end>
             <svg className="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
               <rect width="32" height="32" rx="7" />
               <path d="M8 24V14l8-6 8 6v10h-5v-6h-6v6z" />
             </svg>
             <span className="brand__text">
-              <span className="brand__name">Alpharetta Civic</span>
+              <span className="brand__name">Georgia Civic</span>
               <span className="brand__tag">Local government, explained</span>
             </span>
           </NavLink>
-          <nav aria-label="Primary" className="primary-nav">
-            {NAV.map((n) => (
-              <NavLink key={n.to} to={n.to} end={n.end} className="primary-nav__link">
-                {n.label}
-              </NavLink>
-            ))}
-          </nav>
+          {place && (
+            <p className="placebar">
+              <PinIcon className="placebar__icon" />
+              <span className="placebar__name">
+                <span className="visually-hidden">Location: </span>
+                {placeLabel(place)}
+              </span>
+              <Link to={chooserPath(place)} className="placebar__change" aria-label="Change location">
+                Change
+              </Link>
+            </p>
+          )}
+          {covered && (
+            <nav aria-label={`${covered.name} pages`} className="primary-nav">
+              {COUNTY_NAV.map((n) => (
+                <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className="primary-nav__link">
+                  {n.label}
+                </NavLink>
+              ))}
+            </nav>
+          )}
         </div>
       </header>
       <main id="main" ref={mainRef} tabIndex={-1} className="main">
