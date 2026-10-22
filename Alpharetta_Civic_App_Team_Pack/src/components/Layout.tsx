@@ -67,18 +67,6 @@ export function Layout() {
       <main id="main" ref={mainRef} tabIndex={-1} className="main">
         <Outlet />
       </main>
-      <footer className="footer">
-        <div className="footer__inner">
-          <p>
-            Alpharetta Civic is a student project for the Congressional App Challenge. It is not affiliated with or endorsed by the City
-            of Alpharetta.
-          </p>
-          <p>
-            Records come from a small local dataset, not a live connection to city systems, and the archive is not complete. Always check
-            the official source before relying on any information.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }
