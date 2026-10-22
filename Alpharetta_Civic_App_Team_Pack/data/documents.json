@@ -1,78 +1,129 @@
 [
   {
-    "id": "document-mock-001",
-    "title": "MOCK ONLY: Sample Council Agenda Packet",
+    "id": "document-2026-09-03-pc-agenda",
+    "title": "Planning Commission Agenda, September 3, 2026",
+    "documentType": "agenda",
+    "meetingId": "meeting-2026-09-03-pc",
+    "issueIds": ["issue-mp-26-12-veterinary-dental", "issue-mp-26-13-royal-400"],
+    "publishedDate": "2026-09-03",
+    "url": "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11516,plainText=false)",
+    "description": "Official agenda. Lists the Veterinary Dental Specialist of Atlanta public hearing, and notes that the Royal 400 Data Center item was deferred by staff.",
+    "sourceName": "City of Alpharetta meeting portal (CivicClerk)",
+    "dataMode": "curated",
+    "mockOnly": false
+  },
+  {
+    "id": "document-2026-09-14-cc-agenda",
+    "title": "City Council Agenda, September 14, 2026",
+    "documentType": "agenda",
+    "meetingId": "meeting-2026-09-14-cc",
+    "issueIds": [
+      "issue-ph-26-16-north-main",
+      "issue-mp-26-13-royal-400",
+      "issue-canton-street-speed",
+      "issue-old-rucker-farm-grant"
+    ],
+    "publishedDate": "2026-09-14",
+    "url": "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11541,plainText=false)",
+    "description": "Official agenda for the City Council meeting and public hearing.",
+    "sourceName": "City of Alpharetta meeting portal (CivicClerk)",
+    "dataMode": "curated",
+    "mockOnly": false
+  },
+  {
+    "id": "document-2026-09-14-cc-minutes",
+    "title": "City Council Official Minutes, September 14, 2026",
+    "documentType": "minutes",
+    "meetingId": "meeting-2026-09-14-cc",
+    "issueIds": [
+      "issue-ph-26-16-north-main",
+      "issue-mp-26-13-royal-400",
+      "issue-canton-street-speed",
+      "issue-old-rucker-farm-grant"
+    ],
+    "publishedDate": "2026-10-21",
+    "url": "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11626,plainText=false)",
+    "description": "Official minutes recording the votes on PH-26-16, the Canton Street speed reduction, and the Points of Light grant agreement, and the staff deferral of the Royal 400 item.",
+    "sourceName": "City of Alpharetta, Office of the City Clerk",
+    "dataMode": "curated",
+    "mockOnly": false
+  },
+  {
+    "id": "document-2026-09-28-cc-agenda",
+    "title": "City Council Agenda, September 28, 2026",
+    "documentType": "agenda",
+    "meetingId": "meeting-2026-09-28-cc",
+    "issueIds": ["issue-mp-26-12-veterinary-dental"],
+    "publishedDate": "2026-09-28",
+    "url": "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11577,plainText=false)",
+    "description": "Official agenda for the City Council meeting and public hearing.",
+    "sourceName": "City of Alpharetta meeting portal (CivicClerk)",
+    "dataMode": "curated",
+    "mockOnly": false
+  },
+  {
+    "id": "document-2026-09-28-cc-minutes",
+    "title": "City Council Official Minutes, September 28, 2026",
+    "documentType": "minutes",
+    "meetingId": "meeting-2026-09-28-cc",
+    "issueIds": ["issue-mp-26-12-veterinary-dental"],
+    "publishedDate": "2026-10-21",
+    "url": "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11625,plainText=false)",
+    "description": "Official minutes recording the 7-0 approval of MP-26-12/CU-26-10 and the Planning Commission's earlier 7-0 recommendation.",
+    "sourceName": "City of Alpharetta, Office of the City Clerk",
+    "dataMode": "curated",
+    "mockOnly": false
+  },
+  {
+    "id": "document-2026-10-01-pc-agenda",
+    "title": "Planning Commission Agenda, October 1, 2026",
+    "documentType": "agenda",
+    "meetingId": "meeting-2026-10-01-pc",
+    "issueIds": ["issue-mp-26-13-royal-400"],
+    "publishedDate": "2026-09-22",
+    "url": "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11569,plainText=false)",
+    "description": "Official agenda. Lists the public hearing on MP-26-13/CU-26-11/V-26-19 Royal 400 Data Center.",
+    "sourceName": "City of Alpharetta meeting portal (CivicClerk)",
+    "dataMode": "curated",
+    "mockOnly": false
+  },
+  {
+    "id": "document-2026-10-01-pc-packet",
+    "title": "Planning Commission Agenda Packet, October 1, 2026",
     "documentType": "agenda_packet",
-    "meetingId": "meeting-mock-001",
-    "issueIds": [
-      "issue-mock-001",
-      "issue-mock-002"
-    ],
-    "publishedDate": "2026-10-12",
-    "url": null,
-    "description": "MOCK DATA: Fictional document metadata. No document is attached.",
-    "sourceName": "Mock source - replace with official source",
-    "dataMode": "mock",
-    "mockOnly": true
+    "meetingId": "meeting-2026-10-01-pc",
+    "issueIds": ["issue-mp-26-13-royal-400"],
+    "publishedDate": "2026-09-25",
+    "url": "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11576,plainText=false)",
+    "description": "Agenda packet including the staff report and staff-recommended conditions for the Royal 400 Data Center request. Large PDF file.",
+    "sourceName": "City of Alpharetta meeting portal (CivicClerk)",
+    "dataMode": "curated",
+    "mockOnly": false
   },
   {
-    "id": "document-mock-002",
-    "title": "MOCK ONLY: Sample Planning Staff Report",
-    "documentType": "staff_report",
-    "meetingId": "meeting-mock-002",
-    "issueIds": [
-      "issue-mock-003"
-    ],
-    "publishedDate": "2026-10-15",
-    "url": null,
-    "description": "MOCK DATA: Fictional staff report metadata. No official report is represented.",
-    "sourceName": "Mock source - replace with official source",
-    "dataMode": "mock",
-    "mockOnly": true
+    "id": "document-2026-10-26-cc-agenda",
+    "title": "City Council Agenda, October 26, 2026",
+    "documentType": "agenda",
+    "meetingId": "meeting-2026-10-26-cc",
+    "issueIds": ["issue-mp-26-13-royal-400"],
+    "publishedDate": "2026-10-21",
+    "url": "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11623,plainText=false)",
+    "description": "Official agenda for the scheduled City Council meeting and public hearing, including the Royal 400 Data Center request.",
+    "sourceName": "City of Alpharetta meeting portal (CivicClerk)",
+    "dataMode": "curated",
+    "mockOnly": false
   },
   {
-    "id": "document-mock-003",
-    "title": "MOCK ONLY: Sample Design Attachment",
-    "documentType": "attachment",
-    "meetingId": "meeting-mock-002",
-    "issueIds": [
-      "issue-mock-004"
-    ],
-    "publishedDate": "2026-10-15",
-    "url": null,
-    "description": "MOCK DATA: Fictional attachment metadata for Archive layout testing.",
-    "sourceName": "Mock source - replace with official source",
-    "dataMode": "mock",
-    "mockOnly": true
-  },
-  {
-    "id": "document-mock-004",
-    "title": "MOCK ONLY: Sample Corridor Brief",
-    "documentType": "supporting_document",
-    "meetingId": "meeting-mock-003",
-    "issueIds": [
-      "issue-mock-005"
-    ],
-    "publishedDate": "2026-10-27",
-    "url": null,
-    "description": "MOCK DATA: Fictional supporting-document metadata for map and search testing.",
-    "sourceName": "Mock source - replace with official source",
-    "dataMode": "mock",
-    "mockOnly": true
-  },
-  {
-    "id": "document-mock-005",
-    "title": "MOCK ONLY: Sample Public-Space Concept Sheet",
-    "documentType": "attachment",
-    "meetingId": "meeting-mock-001",
-    "issueIds": [
-      "issue-mock-002"
-    ],
-    "publishedDate": "2026-10-12",
-    "url": null,
-    "description": "MOCK DATA: Fictional attachment metadata; no official file is linked.",
-    "sourceName": "Mock source - replace with official source",
-    "dataMode": "mock",
-    "mockOnly": true
+    "id": "document-2026-10-26-cc-packet",
+    "title": "City Council Agenda Packet, October 26, 2026",
+    "documentType": "agenda_packet",
+    "meetingId": "meeting-2026-10-26-cc",
+    "issueIds": ["issue-mp-26-13-royal-400"],
+    "publishedDate": "2026-10-21",
+    "url": "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11624,plainText=false)",
+    "description": "Agenda packet. Its Royal 400 Data Center item states the Planning Commission's 6-0 recommendation of approval on October 1, 2026. Large PDF file.",
+    "sourceName": "City of Alpharetta meeting portal (CivicClerk)",
+    "dataMode": "curated",
+    "mockOnly": false
   }
 ]

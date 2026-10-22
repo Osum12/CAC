@@ -16,7 +16,7 @@ Durable record of the AI-assisted build session (Claude Code) started 2026-10-21
 | Foundation: types, data service, app shell, mock indicator | Done |
 | Citywide + issue detail | Done |
 | Archive + meeting detail + document detail | Done |
-| Near Me: demo points, ranked feed, Leaflet map, feed/map selection sync | Done |
+| Near Me: starting location, ranked feed, Leaflet map, feed/map selection sync | Done |
 | Automated checks (test, typecheck, lint, build) | Passing, see below |
 | Browser review at desktop and mobile widths | Done (Playwright + Edge, 375px and 1366px, light and dark) |
 | Independent final review | Done: 13 findings, 0 critical, all fixed |
@@ -35,15 +35,17 @@ Durable record of the AI-assisted build session (Claude Code) started 2026-10-21
 | 2026-10-22 | Route sweep: 11 routes x (375 light, 1366 light, 375 dark) | 0 horizontal overflow, 0 console errors, all pins labelled |
 | 2026-10-22 | Map tile check | 9/9 OpenStreetMap tile requests succeeded (wasted initial-view requests removed) |
 | 2026-10-22 | typecheck, lint, build | passed |
+| 2026-10-22 | Real-data swap: `npm test`, typecheck, lint, build | 49 tests passed; all others passed |
+| 2026-10-22 | Real-data route sweep (8 routes x 375/1366) | 0 overflow, 0 console errors, 3 approximate pins labelled |
 
 ## Known limitations
 
-- All 13 records are fictional mock data. Real records must be researched and verified by the team (see `data/README.md`).
-- No geocoding: typed addresses are rejected with an honest message. Only two fictional demo points work.
+- 2026-10-22: replaced the fictional records with 19 curated real records (see `data/README.md`). The fictional pack moved to `src/test/fixtures/` for tests. Each fact was checked against downloaded official minutes, agendas or packets. The team should still open every source link themselves.
+- Map points for real issues are approximate (U.S. Census geocoder, from addresses in city documents) and labelled as such.
+- No geocoding in the app: typed addresses are rejected with an honest message. The only starting location is Alpharetta City Hall.
 - Map tiles come from the public OpenStreetMap server and need internet access. The list still works offline.
 - Search (`searchRecords`) exists in the service but has no UI (P1).
 
-- Sample map pins sit on a real street map (one is near a school). They are dashed, labelled and captioned as fictional, but should be replaced with verified locations or removed before a public demo.
 - Browser checks used headless Edge through Playwright. The Claude in Chrome extension was not connected, so no manual click-through in a real Chrome window was done.
 
 ## Next steps (student team)

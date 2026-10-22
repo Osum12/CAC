@@ -13,7 +13,10 @@ import {
   type Dataset,
 } from './civicData';
 import type { Issue } from '../types/civic';
+import { mockLoader } from '../test/mockDataset';
 
+// Tests run against the fictional fixture pack, not the real records in /data.
+beforeEach(() => setDataLoader(mockLoader));
 afterEach(() => setDataLoader(null));
 
 describe('civicData service (JSON fixtures)', () => {

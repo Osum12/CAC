@@ -53,6 +53,6 @@ describe('nearMe', () => {
   it('does not claim proximity when no location is chosen', () => {
     const ranked = rankIssuesForLocation([at('a', 34.07, -84.29)], null);
     expect(ranked[0].distance).toBeNull();
-    expect(ranked[0].reason).not.toMatch(/mi from/);
+    expect(ranked[0].reason).not.toMatch(/mi away/);
   });
 });

@@ -34,7 +34,7 @@ export function Layout() {
       {/* Shown unless the dataset is confirmed to contain no mock records (fails safe on load errors). */}
       {!(info.status === 'ready' && !info.data.containsMock) && (
         <div className="data-banner" role="note">
-          <strong>Prototype · Sample data.</strong>{' '}
+          <strong>Sample data.</strong>{' '}
           <span>
             {info.status === 'ready' && info.data.mockRecords < info.data.totalRecords
               ? `${info.data.mockRecords} of ${info.data.totalRecords} records shown are fictional test content`
@@ -52,7 +52,7 @@ export function Layout() {
             </svg>
             <span className="brand__text">
               <span className="brand__name">Alpharetta Civic</span>
-              <span className="brand__tag">Student prototype</span>
+              <span className="brand__tag">Local government, explained</span>
             </span>
           </NavLink>
           <nav aria-label="Primary" className="primary-nav">

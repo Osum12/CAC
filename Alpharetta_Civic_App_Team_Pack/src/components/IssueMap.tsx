@@ -3,7 +3,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import type { LatLng } from '../types/civic';
 
-export type MapPoint = { id: string; title: string; number: number; coords: LatLng; sample: boolean };
+/** `note` describes an unverified point (e.g. "approximate map point"); null for verified locations. */
+export type MapPoint = { id: string; title: string; number: number; coords: LatLng; note: string | null };
 
 type Props = {
   points: MapPoint[];
@@ -12,14 +13,14 @@ type Props = {
   onSelect: (id: string) => void;
 };
 
-// Used only when there are no points or demo point to frame the map.
+// Used only when there are no points or starting location to frame the map.
 const FALLBACK_CENTER: L.LatLngTuple = [34.0754, -84.2941];
 
 const pinIcon = (p: MapPoint, selected: boolean) =>
   L.divIcon({
     className: '',
     // Only the numeric pin number is interpolated into HTML; titles are set as attributes below.
-    html: `<span class="pin${selected ? ' pin--selected' : ''}${p.sample ? ' pin--sample' : ''}"><span>${Number(p.number)}</span></span>`,
+    html: `<span class="pin${selected ? ' pin--selected' : ''}${p.note ? ' pin--unverified' : ''}"><span>${Number(p.number)}</span></span>`,
     iconSize: [34, 42],
     iconAnchor: [17, 40],
   });
@@ -74,7 +75,7 @@ export function IssueMap({ points, origin, selectedId, onSelect }: Props) {
     };
   }, []);
 
-  // Frame the map and build markers when the data or demo point changes.
+  // Frame the map and build markers when the data or starting location changes.
   useEffect(() => {
     const map = mapRef.current;
     const layer = layerRef.current;
@@ -91,7 +92,7 @@ export function IssueMap({ points, origin, selectedId, onSelect }: Props) {
     else map.setView(FALLBACK_CENTER, 14);
 
     for (const p of points) {
-      const label = `Map pin ${p.number}: ${p.title}${p.sample ? ' (sample map point)' : ''}`;
+      const label = `Map pin ${p.number}: ${p.title}${p.note ? ` (${p.note})` : ''}`;
       const marker = L.marker([p.coords.latitude, p.coords.longitude], {
         title: label,
         riseOnHover: true,
@@ -114,7 +115,7 @@ export function IssueMap({ points, origin, selectedId, onSelect }: Props) {
 
     if (origin) {
       const o = L.marker([origin.latitude, origin.longitude], {
-        title: `${origin.label} (fictional demo point)`,
+        title: `${origin.label} (starting location)`,
         keyboard: false,
         interactive: false,
         icon: L.divIcon({ className: '', html: '<span class="origin-dot"></span>', iconSize: [22, 22], iconAnchor: [11, 11] }),

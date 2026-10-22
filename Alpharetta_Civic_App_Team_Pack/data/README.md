@@ -1,25 +1,35 @@
-# Alpharetta Civic App — Mock Data Pack
+# Alpharetta Civic App — Data
 
-**IMPORTANT: Every record in this pack is fictional test data. None of the sample titles, dates, locations, statuses, summaries, or documents represents a verified City of Alpharetta record.** Do not present these records as official civic information.
+The records in this folder are what the app shows. As of 2026-10-22 they are **curated real records** (`dataMode: "curated"`, `mockOnly: false`): 5 meetings, 5 issues and 9 documents from City of Alpharetta City Council and Planning Commission meetings in September and October 2026.
 
-## Files
-- `data/meetings.json` — sample meeting records
-- `data/issues.json` — sample civic issues
-- `data/documents.json` — sample document metadata
+The original fictional fixture pack lives in `src/test/fixtures/` and is used only by the automated tests.
 
-## Intended use
-Use these files to build and test layout, navigation, filtering, data relations, loading states, and feed/map interactions before the real research dataset is ready. Every record has `dataMode: "mock"` and `mockOnly: true`. Mock map coordinates are visual test points only.
+## Where the facts come from
 
-## Replacement rules
-1. Preserve the record types and IDs/relationship pattern, or update all relationships when IDs change.
-2. Replace fictional titles, dates, summaries, statuses, and map values with verified information.
-3. Add official source URLs for real records. Do not fabricate URLs.
-4. Mark a source as verified only after checking the original document or official page.
-5. Change `dataMode` to `curated` (or another explicit mode agreed by the project) only for real records that were manually collected and verified. `mockOnly` should be `false` for those real records.
-6. Keep the user-facing app honest about whether data is sample, curated, or live.
+Every record was checked against official City of Alpharetta documents on the city's meeting portal, https://alpharettaga.portal.civicclerk.com/, which is linked from https://www.alpharetta.ga.us/public-meetings:
 
-## Recommended development pattern
-Build a small data-access module that reads these JSON files and exposes functions such as `getMeetings`, `getIssues`, `getDocuments`, `getIssueById`, and `getDocumentsForMeeting`. UI pages should call those functions, not import the JSON files independently. This makes swapping the data source easier.
+| Meeting | Portal page | Evidence used |
+|---|---|---|
+| Planning Commission, Sept 3, 2026 | event/4577 | Agenda (fileId 11516). Its outcome is taken from the Sept 28 Council minutes, not from the "unofficial" Planning Commission minutes. |
+| City Council, Sept 14, 2026 | event/4615 | Agenda (11541), Official Minutes (11626) |
+| City Council, Sept 28, 2026 | event/4616 | Agenda (11577), Official Minutes (11625) |
+| Planning Commission, Oct 1, 2026 | event/4578 | Agenda (11569), packet (11576). Its outcome is taken from the Oct 26 Council packet. |
+| City Council, Oct 26, 2026 (scheduled) | event/4619 | Agenda (11623), packet (11624) |
+
+Issue statuses come only from votes recorded in official minutes or official agenda packets. Agenda inclusion is never treated as approval. **Royal 400 Data Center is "under consideration" until City Council votes; update it after the Oct 26, 2026 meeting.**
+
+## Map locations
+
+Street addresses are quoted from the city documents. Their coordinates were looked up with the U.S. Census Bureau geocoder (https://geocoding.geo.census.gov/) on 2026-10-22, so they are marked `locationType: "approximate"` and `verified: false`. The app labels them as approximate. Items whose documents give no street address have no coordinates and no map pin.
+
+## Adding or updating a record
+
+1. Find the item on the city portal and open the official agenda, minutes, or staff report.
+2. Write the summary using only what the document says. Distinguish what was discussed from what was decided.
+3. Use only URLs you have opened. Set `lastVerifiedAt` (meetings) and `statusAsOf` (issues).
+4. Keep IDs stable and update relationships in both directions (issue ↔ meeting, issue ↔ document, meeting → agenda document).
+5. Run `npm run validate:data` and `npm test`.
 
 ## Status values
-Suggested issue statuses: `proposed`, `under_consideration`, `approved`, `denied`, `withdrawn`, `completed`, `unknown`. Only use a status when source evidence supports it.
+
+`proposed`, `under_consideration`, `approved`, `denied`, `withdrawn`, `completed`, `unknown`. Only use a status when source evidence supports it.

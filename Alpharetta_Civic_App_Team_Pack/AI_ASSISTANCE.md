@@ -22,11 +22,19 @@ Commits `fdf437a` and `00bd7cc` on the `integration` branch, plus the documentat
 - Researched the 2026 CAC rules with an AI research agent (summarized in `CAC_READINESS.md`).
 - Wrote `README.md`, `PROGRESS.md`, this file and `CAC_READINESS.md`.
 
-The AI did **not** change the fixture data in `data/` or the PRDs, did not add real Alpharetta records or URLs, and did not deploy anything.
+In a later step (2026-10-22), at the session runner's request, Claude Code also:
+- Researched real Alpharetta City Council and Planning Commission items on the city's official meeting portal, using an AI research agent.
+- Re-checked each fact itself by downloading the official agendas, minutes and packets and reading the relevant passages.
+- Wrote the 19 real records now in `data/`. It moved the original fictional records to `src/test/fixtures/` for tests only.
+- Looked up approximate coordinates for 4 addresses with the U.S. Census Bureau geocoder.
+
+**The team should open each source link and confirm the records themselves** before presenting them as checked by the team.
+
+The AI did not change the PRDs and did not deploy anything.
 
 ## Student contributions (TO BE COMPLETED BY THE TEAM)
 
-> As of this commit, nearly all the code is AI-generated. The rules say AI must not be the entirety of technical development, so the team needs to make and document real technical contributions before submitting. Ideas are in `CAC_READINESS.md`, under "Student-owned work".
+> As of this commit, nearly all the code is AI-generated. The rules say AI must not be the entirety of technical development, so the team needs to make and document real technical contributions before submitting. Ideas are in `CAC_READINESS.md`, under "Must do before submitting".
 
 | Student | What they designed, wrote, or changed | Files / commits |
 |---|---|---|

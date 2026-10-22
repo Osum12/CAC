@@ -1,65 +1,87 @@
 [
   {
-    "id": "meeting-mock-001",
-    "title": "MOCK ONLY: Sample City Council Meeting",
-    "meetingType": "city_council",
-    "date": "2026-10-12",
-    "startTime": "19:00",
-    "status": "completed",
-    "summary": "MOCK DATA: A fictional council meeting used to test the meeting card and details page. Replace this text with a source-grounded summary.",
-    "officialPageUrl": null,
-    "recordingUrl": null,
-    "agendaDocumentIds": [
-      "document-mock-001"
-    ],
-    "issueIds": [
-      "issue-mock-001",
-      "issue-mock-002"
-    ],
-    "dataMode": "mock",
-    "mockOnly": true,
-    "lastVerifiedAt": null
-  },
-  {
-    "id": "meeting-mock-002",
-    "title": "MOCK ONLY: Sample Planning Commission Meeting",
+    "id": "meeting-2026-09-03-pc",
+    "title": "Planning Commission Meeting, September 2026",
     "meetingType": "planning_commission",
-    "date": "2026-10-15",
+    "date": "2026-09-03",
     "startTime": "18:30",
     "status": "completed",
-    "summary": "MOCK DATA: A fictional planning meeting used to test agenda grouping and related issue navigation.",
-    "officialPageUrl": null,
-    "recordingUrl": null,
-    "agendaDocumentIds": [
-      "document-mock-002",
-      "document-mock-003"
-    ],
-    "issueIds": [
-      "issue-mock-003",
-      "issue-mock-004"
-    ],
-    "dataMode": "mock",
-    "mockOnly": true,
-    "lastVerifiedAt": null
+    "summary": "The Planning Commission heard the request for a veterinary dental clinic at 3070 Windward Plaza and recommended approval, 7-0, as recorded later in the September 28, 2026 City Council minutes. The Royal 400 Data Center request was on the agenda but was deferred by staff.",
+    "officialPageUrl": "https://alpharettaga.portal.civicclerk.com/event/4577/files",
+    "recordingUrl": "https://cpmedia.azureedge.net/alpharettaga/e9098eb0-5f00-49ef-8e8a-a84893c6ada2.mp4",
+    "agendaDocumentIds": ["document-2026-09-03-pc-agenda"],
+    "issueIds": ["issue-mp-26-12-veterinary-dental", "issue-mp-26-13-royal-400"],
+    "dataMode": "curated",
+    "mockOnly": false,
+    "lastVerifiedAt": "2026-10-22"
   },
   {
-    "id": "meeting-mock-003",
-    "title": "MOCK ONLY: Sample Transportation Update",
-    "meetingType": "other_public_meeting",
-    "date": "2026-10-27",
-    "startTime": null,
-    "status": "scheduled",
-    "summary": "MOCK DATA: A fictional upcoming public meeting to test the upcoming-meetings layout.",
-    "officialPageUrl": null,
-    "recordingUrl": null,
-    "agendaDocumentIds": [
-      "document-mock-004"
-    ],
+    "id": "meeting-2026-09-14-cc",
+    "title": "City Council Meeting & Public Hearing, September 14, 2026",
+    "meetingType": "city_council",
+    "date": "2026-09-14",
+    "startTime": "18:30",
+    "status": "completed",
+    "summary": "City Council approved a change of zoning conditions for 116 and 126 North Main Street, a speed-limit reduction on Canton Street north of Milton Avenue, and a $300,000 grant agreement with Points of Light for Old Rucker Farm. The Royal 400 Data Center request was deferred by staff.",
+    "officialPageUrl": "https://alpharettaga.portal.civicclerk.com/event/4615/files",
+    "recordingUrl": "https://alpharettaga.portal.civicclerk.com/event/4615/media",
+    "agendaDocumentIds": ["document-2026-09-14-cc-agenda"],
     "issueIds": [
-      "issue-mock-005"
+      "issue-ph-26-16-north-main",
+      "issue-mp-26-13-royal-400",
+      "issue-canton-street-speed",
+      "issue-old-rucker-farm-grant"
     ],
-    "dataMode": "mock",
-    "mockOnly": true,
-    "lastVerifiedAt": null
+    "dataMode": "curated",
+    "mockOnly": false,
+    "lastVerifiedAt": "2026-10-22"
+  },
+  {
+    "id": "meeting-2026-09-28-cc",
+    "title": "City Council Meeting & Public Hearing, September 28, 2026",
+    "meetingType": "city_council",
+    "date": "2026-09-28",
+    "startTime": "18:30",
+    "status": "completed",
+    "summary": "City Council approved, 7-0, a master plan amendment and conditional use that allow a small-animal veterinary dental clinic at 3070 Windward Plaza.",
+    "officialPageUrl": "https://alpharettaga.portal.civicclerk.com/event/4616/files",
+    "recordingUrl": "https://alpharettaga.portal.civicclerk.com/event/4616/media",
+    "agendaDocumentIds": ["document-2026-09-28-cc-agenda"],
+    "issueIds": ["issue-mp-26-12-veterinary-dental"],
+    "dataMode": "curated",
+    "mockOnly": false,
+    "lastVerifiedAt": "2026-10-22"
+  },
+  {
+    "id": "meeting-2026-10-01-pc",
+    "title": "Planning Commission Meeting, October 2026",
+    "meetingType": "planning_commission",
+    "date": "2026-10-01",
+    "startTime": "18:30",
+    "status": "completed",
+    "summary": "The Planning Commission considered the Royal 400 Data Center request and recommended approval, 6-0, with staff conditions and a new condition requiring a public art sculpture at the corner, according to the October 26, 2026 City Council agenda packet.",
+    "officialPageUrl": "https://alpharettaga.portal.civicclerk.com/event/4578/files",
+    "recordingUrl": null,
+    "agendaDocumentIds": ["document-2026-10-01-pc-agenda"],
+    "issueIds": ["issue-mp-26-13-royal-400"],
+    "dataMode": "curated",
+    "mockOnly": false,
+    "lastVerifiedAt": "2026-10-22"
+  },
+  {
+    "id": "meeting-2026-10-26-cc",
+    "title": "City Council Meeting & Public Hearing, October 26, 2026",
+    "meetingType": "city_council",
+    "date": "2026-10-26",
+    "startTime": "18:30",
+    "status": "scheduled",
+    "summary": "Scheduled City Council meeting. The posted agenda includes a public hearing on the Royal 400 Data Center request.",
+    "officialPageUrl": "https://alpharettaga.portal.civicclerk.com/event/4619/files",
+    "recordingUrl": null,
+    "agendaDocumentIds": ["document-2026-10-26-cc-agenda"],
+    "issueIds": ["issue-mp-26-13-royal-400"],
+    "dataMode": "curated",
+    "mockOnly": false,
+    "lastVerifiedAt": "2026-10-22"
   }
 ]

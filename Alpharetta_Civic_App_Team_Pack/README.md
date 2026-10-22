@@ -2,7 +2,7 @@
 
 A student prototype for the Congressional App Challenge. It helps Alpharetta, Georgia residents see what local government is working on: meetings, proposals, and public documents in one place, in plain language, with a path back to the original source.
 
-> **Current data is fictional.** All 13 records in `data/` are mock test content (`dataMode: "mock"`). The app labels every one of them as sample data. Before the app is presented as showing real information, the team must replace records with verified, source-linked ones. See [Replacing mock data](#replacing-mock-data).
+> **Data:** `data/` holds 19 real records (5 meetings, 5 issues, 9 documents) from City of Alpharetta City Council and Planning Commission meetings in September and October 2026. Each was checked against official agendas and minutes on 2026-10-22 and links to its source. This is a small selected set, not a complete or live archive. See `data/README.md`.
 
 ## Features (P0 demo scope)
 
@@ -10,15 +10,15 @@ A student prototype for the Congressional App Challenge. It helps Alpharetta, Ge
 |---|---|---|
 | Citywide | `/` | Featured issues, other issues, upcoming meetings and recent meetings, all from the shared data service. |
 | Issue detail | `/issues/:issueId` | Summary, status with its "as of" date, why it may matter, location, related meetings and documents, sources. |
-| Near Me | `/near-me` | Pick a fictional demo point to sort issues by straight-line distance. A Leaflet map shows pins only for issues with valid coordinates. Choosing a pin highlights the matching list item, and the reverse. Every item says why it's listed. |
+| Near Me | `/near-me` | Start from Alpharetta City Hall to sort issues by straight-line distance. A Leaflet map shows pins only for issues with coordinates; these are approximate points looked up from addresses in city documents, and the map labels them that way. Choosing a pin highlights the matching list item, and the reverse. Every item says why it's listed. |
 | Archive | `/archive` | Meetings and documents in one list, with filters for All, Videos, Agendas and Documents (`?type=`). |
 | Meeting detail | `/meetings/:meetingId` | Date and time, recording and official-page links when they exist, agenda and documents, related issues. |
 | Document detail | `/documents/:documentId` | Description, source, parent meeting, related issues, and the original file link when one exists. |
 
 Honesty rules built into the code:
-- Mock records always show a "Sample data" badge, and a site-wide banner appears unless every loaded record is confirmed curated.
+- Any mock record shows a "Sample data" badge, and a site-wide banner appears unless every loaded record is confirmed curated. With the current real data, neither appears.
 - A missing or invalid URL is never rendered as a link. Mock records never carry links, which the data service enforces.
-- Address entry is never geocoded, stored or logged. The app says so and offers the demo points instead.
+- Address entry is never geocoded, stored or logged. The app says so and offers the example location instead.
 - Distance is described as distance only, never as an impact claim. Issues with no location stay in the list without a pin.
 - Status comes straight from the data. Unknown values display as "Status not verified".
 
@@ -64,7 +64,7 @@ src/
   types/civic.ts      Shared Meeting / Issue / CivicDocument types (matches docs/DATA_CONTRACT.md)
   services/
     civicData.ts      The only module that reads the fixtures; list, lookup and relationship functions
-    nearMe.ts         Demo points, coordinate validation, distance ranking and explanations
+    nearMe.ts         Example starting location, coordinate validation, distance ranking and explanations
     format.ts         Date/label formatting and safe URL checking
     useAsync.ts       Loading / error / retry state for data requests
   components/         Layout, cards, badges, status labels, map, empty/error states
@@ -74,20 +74,21 @@ src/
 
 Data flows one way: **page → `civicData.ts` → JSON fixtures**. To use a different data source later, change `loadDataset` in `civicData.ts`. No page needs to change.
 
-## Replacing mock data
+## Adding or updating records
 
-Follow `data/README.md` and the checklist in `PRODUCT_PRD.md` (Appendix A). In short, for each real record:
+Follow `data/README.md` and the checklist in `PRODUCT_PRD.md` (Appendix A). In short, for each record:
 
 1. Open the official source and check every field yourself.
-2. Replace the fictional text field by field. Add only URLs you have opened.
+2. Write each field from what the source says. Add only URLs you have opened.
 3. Set `dataMode: "curated"`, `mockOnly: false`, and `lastVerifiedAt` (meetings) or `sourceUrls` (issues).
 4. Add coordinates only if the source supports them. Otherwise set `location` to `null`.
 5. Run `npm run validate:data` and `npm test`.
 
 ## Testing
 
-`npm test` runs 39 tests:
-- fixture integrity: unique IDs, relationships that resolve, provenance flags, valid statuses and dates, URL and coordinate rules
+`npm test` runs 49 tests. They use the fictional fixture pack in `src/test/fixtures/`, so they don't depend on which real records are in `data/`:
+- data integrity for both the real records and the fixtures: unique IDs, relationships that resolve, provenance flags, valid statuses and dates, URL and coordinate rules
+- a check that the real data renders with no sample labels
 - data-service behavior: lookups, malformed rows, load errors and retry
 - Near Me ranking
 - map accessibility with real Leaflet

@@ -1,18 +1,26 @@
 // Near Me demo ranking. Deliberately simple and explainable:
 //   1. Issues with valid coordinates, nearest first (straight-line distance).
 //   2. Issues with no usable coordinates, kept in the feed as citywide items.
-// No geocoding happens anywhere: the only locations are the preset demo points below.
+// No geocoding happens in the app: the only starting points are the preset example locations below.
 
 import type { Issue, LatLng } from '../types/civic';
 
 export type DemoLocation = LatLng & { id: string; label: string; description: string };
 
-// Fictional demo points placed near the sample markers. They are NOT addresses
-// and must never be presented as the user's real location.
+// Public example locations, never the user's own address. Coordinates come from the
+// U.S. Census Bureau geocoder for the published street address (checked 2026-10-22).
 export const DEMO_LOCATIONS: DemoLocation[] = [
-  { id: 'demo-north', label: 'Demo point 1', description: 'Fictional point near the northern sample markers', latitude: 34.0795, longitude: -84.2965 },
-  { id: 'demo-south', label: 'Demo point 2', description: 'Fictional point near the southern sample markers', latitude: 34.0725, longitude: -84.2925 },
+  { id: 'city-hall', label: 'Alpharetta City Hall', description: '2 Park Plaza, downtown', latitude: 34.0746, longitude: -84.29258 },
 ];
+
+/** Short description of how trustworthy an issue's map point is. */
+export function pointKind(issue: Issue): string {
+  const loc = issue.location;
+  if (loc?.verified) return 'recorded location';
+  if (loc?.locationType === 'mock_marker') return 'sample map point';
+  if (loc?.locationType === 'approximate') return 'approximate map point';
+  return 'unverified map point';
+}
 
 /** Rough Alpharetta-area bounds, used only to reject obviously misplaced coordinates. */
 const AREA_BOUNDS = { minLat: 33.95, maxLat: 34.2, minLng: -84.45, maxLng: -84.15 };
@@ -56,11 +64,11 @@ export function rankIssuesForLocation(issues: Issue[], origin: LatLng | null): R
 }
 
 function explain(issue: Issue, coords: LatLng | null, distance: number | null, origin: LatLng | null): string {
-  const point = issue.location?.verified ? 'recorded location' : 'sample map point';
+  const point = pointKind(issue);
   if (coords && distance !== null) {
     const miles = distance < 0.1 ? 'under 0.1' : distance.toFixed(1);
-    return `About ${miles} mi from the demo point, measured to its ${point}. This is distance only, not a claim that the issue affects this spot.`;
+    return `About ${miles} mi away in a straight line, measured to its ${point}. This is distance only, not a claim that the issue affects this spot.`;
   }
-  if (coords && !origin) return `Has a ${point} on the map. Choose a demo point to sort by distance.`;
+  if (coords && !origin) return `Has ${/^[aeiou]/.test(point) ? 'an' : 'a'} ${point} on the map. Choose a starting location to sort by distance.`;
   return 'This record has no map location, so it is listed as a citywide item instead of being ranked by distance.';
 }

@@ -54,8 +54,12 @@ export function CitywidePage() {
             </div>
           </dl>
         )}
-        {state.status === 'ready' && [...state.data[0], ...state.data[1], ...state.data[2]].some(isMock) && (
-          <p className="hero__note">These counts are of the sample records in this prototype, not city totals.</p>
+        {state.status === 'ready' && (
+          <p className="hero__note">
+            {[...state.data[0], ...state.data[1], ...state.data[2]].some(isMock)
+              ? 'These counts include sample records and are not city totals.'
+              : 'A selected set of recent records checked against official city documents, not every city item.'}
+          </p>
         )}
       </section>
 

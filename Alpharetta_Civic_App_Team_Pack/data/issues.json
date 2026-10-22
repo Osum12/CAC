@@ -1,131 +1,140 @@
 [
   {
-    "id": "issue-mock-001",
-    "title": "MOCK ONLY: Sample Pedestrian Crossing Review",
-    "category": "transportation",
-    "summary": "MOCK DATA: A fictional example describing a possible pedestrian-safety review. Replace with a verified summary of an actual public record.",
-    "status": "under_consideration",
-    "statusAsOf": "2026-10-12",
-    "meetingIds": [
-      "meeting-mock-001"
-    ],
-    "documentIds": [
-      "document-mock-001"
-    ],
-    "location": {
-      "label": "Demo Map Area A (fictional)",
-      "address": null,
-      "latitude": 34.0757,
-      "longitude": -84.2948,
-      "locationType": "mock_marker",
-      "verified": false
-    },
-    "whyItMayMatter": "MOCK DATA: This explanation exists only to test relevance text and must be replaced with evidence-based wording.",
-    "sourceUrls": [],
-    "dataMode": "mock",
-    "mockOnly": true,
-    "featured": true
-  },
-  {
-    "id": "issue-mock-002",
-    "title": "MOCK ONLY: Sample Public-Space Improvement Proposal",
-    "category": "parks_and_public_spaces",
-    "summary": "MOCK DATA: A fictional public-space proposal used to test issue summaries and status labels.",
-    "status": "proposed",
-    "statusAsOf": "2026-10-12",
-    "meetingIds": [
-      "meeting-mock-001"
-    ],
-    "documentIds": [
-      "document-mock-001",
-      "document-mock-005"
-    ],
-    "location": {
-      "label": "Demo Map Area B (fictional)",
-      "address": null,
-      "latitude": 34.0783,
-      "longitude": -84.2898,
-      "locationType": "mock_marker",
-      "verified": false
-    },
-    "whyItMayMatter": "MOCK DATA: The issue may be used to test citywide display; no real-world impact is asserted.",
-    "sourceUrls": [],
-    "dataMode": "mock",
-    "mockOnly": true,
-    "featured": true
-  },
-  {
-    "id": "issue-mock-003",
-    "title": "MOCK ONLY: Sample Land-Use Application",
+    "id": "issue-mp-26-13-royal-400",
+    "title": "Royal 400 Data Center: substation and expansion (MP-26-13 / CU-26-11 / V-26-19)",
     "category": "development_and_zoning",
-    "summary": "MOCK DATA: A fictional land-use application for testing the issue detail layout; not an actual Alpharetta application.",
-    "status": "proposed",
-    "statusAsOf": "2026-10-15",
-    "meetingIds": [
-      "meeting-mock-002"
-    ],
+    "summary": "GI Partners is asking the city to allow a Georgia Power utility substation alongside a 60,200 square foot expansion of an existing data center at 4905 North Point Parkway. The request includes a master plan amendment, a conditional use, a reduced buffer along Kimball Bridge Road (from 100 feet to 40 feet) for the substation, and a variance to allow screen walls taller than 8 feet.",
+    "status": "under_consideration",
+    "statusAsOf": "2026-10-01",
+    "meetingIds": ["meeting-2026-09-03-pc", "meeting-2026-09-14-cc", "meeting-2026-10-01-pc", "meeting-2026-10-26-cc"],
     "documentIds": [
-      "document-mock-002"
+      "document-2026-09-03-pc-agenda",
+      "document-2026-09-14-cc-agenda",
+      "document-2026-09-14-cc-minutes",
+      "document-2026-10-01-pc-agenda",
+      "document-2026-10-01-pc-packet",
+      "document-2026-10-26-cc-agenda",
+      "document-2026-10-26-cc-packet"
     ],
     "location": {
-      "label": "Demo Map Area C (fictional)",
-      "address": null,
-      "latitude": 34.0718,
-      "longitude": -84.2991,
-      "locationType": "mock_marker",
+      "label": "4905 North Point Parkway",
+      "address": "4905 North Point Parkway, Alpharetta, GA (northeast corner of Kimball Bridge Road and North Point Parkway)",
+      "latitude": 34.05514,
+      "longitude": -84.27177,
+      "locationType": "approximate",
       "verified": false
     },
-    "whyItMayMatter": "MOCK DATA: Example relevance text only. Do not use it to infer actual effects on a property or neighborhood.",
-    "sourceUrls": [],
-    "dataMode": "mock",
-    "mockOnly": true,
+    "whyItMayMatter": "The Planning Commission recommended approval 6-0 on October 1, 2026, and the item is on the October 26, 2026 City Council agenda. The final decision belongs to City Council and had not been made when this record was checked. The request would reduce a buffer along Kimball Bridge Road, which may interest people who use or live near that road.",
+    "sourceUrls": [
+      "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11624,plainText=false)",
+      "https://alpharettaga.portal.civicclerk.com/event/4619/files"
+    ],
+    "dataMode": "curated",
+    "mockOnly": false,
     "featured": true
   },
   {
-    "id": "issue-mock-004",
-    "title": "MOCK ONLY: Sample Neighborhood Design Discussion",
-    "category": "community_planning",
-    "summary": "MOCK DATA: A fictional discussion item for testing category filters and related documents.",
-    "status": "unknown",
-    "statusAsOf": null,
-    "meetingIds": [
-      "meeting-mock-002"
+    "id": "issue-ph-26-16-north-main",
+    "title": "116/126 North Main Street: rooftop restaurant change of conditions (PH-26-16)",
+    "category": "development_and_zoning",
+    "summary": "Changes to the zoning conditions for 116 and 126 North Main Street allow part of the rooftop of the building closest to North Main Street to be enclosed for a restaurant. The enclosed space makes it a four-story building; the approved conditions raise the height limit from 3 stories and 46 feet to 4 stories and 60 feet.",
+    "status": "approved",
+    "statusAsOf": "2026-09-14",
+    "meetingIds": ["meeting-2026-09-14-cc"],
+    "documentIds": ["document-2026-09-14-cc-agenda", "document-2026-09-14-cc-minutes"],
+    "location": {
+      "label": "116 & 126 North Main Street",
+      "address": "116 & 126 North Main Street, Alpharetta, GA (west side of North Main Street across from Cumming Street)",
+      "latitude": 34.07885,
+      "longitude": -84.29458,
+      "locationType": "approximate",
+      "verified": false
+    },
+    "whyItMayMatter": "This allows a taller building and a rooftop restaurant downtown. The approved conditions limit rooftop restaurant hours to no later than 11:00 PM.",
+    "sourceUrls": [
+      "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11626,plainText=false)",
+      "https://alpharettaga.portal.civicclerk.com/event/4615/files"
     ],
-    "documentIds": [
-      "document-mock-003"
+    "dataMode": "curated",
+    "mockOnly": false,
+    "featured": true
+  },
+  {
+    "id": "issue-canton-street-speed",
+    "title": "Canton Street speed limit reduction, north of Milton Avenue",
+    "category": "transportation",
+    "summary": "City Council voted to lower the speed limit on Canton Street north of Milton Avenue from 30 mph to 25 mph, and to petition the Georgia Department of Transportation (GDOT) to approve the change.",
+    "status": "approved",
+    "statusAsOf": "2026-09-14",
+    "meetingIds": ["meeting-2026-09-14-cc"],
+    "documentIds": ["document-2026-09-14-cc-agenda", "document-2026-09-14-cc-minutes"],
+    "location": {
+      "label": "Canton Street, north of Milton Avenue",
+      "address": null,
+      "latitude": null,
+      "longitude": null,
+      "locationType": "unknown",
+      "verified": false
+    },
+    "whyItMayMatter": "The city's vote is a request: the minutes say the city will petition GDOT to approve the same change. This record does not confirm that GDOT has approved it or that new signs are posted.",
+    "sourceUrls": [
+      "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11626,plainText=false)",
+      "https://alpharettaga.portal.civicclerk.com/event/4615/files"
     ],
-    "location": null,
-    "whyItMayMatter": "MOCK DATA: Geographic impact is not assigned in this sample record.",
-    "sourceUrls": [],
-    "dataMode": "mock",
-    "mockOnly": true,
+    "dataMode": "curated",
+    "mockOnly": false,
+    "featured": true
+  },
+  {
+    "id": "issue-mp-26-12-veterinary-dental",
+    "title": "Veterinary dental clinic at Windward Plaza (MP-26-12 / CU-26-10)",
+    "category": "development_and_zoning",
+    "summary": "A master plan amendment and conditional use allow Veterinary Dental Specialists of Atlanta to operate a small-animal hospital in a 4,257 square foot suite in the Terraces at Windward shopping center at 3070 Windward Plaza.",
+    "status": "approved",
+    "statusAsOf": "2026-09-28",
+    "meetingIds": ["meeting-2026-09-03-pc", "meeting-2026-09-28-cc"],
+    "documentIds": ["document-2026-09-03-pc-agenda", "document-2026-09-28-cc-agenda", "document-2026-09-28-cc-minutes"],
+    "location": {
+      "label": "3070 Windward Plaza, Suites G & H-I",
+      "address": "3070 Windward Plaza, Suites G & H-I, Alpharetta, GA",
+      "latitude": 34.09329,
+      "longitude": -84.23972,
+      "locationType": "approximate",
+      "verified": false
+    },
+    "whyItMayMatter": "The Planning Commission recommended approval 7-0 on September 3, 2026, and asked the applicant to work with the property owner to move the pet relief area to the rear of the building. City Council approved it 7-0 on September 28, 2026.",
+    "sourceUrls": [
+      "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11625,plainText=false)",
+      "https://alpharettaga.portal.civicclerk.com/event/4616/files"
+    ],
+    "dataMode": "curated",
+    "mockOnly": false,
     "featured": false
   },
   {
-    "id": "issue-mock-005",
-    "title": "MOCK ONLY: Sample Road Corridor Study",
-    "category": "transportation",
-    "summary": "MOCK DATA: A fictional corridor study used to test map/feed coordination and location relevance.",
-    "status": "proposed",
-    "statusAsOf": "2026-10-20",
-    "meetingIds": [
-      "meeting-mock-003"
-    ],
-    "documentIds": [
-      "document-mock-004"
-    ],
+    "id": "issue-old-rucker-farm-grant",
+    "title": "$300,000 Lowe's Community Impact grant for Old Rucker Farm",
+    "category": "parks_and_public_spaces",
+    "summary": "City Council ratified an agreement with Points of Light (Lowe's Community Impact Grant Partners) for $300,000 in grant funds. City staff presented the grant as completing the renovation of the house at Old Rucker Farm into an agriculture and sustainability education facility.",
+    "status": "approved",
+    "statusAsOf": "2026-09-14",
+    "meetingIds": ["meeting-2026-09-14-cc"],
+    "documentIds": ["document-2026-09-14-cc-agenda", "document-2026-09-14-cc-minutes"],
     "location": {
-      "label": "Demo Map Area D (fictional)",
+      "label": "Old Rucker Farm",
       "address": null,
-      "latitude": 34.081,
-      "longitude": -84.3021,
-      "locationType": "mock_marker",
+      "latitude": null,
+      "longitude": null,
+      "locationType": "unknown",
       "verified": false
     },
-    "whyItMayMatter": "MOCK DATA: Example of a geographically located issue; no real traffic impact is claimed.",
-    "sourceUrls": [],
-    "dataMode": "mock",
-    "mockOnly": true,
+    "whyItMayMatter": "Old Rucker Farm is described in the minutes as the hub of Alpharetta's Community Agriculture Program. According to the minutes, the grant has no local match requirement and must be spent on or before March 1, 2027.",
+    "sourceUrls": [
+      "https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11626,plainText=false)",
+      "https://alpharettaga.portal.civicclerk.com/event/4615/files"
+    ],
+    "dataMode": "curated",
+    "mockOnly": false,
     "featured": false
   }
 ]

@@ -19,12 +19,13 @@ Checked 2026-10-21 against the official 2026 rulebook: https://www.congressional
 
 - All P0 pages work with the fixture data. `npm test` (39 tests), typecheck, lint and build all pass.
 - Every route checked at 375px and 1366px, in light and dark mode: no horizontal overflow, no console errors.
-- **The data is 100% fictional.** The app is honest about this, but a civic app that only shows "MOCK ONLY" records will look weaker to judges. Replacing even 3–5 records with verified real ones would strengthen it a lot.
+- **The data is real**: 5 issues, 5 meetings and 9 documents from September and October 2026, each linked to official city agendas or minutes. It is a selected set, not a complete or live archive, so say that in the demo.
+- **Royal 400 Data Center goes before City Council on Oct 26, 2026, the same day as the noon submission deadline.** The meeting is at 6:30 PM, after the deadline, so the submitted app will correctly show it as under consideration. Update it after the vote for any later demo.
 
 ## Must do before submitting (student team)
 
 1. **Make and document real student technical work** (required by the AI rule). Each item below is a meaningful, self-contained piece of work:
-   - Research 3–5 real Alpharetta council or planning items and convert them to curated records (see `README.md`). This needs real research skill and is core to the product.
+   - Verify the 5 AI-researched records yourselves (open every source link), then research and add more items, e.g. the other Oct 26 agenda items (see `data/README.md`). This needs real research skill and is core to the product.
    - Build the P1 search box using the existing `searchRecords()` in `src/services/civicData.ts`.
    - Add the topic/category filter to Citywide or Archive.
    - Write tests for whatever you add.
@@ -38,9 +39,9 @@ Checked 2026-10-21 against the official 2026 rulebook: https://www.congressional
 ## Honest demo script (about 2½ minutes)
 
 1. **0:00–0:20.** Team names, "Alpharetta Civic", the one-sentence purpose (understand what Alpharetta's government is considering, with a path to the source), and the target audience (Alpharetta residents).
-2. **0:20–0:50 Citywide.** Point out the sample-data banner. Open a featured issue and show its status, the "as of" date, the related meeting and documents, and "No official source added yet".
-3. **0:50–1:30 Near Me.** Choose Demo point 1. The list re-sorts by distance, each item explains why it's listed, and selecting a pin highlights the matching card. Note that the issue with no location stays in the list without a pin. Type an address to show the app honestly says lookup isn't connected.
-4. **1:30–2:00 Archive.** Switch between filters, open a meeting, and show "Recording not available" as plain text rather than a broken link. Follow a link back to an issue.
+2. **0:20–0:50 Citywide.** Open the Royal 400 Data Center issue: status "Under consideration", the Planning Commission recommendation, and the upcoming Oct 26 Council meeting. Then open the North Main Street item and click through to the official minutes PDF.
+3. **0:50–1:30 Near Me.** Choose Alpharetta City Hall. The list re-sorts by distance, each item explains why it's listed, and selecting a pin highlights the matching card. Point out that pins are approximate, and that items with no street address stay in the list without a pin.
+4. **1:30–2:00 Archive.** Switch to Videos and open the Sept 14 City Council meeting recording on the city portal. Open a meeting and follow its links to issues and documents.
 5. **2:00–2:30 Tools and learning.** React, TypeScript, Vite, Leaflet/OpenStreetMap, Vitest. Name the technical challenge your team actually solved, and disclose AI use.
 
 Do not say the data is live, official or complete, or that distance means an issue affects someone's home.

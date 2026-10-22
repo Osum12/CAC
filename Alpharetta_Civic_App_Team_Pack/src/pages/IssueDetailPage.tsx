@@ -97,7 +97,7 @@ export function IssueDetailPage() {
               <ul className="plain-list">
                 {issue.sourceUrls.map((url, i) => (
                   <li key={i}>
-                    <SourceAction url={url} label={`Official source ${i + 1}`} unavailableText="Source link is not valid" />
+                    <SourceAction url={url} label={sourceLabel(url, i)} unavailableText="Source link is not valid" />
                   </li>
                 ))}
               </ul>
@@ -128,19 +128,28 @@ function LocationPanel({ issue }: { issue: Issue }) {
               ? 'Location checked against the source.'
               : loc.locationType === 'mock_marker'
                 ? 'Sample map point for testing. It is not a real project site.'
-                : 'Location has not been verified.'}
+                : loc.locationType === 'approximate'
+                  ? 'The street address comes from the city document. The map point is approximate: it was looked up from that address, not taken from an exact site boundary.'
+                  : 'The exact location has not been mapped.'}
           </p>
           {coords ? (
             <Link to={`/near-me?issue=${encodeURIComponent(issue.id)}`} className="text-link">
               See it on the Near Me map →
             </Link>
           ) : (
-            <p className="muted">No usable map coordinates.</p>
+            <p className="muted">This issue isn’t shown on the map because the source gives no exact address.</p>
           )}
         </>
       )}
     </section>
   );
+}
+
+/** Names a source link by where it points, so readers know what they will open. */
+function sourceLabel(url: string, index: number): string {
+  if (/portal\.civicclerk\.com\/event\//.test(url)) return 'Meeting page on the city’s portal';
+  if (/civicclerk\.com\/.*GetMeetingFileStream/.test(url)) return 'Official meeting document (PDF)';
+  return `Official source ${index + 1}`;
 }
 
 function MissingNote({ count, noun }: { count: number; noun: string }) {

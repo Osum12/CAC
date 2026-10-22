@@ -6,6 +6,7 @@ import { setDataLoader } from '../services/civicData';
 import { splitMeetings } from './CitywidePage';
 import type { MapPoint } from '../components/IssueMap';
 import type { Meeting } from '../types/civic';
+import { mockLoader } from '../test/mockDataset';
 
 // Leaflet needs a real browser layout engine; replace the map with a simple list of its markers.
 vi.mock('../components/IssueMap', () => ({
@@ -29,12 +30,14 @@ const renderAt = (path: string) =>
     </MemoryRouter>,
   );
 
+// Tests run against the fictional fixture pack, not the real records in /data.
+beforeEach(() => setDataLoader(mockLoader));
 afterEach(() => setDataLoader(null));
 
 describe('Citywide', () => {
   it('shows the sample-data banner, featured issues, and meetings from the service', async () => {
     renderAt('/');
-    expect(await screen.findByText(/Prototype · Sample data/)).toBeInTheDocument();
+    expect(await screen.findByText('Sample data.')).toBeInTheDocument();
     const featured = screen.getByRole('heading', { name: 'Featured issues' }).closest('section')!;
     expect(within(featured).getByRole('link', { name: /Sample Pedestrian Crossing Review/ })).toHaveAttribute('href', '/issues/issue-mock-001');
     expect(screen.getAllByText('Sample data').length).toBeGreaterThan(3);
@@ -137,9 +140,9 @@ describe('Near Me', () => {
     expect(within(markers).getAllByRole('button').map((b) => b.textContent?.match(/marker (\d)/)?.[1])).toEqual(['1', '2', '3', '4']);
     expect(screen.getByText(/no map location, so it is listed as a citywide item/)).toBeInTheDocument();
 
-    await userEvent.click(screen.getByRole('radio', { name: /Demo point 1/ }));
-    expect(screen.getByRole('heading', { name: /Sorted by distance from Demo point 1/ })).toBeInTheDocument();
-    expect(screen.getAllByText(/mi from the demo point/).length).toBe(4);
+    await userEvent.click(screen.getByRole('radio', { name: /Alpharetta City Hall/ }));
+    expect(screen.getByRole('heading', { name: /Sorted by distance from Alpharetta City Hall/ })).toBeInTheDocument();
+    expect(screen.getAllByText(/mi away in a straight line/).length).toBe(4);
   });
 
   it('syncs a marker selection with the feed', async () => {
@@ -152,11 +155,33 @@ describe('Near Me', () => {
     renderAt('/near-me');
     const input = await screen.findByLabelText('Or enter an address');
     await userEvent.click(screen.getByRole('button', { name: 'Search' }));
-    expect(screen.getByText(/Enter an address, or choose a demo point/)).toBeInTheDocument();
+    expect(screen.getByText(/Enter an address, or choose a starting location/)).toBeInTheDocument();
     await userEvent.type(input, '123 Example Street');
     await userEvent.click(screen.getByRole('button', { name: 'Search' }));
-    expect(screen.getByText(/Address lookup isn’t connected/)).toBeInTheDocument();
+    expect(screen.getByText(/Address lookup isn’t available yet/)).toBeInTheDocument();
     expect(input).toHaveValue('');
+  });
+});
+
+describe('With the real curated records in /data', () => {
+  beforeEach(() => setDataLoader(null));
+
+  it('shows no sample-data labels and keeps unfinished decisions marked as such', async () => {
+    renderAt('/');
+    expect(await screen.findByRole('link', { name: /Royal 400 Data Center/ })).toBeInTheDocument();
+    expect(screen.queryByText(/Sample data/)).not.toBeInTheDocument();
+    expect(screen.getAllByText('Curated from official source').length).toBeGreaterThan(0);
+    expect(screen.getByText(/not every city item/)).toBeInTheDocument();
+  });
+
+  it('links an approved issue to its official minutes', async () => {
+    renderAt('/issues/issue-ph-26-16-north-main');
+    expect(await screen.findByText('Approved')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /Official meeting document \(PDF\)/ })).toHaveAttribute(
+      'href',
+      'https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11626,plainText=false)',
+    );
+    expect(screen.getByText(/map point is approximate/)).toBeInTheDocument();
   });
 });
 

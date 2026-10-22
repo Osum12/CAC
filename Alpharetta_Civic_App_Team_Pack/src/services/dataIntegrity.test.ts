@@ -1,17 +1,17 @@
-// Validates the JSON fixtures in /data against docs/DATA_CONTRACT.md.
-// Run on its own with `npm run validate:data` after editing any data file.
+// Validates JSON records against docs/DATA_CONTRACT.md: the real records in /data
+// and the fictional test fixtures. Run with `npm run validate:data` after editing data.
 
 import meetings from '../../data/meetings.json';
 import issues from '../../data/issues.json';
 import documents from '../../data/documents.json';
-import { findBrokenRelationships } from './civicData';
+import { mockDataset } from '../test/mockDataset';
+import { findBrokenRelationships, type Dataset } from './civicData';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 
-const M = meetings as Meeting[];
-const I = issues as Issue[];
-const D = documents as CivicDocument[];
-const ALL = [...M, ...I, ...D];
+const realDataset: Dataset = { meetings: meetings as Meeting[], issues: issues as Issue[], documents: documents as CivicDocument[] };
+
 const STATUSES = ['proposed', 'under_consideration', 'approved', 'denied', 'withdrawn', 'completed', 'unknown'];
+const MEETING_STATUSES = ['scheduled', 'completed', 'canceled', 'unknown'];
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 const isHttpUrl = (u: string) => {
@@ -22,7 +22,12 @@ const isHttpUrl = (u: string) => {
   }
 };
 
-describe('data fixtures', () => {
+describe.each([
+  ['data/ (records shown in the app)', realDataset],
+  ['test fixtures (fictional)', mockDataset],
+])('%s', (_name, { meetings: M, issues: I, documents: D }) => {
+  const ALL = [...M, ...I, ...D];
+
   it('has unique IDs within each record type', () => {
     for (const list of [M, I, D]) {
       const ids = list.map((r) => r.id);
@@ -45,21 +50,29 @@ describe('data fixtures', () => {
     }
   });
 
-  it('marks provenance consistently: mock rows are mockOnly, curated rows are verified', () => {
+  it('marks provenance consistently, and curated rows carry verification evidence', () => {
     for (const r of ALL) {
       expect(['mock', 'curated']).toContain(r.dataMode);
       expect(r.mockOnly).toBe(r.dataMode === 'mock');
     }
-    for (const m of M.filter((x) => x.dataMode === 'curated')) expect(m.lastVerifiedAt).not.toBeNull();
+    for (const m of M.filter((x) => x.dataMode === 'curated')) {
+      expect(m.lastVerifiedAt).not.toBeNull();
+      expect(m.officialPageUrl ?? m.recordingUrl).not.toBeNull();
+    }
     for (const i of I.filter((x) => x.dataMode === 'curated')) expect(i.sourceUrls.length).toBeGreaterThan(0);
+    for (const d of D.filter((x) => x.dataMode === 'curated')) expect(d.url).not.toBeNull();
   });
 
-  it('uses only contract issue statuses', () => {
+  it('uses only contract statuses', () => {
     for (const i of I) expect(STATUSES).toContain(i.status);
+    for (const m of M) expect(MEETING_STATUSES).toContain(m.status);
   });
 
   it('uses ISO dates or null', () => {
-    for (const m of M) if (m.date !== null) expect(m.date).toMatch(ISO_DATE);
+    for (const m of M) {
+      if (m.date !== null) expect(m.date).toMatch(ISO_DATE);
+      if (m.lastVerifiedAt !== null) expect(m.lastVerifiedAt).toMatch(ISO_DATE);
+    }
     for (const i of I) if (i.statusAsOf !== null) expect(i.statusAsOf).toMatch(ISO_DATE);
     for (const d of D) if (d.publishedDate !== null) expect(d.publishedDate).toMatch(ISO_DATE);
   });
@@ -76,13 +89,13 @@ describe('data fixtures', () => {
     }
   });
 
-  it('only uses numeric coordinates, and mock markers are never marked verified', () => {
+  it('only uses numeric coordinates, and never marks mock or approximate points as verified', () => {
     for (const i of I) {
       if (!i.location) continue;
       const { latitude, longitude, locationType, verified } = i.location;
       expect(latitude === null || Number.isFinite(latitude)).toBe(true);
       expect(longitude === null || Number.isFinite(longitude)).toBe(true);
-      if (locationType === 'mock_marker') expect(verified).toBe(false);
+      if (locationType !== 'verified') expect(verified).toBe(false);
       if (i.dataMode === 'mock') expect(verified).toBe(false);
     }
   });

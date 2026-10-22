@@ -4,8 +4,8 @@ import { IssueMap, type MapPoint } from './IssueMap';
 // Uses the real Leaflet library in jsdom to check marker accessibility and that
 // selection restyles markers in place rather than rebuilding them (which would drop focus).
 const points: MapPoint[] = [
-  { id: 'a', title: 'First issue', number: 1, coords: { latitude: 34.07, longitude: -84.29 }, sample: true },
-  { id: 'b', title: 'Second issue', number: 2, coords: { latitude: 34.08, longitude: -84.3 }, sample: false },
+  { id: 'a', title: 'First issue', number: 1, coords: { latitude: 34.07, longitude: -84.29 }, note: 'approximate map point' },
+  { id: 'b', title: 'Second issue', number: 2, coords: { latitude: 34.08, longitude: -84.3 }, note: null },
 ];
 
 describe('IssueMap', () => {
@@ -13,7 +13,7 @@ describe('IssueMap', () => {
     const { container } = render(<IssueMap points={points} origin={null} selectedId={null} onSelect={() => {}} />);
     const pins = container.querySelectorAll('.leaflet-marker-icon[role="button"]');
     expect(pins).toHaveLength(2);
-    expect(pins[0]).toHaveAttribute('aria-label', 'Map pin 1: First issue (sample map point)');
+    expect(pins[0]).toHaveAttribute('aria-label', 'Map pin 1: First issue (approximate map point)');
     expect(pins[1]).toHaveAttribute('aria-label', 'Map pin 2: Second issue');
     expect(pins[0]).toHaveAttribute('aria-pressed', 'false');
   });

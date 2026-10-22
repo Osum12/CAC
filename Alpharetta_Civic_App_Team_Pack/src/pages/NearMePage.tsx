@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getIssues } from '../services/civicData';
 import { humanize } from '../services/format';
-import { DEMO_LOCATIONS, rankIssuesForLocation, type RankedIssue } from '../services/nearMe';
+import { DEMO_LOCATIONS, pointKind, rankIssuesForLocation, type RankedIssue } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
 import { IssueMap, type MapPoint } from '../components/IssueMap';
@@ -31,7 +31,7 @@ export function NearMePage() {
     () =>
       ranked
         .filter((r) => r.coords)
-        .map((r, i) => ({ id: r.issue.id, title: r.issue.title, number: i + 1, coords: r.coords!, sample: isMock(r.issue) || !r.issue.location?.verified })),
+        .map((r, i) => ({ id: r.issue.id, title: r.issue.title, number: i + 1, coords: r.coords!, note: r.issue.location?.verified ? null : isMock(r.issue) ? 'sample map point' : pointKind(r.issue) })),
     [ranked],
   );
   const pinNumber = (id: string) => points.find((p) => p.id === id)?.number ?? null;
@@ -71,7 +71,7 @@ export function NearMePage() {
               </h2>
               <IssueMap points={points} origin={origin} selectedId={selectedId} onSelect={(id) => updateParam('issue', id)} />
               <p className="fine-print">
-                Numbered pins match the list. Pins marked as sample are fictional test points, not real project sites.{' '}
+                Numbered pins match the list. Dashed pins are approximate: they are placed from a street address, not an exact site boundary.{' '}
                 {ranked.length - points.length > 0 &&
                   `${ranked.length - points.length} issue${ranked.length - points.length > 1 ? 's have' : ' has'} no map location and appear${ranked.length - points.length > 1 ? '' : 's'} in the list only.`}
               </p>
@@ -80,7 +80,7 @@ export function NearMePage() {
               <h2 id="feed-h" className="nearme__feed-title">
                 {origin ? `Sorted by distance from ${origin.label}` : 'All Alpharetta issues'}
               </h2>
-              {!origin && <p className="muted">Pick a demo point above to sort this list by distance.</p>}
+              {!origin && <p className="muted">Choose a starting location above to sort this list by distance.</p>}
               <ol className="feed" ref={listRef}>
                 {ranked.map((r) => (
                   <li key={r.issue.id}>
@@ -104,13 +104,13 @@ function LocationPicker({ originId, onChoose }: { originId: string | null; onCho
   const [address, setAddress] = useState('');
   const [message, setMessage] = useState<{ tone: 'error' | 'info'; text: string } | null>(null);
 
-  // There is no geocoding service in this prototype. An entered address is never
-  // looked up, stored, or logged; the user is told plainly and offered demo points.
+  // There is no geocoding service in this app. An entered address is never
+  // looked up, stored, or logged; the user is told plainly and offered the example locations.
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
     const value = address.trim();
     if (!value) {
-      setMessage({ tone: 'error', text: 'Enter an address, or choose a demo point instead.' });
+      setMessage({ tone: 'error', text: 'Enter an address, or choose a starting location instead.' });
       return;
     }
     if (value.length < 5 || !/[a-z]/i.test(value)) {
@@ -120,7 +120,7 @@ function LocationPicker({ originId, onChoose }: { originId: string | null; onCho
     setAddress('');
     setMessage({
       tone: 'info',
-      text: 'Address lookup isn’t connected in this prototype, so we didn’t search for that address and haven’t saved it. Choose a demo point to try the feature.',
+      text: 'Address lookup isn’t available yet, so we didn’t search for that address and haven’t saved it. Choose a starting location above instead.',
     });
   };
 
@@ -131,7 +131,7 @@ function LocationPicker({ originId, onChoose }: { originId: string | null; onCho
       </h2>
       <div className="locator__grid">
         <fieldset className="locator__demo">
-          <legend>Demo points (fictional)</legend>
+          <legend>Start from</legend>
           <div className="locator__options">
             {[{ id: null, label: 'No location', description: 'Show every issue unsorted' }, ...DEMO_LOCATIONS].map((l) => (
               <label key={l.id ?? 'none'} className="radio-card">
@@ -167,7 +167,7 @@ function LocationPicker({ originId, onChoose }: { originId: string | null; onCho
             </button>
           </div>
           <p id="address-help" className="fine-print">
-            Address search isn’t available in this prototype yet.
+            Address search isn’t available yet. Your address is never saved.
           </p>
           <p id="address-msg" className={`form-msg${message ? ` form-msg--${message.tone}` : ''}`} role="status" aria-live="polite">
             {message?.text}

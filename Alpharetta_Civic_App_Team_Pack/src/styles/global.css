@@ -112,7 +112,8 @@ body {
 }
 h1,
 h2,
-h3 {
+h3,
+h4 {
   font-family: var(--font-display);
   font-weight: 650;
   line-height: 1.15;
@@ -1036,7 +1037,7 @@ input[aria-invalid='true'] {
   font-weight: 700;
   font-size: 0.9rem;
 }
-.pin--sample {
+.pin--unverified {
   border-style: dashed;
 }
 .pin--selected span {
