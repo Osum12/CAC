@@ -38,8 +38,8 @@ describe('Citywide', () => {
   it('shows the sample-data banner, featured issues, and meetings from the service', async () => {
     renderAt('/');
     expect(await screen.findByText('Sample data.')).toBeInTheDocument();
-    const featured = screen.getByRole('heading', { name: 'Featured issues' }).closest('section')!;
-    expect(within(featured).getByRole('link', { name: /Sample Pedestrian Crossing Review/ })).toHaveAttribute('href', '/issues/issue-mock-001');
+    const issues = screen.getByRole('heading', { name: 'City issues' }).closest('section')!;
+    expect(within(issues).getByRole('link', { name: /^MOCK ONLY: Sample Pedestrian Crossing Review$/ })).toHaveAttribute('href', '/issues/issue-mock-001');
     expect(screen.getAllByText('Sample data').length).toBeGreaterThan(3);
     expect(screen.getByRole('link', { name: /Sample Transportation Update/ })).toBeInTheDocument();
   });
@@ -120,14 +120,14 @@ describe('Archive and meeting detail', () => {
     expect(screen.getByText('Recording not available')).toBeInTheDocument();
     expect(screen.queryByRole('link', { name: /Watch the recording/ })).not.toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Sample Planning Staff Report/ })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Sample Land-Use Application/ })).toHaveAttribute('href', '/issues/issue-mock-003');
+    expect(screen.getByRole('link', { name: /^MOCK ONLY: Sample Land-Use Application$/ })).toHaveAttribute('href', '/issues/issue-mock-003');
   });
 
   it('shows a document with its meeting and related issues', async () => {
     renderAt('/documents/document-mock-005');
     expect(await screen.findByText('No file is linked for this record')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /Sample City Council Meeting/ })).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Public-Space Improvement/ })).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /^MOCK ONLY: Sample Public-Space Improvement Proposal$/ })).toBeInTheDocument();
   });
 });
 
@@ -168,10 +168,16 @@ describe('With the real curated records in /data', () => {
 
   it('shows no sample-data labels and keeps unfinished decisions marked as such', async () => {
     renderAt('/');
-    expect(await screen.findByRole('link', { name: /Royal 400 Data Center/ })).toBeInTheDocument();
+    expect(await screen.findByRole('link', { name: /^Royal 400 Data Center/ })).toBeInTheDocument();
     expect(screen.queryByText(/Sample data/)).not.toBeInTheDocument();
-    expect(screen.getAllByText('Curated from official source').length).toBeGreaterThan(0);
+    // Every issue card links to a real city document, never a made-up URL.
+    const records = screen.getAllByRole('link', { name: /^Official record/ });
+    expect(records).toHaveLength(5);
+    for (const a of records) expect(a.getAttribute('href')).toMatch(/^https:\/\/alpharettaga\.api\.civicclerk\.com\//);
     expect(screen.getByText(/not every city item/)).toBeInTheDocument();
+    expect(screen.getByText(/Last checked against official city documents on October 22, 2026/)).toBeInTheDocument();
+    // Meeting cards link to their real agenda PDFs.
+    expect(screen.getAllByRole('link', { name: /^Agenda \(PDF\)/ }).length).toBe(5);
   });
 
   it('links an approved issue to its official minutes', async () => {
@@ -182,6 +188,69 @@ describe('With the real curated records in /data', () => {
       'https://alpharettaga.api.civicclerk.com/v1/Meetings/GetMeetingFileStream(fileId=11626,plainText=false)',
     );
     expect(screen.getByText(/map point is approximate/)).toBeInTheDocument();
+  });
+});
+
+describe('Citywide search, filters, and map links', () => {
+  it('filters issues by keyword, topic and status, and can clear them', async () => {
+    renderAt('/');
+    const search = await screen.findByLabelText('Search issues');
+    await userEvent.type(search, 'corridor');
+    expect(screen.getByText('1 of 5 issues match')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: /^MOCK ONLY: Sample Road Corridor Study$/ })).toBeInTheDocument();
+
+    await userEvent.clear(search);
+    await userEvent.selectOptions(screen.getByLabelText('Topic'), 'transportation');
+    expect(screen.getByText('2 of 5 issues match')).toBeInTheDocument();
+    await userEvent.selectOptions(screen.getByLabelText('Status'), 'proposed');
+    expect(screen.getByText('1 of 5 issues match')).toBeInTheDocument();
+
+    await userEvent.type(search, 'nothing-matches-this');
+    expect(screen.getByText('No issues match these filters.')).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
+    expect(screen.getByText('5 issues')).toBeInTheDocument();
+    expect(screen.getByLabelText('Topic')).toHaveValue('');
+  });
+
+  it('offers map links only for issues with coordinates, pointing at the right selection', async () => {
+    renderAt('/');
+    const mapLinks = await screen.findAllByRole('link', { name: /^View on map/ });
+    expect(mapLinks).toHaveLength(4); // issue-mock-004 has no location
+    expect(screen.getByRole('link', { name: 'View on map: MOCK ONLY: Sample Road Corridor Study' })).toHaveAttribute('href', '/near-me?issue=issue-mock-005');
+  });
+
+  it('has hero actions that lead to issues and to Near Me', async () => {
+    renderAt('/');
+    expect(await screen.findByRole('link', { name: 'Find issues near me' })).toHaveAttribute('href', '/near-me?loc=city-hall');
+    await userEvent.click(screen.getByRole('button', { name: 'Explore city issues' }));
+    expect(screen.getByRole('heading', { name: 'City issues' })).toHaveFocus();
+  });
+
+  it('opens Near Me with the issue from the card already selected', async () => {
+    renderAt('/near-me?issue=issue-mock-005');
+    expect(await screen.findByRole('button', { name: 'Highlighted on map' })).toHaveAttribute('aria-pressed', 'true');
+  });
+});
+
+describe('Issue detail timeline and archive search', () => {
+  it('lists related meetings in date order', async () => {
+    renderAt('/issues/issue-mock-001');
+    const timeline = (await screen.findByRole('heading', { name: 'Timeline' })).closest('section')!;
+    expect(within(timeline).getByRole('link', { name: /Sample City Council Meeting/ })).toHaveAttribute('href', '/meetings/meeting-mock-001');
+    expect(screen.getByRole('link', { name: /All city issues/ })).toHaveAttribute('href', '/');
+  });
+
+  it('searches the archive and combines search with type filters', async () => {
+    renderAt('/archive');
+    await userEvent.type(await screen.findByLabelText('Search meetings and documents'), 'planning');
+    expect(screen.getByText(/records? matching “planning”/)).toBeInTheDocument();
+    const rows = within(screen.getByRole('list')).getAllByRole('listitem');
+    expect(rows.length).toBeGreaterThan(0);
+    for (const r of rows) expect(r.textContent?.toLowerCase()).toContain('planning');
+    await userEvent.type(screen.getByLabelText('Search meetings and documents'), ' zzz');
+    expect(screen.getByText(/No records match/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Show all records' }));
+    expect(within(screen.getByRole('list')).getAllByRole('listitem')).toHaveLength(8);
   });
 });
 

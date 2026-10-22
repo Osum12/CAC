@@ -1,13 +1,14 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getDocumentById, getMeetingById, getRelatedIssuesForDocument } from '../services/civicData';
 import { formatDate, humanize } from '../services/format';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
 import { IssueCard, MeetingCard } from '../components/Cards';
-import { MockBadge, MockNotice } from '../components/MockBadge';
+import { MockBadge, MockNotice, isMock } from '../components/MockBadge';
 import { SourceAction } from '../components/SourceAction';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
+import { BackLink } from '../components/BackLink';
 
 export function DocumentDetailPage() {
   const { documentId = '' } = useParams();
@@ -30,13 +31,11 @@ export function DocumentDetailPage() {
 
   return (
     <article className="page detail">
-      <nav aria-label="Breadcrumb" className="breadcrumb">
-        <Link to="/archive">Archive</Link> <span aria-hidden="true">/</span> <span>Document</span>
-      </nav>
+      <BackLink fallbackTo="/archive" fallbackLabel="Archive" />
       <header className="detail__header">
-        <div className="card__meta">
+        <div className="card__top">
           <span className="eyebrow">{humanize(doc.documentType)}</span>
-          <MockBadge record={doc} size="lg" />
+          {isMock(doc) && <MockBadge record={doc} size="lg" />}
         </div>
         <h1 className="detail__title">{doc.title}</h1>
         <p className="muted">Published {formatDate(doc.publishedDate, 'date not provided')}</p>
@@ -62,11 +61,13 @@ export function DocumentDetailPage() {
           <section aria-labelledby="d-issues-h">
             <h2 id="d-issues-h">Related issues</h2>
             {issues.length ? (
-              <div className="card-grid card-grid--tight">
+              <ul className="issue-list">
                 {issues.map((i) => (
-                  <IssueCard key={i.id} issue={i} />
+                  <li key={i.id}>
+                    <IssueCard issue={i} />
+                  </li>
                 ))}
-              </div>
+              </ul>
             ) : (
               <EmptyState title="No issues are linked to this document." />
             )}

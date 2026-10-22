@@ -1,9 +1,11 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import { getDocuments, getMeetings } from '../services/civicData';
-import { formatDate, humanize, meetingTypeLabel, safeUrl } from '../services/format';
+import { formatDate, formatTime, humanize, meetingTypeLabel, safeUrl } from '../services/format';
+import { documentMatches, meetingMatches } from '../services/filters';
+import { MeetingStatusBadge } from '../components/StatusBadge';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
-import { MockBadge } from '../components/MockBadge';
+import { MockBadge, isMock } from '../components/MockBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import type { CivicDocument, Meeting } from '../types/civic';
 
@@ -65,7 +67,15 @@ export function ArchivePage() {
     setParams(p, { replace: true });
   };
 
-  const entries = state.status === 'ready' ? buildArchiveEntries(state.data[0], state.data[1]) : [];
+  const q = params.get('q') ?? '';
+  const setQuery = (next: string) => {
+    const p = new URLSearchParams(params);
+    if (next) p.set('q', next);
+    else p.delete('q');
+    setParams(p, { replace: true });
+  };
+
+  const entries = state.status === 'ready' ? buildArchiveEntries(state.data[0], state.data[1]).filter((e) => entryMatches(e, q)) : [];
   const visible = entries.filter((e) => e.groups.includes(filter));
   const count = (f: ArchiveFilter) => entries.filter((e) => e.groups.includes(f)).length;
 
@@ -74,9 +84,16 @@ export function ArchivePage() {
       <header className="page-header">
         <h1>Archive</h1>
         <p className="page-header__lede">
-          Meetings, recordings, agendas, and supporting documents. This is a small selected set of records, not the city’s complete archive.
+          Meetings, recordings, agendas, and minutes, each linked to the original file. This is a small selected set of records, not the city’s complete archive.
         </p>
       </header>
+
+      <form className="filters" role="search" aria-label="Search the archive" onSubmit={(e) => e.preventDefault()}>
+        <div className="filters__field filters__field--grow">
+          <label htmlFor="archive-q">Search meetings and documents</label>
+          <input id="archive-q" type="search" value={q} placeholder="e.g. minutes, Planning Commission, September" onChange={(e) => setQuery(e.target.value)} />
+        </div>
+      </form>
 
       <div className="filter-bar" role="group" aria-label="Filter by record type">
         {FILTERS.map((f) => (
@@ -98,8 +115,9 @@ export function ArchivePage() {
       {state.status === 'error' && <ErrorState onRetry={state.retry} />}
       {state.status === 'ready' && (
         <>
-          <p className="visually-hidden" role="status" aria-live="polite">
-            Showing {visible.length} {visible.length === 1 ? 'record' : 'records'}
+          <p className="results-count" role="status" aria-live="polite">
+            {visible.length} {visible.length === 1 ? 'record' : 'records'}
+            {q ? ` matching “${q}”` : ''}
           </p>
           {visible.length ? (
             <ol className="archive-list">
@@ -111,10 +129,14 @@ export function ArchivePage() {
             </ol>
           ) : (
             <EmptyState
-              title={EMPTY_COPY[filter]}
+              title={q ? `No records match “${q}”.` : EMPTY_COPY[filter]}
               action={
-                filter !== 'all' && (
-                  <button type="button" className="button button--ghost" onClick={() => setFilter('all')}>
+                (q || filter !== 'all') && (
+                  <button
+                    type="button"
+                    className="button button--ghost"
+                    onClick={() => setParams(new URLSearchParams(), { replace: true })}
+                  >
                     Show all records
                   </button>
                 )
@@ -127,17 +149,16 @@ export function ArchivePage() {
   );
 }
 
+const entryMatches = (e: ArchiveEntry, q: string) => (e.kind === 'meeting' ? meetingMatches(e.record, q) : documentMatches(e.record, q));
+
 function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
   const isMeeting = entry.kind === 'meeting';
   const to = isMeeting ? `/meetings/${encodeURIComponent(entry.id)}` : `/documents/${encodeURIComponent(entry.id)}`;
   const typeLabel = isMeeting ? `Meeting · ${meetingTypeLabel(entry.record.meetingType)}` : humanize(entry.record.documentType);
-  const availability = isMeeting
-    ? safeUrl(entry.record.recordingUrl)
-      ? 'Recording available'
-      : 'No recording linked'
-    : safeUrl(entry.record.url)
-      ? 'File available'
-      : 'No file linked';
+  const mock = isMock(entry.record);
+  const recording = isMeeting && !mock ? safeUrl(entry.record.recordingUrl) : null;
+  const file = !isMeeting && !mock ? safeUrl(entry.record.url) : null;
+  const time = isMeeting ? formatTime(entry.record.startTime) : null;
 
   return (
     <article className={`archive-row archive-row--${entry.kind}`}>
@@ -145,18 +166,40 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
         {isMeeting ? '◷' : '▤'}
       </span>
       <div className="archive-row__body">
-        <div className="card__meta">
+        <div className="card__top">
           <span className="eyebrow">{typeLabel}</span>
-          <MockBadge record={entry.record} />
+          {isMeeting && <MeetingStatusBadge status={entry.record.status} />}
+          {mock && <MockBadge record={entry.record} />}
         </div>
         <h2 className="archive-row__title">
           <Link to={to} className="card__link">
             {entry.record.title}
           </Link>
         </h2>
-        <p className="muted">
-          {formatDate(entry.date)} · {availability}
+        <p className="archive-row__date">
+          {isMeeting ? '' : 'Published '}
+          <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time>
+          {time ? ` · ${time}` : ''}
         </p>
+        <div className="card__actions">
+          {isMeeting ? (
+            recording ? (
+              <a className="card__action" href={recording} target="_blank" rel="noopener noreferrer">
+                Watch recording<span aria-hidden="true"> ↗</span>
+                <span className="visually-hidden"> (opens in a new tab)</span>
+              </a>
+            ) : (
+              <span className="card__action card__action--muted">No recording linked</span>
+            )
+          ) : file ? (
+            <a className="card__action" href={file} target="_blank" rel="noopener noreferrer">
+              Open PDF<span aria-hidden="true"> ↗</span>
+              <span className="visually-hidden"> (opens in a new tab)</span>
+            </a>
+          ) : (
+            <span className="card__action card__action--muted">No file linked</span>
+          )}
+        </div>
       </div>
     </article>
   );

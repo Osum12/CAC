@@ -1,16 +1,17 @@
 import { Link, useParams } from 'react-router-dom';
 import { getDocumentsForIssue, getIssueById, getMeetingsForIssue } from '../services/civicData';
-import { formatDate, humanize } from '../services/format';
+import { formatDate, formatTime, humanize, meetingStatusLabel, meetingTypeLabel, sourceLabel } from '../services/format';
 import { getValidCoordinates } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
-import { DocumentCard, MeetingCard } from '../components/Cards';
-import { MockBadge, MockNotice } from '../components/MockBadge';
+import { BackLink } from '../components/BackLink';
+import { DocumentCard } from '../components/Cards';
+import { MockBadge, MockNotice, isMock } from '../components/MockBadge';
 import { SourceAction } from '../components/SourceAction';
 import { IssueStatusBadge } from '../components/StatusBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
-import type { Issue } from '../types/civic';
+import type { Issue, Meeting } from '../types/civic';
 
 export function IssueDetailPage() {
   const { issueId = '' } = useParams();
@@ -32,13 +33,11 @@ export function IssueDetailPage() {
 
   return (
     <article className="page detail">
-      <nav aria-label="Breadcrumb" className="breadcrumb">
-        <Link to="/">Citywide</Link> <span aria-hidden="true">/</span> <span>Issue</span>
-      </nav>
+      <BackLink fallbackTo="/" fallbackLabel="All city issues" />
       <header className="detail__header">
-        <div className="card__meta">
+        <div className="card__top">
           <span className="eyebrow">{humanize(issue.category)}</span>
-          <MockBadge record={issue} size="lg" />
+          {isMock(issue) && <MockBadge record={issue} size="lg" />}
         </div>
         <h1 className="detail__title">{issue.title}</h1>
         <div className="detail__status">
@@ -51,8 +50,11 @@ export function IssueDetailPage() {
       <div className="detail__grid">
         <div className="detail__main">
           <section aria-labelledby="summary-h">
-            <h2 id="summary-h">Summary</h2>
+            <h2 id="summary-h">In plain language</h2>
             <p className="prose">{issue.summary || 'No summary has been written for this issue yet.'}</p>
+            {!isMock(issue) && (
+              <p className="fine-print">This summary is a plain-language rewrite of the official documents listed below. Check them for the exact wording.</p>
+            )}
           </section>
 
           <section aria-labelledby="why-h" className="callout">
@@ -60,28 +62,26 @@ export function IssueDetailPage() {
             <p className="prose">{issue.whyItMayMatter || 'No explanation has been recorded for this issue.'}</p>
           </section>
 
-          <section aria-labelledby="meetings-h">
-            <h2 id="meetings-h">Discussed at</h2>
-            {meetings.length ? (
-              <div className="stack">
-                {meetings.map((m) => (
-                  <MeetingCard key={m.id} meeting={m} />
-                ))}
-              </div>
-            ) : (
-              <EmptyState title="No related meetings are linked to this issue." />
-            )}
+          <section aria-labelledby="timeline-h">
+            <h2 id="timeline-h">Timeline</h2>
+            {meetings.length ? <MeetingTimeline meetings={meetings} /> : <EmptyState title="No related meetings are linked to this issue." />}
             {missingMeetings > 0 && <MissingNote count={missingMeetings} noun="meeting" />}
+            <p className="fine-print">
+              Being on an agenda does not mean an item was approved.
+              {!isMock(issue) && ' The status above comes from the recorded vote or official recommendation.'}
+            </p>
           </section>
 
           <section aria-labelledby="docs-h">
             <h2 id="docs-h">Documents</h2>
             {documents.length ? (
-              <div className="card-grid card-grid--tight">
+              <ul className="card-grid card-grid--tight">
                 {documents.map((d) => (
-                  <DocumentCard key={d.id} document={d} />
+                  <li key={d.id}>
+                    <DocumentCard document={d} />
+                  </li>
                 ))}
-              </div>
+              </ul>
             ) : (
               <EmptyState title="No documents are linked to this issue." />
             )}
@@ -90,9 +90,8 @@ export function IssueDetailPage() {
         </div>
 
         <aside className="detail__side">
-          <LocationPanel issue={issue} />
           <section className="panel" aria-labelledby="sources-h">
-            <h2 id="sources-h">Sources</h2>
+            <h2 id="sources-h">Official sources</h2>
             {issue.sourceUrls.length ? (
               <ul className="plain-list">
                 {issue.sourceUrls.map((url, i) => (
@@ -105,9 +104,42 @@ export function IssueDetailPage() {
               <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
             )}
           </section>
+          <LocationPanel issue={issue} />
         </aside>
       </div>
     </article>
+  );
+}
+
+/** Related meetings in date order, so readers can follow the issue's path through city hall. */
+function MeetingTimeline({ meetings }: { meetings: Meeting[] }) {
+  const sorted = [...meetings].sort((a, b) => (a.date ?? '9999').localeCompare(b.date ?? '9999'));
+  return (
+    <ol className="timeline">
+      {sorted.map((m) => {
+        const time = formatTime(m.startTime);
+        return (
+          <li key={m.id} className={`timeline__item timeline__item--${m.status === 'scheduled' ? 'upcoming' : 'past'}`}>
+            <p className="timeline__date">
+              <time dateTime={m.date ?? undefined}>{formatDate(m.date)}</time>
+              {time ? ` · ${time}` : ''}
+            </p>
+            <p className="timeline__title">
+              <Link to={`/meetings/${encodeURIComponent(m.id)}`}>{m.title}</Link>
+            </p>
+            <p className="timeline__meta">
+              {meetingTypeLabel(m.meetingType)} · {meetingStatusLabel(m.status)}
+              {isMock(m) && (
+                <>
+                  {' '}
+                  <MockBadge record={m} />
+                </>
+              )}
+            </p>
+          </li>
+        );
+      })}
+    </ol>
   );
 }
 
@@ -122,7 +154,7 @@ function LocationPanel({ issue }: { issue: Issue }) {
       ) : (
         <>
           <p className="panel__strong">{loc.label ?? loc.address ?? 'Unnamed location'}</p>
-          {loc.address && loc.label && <p>{loc.address}</p>}
+          {loc.address && loc.address !== loc.label && <p>{loc.address}</p>}
           <p className="muted">
             {loc.verified
               ? 'Location checked against the source.'
@@ -133,8 +165,8 @@ function LocationPanel({ issue }: { issue: Issue }) {
                   : 'The exact location has not been mapped.'}
           </p>
           {coords ? (
-            <Link to={`/near-me?issue=${encodeURIComponent(issue.id)}`} className="text-link">
-              See it on the Near Me map →
+            <Link to={`/near-me?issue=${encodeURIComponent(issue.id)}`} className="button button--small">
+              <span aria-hidden="true" className="icon-lead">⌖</span>View on map
             </Link>
           ) : (
             <p className="muted">This issue isn’t shown on the map because the source gives no exact address.</p>
@@ -143,13 +175,6 @@ function LocationPanel({ issue }: { issue: Issue }) {
       )}
     </section>
   );
-}
-
-/** Names a source link by where it points, so readers know what they will open. */
-function sourceLabel(url: string, index: number): string {
-  if (/portal\.civicclerk\.com\/event\//.test(url)) return 'Meeting page on the city’s portal';
-  if (/civicclerk\.com\/.*GetMeetingFileStream/.test(url)) return 'Official meeting document (PDF)';
-  return `Official source ${index + 1}`;
 }
 
 function MissingNote({ count, noun }: { count: number; noun: string }) {

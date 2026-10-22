@@ -1,11 +1,15 @@
-import { Link } from 'react-router-dom';
+import { useRef, type ReactNode, type RefObject } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
+import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState } from '../services/filters';
+import { formatDate, humanize, ISSUE_STATUS_LABELS } from '../services/format';
+import { DEMO_LOCATIONS } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
 import { IssueCard, MeetingCard } from '../components/Cards';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { isMock } from '../components/MockBadge';
-import type { Meeting } from '../types/civic';
+import type { CivicDocument, Issue, Meeting } from '../types/civic';
 
 const todayIso = () => {
   const d = new Date();
@@ -24,9 +28,35 @@ export function splitMeetings(meetings: Meeting[], today = todayIso()) {
   return { upcoming, recent };
 }
 
+/** The agenda for a meeting: prefers a plain agenda over a packet. */
+export function agendaFor(meeting: Meeting, documents: CivicDocument[]): CivicDocument | null {
+  const docs = meeting.agendaDocumentIds.map((id) => documents.find((d) => d.id === id)).filter((d): d is CivicDocument => Boolean(d));
+  return docs.find((d) => d.documentType === 'agenda') ?? docs[0] ?? null;
+}
+
+/** Most recent verification date across curated records, or null when none is recorded. */
+function lastChecked(meetings: Meeting[]): string | null {
+  const dates = meetings.filter((m) => !isMock(m) && m.lastVerifiedAt).map((m) => m.lastVerifiedAt!.slice(0, 10));
+  return dates.length ? dates.sort().at(-1)! : null;
+}
+
 export function CitywidePage() {
   usePageTitle('Citywide');
   const state = useAsync(() => Promise.all([getMeetings(), getIssues(), getDocuments()]), []);
+  const issuesHeading = useRef<HTMLHeadingElement>(null);
+  const meetingsHeading = useRef<HTMLHeadingElement>(null);
+
+  // In-page jumps also move keyboard focus, so screen-reader users land where sighted users do.
+  const jumpTo = (el: HTMLElement | null) => {
+    if (!el) return;
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    el.scrollIntoView?.({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    el.focus({ preventScroll: true });
+  };
+
+  const ready = state.status === 'ready' ? state.data : null;
+  const anyMock = ready ? [...ready[0], ...ready[1], ...ready[2]].some(isMock) : false;
+  const checked = ready && !anyMock ? lastChecked(ready[0]) : null;
 
   return (
     <div className="page">
@@ -36,44 +66,77 @@ export function CitywidePage() {
           What’s on the table at City Hall
         </h1>
         <p className="hero__lede">
-          Meetings, proposals, and public documents in one place, written in plain language with a path back to the original source.
+          Recent proposals, decisions, and public meetings, written in plain language with a link to every official source.
         </p>
-        {state.status === 'ready' && (
-          <dl className="hero__stats">
-            <div>
-              <dt>Issues tracked</dt>
-              <dd>{state.data[1].length}</dd>
-            </div>
-            <div>
-              <dt>Meetings</dt>
-              <dd>{state.data[0].length}</dd>
-            </div>
-            <div>
-              <dt>Documents</dt>
-              <dd>{state.data[2].length}</dd>
-            </div>
-          </dl>
+        <div className="hero__actions">
+          <button type="button" className="button button--on-dark" onClick={() => jumpTo(issuesHeading.current)}>
+            Explore city issues
+          </button>
+          <Link to={`/near-me?loc=${DEMO_LOCATIONS[0].id}`} className="button button--outline-light">
+            Find issues near me
+          </Link>
+        </div>
+        {ready && (
+          <ul className="hero__stats" aria-label="What’s in this app">
+            <li>
+              <button type="button" className="hero__stat" onClick={() => jumpTo(issuesHeading.current)}>
+                <strong>{ready[1].length}</strong> issues
+              </button>
+            </li>
+            <li>
+              <button type="button" className="hero__stat" onClick={() => jumpTo(meetingsHeading.current)}>
+                <strong>{ready[0].length}</strong> meetings
+              </button>
+            </li>
+            <li>
+              <Link to="/archive" className="hero__stat">
+                <strong>{ready[2].length}</strong> documents
+              </Link>
+            </li>
+          </ul>
         )}
-        {state.status === 'ready' && (
+        {ready && (
           <p className="hero__note">
-            {[...state.data[0], ...state.data[1], ...state.data[2]].some(isMock)
+            {anyMock
               ? 'These counts include sample records and are not city totals.'
-              : 'A selected set of recent records checked against official city documents, not every city item.'}
+              : `A selected set of recent records, not every city item.${checked ? ` Last checked against official city documents on ${formatDate(checked)}.` : ''}`}
           </p>
         )}
       </section>
 
       {state.status === 'loading' && <LoadingState rows={4} />}
       {state.status === 'error' && <ErrorState onRetry={state.retry} />}
-      {state.status === 'ready' && <CitywideContent meetings={state.data[0]} issues={state.data[1]} />}
+      {ready && (
+        <CitywideContent
+          meetings={ready[0]}
+          issues={ready[1]}
+          documents={ready[2]}
+          issuesHeading={issuesHeading}
+          meetingsHeading={meetingsHeading}
+        />
+      )}
     </div>
   );
 }
 
-function CitywideContent({ meetings, issues }: { meetings: Meeting[]; issues: Awaited<ReturnType<typeof getIssues>> }) {
-  const { upcoming, recent } = splitMeetings(meetings);
-  const featured = issues.filter((i) => i.featured);
-  const others = issues.filter((i) => !i.featured);
+type ContentProps = {
+  meetings: Meeting[];
+  issues: Issue[];
+  documents: CivicDocument[];
+  issuesHeading: RefObject<HTMLHeadingElement | null>;
+  meetingsHeading: RefObject<HTMLHeadingElement | null>;
+};
+
+function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsHeading }: ContentProps) {
+  const [params, setParams] = useSearchParams();
+  const filters: IssueFilterState = { q: params.get('q') ?? '', topic: params.get('topic') ?? '', status: params.get('status') ?? '' };
+  const setFilter = (key: keyof IssueFilterState, value: string) => {
+    const p = new URLSearchParams(params);
+    if (value) p.set(key, value);
+    else p.delete(key);
+    setParams(p, { replace: true });
+  };
+  const clearFilters = () => setParams(new URLSearchParams(), { replace: true });
 
   if (!meetings.length && !issues.length) {
     return (
@@ -83,63 +146,149 @@ function CitywideContent({ meetings, issues }: { meetings: Meeting[]; issues: Aw
     );
   }
 
+  const { upcoming, recent } = splitMeetings(meetings);
+  const filtering = isFiltering(filters);
+  const matches = filterIssues(issues, filters);
+
   return (
     <div className="citywide-grid">
-      <section className="section section--issues" aria-labelledby="featured-heading">
+      <section className="section" aria-labelledby="issues-heading">
         <div className="section__head">
-          <h2 id="featured-heading">Featured issues</h2>
+          <h2 id="issues-heading" ref={issuesHeading} tabIndex={-1}>
+            City issues
+          </h2>
           <Link to="/near-me" className="text-link">
-            Sort by distance in Near Me →
+            See them on the map →
           </Link>
         </div>
-        {featured.length ? (
-          <div className="card-grid">
-            {featured.map((i) => (
-              <IssueCard key={i.id} issue={i} />
-            ))}
-          </div>
+
+        <IssueFilters issues={issues} filters={filters} onChange={setFilter} onClear={clearFilters} />
+        <p className="results-count" role="status" aria-live="polite">
+          {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
+        </p>
+
+        {filtering ? (
+          matches.length ? (
+            <IssueList issues={matches} headingLevel={3} />
+          ) : (
+            <EmptyState
+              title="No issues match these filters."
+              action={
+                <button type="button" className="button button--ghost" onClick={clearFilters}>
+                  Clear filters
+                </button>
+              }
+            >
+              <p>Try a different word, or choose “All topics” and “Any status”.</p>
+            </EmptyState>
+          )
         ) : (
-          <EmptyState title="No featured issues right now." />
-        )}
-        {others.length > 0 && (
           <>
-            <h3 className="subhead">More issues</h3>
-            <div className="card-grid">
-              {others.map((i) => (
-                <IssueCard key={i.id} issue={i} headingLevel={4} />
-              ))}
-            </div>
+            <IssueGroup title="Featured" issues={issues.filter((i) => i.featured)} />
+            <IssueGroup title="More issues" issues={issues.filter((i) => !i.featured)} />
           </>
         )}
       </section>
 
-      <aside className="section section--meetings" aria-label="Meetings">
-        <h2 id="upcoming-heading">Upcoming meetings</h2>
-        {upcoming.length ? (
-          <div className="stack">
-            {upcoming.map((m) => (
-              <MeetingCard key={m.id} meeting={m} />
-            ))}
-          </div>
-        ) : (
-          <EmptyState title="No upcoming meetings in this dataset." />
-        )}
-        <h2 id="recent-heading" className="section__spaced">
-          Recent meetings
+      <aside className="section section--meetings" aria-labelledby="meetings-heading">
+        <h2 id="meetings-heading" ref={meetingsHeading} tabIndex={-1}>
+          Meetings
         </h2>
-        {recent.length ? (
-          <div className="stack">
-            {recent.map((m) => (
-              <MeetingCard key={m.id} meeting={m} />
-            ))}
-          </div>
-        ) : (
-          <EmptyState title="No past meetings in this dataset." />
-        )}
-        <Link to="/archive" className="text-link section__spaced">
-          Browse the full archive →
+        <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="No upcoming meetings in this dataset." />
+        <MeetingGroup title="Recent" meetings={recent} documents={documents} empty="No past meetings in this dataset." />
+        <Link to="/archive" className="text-link">
+          Browse all meetings and documents →
         </Link>
       </aside>
     </div>
+  );
+}
+
+function IssueFilters({
+  issues,
+  filters,
+  onChange,
+  onClear,
+}: {
+  issues: Issue[];
+  filters: IssueFilterState;
+  onChange: (key: keyof IssueFilterState, value: string) => void;
+  onClear: () => void;
+}) {
+  return (
+    <form className="filters" role="search" aria-label="Search and filter issues" onSubmit={(e) => e.preventDefault()}>
+      <div className="filters__field filters__field--grow">
+        <label htmlFor="issue-q">Search issues</label>
+        <input id="issue-q" type="search" value={filters.q} placeholder="e.g. speed limit, Windward" onChange={(e) => onChange('q', e.target.value)} />
+      </div>
+      <div className="filters__field">
+        <label htmlFor="issue-topic">Topic</label>
+        <select id="issue-topic" value={filters.topic} onChange={(e) => onChange('topic', e.target.value)}>
+          <option value="">All topics</option>
+          {topicsIn(issues).map((t) => (
+            <option key={t} value={t}>
+              {humanize(t)}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="filters__field">
+        <label htmlFor="issue-status">Status</label>
+        <select id="issue-status" value={filters.status} onChange={(e) => onChange('status', e.target.value)}>
+          <option value="">Any status</option>
+          {statusesIn(issues).map((s) => (
+            <option key={s} value={s}>
+              {ISSUE_STATUS_LABELS[s]}
+            </option>
+          ))}
+        </select>
+      </div>
+      {isFiltering(filters) && (
+        <button type="button" className="button button--ghost filters__clear" onClick={onClear}>
+          Clear
+        </button>
+      )}
+    </form>
+  );
+}
+
+function IssueGroup({ title, issues }: { title: string; issues: Issue[] }) {
+  if (!issues.length) return null;
+  return (
+    <>
+      <h3 className="subhead">{title}</h3>
+      <IssueList issues={issues} headingLevel={4} />
+    </>
+  );
+}
+
+function IssueList({ issues, headingLevel }: { issues: Issue[]; headingLevel: 3 | 4 }) {
+  return (
+    <ul className="issue-list">
+      {issues.map((i) => (
+        <li key={i.id}>
+          <IssueCard issue={i} headingLevel={headingLevel} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function MeetingGroup({ title, meetings, documents, empty }: { title: string; meetings: Meeting[]; documents: CivicDocument[]; empty: ReactNode }) {
+  return (
+    <>
+      <h3 className="subhead">{title}</h3>
+      {meetings.length ? (
+        <ul className="stack">
+          {meetings.map((m) => (
+            <li key={m.id}>
+              <MeetingCard meeting={m} agenda={agendaFor(m, documents)} headingLevel={4} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <EmptyState title={String(empty)} />
+      )}
+    </>
   );
 }

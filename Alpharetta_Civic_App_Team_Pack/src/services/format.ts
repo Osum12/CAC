@@ -70,3 +70,21 @@ export function safeUrl(url: string | null | undefined): string | null {
     return null;
   }
 }
+
+export function formatWeekday(iso: string | null): string | null {
+  const d = parseIsoDate(iso);
+  return d ? d.toLocaleDateString('en-US', { weekday: 'short' }) : null;
+}
+
+/** Names a source link by where it points, so readers know what they will open. */
+export function sourceLabel(url: string, index = 0): string {
+  if (/portal\.civicclerk\.com\/event\//.test(url)) return 'Meeting page on the city’s portal';
+  if (/civicclerk\.com\/.*GetMeetingFileStream/.test(url)) return 'Official meeting document (PDF)';
+  return `Official source ${index + 1}`;
+}
+
+/** Prefers a direct official document over a portal page as the single "primary" source. */
+export function primarySource(urls: string[]): string | null {
+  const valid = urls.map(safeUrl).filter((u): u is string => Boolean(u));
+  return valid.find((u) => /GetMeetingFileStream/.test(u)) ?? valid[0] ?? null;
+}

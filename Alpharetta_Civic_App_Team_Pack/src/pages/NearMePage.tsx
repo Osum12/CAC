@@ -193,9 +193,9 @@ function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIss
         </span>
       )}
       <div className="feed-item__body">
-        <div className="card__meta">
+        <div className="card__top">
           <span className="eyebrow">{humanize(issue.category)}</span>
-          <MockBadge record={issue} />
+          <IssueStatusBadge status={issue.status} />
         </div>
         <h3 className="feed-item__title">
           <Link to={`/issues/${encodeURIComponent(issue.id)}`}>{issue.title}</Link>
@@ -205,7 +205,7 @@ function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIss
           {reason}
         </p>
         <div className="card__foot">
-          <IssueStatusBadge status={issue.status} />
+          {isMock(issue) && <MockBadge record={issue} />}
           {coords && (
             <button type="button" className="button button--small button--ghost" aria-pressed={selected} onClick={onShowOnMap}>
               {selected ? 'Highlighted on map' : 'Show on map'}

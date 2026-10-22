@@ -1,14 +1,15 @@
-import { Link, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { getDocumentsForMeeting, getIssuesForMeeting, getMeetingById } from '../services/civicData';
 import { formatDate, formatTime, meetingTypeLabel } from '../services/format';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
 import { DocumentCard, IssueCard } from '../components/Cards';
-import { MockBadge, MockNotice } from '../components/MockBadge';
+import { MockBadge, MockNotice, isMock } from '../components/MockBadge';
 import { SourceAction } from '../components/SourceAction';
 import { MeetingStatusBadge } from '../components/StatusBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
+import { BackLink } from '../components/BackLink';
 
 export function MeetingDetailPage() {
   const { meetingId = '' } = useParams();
@@ -30,13 +31,11 @@ export function MeetingDetailPage() {
 
   return (
     <article className="page detail">
-      <nav aria-label="Breadcrumb" className="breadcrumb">
-        <Link to="/archive">Archive</Link> <span aria-hidden="true">/</span> <span>Meeting</span>
-      </nav>
+      <BackLink fallbackTo="/archive" fallbackLabel="Archive" />
       <header className="detail__header">
-        <div className="card__meta">
+        <div className="card__top">
           <span className="eyebrow">{meetingTypeLabel(meeting.meetingType)}</span>
-          <MockBadge record={meeting} size="lg" />
+          {isMock(meeting) && <MockBadge record={meeting} size="lg" />}
         </div>
         <h1 className="detail__title">{meeting.title}</h1>
         <div className="detail__status">
@@ -59,11 +58,13 @@ export function MeetingDetailPage() {
           <section aria-labelledby="m-docs-h">
             <h2 id="m-docs-h">Agenda and documents</h2>
             {documents.length ? (
-              <div className="card-grid card-grid--tight">
+              <ul className="card-grid card-grid--tight">
                 {documents.map((d) => (
-                  <DocumentCard key={d.id} document={d} />
+                  <li key={d.id}>
+                    <DocumentCard document={d} />
+                  </li>
                 ))}
-              </div>
+              </ul>
             ) : (
               <EmptyState title="No agenda or documents are linked to this meeting yet." />
             )}
@@ -73,11 +74,13 @@ export function MeetingDetailPage() {
           <section aria-labelledby="m-issues-h">
             <h2 id="m-issues-h">Issues on the agenda</h2>
             {issues.length ? (
-              <div className="card-grid card-grid--tight">
+              <ul className="issue-list">
                 {issues.map((i) => (
-                  <IssueCard key={i.id} issue={i} />
+                  <li key={i.id}>
+                    <IssueCard issue={i} />
+                  </li>
                 ))}
-              </div>
+              </ul>
             ) : (
               <EmptyState title="No issues are linked to this meeting." />
             )}
@@ -90,7 +93,7 @@ export function MeetingDetailPage() {
             <h2 id="m-watch-h">Watch and verify</h2>
             <ul className="plain-list">
               <li>
-                <SourceAction url={meeting.recordingUrl} label="Watch the recording" unavailableText="Recording not available" />
+                <SourceAction url={meeting.recordingUrl} label="Watch the recording" unavailableText={meeting.status === 'scheduled' ? 'No recording yet: this meeting hasn’t happened' : 'Recording not available'} />
               </li>
               <li>
                 <SourceAction url={meeting.officialPageUrl} label="Official meeting page" unavailableText="Official page not linked yet" />
