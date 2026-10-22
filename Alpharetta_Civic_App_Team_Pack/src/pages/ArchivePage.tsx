@@ -3,6 +3,7 @@ import { getDocuments, getMeetings } from '../services/civicData';
 import { formatDate, formatTime, humanize, meetingTypeLabel, safeUrl } from '../services/format';
 import { documentMatches, meetingMatches } from '../services/filters';
 import { MeetingStatusBadge } from '../components/StatusBadge';
+import { ExternalAction } from '../components/Cards';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
 import { MockBadge, isMock } from '../components/MockBadge';
@@ -129,17 +130,20 @@ export function ArchivePage() {
             </ol>
           ) : (
             <EmptyState
-              title={q ? `No records match “${q}”.` : EMPTY_COPY[filter]}
+              title={emptyTitle(filter, q, count('all'))}
               action={
-                (q || filter !== 'all') && (
-                  <button
-                    type="button"
-                    className="button button--ghost"
-                    onClick={() => setParams(new URLSearchParams(), { replace: true })}
-                  >
-                    Show all records
-                  </button>
-                )
+                <div className="button-row">
+                  {q && filter !== 'all' && count('all') > 0 && (
+                    <button type="button" className="button button--ghost" onClick={() => setFilter('all')}>
+                      Show all types
+                    </button>
+                  )}
+                  {(q || filter !== 'all') && (
+                    <button type="button" className="button button--ghost" onClick={() => setParams(new URLSearchParams(), { replace: true })}>
+                      Show all records
+                    </button>
+                  )}
+                </div>
               }
             />
           )}
@@ -147,6 +151,16 @@ export function ArchivePage() {
       )}
     </div>
   );
+}
+
+/** Explains an empty result, naming the active type so a combined search isn't misleading. */
+function emptyTitle(filter: ArchiveFilter, q: string, matchesInAll: number): string {
+  if (!q) return EMPTY_COPY[filter];
+  if (filter === 'all') return `No records match “${q}”.`;
+  const type = FILTERS.find((f) => f.id === filter)!.label.toLowerCase();
+  return matchesInAll > 0
+    ? `No ${type} match “${q}”. ${matchesInAll} other ${matchesInAll === 1 ? 'record matches' : 'records match'} in All.`
+    : `No records match “${q}”.`;
 }
 
 const entryMatches = (e: ArchiveEntry, q: string) => (e.kind === 'meeting' ? meetingMatches(e.record, q) : documentMatches(e.record, q));
@@ -184,18 +198,16 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
         <div className="card__actions">
           {isMeeting ? (
             recording ? (
-              <a className="card__action" href={recording} target="_blank" rel="noopener noreferrer">
-                Watch recording<span aria-hidden="true"> ↗</span>
-                <span className="visually-hidden"> (opens in a new tab)</span>
-              </a>
+              <ExternalAction href={recording} context={entry.record.title}>
+                Watch recording
+              </ExternalAction>
             ) : (
               <span className="card__action card__action--muted">No recording linked</span>
             )
           ) : file ? (
-            <a className="card__action" href={file} target="_blank" rel="noopener noreferrer">
-              Open PDF<span aria-hidden="true"> ↗</span>
-              <span className="visually-hidden"> (opens in a new tab)</span>
-            </a>
+            <ExternalAction href={file} context={entry.record.title}>
+              Open PDF
+            </ExternalAction>
           ) : (
             <span className="card__action card__action--muted">No file linked</span>
           )}

@@ -175,7 +175,7 @@ describe('With the real curated records in /data', () => {
     expect(records).toHaveLength(5);
     for (const a of records) expect(a.getAttribute('href')).toMatch(/^https:\/\/alpharettaga\.api\.civicclerk\.com\//);
     expect(screen.getByText(/not every city item/)).toBeInTheDocument();
-    expect(screen.getByText(/Last checked against official city documents on October 22, 2026/)).toBeInTheDocument();
+    expect(screen.getByText(/Meeting records last checked against official city documents on October 22, 2026/)).toBeInTheDocument();
     // Meeting cards link to their real agenda PDFs.
     expect(screen.getAllByRole('link', { name: /^Agenda \(PDF\)/ }).length).toBe(5);
   });
@@ -251,6 +251,30 @@ describe('Issue detail timeline and archive search', () => {
     expect(screen.getByText(/No records match/)).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Show all records' }));
     expect(within(screen.getByRole('list')).getAllByRole('listitem')).toHaveLength(8);
+  });
+});
+
+describe('Review fixes', () => {
+  it('ignores filter values in the URL that are not in the data', async () => {
+    renderAt('/?topic=bogus&status=denied');
+    expect(await screen.findByText('5 issues')).toBeInTheDocument();
+    expect(screen.getByLabelText('Topic')).toHaveValue('');
+  });
+
+  it('names the active type when search plus type finds nothing', async () => {
+    renderAt('/archive?q=planning&type=videos');
+    expect(await screen.findByText(/No videos match “planning”\. \d+ other records? match/)).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: 'Show all types' }));
+    expect(screen.getByLabelText('Search meetings and documents')).toHaveValue('planning');
+    expect(screen.getByRole('button', { name: /^All/ })).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('gives repeated document links distinct accessible names', async () => {
+    setDataLoader(null);
+    renderAt('/issues/issue-mp-26-13-royal-400');
+    const pdfLinks = await screen.findAllByRole('link', { name: /^Open PDF/ });
+    const names = pdfLinks.map((a) => a.textContent);
+    expect(new Set(names).size).toBe(names.length);
   });
 });
 

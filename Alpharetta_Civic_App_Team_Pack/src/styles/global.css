@@ -1,7 +1,7 @@
 /* Alpharetta Civic design system.
    Direction: a modern civic "public notice" look. Warm paper, deep evergreen ink,
-   a brick accent, editorial serif headings (Fraunces) over the US-government
-   text face Public Sans. All colors are tokens so dark mode is a token swap. */
+   a brick accent, editorial serif headings (Fraunces) over the calm, humanist
+   text face Source Sans 3. All colors are tokens so dark mode is a token swap. */
 
 :root {
   --paper: #f6f2ea;
@@ -39,7 +39,7 @@
   --st-neutral-ink: #45403a;
 
   --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
-  --font-body: 'Public Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-body: 'Source Sans 3', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
 
   --radius: 10px;
   --radius-lg: 16px;
@@ -73,6 +73,7 @@
     --btn-bg-hover: #cfe5db;
     --btn-ink: #0d1b17;
     --masthead-edge: #2e3b36;
+    --hero-edge: #34463f;
     --mock-bg: #3a2f10;
     --mock-ink: #f5d98a;
     --mock-line: #8a6d1d;
@@ -1184,7 +1185,9 @@ input[aria-invalid='true'] {
   --space-6: 32px;
 }
 body {
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
+  line-height: 1.6;
+  letter-spacing: 0.003em;
 }
 h1,
 h2,
@@ -1286,6 +1289,15 @@ ul.card-grid,
 }
 .hero__stat:hover {
   background: rgb(255 255 255 / 0.1);
+}
+.hero__stat--static,
+.hero__stat--static:hover {
+  cursor: default;
+  background: transparent;
+  border-color: transparent;
+}
+.hero {
+  border: 1px solid var(--hero-edge, transparent);
 }
 .hero__stat strong {
   font-family: var(--font-display);
@@ -1420,6 +1432,12 @@ h2[tabindex='-1']:focus-visible {
 }
 .card--meeting .card__title {
   font-size: 1.1rem;
+}
+.card__when-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-3);
 }
 .datechip {
   width: 60px;

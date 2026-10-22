@@ -37,6 +37,10 @@ Durable record of the AI-assisted build session (Claude Code) started 2026-10-21
 | 2026-10-22 | typecheck, lint, build | passed |
 | 2026-10-22 | Real-data swap: `npm test`, typecheck, lint, build | 49 tests passed; all others passed |
 | 2026-10-22 | Real-data route sweep (8 routes x 375/1366) | 0 overflow, 0 console errors, 3 approximate pins labelled |
+| 2026-10-22 | UI/UX refinement round: `npm test` | 6 files, 61 tests passed |
+| 2026-10-22 | Responsive sweep: 7 routes x 320/375/430/768/1024/1440 | 0 horizontal overflow, 0 console errors, no text under 13px |
+| 2026-10-22 | AI QA/accessibility review | 0 critical, 1 high (initial load scrolled past the skip link), 3 medium, 5 low; all fixed and re-verified (fresh load at top, first Tab = "Skip to content") |
+| 2026-10-22 | typecheck, lint, `npm run build` | passed |
 
 ## Known limitations
 
@@ -44,7 +48,7 @@ Durable record of the AI-assisted build session (Claude Code) started 2026-10-21
 - Map points for real issues are approximate (U.S. Census geocoder, from addresses in city documents) and labelled as such.
 - No geocoding in the app: typed addresses are rejected with an honest message. The only starting location is Alpharetta City Hall.
 - Map tiles come from the public OpenStreetMap server and need internet access. The list still works offline.
-- Search (`searchRecords`) exists in the service but has no UI (P1).
+- Citywide has keyword/topic/status filters and the Archive has keyword search. There is no date filter yet.
 
 - Browser checks used headless Edge through Playwright. The Claude in Chrome extension was not connected, so no manual click-through in a real Chrome window was done.
 

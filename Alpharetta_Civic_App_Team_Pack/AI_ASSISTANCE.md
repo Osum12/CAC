@@ -30,6 +30,13 @@ In a later step (2026-10-22), at the session runner's request, Claude Code also:
 
 **The team should open each source link and confirm the records themselves** before presenting them as checked by the team.
 
+On 2026-10-22, also at the session runner's request, Claude Code did a UI/UX refinement round:
+- Added hero actions, Citywide search and filters, and Archive search.
+- Redesigned the issue and meeting cards and added map and source links.
+- Added the issue timeline and back navigation, and switched the body font to Source Sans 3.
+- Added the tests for these features.
+- Ran an AI QA/accessibility reviewer, which found 8 issues (no critical ones), and fixed them.
+
 The AI did not change the PRDs and did not deploy anything.
 
 ## Student contributions (TO BE COMPLETED BY THE TEAM)

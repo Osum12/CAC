@@ -11,11 +11,15 @@ import { IssueStatusBadge, MeetingStatusBadge } from './StatusBadge';
 
 type HeadingLevel = 2 | 3 | 4;
 
-/** Small outbound link used inside card action rows. */
-function ExternalAction({ href, children }: { href: string; children: string }) {
+/**
+ * Small outbound link used inside card action rows. `context` (usually the record title)
+ * is added for screen readers so repeated links like "Open PDF" are distinguishable.
+ */
+export function ExternalAction({ href, children, context }: { href: string; children: string; context: string }) {
   return (
     <a className="card__action" href={href} target="_blank" rel="noopener noreferrer">
       {children}
+      <span className="visually-hidden">: {context}</span>
       <span aria-hidden="true"> ↗</span>
       <span className="visually-hidden"> (opens in a new tab)</span>
     </a>
@@ -54,7 +58,9 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
           </Link>
         )}
         {source ? (
-          <ExternalAction href={source}>Official record</ExternalAction>
+          <ExternalAction href={source} context={issue.title}>
+            Official record
+          </ExternalAction>
         ) : (
           <span className="card__action card__action--muted">No official source linked</span>
         )}
@@ -92,22 +98,26 @@ export function MeetingCard({
         )}
       </div>
       <div className="card__body">
-        <div className="card__top">
-          <span className="eyebrow">{meetingTypeLabel(meeting.meetingType)}</span>
-          <MeetingStatusBadge status={meeting.status} />
-        </div>
+        <span className="eyebrow">{meetingTypeLabel(meeting.meetingType)}</span>
         <H className="card__title">
           <Link to={`/meetings/${encodeURIComponent(meeting.id)}`} className="card__link">
             {meeting.title}
           </Link>
         </H>
-        <p className="card__when">
-          <time dateTime={meeting.date ?? undefined}>{formatDate(meeting.date)}</time>
-          {time ? ` · ${time}` : ''}
-        </p>
+        <div className="card__when-row">
+          <p className="card__when">
+            <time dateTime={meeting.date ?? undefined}>{formatDate(meeting.date)}</time>
+            {time ? ` · ${time}` : ''}
+          </p>
+          <MeetingStatusBadge status={meeting.status} />
+        </div>
         {(agendaUrl || isMock(meeting)) && (
           <div className="card__actions">
-            {agendaUrl && <ExternalAction href={agendaUrl}>Agenda (PDF)</ExternalAction>}
+            {agendaUrl && (
+              <ExternalAction href={agendaUrl} context={meeting.title}>
+                Agenda (PDF)
+              </ExternalAction>
+            )}
             {isMock(meeting) && <MockBadge record={meeting} />}
           </div>
         )}
@@ -133,7 +143,9 @@ export function DocumentCard({ document, headingLevel = 3 }: { document: CivicDo
       <p className="card__when">Published {formatDate(document.publishedDate, 'date not provided')}</p>
       <div className="card__actions">
         {url ? (
-          <ExternalAction href={url}>{/GetMeetingFileStream/.test(url) ? 'Open PDF' : 'Open document'}</ExternalAction>
+          <ExternalAction href={url} context={document.title}>
+            {/GetMeetingFileStream/.test(url) ? 'Open PDF' : 'Open document'}
+          </ExternalAction>
         ) : (
           <span className="card__action card__action--muted">No file linked yet</span>
         )}

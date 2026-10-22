@@ -15,15 +15,15 @@ export function Layout() {
   const mainRef = useRef<HTMLElement>(null);
 
   // On route change, move focus to the main region so keyboard and screen-reader
-  // users start at the new page content; scroll back to the top.
-  const first = useRef(true);
+  // users start at the new page content; scroll back to the top. Comparing with the
+  // previous pathname (not a "first run" flag) keeps this from firing on the initial
+  // load, even when React StrictMode runs effects twice in development.
+  const prevPath = useRef(pathname);
   useEffect(() => {
-    if (first.current) {
-      first.current = false;
-      return;
-    }
+    if (prevPath.current === pathname) return;
+    prevPath.current = pathname;
     window.scrollTo(0, 0);
-    mainRef.current?.focus();
+    mainRef.current?.focus({ preventScroll: true });
   }, [pathname]);
 
   return (

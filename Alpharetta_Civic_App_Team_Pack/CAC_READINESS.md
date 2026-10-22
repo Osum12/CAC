@@ -26,12 +26,12 @@ Checked 2026-10-21 against the official 2026 rulebook: https://www.congressional
 
 1. **Make and document real student technical work** (required by the AI rule). Each item below is a meaningful, self-contained piece of work:
    - Verify the 5 AI-researched records yourselves (open every source link), then research and add more items, e.g. the other Oct 26 agenda items (see `data/README.md`). This needs real research skill and is core to the product.
-   - Build the P1 search box using the existing `searchRecords()` in `src/services/civicData.ts`.
-   - Add the topic/category filter to Citywide or Archive.
+   - Add date filtering (e.g. "last 30 days") to Citywide or the Archive, building on `src/services/filters.ts`.
+   - Let users pick their own starting location on Near Me from a list of public places.
    - Write tests for whatever you add.
 2. **Read and understand the code** well enough to explain it to a judge: the data flow (`page → civicData.ts → JSON`), how Near Me ranking works (`nearMe.ts`), and why null URLs are never links (`SourceAction.tsx`).
 3. **Fill in `AI_ASSISTANCE.md`** honestly, and put a matching disclosure in the submission form.
-4. **List open-source libraries** in the submission: React, React Router, Leaflet, OpenStreetMap data, Vite, Vitest, Testing Library, ESLint, Google Fonts (Fraunces, Public Sans).
+4. **List open-source libraries** in the submission: React, React Router, Leaflet, OpenStreetMap data, Vite, Vitest, Testing Library, ESLint, Google Fonts (Fraunces, Source Sans 3).
 5. **Record the demo video** (1–3 min). Say aloud that the records are sample data unless you've replaced them.
 6. **Confirm eligibility**: grades, residency, district, team size ≤ 4.
 7. **Merge to `main`** only after the team reviews `integration`, if the team wants `main` to be the submitted version.

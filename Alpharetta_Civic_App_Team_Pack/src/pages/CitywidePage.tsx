@@ -89,9 +89,9 @@ export function CitywidePage() {
               </button>
             </li>
             <li>
-              <Link to="/archive" className="hero__stat">
-                <strong>{ready[2].length}</strong> documents
-              </Link>
+              <span className="hero__stat hero__stat--static">
+                <strong>{ready[2].length}</strong> official documents
+              </span>
             </li>
           </ul>
         )}
@@ -99,7 +99,7 @@ export function CitywidePage() {
           <p className="hero__note">
             {anyMock
               ? 'These counts include sample records and are not city totals.'
-              : `A selected set of recent records, not every city item.${checked ? ` Last checked against official city documents on ${formatDate(checked)}.` : ''}`}
+              : `A selected set of recent records, not every city item.${checked ? ` Meeting records last checked against official city documents on ${formatDate(checked)}.` : ''}`}
           </p>
         )}
       </section>
@@ -129,7 +129,15 @@ type ContentProps = {
 
 function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsHeading }: ContentProps) {
   const [params, setParams] = useSearchParams();
-  const filters: IssueFilterState = { q: params.get('q') ?? '', topic: params.get('topic') ?? '', status: params.get('status') ?? '' };
+  // Values from the URL are only honored if they exist in the data, so a stale or mistyped
+  // link never filters by something the dropdowns can't show.
+  const rawTopic = params.get('topic') ?? '';
+  const rawStatus = params.get('status') ?? '';
+  const filters: IssueFilterState = {
+    q: params.get('q') ?? '',
+    topic: topicsIn(issues).includes(rawTopic) ? rawTopic : '',
+    status: (statusesIn(issues) as string[]).includes(rawStatus) ? rawStatus : '',
+  };
   const setFilter = (key: keyof IssueFilterState, value: string) => {
     const p = new URLSearchParams(params);
     if (value) p.set(key, value);
