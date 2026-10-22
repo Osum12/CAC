@@ -41,6 +41,9 @@ Durable record of the AI-assisted build session (Claude Code) started 2026-10-21
 | 2026-10-22 | Responsive sweep: 7 routes x 320/375/430/768/1024/1440 | 0 horizontal overflow, 0 console errors, no text under 13px |
 | 2026-10-22 | AI QA/accessibility review | 0 critical, 1 high (initial load scrolled past the skip link), 3 medium, 5 low; all fixed and re-verified (fresh load at top, first Tab = "Skip to content") |
 | 2026-10-22 | typecheck, lint, `npm run build` | passed |
+| 2026-10-22 | Final visual pass: link check of all 17 data URLs | 17/17 live (9 PDFs, 7 portal pages, 1 video) |
+| 2026-10-22 | Final visual pass: meeting dates/times vs city portal event list; map points vs Census geocoder | 5/5 meetings match; 3/3 coordinates match |
+| 2026-10-22 | Final visual pass: tests, typecheck, lint, build, 7 routes x 6 widths | 67 passed; all passed; 0 overflow, 0 console errors |
 | 2026-10-22 | Date filters: `npm test`, typecheck, lint, build, 6-width sweep | 67 tests passed; all others passed; 0 overflow, 0 console errors |
 
 ## Known limitations

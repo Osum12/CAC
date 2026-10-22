@@ -1654,3 +1654,135 @@ h2[tabindex='-1']:focus-visible {
     transform: none;
   }
 }
+
+/* ---------- Final visual pass: readability, consistency, narrow layouts ---------- */
+:root {
+  --card-pad: 22px;
+  --card-pad-sm: 18px;
+}
+
+/* Text sizes: summaries match body copy; metadata and actions never drop below 16px. */
+.card__summary {
+  font-size: 1.0625rem;
+  line-height: 1.6;
+}
+.card__meta-line,
+.card__when,
+.archive-row__date,
+.timeline__meta,
+.feed-item__reason,
+.results-count {
+  font-size: 1rem;
+}
+.eyebrow {
+  font-size: 0.875rem;
+}
+.card__title {
+  font-size: 1.3rem;
+  line-height: 1.25;
+}
+.card--meeting .card__title {
+  font-size: 1.15rem;
+}
+
+/* One padding value for every card-like surface. */
+.card,
+.feed-item,
+.panel {
+  padding: var(--card-pad);
+}
+.card {
+  gap: 10px;
+}
+
+/* Badges share one height and size so rows line up. */
+.status,
+.badge {
+  min-height: 28px;
+  font-size: 0.875rem;
+  padding: 2px 10px;
+}
+
+/* Card actions read as clear secondary buttons rather than small underlined text. */
+.card__actions {
+  gap: var(--space-2) var(--space-3);
+  padding-top: var(--space-3);
+  margin-top: var(--space-1);
+}
+.card__action {
+  min-height: 40px;
+  padding: 0 16px;
+  font-size: 1rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--paper);
+  text-decoration: none;
+  transition:
+    background 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+.card__action:hover {
+  background: var(--paper-2);
+  border-color: var(--accent-ink);
+}
+.card__action--muted {
+  border-color: transparent;
+  background: none;
+  padding: 0;
+}
+.button--small {
+  min-height: 40px;
+}
+
+/* Meeting status always sits on its own line under the date, for every meeting type. */
+.card__when-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+/* Section rhythm. */
+.subhead {
+  margin: var(--space-6) 0 var(--space-3);
+}
+.section__head + .filters {
+  margin-top: 0;
+}
+
+/* Below 1100px there isn't room for a comfortable meetings column, so meetings move
+   under the issues and lay out as a grid of cards instead of a cramped sidebar. */
+@media (max-width: 1100px) {
+  .citywide-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-6);
+  }
+  .section--meetings ul.stack {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
+    gap: var(--space-4);
+  }
+}
+
+/* Phones: tighter padding, and filters in two columns so issues stay near the top. */
+@media (max-width: 560px) {
+  .card,
+  .feed-item,
+  .panel {
+    padding: var(--card-pad-sm);
+  }
+  .filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3) var(--space-2);
+  }
+  .filters--compact {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .filters__field--grow {
+    grid-column: 1 / -1;
+  }
+  .filters__clear {
+    align-self: end;
+  }
+  .card__title {
+    font-size: 1.2rem;
+  }
+}
