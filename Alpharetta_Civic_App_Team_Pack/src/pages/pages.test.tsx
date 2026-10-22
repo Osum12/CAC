@@ -278,6 +278,38 @@ describe('Review fixes', () => {
   });
 });
 
+describe('Date filters', () => {
+  // Pin "today" so results don't change with the real calendar. Only Date is faked,
+  // so userEvent and React's timers keep working.
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(2026, 9, 22, 12));
+  });
+  afterEach(() => vi.useRealTimers());
+
+  it('filters Citywide issues by when their status was updated', async () => {
+    renderAt('/');
+    await userEvent.selectOptions(await screen.findByLabelText('Updated'), '30d');
+    expect(screen.getByText('4 of 5 issues match')).toBeInTheDocument(); // the undated issue drops out
+    expect(screen.queryByRole('link', { name: /^MOCK ONLY: Sample Neighborhood Design Discussion$/ })).not.toBeInTheDocument();
+    expect(screen.queryByRole('option', { name: 'Upcoming' })).not.toBeInTheDocument();
+  });
+
+  it('shows upcoming records in the Archive and ignores unknown values', async () => {
+    renderAt('/archive?when=upcoming');
+    const rows = await screen.findAllByRole('listitem');
+    // Fixture items dated Oct 27, 2026: one meeting and one document.
+    expect(rows).toHaveLength(2);
+    expect(screen.getByText(/2 records · upcoming/)).toBeInTheDocument();
+  });
+
+  it('treats an unknown date value as "Any time"', async () => {
+    renderAt('/archive?when=constructor');
+    expect(await screen.findByLabelText('Date')).toHaveValue('');
+    expect(within(screen.getByRole('list')).getAllByRole('listitem')).toHaveLength(8);
+  });
+});
+
 describe('Routing', () => {
   it('shows a not-found page for unknown routes', async () => {
     renderAt('/nowhere');

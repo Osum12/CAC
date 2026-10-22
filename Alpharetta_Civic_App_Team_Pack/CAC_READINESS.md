@@ -26,7 +26,7 @@ Checked 2026-10-21 against the official 2026 rulebook: https://www.congressional
 
 1. **Make and document real student technical work** (required by the AI rule). Each item below is a meaningful, self-contained piece of work:
    - Verify the 5 AI-researched records yourselves (open every source link), then research and add more items, e.g. the other Oct 26 agenda items (see `data/README.md`). This needs real research skill and is core to the product.
-   - Add date filtering (e.g. "last 30 days") to Citywide or the Archive, building on `src/services/filters.ts`.
+   - Add a custom date picker ("from / to") alongside the preset date ranges in `src/services/filters.ts`.
    - Let users pick their own starting location on Near Me from a list of public places.
    - Write tests for whatever you add.
 2. **Read and understand the code** well enough to explain it to a judge: the data flow (`page → civicData.ts → JSON`), how Near Me ranking works (`nearMe.ts`), and why null URLs are never links (`SourceAction.tsx`).

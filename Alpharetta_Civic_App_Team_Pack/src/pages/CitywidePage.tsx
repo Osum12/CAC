@@ -1,8 +1,8 @@
 import { useRef, type ReactNode, type RefObject } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
-import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState } from '../services/filters';
-import { formatDate, humanize, ISSUE_STATUS_LABELS } from '../services/format';
+import { DATE_RANGE_LABELS, filterIssues, isFiltering, statusesIn, topicsIn, type DateRange, type IssueFilterState } from '../services/filters';
+import { formatDate, humanize, ISSUE_STATUS_LABELS, todayIso } from '../services/format';
 import { DEMO_LOCATIONS } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
@@ -10,11 +10,6 @@ import { IssueCard, MeetingCard } from '../components/Cards';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { isMock } from '../components/MockBadge';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
-
-const todayIso = () => {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-};
 
 /**
  * Upcoming = not held or canceled, and dated today or later. A "scheduled" meeting with no
@@ -27,6 +22,9 @@ export function splitMeetings(meetings: Meeting[], today = todayIso()) {
   const recent = meetings.filter((m) => !isUpcoming(m)).sort((a, b) => (b.date ?? '').localeCompare(a.date ?? ''));
   return { upcoming, recent };
 }
+
+/** Issue dates (when a status was set) are never in the future, so "Upcoming" isn't offered here. */
+const ISSUE_DATE_RANGES: Exclude<DateRange, '' | 'upcoming'>[] = ['30d', '90d', 'year'];
 
 /** The agenda for a meeting: prefers a plain agenda over a packet. */
 export function agendaFor(meeting: Meeting, documents: CivicDocument[]): CivicDocument | null {
@@ -133,10 +131,12 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
   // link never filters by something the dropdowns can't show.
   const rawTopic = params.get('topic') ?? '';
   const rawStatus = params.get('status') ?? '';
+  const rawWhen = params.get('when') ?? '';
   const filters: IssueFilterState = {
     q: params.get('q') ?? '',
     topic: topicsIn(issues).includes(rawTopic) ? rawTopic : '',
     status: (statusesIn(issues) as string[]).includes(rawStatus) ? rawStatus : '',
+    when: (ISSUE_DATE_RANGES as string[]).includes(rawWhen) ? (rawWhen as DateRange) : '',
   };
   const setFilter = (key: keyof IssueFilterState, value: string) => {
     const p = new URLSearchParams(params);
@@ -187,7 +187,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
                 </button>
               }
             >
-              <p>Try a different word, or choose “All topics” and “Any status”.</p>
+              <p>Try a different word, or choose “All topics”, “Any status”, and “Any time”.</p>
             </EmptyState>
           )
         ) : (
@@ -247,6 +247,17 @@ function IssueFilters({
           {statusesIn(issues).map((s) => (
             <option key={s} value={s}>
               {ISSUE_STATUS_LABELS[s]}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div className="filters__field">
+        <label htmlFor="issue-when">Updated</label>
+        <select id="issue-when" value={filters.when} onChange={(e) => onChange('when', e.target.value)}>
+          <option value="">Any time</option>
+          {ISSUE_DATE_RANGES.map((r) => (
+            <option key={r} value={r}>
+              {DATE_RANGE_LABELS[r]}
             </option>
           ))}
         </select>

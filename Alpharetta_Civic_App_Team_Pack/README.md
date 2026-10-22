@@ -8,10 +8,10 @@ A student prototype for the Congressional App Challenge. It helps Alpharetta, Ge
 
 | Page | Route | What it does |
 |---|---|---|
-| Citywide | `/` | Hero with "Explore city issues" and "Find issues near me" actions; issues with keyword, topic and status filters (kept in the URL, e.g. `/?topic=transportation`); each issue card links to its official record and, when it has a map point, to Near Me with that issue selected; upcoming and recent meetings with agenda PDF links. |
+| Citywide | `/` | Hero with "Explore city issues" and "Find issues near me" actions; issues with keyword, topic, status and "Updated" date filters (kept in the URL, e.g. `/?topic=transportation&when=30d`); each issue card links to its official record and, when it has a map point, to Near Me with that issue selected; upcoming and recent meetings with agenda PDF links. |
 | Issue detail | `/issues/:issueId` | Plain-language summary (labelled as a rewrite of the sources), status with its "as of" date, why it may matter, a dated timeline of related meetings, documents with direct PDF links, official sources, location with "View on map". |
 | Near Me | `/near-me` | Start from Alpharetta City Hall to sort issues by straight-line distance. A Leaflet map shows pins only for issues with coordinates; these are approximate points looked up from addresses in city documents, and the map labels them that way. Choosing a pin highlights the matching list item, and the reverse. Every item says why it's listed. |
-| Archive | `/archive` | Meetings and documents in one list, with keyword search (`?q=`) and type filters for All, Videos, Agendas and Documents (`?type=`); rows link straight to recordings and PDFs. |
+| Archive | `/archive` | Meetings and documents in one list, with keyword search (`?q=`), a date filter (`?when=upcoming|30d|90d|year`) and type filters for All, Videos, Agendas and Documents (`?type=`); rows link straight to recordings and PDFs. |
 | Meeting detail | `/meetings/:meetingId` | Date and time, recording and official-page links when they exist, agenda and documents, related issues. |
 | Document detail | `/documents/:documentId` | Description, source, parent meeting, related issues, and the original file link when one exists. |
 
@@ -22,7 +22,7 @@ Honesty rules built into the code:
 - Distance is described as distance only, never as an impact claim. Issues with no location stay in the list without a pin.
 - Status comes straight from the data. Unknown values display as "Status not verified".
 
-Out of scope for this version: date filters, live city data, accounts, notifications.
+Out of scope for this version: live city data, accounts, notifications.
 
 ## Tech stack
 
@@ -66,7 +66,7 @@ src/
     civicData.ts      The only module that reads the fixtures; list, lookup and relationship functions
     nearMe.ts         Example starting location, coordinate validation, distance ranking and explanations
     format.ts         Date/label formatting, safe URL checking, source-link naming
-    filters.ts        Keyword/topic/status matching used by Citywide and Archive search
+    filters.ts        Keyword/topic/status/date-range matching used by Citywide and Archive
     useAsync.ts       Loading / error / retry state for data requests
   components/         Layout, cards, badges, status labels, map, empty/error states
   pages/              One file per route
@@ -87,7 +87,7 @@ Follow `data/README.md` and the checklist in `PRODUCT_PRD.md` (Appendix A). In s
 
 ## Testing
 
-`npm test` runs 61 tests. They use the fictional fixture pack in `src/test/fixtures/`, so they don't depend on which real records are in `data/`:
+`npm test` runs 67 tests. They use the fictional fixture pack in `src/test/fixtures/`, so they don't depend on which real records are in `data/`:
 - data integrity for both the real records and the fixtures: unique IDs, relationships that resolve, provenance flags, valid statuses and dates, URL and coordinate rules
 - a check that the real data renders with no sample labels and that every source link points to the city's document server
 - search and filter behavior, hero actions, map links, the issue timeline, and archive search

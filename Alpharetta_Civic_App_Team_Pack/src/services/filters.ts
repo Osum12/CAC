@@ -2,8 +2,38 @@
 // Pure functions over already-loaded records, so they are easy to test and need no backend.
 
 import type { CivicDocument, Issue, IssueStatus, Meeting } from '../types/civic';
+import { parseIsoDate, todayIso } from './format';
 
-export type IssueFilterState = { q: string; topic: string; status: string };
+/** Relative date windows. 'upcoming' means today or later; the others look back from today. */
+export type DateRange = '' | 'upcoming' | '30d' | '90d' | 'year';
+
+export const DATE_RANGE_LABELS: Record<Exclude<DateRange, ''>, string> = {
+  upcoming: 'Upcoming',
+  '30d': 'Last 30 days',
+  '90d': 'Last 90 days',
+  year: 'This year',
+};
+
+export const isDateRange = (v: string | null): v is DateRange => v === '' || (v !== null && Object.hasOwn(DATE_RANGE_LABELS, v));
+
+/**
+ * True when an ISO date falls in the range, relative to `today` (YYYY-MM-DD).
+ * Records with no date never match a date range, since we can't place them in time.
+ */
+export function inDateRange(iso: string | null, range: DateRange, today = todayIso()): boolean {
+  if (!range) return true;
+  const date = parseIsoDate(iso);
+  const now = parseIsoDate(today);
+  if (!date || !now) return false;
+  if (range === 'upcoming') return date >= now;
+  if (range === 'year') return date.getFullYear() === now.getFullYear() && date <= now;
+  const days = range === '30d' ? 30 : 90;
+  const start = new Date(now);
+  start.setDate(start.getDate() - days);
+  return date >= start && date <= now;
+}
+
+export type IssueFilterState = { q: string; topic: string; status: string; when: DateRange };
 
 /** Lower-cased words of a query; empty words are dropped. */
 const terms = (q: string) => q.toLowerCase().split(/\s+/).filter(Boolean);
@@ -16,16 +46,18 @@ export function matchesQuery(q: string, ...fields: (string | null | undefined)[]
   return words.every((w) => haystack.includes(w));
 }
 
-export function filterIssues(issues: Issue[], { q, topic, status }: IssueFilterState): Issue[] {
+/** Issues are dated by `statusAsOf`, the date their current status was established. */
+export function filterIssues(issues: Issue[], { q, topic, status, when }: IssueFilterState, today = todayIso()): Issue[] {
   return issues.filter(
     (i) =>
       (!topic || i.category === topic) &&
       (!status || i.status === status) &&
+      inDateRange(i.statusAsOf, when, today) &&
       matchesQuery(q, i.title, i.summary, i.category.replace(/_/g, ' '), i.location?.label, i.whyItMayMatter),
   );
 }
 
-export const isFiltering = (f: IssueFilterState) => Boolean(f.q.trim() || f.topic || f.status);
+export const isFiltering = (f: IssueFilterState) => Boolean(f.q.trim() || f.topic || f.status || f.when);
 
 /** Distinct values present in the data, so filters never offer an option with zero results. */
 export function topicsIn(issues: Issue[]): string[] {

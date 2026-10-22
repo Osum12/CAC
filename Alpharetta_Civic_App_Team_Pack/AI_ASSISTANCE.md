@@ -36,6 +36,7 @@ On 2026-10-22, also at the session runner's request, Claude Code did a UI/UX ref
 - Added the issue timeline and back navigation, and switched the body font to Source Sans 3.
 - Added the tests for these features.
 - Ran an AI QA/accessibility reviewer, which found 8 issues (no critical ones), and fixed them.
+- Added date filters to Citywide (when a status was set) and the Archive (meeting or publish date), with tests.
 
 The AI did not change the PRDs and did not deploy anything.
 

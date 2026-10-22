@@ -1,7 +1,7 @@
 import { Link, useSearchParams } from 'react-router-dom';
 import { getDocuments, getMeetings } from '../services/civicData';
 import { formatDate, formatTime, humanize, meetingTypeLabel, safeUrl } from '../services/format';
-import { documentMatches, meetingMatches } from '../services/filters';
+import { DATE_RANGE_LABELS, documentMatches, inDateRange, isDateRange, meetingMatches, type DateRange } from '../services/filters';
 import { MeetingStatusBadge } from '../components/StatusBadge';
 import { ExternalAction } from '../components/Cards';
 import { useAsync } from '../services/useAsync';
@@ -69,14 +69,16 @@ export function ArchivePage() {
   };
 
   const q = params.get('q') ?? '';
-  const setQuery = (next: string) => {
+  const rawWhen = params.get('when') ?? '';
+  const when: DateRange = isDateRange(rawWhen) ? rawWhen : '';
+  const setParam = (key: 'q' | 'when', next: string) => {
     const p = new URLSearchParams(params);
-    if (next) p.set('q', next);
-    else p.delete('q');
+    if (next) p.set(key, next);
+    else p.delete(key);
     setParams(p, { replace: true });
   };
 
-  const entries = state.status === 'ready' ? buildArchiveEntries(state.data[0], state.data[1]).filter((e) => entryMatches(e, q)) : [];
+  const entries = state.status === 'ready' ? buildArchiveEntries(state.data[0], state.data[1]).filter((e) => entryMatches(e, q) && inDateRange(e.date, when)) : [];
   const visible = entries.filter((e) => e.groups.includes(filter));
   const count = (f: ArchiveFilter) => entries.filter((e) => e.groups.includes(f)).length;
 
@@ -89,10 +91,21 @@ export function ArchivePage() {
         </p>
       </header>
 
-      <form className="filters" role="search" aria-label="Search the archive" onSubmit={(e) => e.preventDefault()}>
+      <form className="filters filters--compact" role="search" aria-label="Search the archive" onSubmit={(e) => e.preventDefault()}>
         <div className="filters__field filters__field--grow">
           <label htmlFor="archive-q">Search meetings and documents</label>
-          <input id="archive-q" type="search" value={q} placeholder="e.g. minutes, Planning Commission, September" onChange={(e) => setQuery(e.target.value)} />
+          <input id="archive-q" type="search" value={q} placeholder="e.g. minutes, Planning Commission, September" onChange={(e) => setParam('q', e.target.value)} />
+        </div>
+        <div className="filters__field">
+          <label htmlFor="archive-when">Date</label>
+          <select id="archive-when" value={when} onChange={(e) => setParam('when', e.target.value)}>
+            <option value="">Any time</option>
+            {(Object.keys(DATE_RANGE_LABELS) as (keyof typeof DATE_RANGE_LABELS)[]).map((r) => (
+              <option key={r} value={r}>
+                {DATE_RANGE_LABELS[r]}
+              </option>
+            ))}
+          </select>
         </div>
       </form>
 
@@ -119,6 +132,7 @@ export function ArchivePage() {
           <p className="results-count" role="status" aria-live="polite">
             {visible.length} {visible.length === 1 ? 'record' : 'records'}
             {q ? ` matching “${q}”` : ''}
+            {when ? ` · ${DATE_RANGE_LABELS[when].toLowerCase()}` : ''}
           </p>
           {visible.length ? (
             <ol className="archive-list">
@@ -130,7 +144,7 @@ export function ArchivePage() {
             </ol>
           ) : (
             <EmptyState
-              title={emptyTitle(filter, q, count('all'))}
+              title={when ? `No ${filter === 'all' ? 'records' : FILTERS.find((f) => f.id === filter)!.label.toLowerCase()} match these filters for “${DATE_RANGE_LABELS[when]}”.` : emptyTitle(filter, q, count('all'))}
               action={
                 <div className="button-row">
                   {q && filter !== 'all' && count('all') > 0 && (
@@ -138,7 +152,7 @@ export function ArchivePage() {
                       Show all types
                     </button>
                   )}
-                  {(q || filter !== 'all') && (
+                  {(q || when || filter !== 'all') && (
                     <button type="button" className="button button--ghost" onClick={() => setParams(new URLSearchParams(), { replace: true })}>
                       Show all records
                     </button>

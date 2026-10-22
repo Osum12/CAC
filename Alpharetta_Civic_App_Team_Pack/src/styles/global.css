@@ -1333,9 +1333,9 @@ h2[tabindex='-1']:focus-visible {
 
 /* Filters */
 .filters {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-end;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) auto;
+  align-items: end;
   gap: var(--space-3);
   padding: var(--space-4);
   margin: var(--space-2) 0 var(--space-2);
@@ -1344,11 +1344,17 @@ h2[tabindex='-1']:focus-visible {
   border-radius: var(--radius);
 }
 .filters__field {
-  flex: 1 1 170px;
   min-width: 0;
 }
 .filters__field--grow {
-  flex: 2 1 240px;
+  grid-column: 1 / -1;
+}
+/* Two-control version (Archive): search and one dropdown side by side. */
+.filters--compact {
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+}
+.filters--compact .filters__field--grow {
+  grid-column: auto;
 }
 .filters label {
   display: block;
@@ -1610,9 +1616,12 @@ h2[tabindex='-1']:focus-visible {
   .filters {
     padding: var(--space-3);
   }
-  .filters__field,
+  .filters,
+  .filters--compact {
+    grid-template-columns: minmax(0, 1fr);
+  }
   .filters__field--grow {
-    flex-basis: 100%;
+    grid-column: auto;
   }
   .card--meeting {
     gap: var(--space-3);

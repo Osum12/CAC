@@ -3,6 +3,11 @@
 
 import type { IssueStatus } from '../types/civic';
 
+/** Today as a local YYYY-MM-DD string (matches how dates are stored in the data). */
+export function todayIso(now = new Date()): string {
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+}
+
 export function parseIsoDate(iso: string | null): Date | null {
   if (!iso) return null;
   const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(iso);
