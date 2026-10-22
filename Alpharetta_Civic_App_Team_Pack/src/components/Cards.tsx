@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
-import { formatDate, formatShortDate, formatTime, formatWeekday, humanize, meetingTypeLabel, primarySource, safeUrl } from '../services/format';
+import { formatCompactDate, formatDate, formatShortDate, formatTime, formatWeekday, humanize, meetingTypeLabel, primarySource, safeUrl } from '../services/format';
 import { getValidCoordinates } from '../services/nearMe';
 import { MockBadge, isMock } from './MockBadge';
 import { IssueStatusBadge, MeetingStatusBadge } from './StatusBadge';
@@ -33,8 +33,8 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
   return (
     <article className="card card--issue">
       <div className="card__top">
-        <span className="eyebrow">{humanize(issue.category)}</span>
-        <IssueStatusBadge status={issue.status} />
+        <span className="tag">{humanize(issue.category)}</span>
+        {isMock(issue) && <MockBadge record={issue} />}
       </div>
       <H className="card__title">
         <Link to={`/issues/${encodeURIComponent(issue.id)}`} className="card__link">
@@ -42,15 +42,19 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
         </Link>
       </H>
       <p className="card__summary">{issue.summary}</p>
-      <p className="card__meta-line">
-        {issue.statusAsOf ? `Status as of ${formatDate(issue.statusAsOf)}` : 'No status date recorded'}
-        {isMock(issue) && (
-          <>
-            {' '}
-            <MockBadge record={issue} />
-          </>
-        )}
-      </p>
+      <dl className="facts">
+        <div className="facts__row">
+          <dt>Status</dt>
+          <dd>
+            <IssueStatusBadge status={issue.status} />
+            <span className="facts__note">{issue.statusAsOf ? ` as of ${formatDate(issue.statusAsOf)}` : ' (no date recorded)'}</span>
+          </dd>
+        </div>
+        <div className="facts__row">
+          <dt>Where</dt>
+          <dd>{issue.location?.label ?? 'No specific address in the record'}</dd>
+        </div>
+      </dl>
       <div className="card__actions">
         {mappable && (
           <Link className="card__action" to={`/near-me?issue=${encodeURIComponent(issue.id)}`}>
@@ -98,19 +102,27 @@ export function MeetingCard({
         )}
       </div>
       <div className="card__body">
-        <span className="eyebrow">{meetingTypeLabel(meeting.meetingType)}</span>
+        <span className="tag">{meetingTypeLabel(meeting.meetingType)}</span>
         <H className="card__title">
           <Link to={`/meetings/${encodeURIComponent(meeting.id)}`} className="card__link">
             {meeting.title}
           </Link>
         </H>
-        <div className="card__when-row">
-          <p className="card__when">
-            <time dateTime={meeting.date ?? undefined}>{formatDate(meeting.date)}</time>
-            {time ? ` · ${time}` : ''}
-          </p>
-          <MeetingStatusBadge status={meeting.status} />
-        </div>
+        <dl className="facts">
+          <div className="facts__row">
+            <dt>When</dt>
+            <dd>
+              <time dateTime={meeting.date ?? undefined}>{formatCompactDate(meeting.date)}</time>
+              {time ? `, ${time}` : ''}
+            </dd>
+          </div>
+          <div className="facts__row">
+            <dt>Status</dt>
+            <dd>
+              <MeetingStatusBadge status={meeting.status} />
+            </dd>
+          </div>
+        </dl>
         {(agendaUrl || isMock(meeting)) && (
           <div className="card__actions">
             {agendaUrl && (
@@ -132,7 +144,7 @@ export function DocumentCard({ document, headingLevel = 3 }: { document: CivicDo
   return (
     <article className="card card--document">
       <div className="card__top">
-        <span className="eyebrow">{humanize(document.documentType)}</span>
+        <span className="tag">{humanize(document.documentType)}</span>
         {isMock(document) && <MockBadge record={document} />}
       </div>
       <H className="card__title">

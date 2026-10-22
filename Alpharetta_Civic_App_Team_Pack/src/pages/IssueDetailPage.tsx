@@ -36,7 +36,7 @@ export function IssueDetailPage() {
       <BackLink fallbackTo="/" fallbackLabel="All city issues" />
       <header className="detail__header">
         <div className="card__top">
-          <span className="eyebrow">{humanize(issue.category)}</span>
+          <span className="tag">{humanize(issue.category)}</span>
           {isMock(issue) && <MockBadge record={issue} size="lg" />}
         </div>
         <h1 className="detail__title">{issue.title}</h1>
@@ -122,13 +122,13 @@ function MeetingTimeline({ meetings }: { meetings: Meeting[] }) {
           <li key={m.id} className={`timeline__item timeline__item--${m.status === 'scheduled' ? 'upcoming' : 'past'}`}>
             <p className="timeline__date">
               <time dateTime={m.date ?? undefined}>{formatDate(m.date)}</time>
-              {time ? ` · ${time}` : ''}
+              {time ? ` at ${time}` : ''}
             </p>
             <p className="timeline__title">
               <Link to={`/meetings/${encodeURIComponent(m.id)}`}>{m.title}</Link>
             </p>
             <p className="timeline__meta">
-              {meetingTypeLabel(m.meetingType)} · {meetingStatusLabel(m.status)}
+              {meetingTypeLabel(m.meetingType)} meeting, {meetingStatusLabel(m.status).toLowerCase()}
               {isMock(m) && (
                 <>
                   {' '}

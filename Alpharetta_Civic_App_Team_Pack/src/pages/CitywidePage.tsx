@@ -2,7 +2,7 @@ import { useRef, type ReactNode, type RefObject } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
 import { DATE_RANGE_LABELS, filterIssues, isFiltering, statusesIn, topicsIn, type DateRange, type IssueFilterState } from '../services/filters';
-import { formatDate, humanize, ISSUE_STATUS_LABELS, todayIso } from '../services/format';
+import { formatDate, humanize, ISSUE_STATUS_LABELS, safeUrl, todayIso } from '../services/format';
 import { DEMO_LOCATIONS } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
@@ -43,6 +43,7 @@ export function CitywidePage() {
   const state = useAsync(() => Promise.all([getMeetings(), getIssues(), getDocuments()]), []);
   const issuesHeading = useRef<HTMLHeadingElement>(null);
   const meetingsHeading = useRef<HTMLHeadingElement>(null);
+  const [params, setParams] = useSearchParams();
 
   // In-page jumps also move keyboard focus, so screen-reader users land where sighted users do.
   const jumpTo = (el: HTMLElement | null) => {
@@ -59,48 +60,82 @@ export function CitywidePage() {
   return (
     <div className="page">
       <section className="hero" aria-labelledby="citywide-title">
-        <p className="eyebrow eyebrow--light">Alpharetta, Georgia</p>
+        <p className="hero__place">Alpharetta, Georgia</p>
         <h1 id="citywide-title" className="hero__title">
           What’s on the table at City Hall
         </h1>
-        <p className="hero__lede">
-          Recent proposals, decisions, and public meetings, written in plain language with a link to every official source.
-        </p>
-        <div className="hero__actions">
-          <button type="button" className="button button--on-dark" onClick={() => jumpTo(issuesHeading.current)}>
-            Explore city issues
+        <p className="hero__lede">Recent proposals, decisions, and public meetings, explained in plain language with a link to every official source.</p>
+        <form
+          className="hero-search"
+          role="search"
+          aria-label="Issue search"
+          onSubmit={(e) => {
+            e.preventDefault();
+            jumpTo(issuesHeading.current);
+          }}
+        >
+          <label htmlFor="hero-q" className="visually-hidden">
+            Search city issues
+          </label>
+          <input
+            id="hero-q"
+            type="search"
+            value={params.get('q') ?? ''}
+            placeholder="Search issues, e.g. speed limit"
+            onChange={(e) => {
+              const p = new URLSearchParams(params);
+              if (e.target.value) p.set('q', e.target.value);
+              else p.delete('q');
+              setParams(p, { replace: true });
+            }}
+          />
+          <button type="submit" className="hero-search__button">
+            Search
           </button>
-          <Link to={`/near-me?loc=${DEMO_LOCATIONS[0].id}`} className="button button--outline-light">
-            Find issues near me
-          </Link>
-        </div>
-        {ready && (
-          <ul className="hero__stats" aria-label="What’s in this app">
-            <li>
-              <button type="button" className="hero__stat" onClick={() => jumpTo(issuesHeading.current)}>
-                <strong>{ready[1].length}</strong> issues
-              </button>
-            </li>
-            <li>
-              <button type="button" className="hero__stat" onClick={() => jumpTo(meetingsHeading.current)}>
-                <strong>{ready[0].length}</strong> meetings
-              </button>
-            </li>
-            <li>
-              <span className="hero__stat hero__stat--static">
-                <strong>{ready[2].length}</strong> official documents
-              </span>
-            </li>
-          </ul>
-        )}
+        </form>
         {ready && (
           <p className="hero__note">
             {anyMock
-              ? 'These counts include sample records and are not city totals.'
+              ? 'These records include sample data and are not city totals.'
               : `A selected set of recent records, not every city item.${checked ? ` Meeting records last checked against official city documents on ${formatDate(checked)}.` : ''}`}
           </p>
         )}
       </section>
+
+      {ready && (
+        <nav className="quicklinks" aria-label="Shortcuts">
+          <ul>
+            <li>
+              <Link to={`/near-me?loc=${DEMO_LOCATIONS[0].id}`} className="quicklink">
+                <QuickIcon name="pin" />
+                <span className="quicklink__label">Find issues near me</span>
+                <span className="quicklink__hint">Sorted by distance from City Hall</span>
+              </Link>
+            </li>
+            <li>
+              <button type="button" className="quicklink" onClick={() => jumpTo(meetingsHeading.current)}>
+                <QuickIcon name="calendar" />
+                <span className="quicklink__label">Upcoming meetings</span>
+                <span className="quicklink__hint">{plural(splitMeetings(ready[0]).upcoming.length, 'meeting')} scheduled</span>
+              </button>
+            </li>
+            <li>
+              <Link to="/archive?type=videos" className="quicklink">
+                <QuickIcon name="play" />
+                <span className="quicklink__label">Meeting recordings</span>
+                <span className="quicklink__hint">{plural(ready[0].filter((m) => safeUrl(m.recordingUrl)).length, 'video')} on the city portal</span>
+              </Link>
+            </li>
+            <li>
+              <Link to="/archive" className="quicklink">
+                <QuickIcon name="document" />
+                <span className="quicklink__label">Agendas and minutes</span>
+                <span className="quicklink__hint">{plural(ready[2].length, 'official document')}</span>
+              </Link>
+            </li>
+          </ul>
+        </nav>
+      )}
 
       {state.status === 'loading' && <LoadingState rows={4} />}
       {state.status === 'error' && <ErrorState onRetry={state.retry} />}
@@ -166,7 +201,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
             City issues
           </h2>
           <Link to="/near-me" className="text-link">
-            See them on the map →
+            See them on the map
           </Link>
         </div>
 
@@ -205,7 +240,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
         <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="No upcoming meetings in this dataset." />
         <MeetingGroup title="Recent" meetings={recent} documents={documents} empty="No past meetings in this dataset." />
         <Link to="/archive" className="text-link">
-          Browse all meetings and documents →
+          Browse all meetings and documents
         </Link>
       </aside>
     </div>
@@ -225,10 +260,6 @@ function IssueFilters({
 }) {
   return (
     <form className="filters" role="search" aria-label="Search and filter issues" onSubmit={(e) => e.preventDefault()}>
-      <div className="filters__field filters__field--grow">
-        <label htmlFor="issue-q">Search issues</label>
-        <input id="issue-q" type="search" value={filters.q} placeholder="e.g. speed limit, Windward" onChange={(e) => onChange('q', e.target.value)} />
-      </div>
       <div className="filters__field">
         <label htmlFor="issue-topic">Topic</label>
         <select id="issue-topic" value={filters.topic} onChange={(e) => onChange('topic', e.target.value)}>
@@ -309,5 +340,24 @@ function MeetingGroup({ title, meetings, documents, empty }: { title: string; me
         <EmptyState title={String(empty)} />
       )}
     </>
+  );
+}
+
+const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
+
+/** Simple line icons for the shortcut row. Decorative; the link text carries the meaning. */
+function QuickIcon({ name }: { name: 'pin' | 'calendar' | 'play' | 'document' }) {
+  const paths = {
+    pin: <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />,
+    calendar: <path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm3 8h2m3 0h2m-7 4h2m3 0h2" />,
+    play: <path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm6 4v6l5-3-5-3Z" />,
+    document: <path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm7 0v5h5M9 13h6m-6 4h6" />,
+  };
+  return (
+    <span className="quicklink__icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+        {paths[name]}
+      </svg>
+    </span>
   );
 }

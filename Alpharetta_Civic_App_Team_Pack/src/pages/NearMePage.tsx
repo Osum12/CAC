@@ -194,7 +194,7 @@ function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIss
       )}
       <div className="feed-item__body">
         <div className="card__top">
-          <span className="eyebrow">{humanize(issue.category)}</span>
+          <span className="tag">{humanize(issue.category)}</span>
           <IssueStatusBadge status={issue.status} />
         </div>
         <h3 className="feed-item__title">

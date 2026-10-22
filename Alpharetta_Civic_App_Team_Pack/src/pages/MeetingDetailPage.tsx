@@ -34,7 +34,7 @@ export function MeetingDetailPage() {
       <BackLink fallbackTo="/archive" fallbackLabel="Archive" />
       <header className="detail__header">
         <div className="card__top">
-          <span className="eyebrow">{meetingTypeLabel(meeting.meetingType)}</span>
+          <span className="tag">{meetingTypeLabel(meeting.meetingType)}</span>
           {isMock(meeting) && <MockBadge record={meeting} size="lg" />}
         </div>
         <h1 className="detail__title">{meeting.title}</h1>
@@ -42,7 +42,7 @@ export function MeetingDetailPage() {
           <MeetingStatusBadge status={meeting.status} />
           <span className="muted">
             {formatDate(meeting.date)}
-            {time ? ` at ${time}` : meeting.date ? ' · time not listed' : ''}
+            {time ? ` at ${time}` : meeting.date ? ' (time not listed)' : ''}
           </span>
         </div>
       </header>

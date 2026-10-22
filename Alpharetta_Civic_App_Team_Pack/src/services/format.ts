@@ -21,6 +21,12 @@ export function formatDate(iso: string | null, fallback = 'Date not provided'): 
   return d ? d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : fallback;
 }
 
+/** "Oct 26, 2026": compact form for tight spaces like meeting cards. */
+export function formatCompactDate(iso: string | null, fallback = 'Date not provided'): string {
+  const d = parseIsoDate(iso);
+  return d ? d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : fallback;
+}
+
 export function formatShortDate(iso: string | null): { month: string; day: string } | null {
   const d = parseIsoDate(iso);
   return d ? { month: d.toLocaleDateString('en-US', { month: 'short' }), day: String(d.getDate()) } : null;

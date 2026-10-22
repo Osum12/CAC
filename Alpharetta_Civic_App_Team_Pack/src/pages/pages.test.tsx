@@ -194,7 +194,7 @@ describe('With the real curated records in /data', () => {
 describe('Citywide search, filters, and map links', () => {
   it('filters issues by keyword, topic and status, and can clear them', async () => {
     renderAt('/');
-    const search = await screen.findByLabelText('Search issues');
+    const search = await screen.findByLabelText('Search city issues');
     await userEvent.type(search, 'corridor');
     expect(screen.getByText('1 of 5 issues match')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /^MOCK ONLY: Sample Road Corridor Study$/ })).toBeInTheDocument();
@@ -219,11 +219,17 @@ describe('Citywide search, filters, and map links', () => {
     expect(screen.getByRole('link', { name: 'View on map: MOCK ONLY: Sample Road Corridor Study' })).toHaveAttribute('href', '/near-me?issue=issue-mock-005');
   });
 
-  it('has hero actions that lead to issues and to Near Me', async () => {
+  it('has a hero search that jumps to the results, and working shortcuts', async () => {
     renderAt('/');
-    expect(await screen.findByRole('link', { name: 'Find issues near me' })).toHaveAttribute('href', '/near-me?loc=city-hall');
-    await userEvent.click(screen.getByRole('button', { name: 'Explore city issues' }));
+    await userEvent.type(await screen.findByLabelText('Search city issues'), 'corridor{Enter}');
     expect(screen.getByRole('heading', { name: 'City issues' })).toHaveFocus();
+    expect(screen.getByText('1 of 5 issues match')).toBeInTheDocument();
+
+    expect(screen.getByRole('link', { name: /Find issues near me/ })).toHaveAttribute('href', '/near-me?loc=city-hall');
+    expect(screen.getByRole('link', { name: /Meeting recordings/ })).toHaveAttribute('href', '/archive?type=videos');
+    expect(screen.getByRole('link', { name: /Agendas and minutes/ })).toHaveAttribute('href', '/archive');
+    await userEvent.click(screen.getByRole('button', { name: /Upcoming meetings/ }));
+    expect(screen.getByRole('heading', { name: 'Meetings' })).toHaveFocus();
   });
 
   it('opens Near Me with the issue from the card already selected', async () => {
@@ -300,7 +306,7 @@ describe('Date filters', () => {
     const rows = await screen.findAllByRole('listitem');
     // Fixture items dated Oct 27, 2026: one meeting and one document.
     expect(rows).toHaveLength(2);
-    expect(screen.getByText(/2 records · upcoming/)).toBeInTheDocument();
+    expect(screen.getByText(/2 records, upcoming/)).toBeInTheDocument();
   });
 
   it('treats an unknown date value as "Any time"', async () => {

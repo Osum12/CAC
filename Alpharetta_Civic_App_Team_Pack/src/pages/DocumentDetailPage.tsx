@@ -34,7 +34,7 @@ export function DocumentDetailPage() {
       <BackLink fallbackTo="/archive" fallbackLabel="Archive" />
       <header className="detail__header">
         <div className="card__top">
-          <span className="eyebrow">{humanize(doc.documentType)}</span>
+          <span className="tag">{humanize(doc.documentType)}</span>
           {isMock(doc) && <MockBadge record={doc} size="lg" />}
         </div>
         <h1 className="detail__title">{doc.title}</h1>

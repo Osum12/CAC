@@ -132,7 +132,7 @@ export function ArchivePage() {
           <p className="results-count" role="status" aria-live="polite">
             {visible.length} {visible.length === 1 ? 'record' : 'records'}
             {q ? ` matching “${q}”` : ''}
-            {when ? ` · ${DATE_RANGE_LABELS[when].toLowerCase()}` : ''}
+            {when ? `, ${DATE_RANGE_LABELS[when].toLowerCase()}` : ''}
           </p>
           {visible.length ? (
             <ol className="archive-list">
@@ -182,7 +182,7 @@ const entryMatches = (e: ArchiveEntry, q: string) => (e.kind === 'meeting' ? mee
 function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
   const isMeeting = entry.kind === 'meeting';
   const to = isMeeting ? `/meetings/${encodeURIComponent(entry.id)}` : `/documents/${encodeURIComponent(entry.id)}`;
-  const typeLabel = isMeeting ? `Meeting · ${meetingTypeLabel(entry.record.meetingType)}` : humanize(entry.record.documentType);
+  const typeLabel = isMeeting ? `${meetingTypeLabel(entry.record.meetingType)} meeting` : humanize(entry.record.documentType);
   const mock = isMock(entry.record);
   const recording = isMeeting && !mock ? safeUrl(entry.record.recordingUrl) : null;
   const file = !isMeeting && !mock ? safeUrl(entry.record.url) : null;
@@ -195,7 +195,7 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
       </span>
       <div className="archive-row__body">
         <div className="card__top">
-          <span className="eyebrow">{typeLabel}</span>
+          <span className="tag">{typeLabel}</span>
           {isMeeting && <MeetingStatusBadge status={entry.record.status} />}
           {mock && <MockBadge record={entry.record} />}
         </div>
@@ -207,7 +207,7 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
         <p className="archive-row__date">
           {isMeeting ? '' : 'Published '}
           <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time>
-          {time ? ` · ${time}` : ''}
+          {time ? ` at ${time}` : ''}
         </p>
         <div className="card__actions">
           {isMeeting ? (
