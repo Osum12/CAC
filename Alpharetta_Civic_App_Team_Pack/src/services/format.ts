@@ -99,3 +99,9 @@ export function primarySource(urls: string[]): string | null {
   const valid = urls.map(safeUrl).filter((u): u is string => Boolean(u));
   return valid.find((u) => /GetMeetingFileStream/.test(u)) ?? valid[0] ?? null;
 }
+
+/** "Monday, October 26": for headline-style dates where the year is implied. */
+export function formatWeekdayDate(iso: string | null): string {
+  const d = parseIsoDate(iso);
+  return d ? d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' }) : 'Date to be announced';
+}

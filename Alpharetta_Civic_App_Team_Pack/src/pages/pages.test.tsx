@@ -41,7 +41,8 @@ describe('Citywide', () => {
     const issues = screen.getByRole('heading', { name: 'City issues' }).closest('section')!;
     expect(within(issues).getByRole('link', { name: /^MOCK ONLY: Sample Pedestrian Crossing Review$/ })).toHaveAttribute('href', '/issues/issue-mock-001');
     expect(screen.getAllByText('Sample data').length).toBeGreaterThan(3);
-    expect(screen.getByRole('link', { name: /Sample Transportation Update/ })).toBeInTheDocument();
+    const meetings = screen.getByRole('heading', { name: 'Meetings' }).closest('aside')!;
+    expect(within(meetings).getByRole('link', { name: /Sample Transportation Update/ })).toBeInTheDocument();
   });
 
   it('shows an error with a working retry', async () => {
@@ -168,7 +169,7 @@ describe('With the real curated records in /data', () => {
 
   it('shows no sample-data labels and keeps unfinished decisions marked as such', async () => {
     renderAt('/');
-    expect(await screen.findByRole('link', { name: /^Royal 400 Data Center/ })).toBeInTheDocument();
+    expect((await screen.findAllByRole('link', { name: /^Royal 400 Data Center/ })).length).toBeGreaterThan(0);
     expect(screen.queryByText(/Sample data/)).not.toBeInTheDocument();
     // Every issue card links to a real city document, never a made-up URL.
     const records = screen.getAllByRole('link', { name: /^Official record/ });
@@ -197,7 +198,8 @@ describe('Citywide search, filters, and map links', () => {
     const search = await screen.findByLabelText('Search city issues');
     await userEvent.type(search, 'corridor');
     expect(screen.getByText('1 of 5 issues match')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /^MOCK ONLY: Sample Road Corridor Study$/ })).toBeInTheDocument();
+    const issuesSection = screen.getByRole('heading', { name: 'City issues' }).closest('section')!;
+    expect(within(issuesSection).getByRole('link', { name: /^MOCK ONLY: Sample Road Corridor Study$/ })).toBeInTheDocument();
 
     await userEvent.clear(search);
     await userEvent.selectOptions(screen.getByLabelText('Topic'), 'transportation');
@@ -257,6 +259,29 @@ describe('Issue detail timeline and archive search', () => {
     expect(screen.getByText(/No records match/)).toBeInTheDocument();
     await userEvent.click(screen.getByRole('button', { name: 'Show all records' }));
     expect(within(screen.getByRole('list')).getAllByRole('listitem')).toHaveLength(8);
+  });
+});
+
+describe('Next at City Hall docket', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date(2026, 9, 22, 12));
+  });
+  afterEach(() => vi.useRealTimers());
+
+  it('shows the next real meeting, its agenda items, and the latest decision', async () => {
+    setDataLoader(null);
+    renderAt('/');
+    const docket = await screen.findByRole('complementary', { name: 'Next at City Hall' });
+    expect(within(docket).getByText('Monday, October 26')).toBeInTheDocument();
+    expect(within(docket).getByRole('link', { name: 'City Council Meeting & Public Hearing, October 26, 2026' })).toHaveAttribute(
+      'href',
+      '/meetings/meeting-2026-10-26-cc',
+    );
+    expect(within(docket).getByRole('link', { name: /^Royal 400 Data Center/ })).toHaveAttribute('href', '/issues/issue-mp-26-13-royal-400');
+    expect(within(docket).getByRole('link', { name: /Read the agenda \(PDF\)/ }).getAttribute('href')).toMatch(/fileId=11623/);
+    // Latest decision = most recent approved/denied status date in the data (Sept 28 vet clinic).
+    expect(within(docket).getByRole('link', { name: /Veterinary dental clinic/ })).toBeInTheDocument();
   });
 });
 

@@ -4,14 +4,16 @@
    text face Source Sans 3. All colors are tokens so dark mode is a token swap. */
 
 :root {
-  --paper: #f3f4f1;
-  --paper-2: #e8ebe6;
-  --surface: #ffffff;
+  --paper: #f5f1e8;
+  --paper-2: #ebe5d7;
+  --surface: #fffdf8;
+  --ivory: #f4ede0;
+  --ember: #e9a37c;
   --ink: #17231f;
   --ink-2: #3c4a45;
   --muted: #5a6762;
-  --line: #dce0da;
-  --line-strong: #bfc6bd;
+  --line: #e1d9c8;
+  --line-strong: #c8bda8;
   --tag-bg: #e6eee8;
   --tag-ink: #24483f;
   --evergreen: #1d3b34;
@@ -66,6 +68,8 @@
     --line-strong: #43524c;
     --tag-bg: #22362f;
     --tag-ink: #bcd8cb;
+    --ivory: #ece7dc;
+    --ember: #f0a47e;
     --evergreen: #0d1b17;
     --evergreen-2: #21423a;
     --on-evergreen: #ece7dc;
@@ -2065,4 +2069,265 @@ h2 {
   font-size: clamp(1.75rem, 3.4vw, 2.4rem);
   line-height: 1.2;
   max-width: 32ch;
+}
+
+/* ---------- Editorial layer ----------
+   Identity: forest green, warm ivory, burnt orange, editorial serif.
+   The hero headline is the one signature element; everything else stays quiet. */
+body {
+  overflow-x: clip; /* lets the cover hero run full-bleed without a sideways scrollbar */
+}
+.masthead {
+  box-shadow: none;
+}
+
+/* Editorial serif for page, section and card titles; sans for everything you read or operate. */
+h1,
+h2,
+.card__title,
+.timeline__title,
+.page-header h1,
+.detail__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  font-variation-settings: 'opsz' 72;
+}
+h2 {
+  font-size: clamp(1.6rem, 2.6vw, 2rem);
+}
+.card__title {
+  font-size: 1.35rem;
+  line-height: 1.22;
+}
+.card--meeting .card__title {
+  font-size: 1.18rem;
+}
+.page-header h1,
+.detail__title {
+  font-size: clamp(2.1rem, 4.4vw, 3.1rem);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-variation-settings: 'opsz' 144;
+}
+
+/* Section headings sit on a fine rule, like a printed section break. */
+.section__head,
+#meetings-heading {
+  border-bottom: 1px solid var(--line-strong);
+  padding-bottom: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+.section__head h2 {
+  margin-bottom: 0;
+}
+#meetings-heading {
+  display: block;
+}
+
+/* ---- Cover hero ---- */
+.hero--cover {
+  margin: -28px calc(50% - 50vw) var(--space-6);
+  border-radius: 0;
+  border: 0;
+  border-bottom: 1px solid var(--hero-edge, transparent);
+  padding: clamp(44px, 7vw, 104px) 0 clamp(44px, 6vw, 88px);
+  background: var(--evergreen);
+  color: var(--ivory);
+}
+.hero__inner {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) minmax(300px, 1fr);
+  gap: clamp(32px, 5vw, 80px);
+  align-items: end;
+}
+.hero--cover .hero__place {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--ember);
+  opacity: 1;
+  margin-bottom: var(--space-4);
+}
+.hero--cover .hero__title {
+  font-family: var(--font-display);
+  font-size: clamp(2.7rem, 6.6vw, 5.6rem);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.016em;
+  font-variation-settings: 'opsz' 144;
+  color: var(--ivory);
+  max-width: 11.5ch;
+  margin: 0 0 var(--space-5);
+}
+.hero__line {
+  display: block;
+}
+.hero--cover .hero__lede {
+  font-size: clamp(1.1rem, 1.6vw, 1.3rem);
+  line-height: 1.55;
+  max-width: 44ch;
+  color: var(--ivory);
+  opacity: 0.86;
+}
+.hero--cover .hero-search {
+  background: #fbf7ee;
+  border-radius: 14px;
+  max-width: 620px;
+  box-shadow: 0 10px 30px rgb(0 0 0 / 0.22);
+}
+.hero--cover .hero__note {
+  color: var(--ivory);
+  opacity: 0.72;
+  font-size: 0.95rem;
+  max-width: 56ch;
+}
+
+/* One orchestrated entrance: headline lines, then copy, search and docket. */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(0.4em);
+  }
+}
+.hero--cover .hero__line,
+.hero--cover .hero__lede,
+.hero--cover .hero-search,
+.hero--cover .docket {
+  animation: hero-rise 0.8s cubic-bezier(0.16, 0.8, 0.24, 1) both;
+}
+.hero--cover .hero__line:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.hero--cover .hero__lede {
+  animation-delay: 0.22s;
+}
+.hero--cover .hero-search {
+  animation-delay: 0.32s;
+}
+.hero--cover .docket {
+  animation-delay: 0.45s;
+}
+.page:has(.hero--cover) {
+  animation: none;
+}
+
+/* ---- Docket panel: what is actually next at City Hall ---- */
+.docket {
+  border: 1px solid rgb(244 237 224 / 0.2);
+  border-radius: 18px;
+  background: rgb(255 255 255 / 0.05);
+  padding: clamp(22px, 2.6vw, 32px);
+}
+.docket__block + .docket__block {
+  margin-top: var(--space-5);
+  padding-top: var(--space-5);
+  border-top: 1px solid rgb(244 237 224 / 0.16);
+}
+.docket__kicker {
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--ember);
+  margin: 0 0 var(--space-2);
+}
+.docket__date {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 2.4vw, 2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.004em;
+  margin: 0 0 var(--space-1);
+  font-variation-settings: 'opsz' 96;
+}
+.docket__time {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  opacity: 0.8;
+  margin-top: 4px;
+}
+.docket__title {
+  margin: var(--space-2) 0 var(--space-3);
+  font-size: 1.05rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+.docket__title--small {
+  font-size: 1rem;
+}
+.docket a {
+  color: var(--ivory);
+  text-decoration-color: rgb(244 237 224 / 0.45);
+}
+.docket a:hover {
+  text-decoration-color: var(--ivory);
+}
+.docket__label {
+  font-size: 0.95rem;
+  opacity: 0.75;
+  margin: 0 0 var(--space-1);
+}
+.docket__list {
+  list-style: none;
+  margin: 0 0 var(--space-3);
+  padding: 0;
+}
+.docket__list li {
+  padding: 6px 0 6px 14px;
+  border-left: 2px solid var(--ember);
+  line-height: 1.4;
+}
+.docket .docket__source {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: var(--ember);
+  font-weight: 700;
+  text-decoration-color: currentColor;
+}
+.docket__meta {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  opacity: 0.92;
+}
+.docket :focus-visible,
+.hero--cover :focus-visible {
+  outline-color: var(--ivory);
+}
+
+/* Shortcut tiles: ivory cards with a forest icon ring. */
+.quicklink {
+  background: var(--surface);
+  border-color: var(--line);
+}
+.quicklink__icon {
+  background: none;
+  border: 1.5px solid var(--tag-ink);
+  color: var(--tag-ink);
+}
+
+@media (max-width: 900px) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+  }
+  .hero--cover .hero__title {
+    max-width: 13ch;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero--cover .hero__line,
+  .hero--cover .hero__lede,
+  .hero--cover .hero-search,
+  .hero--cover .docket {
+    animation: none;
+  }
 }

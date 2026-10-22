@@ -2,13 +2,14 @@ import { useRef, type ReactNode, type RefObject } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
 import { DATE_RANGE_LABELS, filterIssues, isFiltering, statusesIn, topicsIn, type DateRange, type IssueFilterState } from '../services/filters';
-import { formatDate, humanize, ISSUE_STATUS_LABELS, safeUrl, todayIso } from '../services/format';
+import { formatDate, formatTime, formatWeekdayDate, humanize, ISSUE_STATUS_LABELS, safeUrl, todayIso } from '../services/format';
 import { DEMO_LOCATIONS } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
 import { IssueCard, MeetingCard } from '../components/Cards';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { isMock } from '../components/MockBadge';
+import { IssueStatusBadge } from '../components/StatusBadge';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 
 /**
@@ -59,47 +60,52 @@ export function CitywidePage() {
 
   return (
     <div className="page">
-      <section className="hero" aria-labelledby="citywide-title">
-        <p className="hero__place">Alpharetta, Georgia</p>
-        <h1 id="citywide-title" className="hero__title">
-          What’s on the table at City Hall
-        </h1>
-        <p className="hero__lede">Recent proposals, decisions, and public meetings, explained in plain language with a link to every official source.</p>
-        <form
-          className="hero-search"
-          role="search"
-          aria-label="Issue search"
-          onSubmit={(e) => {
-            e.preventDefault();
-            jumpTo(issuesHeading.current);
-          }}
-        >
-          <label htmlFor="hero-q" className="visually-hidden">
-            Search city issues
-          </label>
-          <input
-            id="hero-q"
-            type="search"
-            value={params.get('q') ?? ''}
-            placeholder="Search issues, e.g. speed limit"
-            onChange={(e) => {
-              const p = new URLSearchParams(params);
-              if (e.target.value) p.set('q', e.target.value);
-              else p.delete('q');
-              setParams(p, { replace: true });
-            }}
-          />
-          <button type="submit" className="hero-search__button">
-            Search
-          </button>
-        </form>
-        {ready && (
-          <p className="hero__note">
-            {anyMock
-              ? 'These records include sample data and are not city totals.'
-              : `A selected set of recent records, not every city item.${checked ? ` Meeting records last checked against official city documents on ${formatDate(checked)}.` : ''}`}
-          </p>
-        )}
+      <section className="hero hero--cover" aria-labelledby="citywide-title">
+        <div className="hero__inner">
+          <div className="hero__main">
+            <p className="hero__place">Alpharetta, Georgia</p>
+            <h1 id="citywide-title" className="hero__title">
+              <span className="hero__line">What’s on the table</span> <span className="hero__line">at City Hall</span>
+            </h1>
+            <p className="hero__lede">Recent proposals, decisions, and public meetings, explained in plain language with a link to every official source.</p>
+            <form
+              className="hero-search"
+              role="search"
+              aria-label="Issue search"
+              onSubmit={(e) => {
+                e.preventDefault();
+                jumpTo(issuesHeading.current);
+              }}
+            >
+              <label htmlFor="hero-q" className="visually-hidden">
+                Search city issues
+              </label>
+              <input
+                id="hero-q"
+                type="search"
+                value={params.get('q') ?? ''}
+                placeholder="Search issues, e.g. speed limit"
+                onChange={(e) => {
+                  const p = new URLSearchParams(params);
+                  if (e.target.value) p.set('q', e.target.value);
+                  else p.delete('q');
+                  setParams(p, { replace: true });
+                }}
+              />
+              <button type="submit" className="hero-search__button">
+                Search
+              </button>
+            </form>
+            {ready && (
+              <p className="hero__note">
+                {anyMock
+                  ? 'These records include sample data and are not city totals.'
+                  : `A selected set of recent records, not every city item.${checked ? ` Meeting records last checked against official city documents on ${formatDate(checked)}.` : ''}`}
+              </p>
+            )}
+          </div>
+          {ready && <Docket meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
+        </div>
       </section>
 
       {ready && (
@@ -359,5 +365,63 @@ function QuickIcon({ name }: { name: 'pin' | 'calendar' | 'play' | 'document' })
         {paths[name]}
       </svg>
     </span>
+  );
+}
+
+/**
+ * "Next at City Hall": the next scheduled meeting, what is on its agenda, and the most
+ * recent recorded decision. Everything shown comes from the dataset; nothing is invented.
+ */
+function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: Issue[]; documents: CivicDocument[] }) {
+  const next = splitMeetings(meetings).upcoming[0] ?? null;
+  const onAgenda = next ? issues.filter((i) => next.issueIds.includes(i.id)) : [];
+  const decided = issues
+    .filter((i) => ['approved', 'denied', 'withdrawn', 'completed'].includes(i.status) && i.statusAsOf)
+    .sort((a, b) => b.statusAsOf!.localeCompare(a.statusAsOf!))[0];
+  const agenda = next ? agendaFor(next, documents) : null;
+  if (!next && !decided) return null;
+  return (
+    <aside className="docket" aria-label="Next at City Hall">
+      {next && (
+        <div className="docket__block">
+          <p className="docket__kicker">Next at City Hall</p>
+          <p className="docket__date">
+            <time dateTime={next.date ?? undefined}>{formatWeekdayDate(next.date)}</time>
+            {next.startTime && <span className="docket__time">{formatTime(next.startTime)}</span>}
+          </p>
+          <p className="docket__title">
+            <Link to={`/meetings/${encodeURIComponent(next.id)}`}>{next.title}</Link>
+          </p>
+          {onAgenda.length > 0 && (
+            <>
+              <p className="docket__label">On the agenda</p>
+              <ul className="docket__list">
+                {onAgenda.map((i) => (
+                  <li key={i.id}>
+                    <Link to={`/issues/${encodeURIComponent(i.id)}`}>{i.title}</Link>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+          {agenda && safeUrl(agenda.url) && !isMock(agenda) && (
+            <a className="docket__source" href={safeUrl(agenda.url)!} target="_blank" rel="noopener noreferrer">
+              Read the agenda (PDF)<span className="visually-hidden"> for {next.title}, opens in a new tab</span>
+            </a>
+          )}
+        </div>
+      )}
+      {decided && (
+        <div className="docket__block docket__block--decided">
+          <p className="docket__kicker">Latest decision</p>
+          <p className="docket__title docket__title--small">
+            <Link to={`/issues/${encodeURIComponent(decided.id)}`}>{decided.title}</Link>
+          </p>
+          <p className="docket__meta">
+            <IssueStatusBadge status={decided.status} /> on {formatDate(decided.statusAsOf)}
+          </p>
+        </div>
+      )}
+    </aside>
   );
 }
