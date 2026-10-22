@@ -181,6 +181,17 @@ describe('With the real curated records in /data', () => {
     expect(screen.getAllByRole('link', { name: /^Agenda \(PDF\)/ }).length).toBe(5);
   });
 
+  it('keeps archive documents next to the meeting they belong to', async () => {
+    renderAt('/archive');
+    const rows = within(await screen.findByRole('list')).getAllByRole('listitem').map((li) => li.querySelector('h2')?.textContent ?? '');
+    const meeting = rows.indexOf('City Council Meeting & Public Hearing, September 14, 2026');
+    const minutes = rows.indexOf('City Council Official Minutes, September 14, 2026');
+    expect(meeting).toBeGreaterThanOrEqual(0);
+    expect(Math.abs(minutes - meeting)).toBeLessThanOrEqual(2); // meeting, then its agenda and minutes
+    const dateLines = [...document.querySelectorAll('.archive-row__date')].map((p) => p.textContent);
+    expect(dateLines).toContain('For the September 14, 2026 meeting. Published October 21, 2026.');
+  });
+
   it('links an approved issue to its official minutes', async () => {
     renderAt('/issues/issue-ph-26-16-north-main');
     expect(await screen.findByText('Approved')).toBeInTheDocument();

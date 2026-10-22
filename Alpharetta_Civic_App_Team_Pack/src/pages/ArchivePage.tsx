@@ -26,8 +26,13 @@ const FILTERS: { id: ArchiveFilter; label: string }[] = [
 // Display grouping only; the source documentType values are never changed.
 const AGENDA_TYPES = new Set(['agenda', 'agenda_packet']);
 
-/** Builds one date-sorted list of meetings and documents, tagged with the filter groups each belongs to. */
+/**
+ * Builds one date-sorted list of meetings and documents, tagged with the filter groups each belongs to.
+ * A document is dated by its meeting (so minutes sit next to the meeting they record); documents
+ * without a meeting fall back to their publish date.
+ */
 export function buildArchiveEntries(meetings: Meeting[], documents: CivicDocument[]): ArchiveEntry[] {
+  const meetingDate = (d: CivicDocument) => meetings.find((m) => m.id === d.meetingId)?.date ?? null;
   const entries: ArchiveEntry[] = [
     ...meetings.map((m) => ({
       kind: 'meeting' as const,
@@ -39,7 +44,7 @@ export function buildArchiveEntries(meetings: Meeting[], documents: CivicDocumen
     ...documents.map((d) => ({
       kind: 'document' as const,
       id: d.id,
-      date: d.publishedDate,
+      date: meetingDate(d) ?? d.publishedDate,
       record: d,
       groups: ['all', AGENDA_TYPES.has(d.documentType) ? 'agendas' : 'documents'] as ArchiveFilter[],
     })),
@@ -205,9 +210,20 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
           </Link>
         </h2>
         <p className="archive-row__date">
-          {isMeeting ? '' : 'Published '}
-          <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time>
-          {time ? ` at ${time}` : ''}
+          {isMeeting ? (
+            <>
+              <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time>
+              {time ? ` at ${time}` : ''}
+            </>
+          ) : entry.record.meetingId && entry.date !== entry.record.publishedDate ? (
+            <>
+              For the <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time> meeting. Published {formatDate(entry.record.publishedDate, 'date not provided')}.
+            </>
+          ) : (
+            <>
+              Published <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time>
+            </>
+          )}
         </p>
         <div className="card__actions">
           {isMeeting ? (
@@ -216,7 +232,9 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
                 Watch recording
               </ExternalAction>
             ) : (
-              <span className="card__action card__action--muted">No recording linked</span>
+              <span className="card__action card__action--muted">
+                {entry.record.status === 'scheduled' ? 'No recording yet: this meeting hasn’t happened' : 'No recording linked'}
+              </span>
             )
           ) : file ? (
             <ExternalAction href={file} context={entry.record.title}>

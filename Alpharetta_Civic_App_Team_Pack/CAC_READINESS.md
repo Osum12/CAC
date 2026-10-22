@@ -32,9 +32,11 @@ Checked 2026-10-21 against the official 2026 rulebook: https://www.congressional
 2. **Read and understand the code** well enough to explain it to a judge: the data flow (`page → civicData.ts → JSON`), how Near Me ranking works (`nearMe.ts`), and why null URLs are never links (`SourceAction.tsx`).
 3. **Fill in `AI_ASSISTANCE.md`** honestly, and put a matching disclosure in the submission form.
 4. **List open-source libraries** in the submission: React, React Router, Leaflet, OpenStreetMap data, Vite, Vitest, Testing Library, ESLint, Google Fonts (Fraunces, Source Sans 3).
-5. **Record the demo video** (1–3 min). Say aloud that the records are sample data unless you've replaced them.
+5. **Record the demo video** (1–3 min). Say that the records are a small, hand-checked set of real Alpharetta items (not live or complete), and that the app is a student project not affiliated with the City of Alpharetta. The site no longer has a footer saying so, so say it in the video and the written answers.
 6. **Confirm eligibility**: grades, residency, district, team size ≤ 4.
 7. **Merge to `main`** only after the team reviews `integration`, if the team wants `main` to be the submitted version.
+8. **Update Royal 400 after the Oct 26, 2026 City Council vote** (status, `statusAsOf`, the official minutes as source) before any later demo.
+9. **Check the data yourselves** against the linked PDFs. An AI did the research and an AI reviewer re-checked it, but the team should be able to vouch for every record.
 
 ## Honest demo script (about 2½ minutes)
 

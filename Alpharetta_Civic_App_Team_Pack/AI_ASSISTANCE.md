@@ -38,6 +38,8 @@ On 2026-10-22, also at the session runner's request, Claude Code did a UI/UX ref
 - Ran an AI QA/accessibility reviewer, which found 8 issues (no critical ones), and fixed them.
 - Added date filters to Citywide (when a status was set) and the Archive (meeting or publish date), with tests.
 - Restyled the app for clarity, using the City of Alpharetta website as a structural reference: a hero search, shortcut tiles and "label: value" fact lines, in the app's own colors and without the city's branding.
+- Did an editorial redesign: a full-width green cover hero with a serif headline, a "Next at City Hall" panel built from the data, warm ivory pages and serif section titles.
+- Ran a requirements-compliance audit with an independent AI reviewer, re-checked the data against the official PDFs, and fixed the defects found (see `PROGRESS.md`). Archive documents are now dated by their meeting.
 
 The AI did not change the PRDs and did not deploy anything.
 
