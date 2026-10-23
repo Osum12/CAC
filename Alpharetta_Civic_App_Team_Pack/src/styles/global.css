@@ -825,9 +825,9 @@ input[type='search']::-webkit-search-cancel-button {
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-areas:
     'topic status'
-    'main main'
-    'date date';
-  gap: 10px 16px;
+    'topic date'
+    'main main';
+  gap: 2px 16px;
   padding: 20px 0 22px;
   border-top: 1px solid var(--rule);
   transition: background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
@@ -848,9 +848,12 @@ input[type='search']::-webkit-search-cancel-button {
 .row__main {
   grid-area: main;
   min-width: 0;
+  margin-top: 10px;
 }
 .row__date {
   grid-area: date;
+  justify-self: end;
+  text-align: right;
   font-family: var(--mono);
   font-size: 0.9375rem;
   line-height: 1.5;
@@ -1007,8 +1010,22 @@ input[type='search']::-webkit-search-cancel-button {
 .archive-row .tag {
   border-radius: 16px;
 }
+.archive-row.row {
+  grid-template-areas:
+    'topic status'
+    'main main'
+    'date date';
+}
 .archive-row .row__date {
   text-align: left;
+  justify-self: start;
+  margin-top: 8px;
+}
+.row--meeting .row__main {
+  margin-top: 0;
+}
+.row--document .card__actions {
+  margin-top: 8px;
 }
 .archive-row__icon {
   display: inline-flex;
@@ -1117,15 +1134,23 @@ input[type='search']::-webkit-search-cancel-button {
   }
 }
 @container (min-width: 680px) {
-  .row {
+  .row,
+  .archive-row.row {
     grid-template-columns: minmax(0, 1fr) 8.5rem 11rem;
     grid-template-areas:
       'topic topic topic'
       'main date status';
     column-gap: 24px;
+    row-gap: 10px;
+  }
+  .archive-row .row__date {
+    margin-top: 0;
+  }
+  .row__main {
+    margin-top: 0;
   }
   .row__date {
-    text-align: right;
+    justify-self: stretch;
     padding-top: 0.2em;
   }
   .row__status {
@@ -1144,6 +1169,7 @@ input[type='search']::-webkit-search-cancel-button {
   }
   .row--document .row__aside {
     padding-top: 0.15em;
+    margin-top: 0;
   }
   .archive-row.row {
     grid-template-columns: minmax(0, 1fr) 12rem 9rem;
@@ -2167,4 +2193,14 @@ input[type='search']::-webkit-search-cancel-button {
     transition: none !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* The brand already names the app on the statewide home; keep the rail label for screen readers only. */
+.hero--state .hero__place {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
 }
