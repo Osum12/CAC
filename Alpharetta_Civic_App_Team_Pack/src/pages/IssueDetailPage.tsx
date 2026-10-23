@@ -113,7 +113,7 @@ export function IssueDetailPage() {
   );
 }
 
-/** Related meetings in date order, so readers can follow the issue's path through city hall. */
+/** Related meetings in date order, so readers can follow the issue's path through its meetings. */
 function MeetingTimeline({ meetings }: { meetings: Meeting[] }) {
   const href = usePlaceHref();
   const sorted = [...meetings].sort((a, b) => (a.date ?? '9999').localeCompare(b.date ?? '9999'));
@@ -165,7 +165,7 @@ function LocationPanel({ issue }: { issue: Issue }) {
               : loc.locationType === 'mock_marker'
                 ? 'Sample map point for testing. It is not a real project site.'
                 : loc.locationType === 'approximate'
-                  ? 'The street address comes from the city document. The map point is approximate: it was looked up from that address, not taken from an exact site boundary.'
+                  ? 'The street address comes from the official record. The map point is approximate: it was looked up from that address, not taken from an exact site boundary.'
                   : 'The exact location has not been mapped.'}
           </p>
           {coords ? (
