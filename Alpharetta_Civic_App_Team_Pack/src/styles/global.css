@@ -2262,3 +2262,12 @@ select:hover:not(:disabled),
     max-width: none;
   }
 }
+
+/* Summaries are never cut short: a cut summary can contradict its status (for example
+   "failed on September 16" next to an Approved badge, when the item passed on October 7). */
+.citywide-grid .card__summary {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: none;
+  overflow: visible;
+}

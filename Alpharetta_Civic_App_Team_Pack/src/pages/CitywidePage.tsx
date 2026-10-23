@@ -306,7 +306,7 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
     .filter((i) => ['approved', 'denied', 'withdrawn', 'completed'].includes(i.status) && i.statusAsOf)
     .sort((a, b) => b.statusAsOf!.localeCompare(a.statusAsOf!));
   const decided = decisions[0];
-  // With no meeting to announce, the panel also lists the few decisions before the latest one.
+  // With no meeting to announce, the panel also lists the next few most recent decisions (some may share its date).
   const earlier = next ? [] : decisions.slice(1, 4);
   const agenda = next ? agendaFor(next, documents) : null;
   if (!next && !decided) return null;
@@ -352,7 +352,7 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
           </p>
           {earlier.length > 0 && (
             <>
-              <p className="docket__label docket__label--rule">Earlier decisions</p>
+              <p className="docket__label docket__label--rule">Other recent decisions</p>
               <ul className="docket__decisions">
                 {earlier.map((i) => (
                   <li key={i.id}>
