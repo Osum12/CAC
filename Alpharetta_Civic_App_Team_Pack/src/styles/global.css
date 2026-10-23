@@ -2670,8 +2670,16 @@ input[type='search']:focus-visible {
     grid-template-columns: 280px minmax(0, 1fr);
   }
   .detail__side {
+    align-self: start;
+  }
+}
+/* Sticky only where the rail fits in the window; it can never be taller than the space below the header. */
+@media (min-width: 960px) and (min-height: 800px) {
+  .detail__side {
     position: sticky;
-    top: 150px;
+    top: 136px;
+    max-height: calc(100vh - 152px);
+    overflow-y: auto;
   }
 }
 /* Below 960 the rail stacks first, and its headings take the same accent bar as the sections. */
@@ -2851,6 +2859,8 @@ input[type='search']:focus-visible {
 }
 .archive-month {
   margin-top: 32px;
+  font-size: 1.375rem;
+  font-weight: 800;
 }
 .archive-list > li:first-child .archive-month {
   margin-top: 8px;

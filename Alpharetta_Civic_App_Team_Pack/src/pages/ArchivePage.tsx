@@ -157,7 +157,7 @@ export function ArchivePage() {
                 const startsMonth = k === 0 || monthOf(visible[k - 1].date) !== month;
                 return (
                   <li key={`${e.kind}-${e.id}`} className={startsMonth ? 'archive-list__first' : undefined}>
-                    {startsMonth && <p className="month__title archive-month">{month}</p>}
+                    {startsMonth && <h3 className="month__title archive-month">{month}</h3>}
                     <ArchiveRow entry={e} />
                   </li>
                 );
