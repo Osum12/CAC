@@ -2,6 +2,22 @@ import { LocationSelector } from '../components/LocationSelector';
 import { COUNTIES, DIRECTORY_SOURCE, MUNICIPALITIES } from '../services/jurisdictions';
 import { usePageTitle } from '../services/usePageTitle';
 
+// What a visitor does here, in order. Describes the app, not any place's records.
+const STEPS = [
+  {
+    title: 'Choose your place',
+    text: 'Pick your county, and your city or town if you like. You’ll go straight to its page, or see that it’s coming soon.',
+  },
+  {
+    title: 'See what’s on the table',
+    text: 'Proposals, decisions, and public meetings, each explained in plain language with its current status.',
+  },
+  {
+    title: 'Check the source',
+    text: 'Every item links to the official agenda, record, or meeting video, so you can read the details yourself.',
+  },
+];
+
 /** Statewide front door: choose a county and, optionally, a city. Shows no civic records itself. */
 export function GeorgiaHomePage() {
   usePageTitle(null);
@@ -19,6 +35,22 @@ export function GeorgiaHomePage() {
             </p>
           </div>
           <LocationSelector />
+        </div>
+      </section>
+
+      <section className="steps" aria-labelledby="steps-title">
+        <div className="steps__inner">
+          <h2 id="steps-title" className="steps__title">
+            How it works
+          </h2>
+          <ol className="steps__list">
+            {STEPS.map((s) => (
+              <li key={s.title} className="steps__item">
+                <h3 className="steps__name">{s.title}</h3>
+                <p className="steps__text">{s.text}</p>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
 
