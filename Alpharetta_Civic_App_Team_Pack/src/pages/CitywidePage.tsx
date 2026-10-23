@@ -10,6 +10,7 @@ import { IssueCard, MeetingCard } from '../components/Cards';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
+import { RegisterHead } from '../components/Register';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 import { usePlace, usePlaceHref, useRecordSources } from '../services/placeContext';
 
@@ -64,8 +65,8 @@ export function CitywidePage() {
     <div className="page">
       <section className="hero hero--cover" aria-labelledby="citywide-title">
         <div className="hero__inner">
+          <p className="hero__place">{place?.name}, Georgia</p>
           <div className="hero__main">
-            <p className="hero__place">{place?.name}, Georgia</p>
             <h1 id="citywide-title" className="hero__title">
               <span className="hero__line">What’s on the table</span> <span className="hero__line">in {place?.name}</span>
             </h1>
@@ -101,9 +102,10 @@ export function CitywidePage() {
               </p>
             )}
           </div>
-          {ready && <Docket meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
         </div>
       </section>
+
+      {ready && <Docket meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
 
       {state.status === 'loading' && <LoadingState rows={4} />}
       {state.status === 'error' && <ErrorState onRetry={state.retry} />}
@@ -163,52 +165,60 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
 
   return (
     <div className="citywide-grid">
-      <section className="section" aria-labelledby="issues-heading">
-        <div className="section__head">
-          <h2 id="issues-heading" ref={issuesHeading} tabIndex={-1}>
-            Issues
-          </h2>
-          <p className="section__source">From the {sources}</p>
-          <Link to={href('/near-me')} className="text-link">
-            See them on the map
-          </Link>
+      <section className="section board" aria-labelledby="issues-heading">
+        <div className="board__label">
+          <div className="section__head">
+            <h2 id="issues-heading" ref={issuesHeading} tabIndex={-1}>
+              Issues
+            </h2>
+            <p className="section__source">From the {sources}</p>
+            <Link to={href('/near-me')} className="text-link">
+              See them on the map
+            </Link>
+          </div>
+          <IssueFilters issues={issues} filters={filters} onChange={setFilter} onClear={clearFilters} />
+          <p className="results-count" role="status" aria-live="polite">
+            {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
+          </p>
         </div>
 
-        <IssueFilters issues={issues} filters={filters} onChange={setFilter} onClear={clearFilters} />
-        <p className="results-count" role="status" aria-live="polite">
-          {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
-        </p>
-
-        {filtering ? (
-          matches.length ? (
-            <IssueList issues={matches} headingLevel={3} />
+        <div className="board__rows">
+          <RegisterHead columns={['Topic', 'Issue', 'Status date', 'Status']} />
+          {filtering ? (
+            matches.length ? (
+              <IssueList issues={matches} headingLevel={3} />
+            ) : (
+              <EmptyState
+                title="No issues match these filters."
+                action={
+                  <button type="button" className="button button--ghost" onClick={clearFilters}>
+                    Clear filters
+                  </button>
+                }
+              >
+                <p>Try a different word, or choose “All topics”, “Any status”, and “Any time”.</p>
+              </EmptyState>
+            )
           ) : (
-            <EmptyState
-              title="No issues match these filters."
-              action={
-                <button type="button" className="button button--ghost" onClick={clearFilters}>
-                  Clear filters
-                </button>
-              }
-            >
-              <p>Try a different word, or choose “All topics”, “Any status”, and “Any time”.</p>
-            </EmptyState>
-          )
-        ) : (
-          <IssueList issues={byImportance(issues)} headingLevel={3} />
-        )}
+            <IssueList issues={byImportance(issues)} headingLevel={3} />
+          )}
+        </div>
       </section>
 
-      <aside className="section section--meetings" aria-labelledby="meetings-heading">
-        <h2 id="meetings-heading" ref={meetingsHeading} tabIndex={-1}>
-          Meetings
-        </h2>
-        <p className="section__source">From the {sources}</p>
-        {upcoming.length > 0 && <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="" />}
-        <MeetingGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} empty="No past meetings in this dataset." />
-        <Link to={href('/archive')} className="text-link">
-          Browse all meetings and documents
-        </Link>
+      <aside className="section board section--meetings" aria-labelledby="meetings-heading">
+        <div className="board__label">
+          <h2 id="meetings-heading" ref={meetingsHeading} tabIndex={-1}>
+            Meetings
+          </h2>
+          <p className="section__source">From the {sources}</p>
+          <Link to={href('/archive')} className="text-link">
+            Browse all meetings and documents
+          </Link>
+        </div>
+        <div className="board__rows">
+          {upcoming.length > 0 && <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="" />}
+          <MeetingGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} empty="No past meetings in this dataset." />
+        </div>
       </aside>
     </div>
   );
@@ -264,7 +274,7 @@ const byImportance = (issues: Issue[]) =>
 
 function IssueList({ issues, headingLevel }: { issues: Issue[]; headingLevel: 3 | 4 }) {
   return (
-    <ul className="issue-list">
+    <ul className="issue-list register">
       {issues.map((i) => (
         <li key={i.id}>
           <IssueCard issue={i} headingLevel={headingLevel} />
@@ -279,7 +289,7 @@ function MeetingGroup({ title, meetings, documents, empty }: { title: string; me
     <>
       <h3 className="subhead">{title}</h3>
       {meetings.length ? (
-        <ul className="stack">
+        <ul className="stack register">
           {meetings.map((m) => (
             <li key={m.id}>
               <MeetingCard meeting={m} agenda={agendaFor(m, documents)} headingLevel={4} />
@@ -308,7 +318,12 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
   const agenda = next ? agendaFor(next, documents) : null;
   if (!next && !decided) return null;
   return (
-    <aside className="docket" aria-label={next ? `Next at ${meetingPlace}` : 'Latest decision'}>
+    <aside className="docket nowband" aria-label={next ? `Next at ${meetingPlace}` : 'Latest decision'}>
+      <div className="nowband__inner">
+      <p className="nowband__label">
+        <span className="nowband__beacon" aria-hidden="true" />
+        Right now
+      </p>
       {next && (
         <div className="docket__block">
           <p className="docket__kicker">Next at {meetingPlace}</p>
@@ -349,6 +364,7 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
           </p>
         </div>
       )}
+      </div>
     </aside>
   );
 }

@@ -11,6 +11,7 @@ import { MockBadge, isMock } from '../components/MockBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import type { CivicDocument, Meeting } from '../types/civic';
 import { usePlaceHref } from '../services/placeContext';
+import { RegisterHead } from '../components/Register';
 
 export type ArchiveFilter = 'all' | 'videos' | 'agendas' | 'documents';
 
@@ -121,13 +122,16 @@ export function ArchivePage() {
             {q ? ` matching “${q}”` : ''}
           </p>
           {visible.length ? (
-            <ol className="archive-list">
+            <>
+            <RegisterHead className="register-head--archive" columns={['Type', 'Record', 'Date', 'Status']} />
+            <ol className="archive-list register">
               {visible.map((e) => (
                 <li key={`${e.kind}-${e.id}`}>
                   <ArchiveRow entry={e} />
                 </li>
               ))}
             </ol>
+            </>
           ) : (
             <EmptyState
               title={emptyTitle(filter, q, count('all'))}
@@ -176,38 +180,20 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
   const time = isMeeting ? formatTime(entry.record.startTime) : null;
 
   return (
-    <article className={`archive-row archive-row--${entry.kind}`}>
-      <span className="archive-row__icon" aria-hidden="true">
-        <RowIcon kind={isMeeting ? 'meeting' : 'document'} />
-      </span>
-      <div className="archive-row__body">
-        <div className="card__top">
-          <span className="tag">{typeLabel}</span>
-          {isMeeting && <MeetingStatusBadge status={entry.record.status} />}
-          {mock && <MockBadge record={entry.record} />}
-        </div>
-        <h2 className="archive-row__title">
+    <article className={`archive-row archive-row--${entry.kind} row`}>
+      <div className="card__top row__topic">
+        <span className="archive-row__icon" aria-hidden="true">
+          <RowIcon kind={isMeeting ? 'meeting' : 'document'} />
+        </span>
+        <span className="tag">{typeLabel}</span>
+        {mock && <MockBadge record={entry.record} />}
+      </div>
+      <div className="archive-row__body row__main">
+        <h2 className="archive-row__title card__title">
           <Link to={to} className="card__link">
             {entry.record.title}
           </Link>
         </h2>
-        <p className="archive-row__date">
-          {isMeeting ? (
-            <>
-              <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time>
-              {time ? ` at ${time}` : ''}
-            </>
-          ) : entry.record.meetingId && entry.date !== entry.record.publishedDate ? (
-            <>
-              For the <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time> meeting.
-              {entry.record.publishedDate ? ` Published ${formatDate(entry.record.publishedDate)}.` : ''}
-            </>
-          ) : (
-            <>
-              Published <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time>
-            </>
-          )}
-        </p>
         <div className="card__actions">
           {isMeeting ? (
             recording ? (
@@ -228,6 +214,31 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
           )}
         </div>
       </div>
+      <p className="archive-row__date row__date">
+        {isMeeting ? (
+          <>
+            <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time>
+            {time ? ` at ${time}` : ''}
+          </>
+        ) : entry.record.meetingId && entry.date !== entry.record.publishedDate ? (
+          <>
+            For the <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time> meeting.
+            {entry.record.publishedDate ? ` Published ${formatDate(entry.record.publishedDate)}.` : ''}
+          </>
+        ) : (
+          <>
+            Published <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time>
+          </>
+        )}
+      </p>
+      <p className="row__status">
+        {isMeeting && (
+          <>
+            <span className="visually-hidden">Status: </span>
+            <MeetingStatusBadge status={entry.record.status} />
+          </>
+        )}
+      </p>
     </article>
   );
 }

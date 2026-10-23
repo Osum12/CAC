@@ -33,44 +33,50 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
   const source = isMock(issue) ? null : primarySource(issue.sourceUrls);
   const mappable = getValidCoordinates(issue) !== null;
   return (
-    <article className="card card--issue">
-      <div className="card__top">
+    <article className="card card--issue row">
+      <div className="card__top row__topic">
         <span className="tag">{humanize(issue.category)}</span>
         {isMock(issue) && <MockBadge record={issue} />}
       </div>
-      <H className="card__title">
-        <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)} className="card__link">
-          {issue.title}
-        </Link>
-      </H>
-      <p className="card__summary">{issue.summary}</p>
-      <dl className="facts">
-        <div className="facts__row">
-          <dt>Status</dt>
-          <dd>
-            <IssueStatusBadge status={issue.status} />
-            <span className="facts__note">{issue.statusAsOf ? ` as of ${formatDate(issue.statusAsOf)}` : ' (no date recorded)'}</span>
-          </dd>
-        </div>
-        <div className="facts__row">
-          <dt>Where</dt>
-          <dd>{issue.location?.label ?? 'No specific address in the record'}</dd>
-        </div>
-      </dl>
-      <div className="card__actions">
-        {mappable && (
-          <Link className="card__action" to={href(`/near-me?issue=${encodeURIComponent(issue.id)}`)}>
-            <span aria-hidden="true" className="icon-lead">⌖</span>View on map<span className="visually-hidden">: {issue.title}</span>
+      <div className="row__main">
+        <H className="card__title">
+          <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)} className="card__link">
+            {issue.title}
           </Link>
-        )}
-        {source ? (
-          <ExternalAction href={source} context={issue.title}>
-            Official record
-          </ExternalAction>
-        ) : (
-          <span className="card__action card__action--muted">No official source linked</span>
-        )}
+        </H>
+        <p className="card__summary">{issue.summary}</p>
+        <p className="row__where">
+          <span className="row__key">Where</span> {issue.location?.label ?? 'No specific address in the record'}
+        </p>
+        <div className="card__actions">
+          {mappable && (
+            <Link className="card__action" to={href(`/near-me?issue=${encodeURIComponent(issue.id)}`)}>
+              View on map<span className="visually-hidden">: {issue.title}</span>
+            </Link>
+          )}
+          {source ? (
+            <ExternalAction href={source} context={issue.title}>
+              Official record
+            </ExternalAction>
+          ) : (
+            <span className="card__action card__action--muted">No official source linked</span>
+          )}
+        </div>
       </div>
+      <p className="row__date">
+        {issue.statusAsOf ? (
+          <>
+            <span className="visually-hidden">Status as of </span>
+            <time dateTime={issue.statusAsOf}>{formatCompactDate(issue.statusAsOf)}</time>
+          </>
+        ) : (
+          'No date recorded'
+        )}
+      </p>
+      <p className="row__status">
+        <span className="visually-hidden">Status: </span>
+        <IssueStatusBadge status={issue.status} />
+      </p>
     </article>
   );
 }
@@ -92,40 +98,29 @@ export function MeetingCard({
   const time = formatTime(meeting.startTime);
   const agendaUrl = agenda && !isMock(agenda) ? safeUrl(agenda.url) : null;
   return (
-    <article className="card card--meeting">
+    <article className="card card--meeting row row--meeting">
       <div className="datechip" aria-hidden="true">
         {short ? (
           <>
-            <span className="datechip__weekday">{weekday}</span>
-            <span className="datechip__day">{short.day}</span>
             <span className="datechip__month">{short.month}</span>
+            <span className="datechip__day">{short.day}</span>
+            <span className="datechip__weekday">{weekday}</span>
           </>
         ) : (
           <span className="datechip__month">TBD</span>
         )}
       </div>
-      <div className="card__body">
+      <div className="card__body row__main">
         <span className="tag">{meetingTypeLabel(meeting.meetingType)}</span>
         <H className="card__title">
           <Link to={href(`/meetings/${encodeURIComponent(meeting.id)}`)} className="card__link">
             {meeting.title}
           </Link>
         </H>
-        <dl className="facts">
-          <div className="facts__row">
-            <dt>When</dt>
-            <dd>
-              <time dateTime={meeting.date ?? undefined}>{formatCompactDate(meeting.date)}</time>
-              {time ? `, ${time}` : ''}
-            </dd>
-          </div>
-          <div className="facts__row">
-            <dt>Status</dt>
-            <dd>
-              <MeetingStatusBadge status={meeting.status} />
-            </dd>
-          </div>
-        </dl>
+        <p className="row__when">
+          <span className="row__key">When</span> <time dateTime={meeting.date ?? undefined}>{formatCompactDate(meeting.date)}</time>
+          {time ? `, ${time}` : ''}
+        </p>
         {(agendaUrl || isMock(meeting)) && (
           <div className="card__actions">
             {agendaUrl && (
@@ -137,6 +132,10 @@ export function MeetingCard({
           </div>
         )}
       </div>
+      <p className="row__status">
+        <span className="visually-hidden">Status: </span>
+        <MeetingStatusBadge status={meeting.status} />
+      </p>
     </article>
   );
 }
@@ -146,18 +145,20 @@ export function DocumentCard({ document, headingLevel = 3 }: { document: CivicDo
   const H = `h${headingLevel}` as const;
   const url = isMock(document) ? null : safeUrl(document.url);
   return (
-    <article className="card card--document">
-      <div className="card__top">
+    <article className="card card--document row row--document">
+      <div className="card__top row__topic">
         <span className="tag">{humanize(document.documentType)}</span>
         {isMock(document) && <MockBadge record={document} />}
       </div>
+      <div className="row__main">
       <H className="card__title">
         <Link to={href(`/documents/${encodeURIComponent(document.id)}`)} className="card__link">
           {document.title}
         </Link>
       </H>
       {document.publishedDate && <p className="card__when">Published {formatDate(document.publishedDate)}</p>}
-      <div className="card__actions">
+      </div>
+      <div className="card__actions row__aside">
         {url ? (
           <ExternalAction href={url} context={document.title}>
             {/GetMeetingFileStream|\.pdf$/i.test(url) ? 'Open PDF' : 'Open document'}

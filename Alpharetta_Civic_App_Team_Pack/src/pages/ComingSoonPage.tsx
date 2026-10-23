@@ -77,7 +77,10 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
               <li key={c.id}>
                 <Link to={countyPath(c)} className="soon-place">
                   <span className="soon-place__name">{c.name}</span>{' '}
-                  <span className="soon-place__status">{c.civicDataAvailable ? 'Issues, meetings, map, and archive' : 'Coming soon'}</span>
+                  <span className={`soon-place__status${c.civicDataAvailable ? ' soon-place__status--live' : ''}`}>
+                    <span className="soon-place__dot" aria-hidden="true" />
+                    {c.civicDataAvailable ? 'Issues, meetings, map, and archive' : 'Coming soon'}
+                  </span>
                 </Link>
               </li>
             ))}
@@ -106,7 +109,10 @@ function CountyPlaces({ county, cities }: { county: County; cities: Municipality
           {cities.map((m) => (
             <li key={m.id}>
               <Link to={`/${m.id}`} className="soon-place">
-                <span className="soon-place__name">{m.name}</span> <span className="soon-place__status">Coming soon</span>
+                <span className="soon-place__name">{m.name}</span> <span className="soon-place__status">
+                  <span className="soon-place__dot" aria-hidden="true" />
+                  Coming soon
+                </span>
               </Link>
             </li>
           ))}
