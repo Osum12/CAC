@@ -11,6 +11,7 @@ import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import { BackLink } from '../components/BackLink';
 import { usePlaceHref } from '../services/placeContext';
+import { nb } from '../components/nb';
 
 export function MeetingDetailPage() {
   const href = usePlaceHref();
@@ -32,7 +33,7 @@ export function MeetingDetailPage() {
   const missingDocs = meeting.agendaDocumentIds.filter((id) => !documents.some((d) => d.id === id)).length;
 
   return (
-    <article className="page detail">
+    <article className="page detail detail--meeting">
       <BackLink fallbackTo={href('/archive')} fallbackLabel="Archive" />
       <header className="detail__header">
         <div className="card__top">
@@ -43,7 +44,7 @@ export function MeetingDetailPage() {
         <div className="detail__status">
           <MeetingStatusBadge status={meeting.status} />
           <span className="muted">
-            {formatDate(meeting.date)}
+            {nb(formatDate(meeting.date))}
             {time ? ` at ${time}` : meeting.date ? ' (time not listed)' : ''}
           </span>
         </div>
@@ -102,7 +103,7 @@ export function MeetingDetailPage() {
               </li>
             </ul>
             <p className="muted">
-              {meeting.lastVerifiedAt ? `Last checked ${formatDate(meeting.lastVerifiedAt.slice(0, 10))}.` : 'Not yet checked against an official source.'}
+              {meeting.lastVerifiedAt ? `Last checked ${nb(formatDate(meeting.lastVerifiedAt.slice(0, 10)))}.` : 'Not yet checked against an official source.'}
             </p>
           </section>
         </aside>

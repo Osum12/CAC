@@ -3,8 +3,10 @@ import type { CivicDocument, Issue, Meeting } from '../types/civic';
 import { formatCompactDate, formatDate, formatShortDate, formatTime, formatWeekday, humanize, meetingTypeLabel, primarySource, safeUrl } from '../services/format';
 import { getValidCoordinates } from '../services/nearMe';
 import { MockBadge, isMock } from './MockBadge';
+import { ArrowLabel } from './SourceAction';
 import { IssueStatusBadge, MeetingStatusBadge } from './StatusBadge';
 import { usePlaceHref } from '../services/placeContext';
+import { nb } from './nb';
 
 // Cards use a "stretched link": the title link's click area covers the whole card,
 // so screen readers hear one clear link per card. Secondary actions (map, source,
@@ -19,9 +21,7 @@ type HeadingLevel = 2 | 3 | 4;
 export function ExternalAction({ href, children, context }: { href: string; children: string; context: string }) {
   return (
     <a className="card__action" href={href} target="_blank" rel="noopener noreferrer">
-      {children}
-      <span className="visually-hidden">: {context}</span>
-      <span aria-hidden="true"> ↗</span>
+      <ArrowLabel text={children} after={<span className="visually-hidden">: {context}</span>} />
       <span className="visually-hidden"> (opens in a new tab)</span>
     </a>
   );
@@ -33,9 +33,9 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
   const source = isMock(issue) ? null : primarySource(issue.sourceUrls);
   const mappable = getValidCoordinates(issue) !== null;
   return (
-    <article className="card card--issue">
+    <article className="card card--issue" data-topic={issue.category}>
       <div className="card__top">
-        <span className="tag">{humanize(issue.category)}</span>
+        <span className="tag tag--topic">{humanize(issue.category)}</span>
         {isMock(issue) && <MockBadge record={issue} />}
       </div>
       <H className="card__title">
@@ -49,10 +49,10 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
           <dt>Status</dt>
           <dd>
             <IssueStatusBadge status={issue.status} />
-            <span className="facts__note">{issue.statusAsOf ? ` as of ${formatDate(issue.statusAsOf)}` : ' (no date recorded)'}</span>
+            <span className="facts__note">{issue.statusAsOf ? ` as of ${nb(formatDate(issue.statusAsOf))}` : ' (no date recorded)'}</span>
           </dd>
         </div>
-        <div className="facts__row">
+        <div className={`facts__row${issue.location?.label ? '' : ' facts__row--no-place'}`}>
           <dt>Where</dt>
           <dd>{issue.location?.label ?? 'No specific address in the record'}</dd>
         </div>
@@ -115,7 +115,7 @@ export function MeetingCard({
           <div className="facts__row">
             <dt>When</dt>
             <dd>
-              <time dateTime={meeting.date ?? undefined}>{formatCompactDate(meeting.date)}</time>
+              <time dateTime={meeting.date ?? undefined}>{nb(formatCompactDate(meeting.date))}</time>
               {time ? `, ${time}` : ''}
             </dd>
           </div>
@@ -156,7 +156,7 @@ export function DocumentCard({ document, headingLevel = 3 }: { document: CivicDo
           {document.title}
         </Link>
       </H>
-      {document.publishedDate && <p className="card__when">Published {formatDate(document.publishedDate)}</p>}
+      {document.publishedDate && <p className="card__when">Published {nb(formatDate(document.publishedDate))}</p>}
       <div className="card__actions">
         {url ? (
           <ExternalAction href={url} context={document.title}>

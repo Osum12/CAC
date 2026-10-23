@@ -1,4 +1,23 @@
+import type { ReactNode } from 'react';
 import { safeUrl } from '../services/format';
+
+/**
+ * The link text with the "↗" glued to its last word, so the arrow never wraps onto a
+ * line of its own. One wrapping span keeps the label a single flex item in pill buttons. `after` (screen-reader-only text) sits inside the same unbreakable run.
+ */
+export function ArrowLabel({ text, after }: { text: string; after?: ReactNode }) {
+  const cut = text.lastIndexOf(' ') + 1;
+  return (
+    <span>
+      {text.slice(0, cut)}
+      <span className="nowrap">
+        {text.slice(cut)}
+        {after}
+        <span aria-hidden="true">{' ↗'}</span>
+      </span>
+    </span>
+  );
+}
 
 type Props = {
   url: string | null | undefined;
@@ -22,8 +41,7 @@ export function SourceAction({ url, label, unavailableText }: Props) {
   }
   return (
     <a className="source-action" href={href} target="_blank" rel="noopener noreferrer">
-      {label}
-      <span aria-hidden="true"> ↗</span>
+      <ArrowLabel text={label} />
       <span className="visually-hidden"> (opens in a new tab)</span>
     </a>
   );

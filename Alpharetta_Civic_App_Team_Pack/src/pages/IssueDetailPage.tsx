@@ -13,6 +13,7 @@ import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import type { Issue, Meeting } from '../types/civic';
 import { usePlaceHref } from '../services/placeContext';
+import { nb } from '../components/nb';
 
 export function IssueDetailPage() {
   const href = usePlaceHref();
@@ -34,23 +35,23 @@ export function IssueDetailPage() {
   const missingDocs = issue.documentIds.filter((id) => !documents.some((d) => d.id === id)).length;
 
   return (
-    <article className="page detail">
+    <article className="page detail detail--issue" data-topic={issue.category}>
       <BackLink fallbackTo={href('/')} fallbackLabel="All issues" />
       <header className="detail__header">
         <div className="card__top">
-          <span className="tag">{humanize(issue.category)}</span>
+          <span className="tag tag--topic">{humanize(issue.category)}</span>
           {isMock(issue) && <MockBadge record={issue} size="lg" />}
         </div>
         <h1 className="detail__title">{issue.title}</h1>
         <div className="detail__status">
           <IssueStatusBadge status={issue.status} />
-          <span className="muted">{issue.statusAsOf ? `Status as of ${formatDate(issue.statusAsOf)}` : 'No status date recorded'}</span>
+          <span className="muted">{issue.statusAsOf ? `Status as of ${nb(formatDate(issue.statusAsOf))}` : 'No status date recorded'}</span>
         </div>
       </header>
       <MockNotice record={issue} kind="issue" />
 
       <div className="detail__grid">
-        <div className="detail__main">
+        <div className="detail__main detail__main--lead">
           <section aria-labelledby="summary-h">
             <h2 id="summary-h">In plain language</h2>
             <p className="prose">{issue.summary || 'No summary has been written for this issue yet.'}</p>
@@ -58,7 +59,27 @@ export function IssueDetailPage() {
               <p className="fine-print">This summary is a plain-language rewrite of the official documents listed below. Check them for the exact wording.</p>
             )}
           </section>
+        </div>
 
+        <aside className="detail__side">
+          <section className="panel" aria-labelledby="sources-h">
+            <h2 id="sources-h">Official sources</h2>
+            {issue.sourceUrls.length ? (
+              <ul className="plain-list">
+                {issue.sourceUrls.map((url, i) => (
+                  <li key={i}>
+                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
+            )}
+          </section>
+          <LocationPanel issue={issue} />
+        </aside>
+
+        <div className="detail__main detail__main--rest">
           <section aria-labelledby="why-h" className="callout">
             <h2 id="why-h">Why it may matter</h2>
             <p className="prose">{issue.whyItMayMatter || 'No explanation has been recorded for this issue.'}</p>
@@ -91,23 +112,6 @@ export function IssueDetailPage() {
           </section>
         </div>
 
-        <aside className="detail__side">
-          <section className="panel" aria-labelledby="sources-h">
-            <h2 id="sources-h">Official sources</h2>
-            {issue.sourceUrls.length ? (
-              <ul className="plain-list">
-                {issue.sourceUrls.map((url, i) => (
-                  <li key={i}>
-                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
-            )}
-          </section>
-          <LocationPanel issue={issue} />
-        </aside>
       </div>
     </article>
   );
@@ -124,7 +128,7 @@ function MeetingTimeline({ meetings }: { meetings: Meeting[] }) {
         return (
           <li key={m.id} className={`timeline__item timeline__item--${m.status === 'scheduled' ? 'upcoming' : 'past'}`}>
             <p className="timeline__date">
-              <time dateTime={m.date ?? undefined}>{formatDate(m.date)}</time>
+              <time dateTime={m.date ?? undefined}>{nb(formatDate(m.date))}</time>
               {time ? ` at ${time}` : ''}
             </p>
             <p className="timeline__title">

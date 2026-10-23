@@ -1,5 +1,6 @@
-import { useRef, type ReactNode, type RefObject } from 'react';
-import { Link } from 'react-router-dom';
+import { useRef, useState, type MouseEvent, type ReactNode, type RefObject } from 'react';
+import { Link, useSearchParams } from 'react-router-dom';
+import { flushSync } from 'react-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
 import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState } from '../services/filters';
@@ -10,8 +11,10 @@ import { IssueCard, MeetingCard } from '../components/Cards';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
+import { Ripples } from '../components/Ripples';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 import { usePlace, usePlaceHref, useRecordSources } from '../services/placeContext';
+import { nb } from '../components/nb';
 
 /**
  * Upcoming = not held or canceled, and dated today or later. A "scheduled" meeting with no
@@ -62,14 +65,22 @@ export function CitywidePage() {
 
   return (
     <div className="page">
-      <section className="hero hero--cover" aria-labelledby="citywide-title">
+      <section className="hero hero--county" aria-labelledby="citywide-title">
         <div className="hero__inner">
+          <Ripples />
           <div className="hero__main">
             <p className="hero__place">{place?.name}, Georgia</p>
             <h1 id="citywide-title" className="hero__title">
               <span className="hero__line">What’s on the table</span> <span className="hero__line">in {place?.name}</span>
             </h1>
             <p className="hero__lede">Recent decisions and public meetings of the {sources}, in plain language, with a link to every official record.</p>
+          </div>
+          {/* Before the search panel in the DOM, so tab order matches what is drawn first. */}
+          {ready && <Docket meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
+          <div className="searchpanel">
+            <p className="searchpanel__prompt" aria-hidden="true">
+              What can we help you find?
+            </p>
             <form
               className="hero-search"
               role="search"
@@ -82,26 +93,27 @@ export function CitywidePage() {
               <label htmlFor="hero-q" className="visually-hidden">
                 Search issues
               </label>
+              <SearchIcon />
               <input
                 id="hero-q"
                 type="search"
                 value={query}
-                placeholder="Search issues, e.g. property tax"
+                placeholder="e.g. property tax"
                 onChange={(e) => onQuery(e.target.value)}
               />
               <button type="submit" className="hero-search__button">
                 Search
               </button>
             </form>
+            {ready && <TopicStrip issues={ready[1]} onPick={() => setTimeout(() => jumpTo(issuesHeading.current), 0)} />}
             {ready && (
               <p className="hero__note">
                 {anyMock
                   ? 'These records include sample data and are not city totals.'
-                  : `A selection of recent items, not every decision.${checked ? ` Last checked against official county records on ${formatDate(checked)}.` : ''}`}
+                  : `A selection of recent items, not every decision.${checked ? ` Last checked against official county records on ${nb(formatDate(checked))}.` : ''}`}
               </p>
             )}
           </div>
-          {ready && <Docket meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
         </div>
       </section>
 
@@ -174,6 +186,8 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
           </Link>
         </div>
 
+        <PageJumps issues={filtering ? matches : issues} meetingCount={upcoming.length + Math.min(recent.length, 4)} />
+
         <IssueFilters issues={issues} filters={filters} onChange={setFilter} onClear={clearFilters} />
         <p className="results-count" role="status" aria-live="polite">
           {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
@@ -181,7 +195,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
 
         {filtering ? (
           matches.length ? (
-            <IssueList issues={matches} headingLevel={3} />
+            <GroupedIssues issues={matches} />
           ) : (
             <EmptyState
               title="No issues match these filters."
@@ -195,7 +209,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
             </EmptyState>
           )
         ) : (
-          <IssueList issues={byImportance(issues)} headingLevel={3} />
+          <GroupedIssues issues={issues} shorten />
         )}
       </section>
 
@@ -262,6 +276,123 @@ function IssueFilters({
 const byImportance = (issues: Issue[]) =>
   [...issues].sort((a, b) => Number(b.featured) - Number(a.featured) || (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? ''));
 
+/**
+ * Issues are grouped by where they stand, so the long list reads as three short ones.
+ * Grouping is presentational: it runs on whatever the search and filters already matched,
+ * and a group with nothing in it is not shown.
+ */
+const GROUPS: { id: string; title: string; glyph: string; statuses: string[] }[] = [
+  { id: 'issues-pending', title: 'Still being decided', glyph: '◐', statuses: ['proposed', 'under_consideration'] },
+  { id: 'issues-approved', title: 'Approved', glyph: '●', statuses: ['approved', 'completed'] },
+  { id: 'issues-denied', title: 'Denied', glyph: '✕', statuses: ['denied'] },
+  { id: 'issues-other', title: 'Withdrawn or status not recorded', glyph: '–', statuses: ['withdrawn', 'unknown'] },
+];
+const groupOf = (i: Issue) => GROUPS.find((g) => g.statuses.includes(i.status)) ?? GROUPS[GROUPS.length - 1];
+
+/** A long group shows its first few issues, whole, and a button for the rest. */
+const SHORT_LENGTH = 6;
+
+function GroupedIssues({ issues, shorten = false }: { issues: Issue[]; shorten?: boolean }) {
+  const sorted = byImportance(issues);
+  const [opened, setOpened] = useState<string[]>([]);
+  const groupRefs = useRef<Record<string, HTMLElement | null>>({});
+  const showAll = (id: string) => {
+    flushSync(() => setOpened((o) => [...o, id]));
+    // Move focus to the first issue that just appeared, so keyboard users carry on reading.
+    groupRefs.current[id]?.querySelector<HTMLElement>(`.issue-list > li:nth-child(${SHORT_LENGTH + 1}) a`)?.focus();
+  };
+  return (
+    <div className="issue-groups">
+      {GROUPS.map((g) => {
+        const members = sorted.filter((i) => groupOf(i) === g);
+        if (!members.length) return null;
+        // Only cut when it saves real scrolling: never hide just one or two issues.
+        const short = shorten && !opened.includes(g.id) && members.length > SHORT_LENGTH + 2;
+        return (
+          <section
+            key={g.id}
+            ref={(el) => {
+              groupRefs.current[g.id] = el;
+            }}
+            className={`issue-group issue-group--${g.id.replace('issues-', '')}`}
+            aria-labelledby={g.id}
+          >
+            <h3 id={g.id} className="issue-group__title" tabIndex={-1}>
+              <span className="issue-group__glyph" aria-hidden="true">
+                {g.glyph}
+              </span>
+              {g.title}
+              <span className="issue-group__count">
+                {members.length}
+                <span className="visually-hidden">{members.length === 1 ? ' issue' : ' issues'}</span>
+              </span>
+            </h3>
+            <IssueList issues={short ? members.slice(0, SHORT_LENGTH) : members} headingLevel={4} />
+            {short && (
+              <button type="button" className="button button--ghost issue-group__more" onClick={() => showAll(g.id)}>
+                Show all {members.length} {g.title.toLowerCase()} issues
+              </button>
+            )}
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
+/** A compact "on this page" row: each status group with its count, and the meetings column. */
+function PageJumps({ issues, meetingCount }: { issues: Issue[]; meetingCount: number }) {
+  const go = (id: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    e.preventDefault();
+    // Keep the address in step (so the section can be linked), without dropping the search
+    // and filter params or adding a history entry for every jump.
+    window.history.replaceState(window.history.state, '', `${window.location.pathname}${window.location.search}#${id}`);
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    el.scrollIntoView?.({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    el.focus({ preventScroll: true });
+  };
+  const present = GROUPS.map((g) => ({ g, n: issues.filter((i) => groupOf(i) === g).length })).filter((x) => x.n > 0);
+  // With one group (or none) visible, the row would only repeat the group heading.
+  if (present.length < 2) return null;
+  return (
+    <nav className="jumps" aria-label="On this page">
+      <ul className="jumps__list">
+        {present.map(({ g, n }) => (
+          <li key={g.id}>
+            <a className="jumps__link" href={`#${g.id}`} onClick={go(g.id)}>
+              <span aria-hidden="true" className="jumps__glyph">
+                {g.glyph}
+              </span>
+              {g.title}
+              <span className="jumps__count">{n}</span>
+            </a>
+          </li>
+        ))}
+        {meetingCount > 0 && (
+          <li className="jumps__meetings">
+            <a className="jumps__link" href="#meetings-heading" onClick={go('meetings-heading')}>
+              <CalendarIcon />
+              Meetings
+              <span className="jumps__count">{meetingCount}</span>
+            </a>
+          </li>
+        )}
+      </ul>
+    </nav>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg className="jumps__glyph" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+      <rect x="4" y="5" width="16" height="15" rx="3" fill="none" stroke="currentColor" strokeWidth="2" />
+      <path d="M4 10h16M9 3v4M15 3v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 function IssueList({ issues, headingLevel }: { issues: Issue[]; headingLevel: 3 | 4 }) {
   return (
     <ul className="issue-list">
@@ -313,7 +444,7 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
         <div className="docket__block">
           <p className="docket__kicker">Next at {meetingPlace}</p>
           <p className="docket__date">
-            <time dateTime={next.date ?? undefined}>{formatWeekdayDate(next.date)}</time>
+            <time dateTime={next.date ?? undefined}>{nb(formatWeekdayDate(next.date))}</time>
             {next.startTime && <span className="docket__time">{formatTime(next.startTime)}</span>}
           </p>
           <p className="docket__title">
@@ -345,10 +476,65 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
             <Link to={href(`/issues/${encodeURIComponent(decided.id)}`)}>{decided.title}</Link>
           </p>
           <p className="docket__meta">
-            <IssueStatusBadge status={decided.status} /> on {formatDate(decided.statusAsOf)}
+            <IssueStatusBadge status={decided.status} /> on {nb(formatDate(decided.statusAsOf))}
           </p>
         </div>
       )}
     </aside>
+  );
+}
+
+/**
+ * One shortcut per topic that has issues in the data, with its count. Each link opens the
+ * issue list filtered to that topic, so a shortcut never leads to an empty list.
+ */
+function TopicStrip({ issues, onPick }: { issues: Issue[]; onPick: () => void }) {
+  const [params] = useSearchParams();
+  const active = params.get('topic') ?? '';
+  const topics = topicsIn(issues);
+  if (!topics.length) return null;
+  return (
+    <nav className="topics" aria-labelledby="topics-title">
+      <p id="topics-title" className="topics__title">
+        Browse by topic
+      </p>
+      <ul className="topics__list">
+        {topics.map((t) => {
+          const count = issues.filter((i) => i.category === t).length;
+          const current = t === active;
+          return (
+            <li key={t}>
+              <Link
+                to={{ search: `?topic=${encodeURIComponent(t)}` }}
+                className="topic"
+                data-topic={t}
+                aria-current={current ? 'true' : undefined}
+                onClick={onPick}
+              >
+                {current && (
+                  <span className="topic__check" aria-hidden="true">
+                    ✓
+                  </span>
+                )}
+                <span className="topic__name">{humanize(t)}</span>
+                <span className="topic__count">
+                  {count}
+                  <span className="visually-hidden">{count === 1 ? ' issue' : ' issues'}</span>
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg className="hero-search__icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+      <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2.2" />
+      <path d="m15.5 15.5 5 5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
   );
 }

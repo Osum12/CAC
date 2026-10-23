@@ -34,6 +34,23 @@ export function Layout() {
   // users start at the new page content; scroll back to the top. Comparing with the
   // previous pathname (not a "first run" flag) keeps this from firing on the initial
   // load, even when React StrictMode runs effects twice in development.
+  // The sticky header's real height, shared with CSS (--header-h) so in-page jumps and
+  // focused elements land below it at every width.
+  const headerRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const root = document.documentElement;
+    const sync = () => root.style.setProperty('--header-h', `${Math.ceil(el.getBoundingClientRect().height)}px`);
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Detail pages belong to a section: issues to Countywide, meetings and documents to Archive.
+  const section = /\/issues\//.test(pathname) ? '/' : /\/(meetings|documents)\//.test(pathname) ? '/archive' : null;
+
   const prevPath = useRef(pathname);
   useEffect(() => {
     if (prevPath.current === pathname) return;
@@ -47,15 +64,36 @@ export function Layout() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <header className="masthead">
+      <header className="masthead" ref={headerRef}>
         <div className="masthead__inner">
-          <NavLink to="/" className="brand" aria-label="Georgia Civic, choose a location" end>
+          <NavLink to="/" className="brand" aria-label="Porchlight, choose a location" end>
             <svg className="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
-              <rect width="32" height="32" rx="7" />
-              <path d="M8 24V14l8-6 8 6v10h-5v-6h-6v6z" />
+              <defs>
+                <linearGradient id="pl-sky" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stopColor="#3b48aa"/><stop offset="1" stopColor="#1c2366"/>
+                </linearGradient>
+                <radialGradient id="pl-glow" cx="17.5" cy="17.5" r="12" gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stopColor="#f2b33d" stopOpacity="0.7"/>
+                  <stop offset="0.5" stopColor="#f2b33d" stopOpacity="0.18"/>
+                  <stop offset="1" stopColor="#f2b33d" stopOpacity="0"/>
+                </radialGradient>
+                <linearGradient id="pl-pane" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stopColor="#ffe7a8"/><stop offset="1" stopColor="#f2b33d"/>
+                </linearGradient>
+              </defs>
+              <rect width="32" height="32" rx="9" fill="url(#pl-sky)"/>
+              <g transform="translate(1.6 -1.4)">
+                <circle cx="17.5" cy="17.5" r="12" fill="url(#pl-glow)"/>
+                <rect x="5" y="8" width="2.6" height="8" rx="1.3" fill="#fbf1dc"/>
+                <path d="M7.4 10.2h7.4a2.7 2.7 0 0 1 2.7 2.7" fill="none" stroke="#fbf1dc" strokeWidth="1.6" strokeLinecap="round"/>
+                <path d="M12.2 15.4 17.5 11.8l5.3 3.6z" fill="#fbf1dc" stroke="#fbf1dc" strokeWidth="1.2" strokeLinejoin="round"/>
+                <rect x="13.2" y="15.4" width="8.6" height="9.4" rx="1" fill="url(#pl-pane)"/>
+                <path d="M17.5 15.6v9M13.4 20.1h8.2" stroke="#2f3a8f" strokeWidth="0.8" opacity="0.4"/>
+                <rect x="12.4" y="24.6" width="10.2" height="2" rx="1" fill="#fbf1dc"/>
+              </g>
             </svg>
             <span className="brand__text">
-              <span className="brand__name">Georgia Civic</span>
+              <span className="brand__name">Porchlight</span>
               <span className="brand__tag">Local government, explained</span>
             </span>
           </NavLink>
@@ -73,11 +111,17 @@ export function Layout() {
           )}
           {covered && (
             <nav aria-label={`${covered.name} pages`} className="primary-nav">
-              {COUNTY_NAV.map((n) => (
-                <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className="primary-nav__link">
-                  {n.label}
-                </NavLink>
-              ))}
+              {COUNTY_NAV.map((n) =>
+                section === n.path ? (
+                  <Link key={n.path} to={countyPath(covered, n.path)} className="primary-nav__link" aria-current="page">
+                    {n.label}
+                  </Link>
+                ) : (
+                  <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className="primary-nav__link">
+                    {n.label}
+                  </NavLink>
+                ),
+              )}
             </nav>
           )}
         </div>

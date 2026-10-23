@@ -11,6 +11,7 @@ import {
   type Municipality,
 } from '../services/jurisdictions';
 import { usePageTitle } from '../services/usePageTitle';
+import { Ripples } from '../components/Ripples';
 
 const joinNames = (names: string[]) =>
   names.length < 3 ? names.join(' and ') : `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
@@ -31,6 +32,7 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
   return (
     <div className="page">
       <section className="soon" aria-labelledby="soon-title">
+        <Ripples />
         <div className="soon__inner">
           <div className="soon__main">
             <p className="soon__badge">
@@ -65,29 +67,12 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
         </div>
       </section>
 
-      {place.level === 'county' ? (
-        <CountyPlaces county={place} cities={municipalitiesInCounty(place.id)} />
-      ) : (
-        <section className="soon-more" aria-labelledby="soon-counties-h">
-          <h2 id="soon-counties-h" className="soon-more__title">
-            {place.countyIds.length > 1 ? `${place.name} spans ${place.countyIds.length} counties` : `${place.name} is in ${countyNames(countiesOf(place))}`}
-          </h2>
-          <ul className="soon-places">
-            {countiesOf(place).map((c) => (
-              <li key={c.id}>
-                <Link to={countyPath(c)} className="soon-place">
-                  <span className="soon-place__name">{c.name}</span>{' '}
-                  <span className="soon-place__status">{c.civicDataAvailable ? 'Issues, meetings, map, and archive' : 'Coming soon'}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      {/* A city's county is already named above, with its own "Explore" action, so only counties list their places. */}
+      {place.level === 'county' && <CountyPlaces county={place} cities={municipalitiesInCounty(place.id)} />}
 
       {!ownRecords && (
         <p className="soon__why fine-print">
-          Georgia Civic only shows records that have been checked against official sources. None have been added for {place.name} yet, so this page
+          Porchlight only shows records that have been checked against official sources. None have been added for {place.name} yet, so this page
           shows no issues, meetings, or documents.
         </p>
       )}
@@ -102,15 +87,20 @@ function CountyPlaces({ county, cities }: { county: County; cities: Municipality
         Cities and towns in {county.name}
       </h2>
       {cities.length ? (
+        <>
+        <p className="soon-more__note">
+          None of these {cities.length === 1 ? 'place has' : `${cities.length} places have`} records yet. Each one has its own page, ready for when its records are added.
+        </p>
         <ul className="soon-places">
           {cities.map((m) => (
             <li key={m.id}>
               <Link to={`/${m.id}`} className="soon-place">
-                <span className="soon-place__name">{m.name}</span> <span className="soon-place__status">Coming soon</span>
+                <span className="soon-place__name">{m.name}</span> <span className="soon-place__status visually-hidden">Coming soon</span>
               </Link>
             </li>
           ))}
         </ul>
+        </>
       ) : (
         <p className="muted">Our directory has no incorporated cities or towns listed for {county.name}.</p>
       )}
