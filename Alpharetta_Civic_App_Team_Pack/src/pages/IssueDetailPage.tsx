@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom';
-import { getDocumentsForIssue, getIssueById, getMeetingsForIssue } from '../services/civicData';
+import { getDocumentsForIssue, getIssueById, getIssues, getMeetingsForIssue } from '../services/civicData';
 import { formatDate, formatTime, humanize, meetingStatusLabel, meetingTypeLabel, sourceLabel } from '../services/format';
 import { getValidCoordinates } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
@@ -13,6 +13,7 @@ import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import type { Issue, Meeting } from '../types/civic';
 import { usePlaceHref } from '../services/placeContext';
+import { shortDate, StatusDot, StatusTrack } from '../components/DataDesk';
 
 export function IssueDetailPage() {
   const href = usePlaceHref();
@@ -20,8 +21,8 @@ export function IssueDetailPage() {
   const state = useAsync(async () => {
     const issue = await getIssueById(issueId);
     if (!issue) return null;
-    const [meetings, documents] = await Promise.all([getMeetingsForIssue(issueId), getDocumentsForIssue(issueId)]);
-    return { issue, meetings, documents };
+    const [meetings, documents, all] = await Promise.all([getMeetingsForIssue(issueId), getDocumentsForIssue(issueId), getIssues()]);
+    return { issue, meetings, documents, all };
   }, [issueId]);
   usePageTitle(state.status === 'ready' && state.data ? state.data.issue.title : 'Issue');
 
@@ -29,7 +30,7 @@ export function IssueDetailPage() {
   if (state.status === 'error') return <div className="page"><ErrorState onRetry={state.retry} /></div>;
   if (!state.data) return <NotFound kind="issue" />;
 
-  const { issue, meetings, documents } = state.data;
+  const { issue, meetings, documents, all } = state.data;
   const missingMeetings = issue.meetingIds.filter((id) => !meetings.some((m) => m.id === id)).length;
   const missingDocs = issue.documentIds.filter((id) => !documents.some((d) => d.id === id)).length;
 
@@ -80,6 +81,7 @@ export function IssueDetailPage() {
 
           <section aria-labelledby="timeline-h">
             <h2 id="timeline-h">Timeline</h2>
+            {meetings.length > 0 && <StatusTrack issue={issue} meetings={meetings} />}
             {meetings.length ? <MeetingTimeline meetings={meetings} /> : <EmptyState title="No related meetings are linked to this issue." />}
             {missingMeetings > 0 && <MissingNote count={missingMeetings} noun="meeting" />}
             <p className="fine-print">
@@ -103,6 +105,8 @@ export function IssueDetailPage() {
             )}
             {missingDocs > 0 && <MissingNote count={missingDocs} noun="document" />}
           </section>
+
+          <RelatedRecords issue={issue} all={all} />
         </div>
 
         <aside className="detail__side">
@@ -157,6 +161,60 @@ function MeetingTimeline({ meetings }: { meetings: Meeting[] }) {
         );
       })}
     </ol>
+  );
+}
+
+/**
+ * Other items that went through the same meetings, then other items on the same topic. Each row
+ * shows its status as a glyph (named for screen readers) and the date that status was recorded.
+ */
+function RelatedRecords({ issue, all }: { issue: Issue; all: Issue[] }) {
+  const others = all.filter((i) => i.id !== issue.id);
+  const shared = (i: Issue) => i.meetingIds.filter((m) => issue.meetingIds.includes(m)).length;
+  const sameMeetings = others
+    .filter((i) => shared(i) > 0)
+    .sort((a, b) => shared(b) - shared(a) || (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? ''))
+    .slice(0, 6);
+  const sameTopic = others
+    .filter((i) => i.category === issue.category && !sameMeetings.includes(i))
+    .sort((a, b) => (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? ''))
+    .slice(0, 4);
+  if (!sameMeetings.length && !sameTopic.length) return null;
+  return (
+    <section aria-labelledby="related-h">
+      <h2 id="related-h">Related records</h2>
+      <div className="related">
+        {sameMeetings.length > 0 && (
+          <RelatedList title="Taken up at the same meetings" items={sameMeetings} note={(i) => `${shared(i)} shared ${shared(i) === 1 ? 'meeting' : 'meetings'}`} />
+        )}
+        {sameTopic.length > 0 && <RelatedList title={`More on ${humanize(issue.category).toLowerCase()}`} items={sameTopic} />}
+      </div>
+    </section>
+  );
+}
+
+function RelatedList({ title, items, note }: { title: string; items: Issue[]; note?: (i: Issue) => string }) {
+  const href = usePlaceHref();
+  return (
+    <div className="related__group">
+      <h3 className="related__title">{title}</h3>
+      <ul className="related__list">
+        {items.map((i) => (
+          <li key={i.id} className="related__item">
+            <StatusDot status={i.status} />
+            <span className="related__body">
+              <Link to={href(`/issues/${encodeURIComponent(i.id)}`)} className="related__link">
+                {i.title}
+              </Link>
+              <span className="related__meta">
+                {i.statusAsOf ? `Status from ${shortDate(i.statusAsOf)}` : 'No status date'}
+                {note ? `, ${note(i)}` : ''}
+              </span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 

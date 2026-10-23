@@ -1,4 +1,4 @@
-import { useRef, type ReactNode, type RefObject } from 'react';
+import { memo, useRef, type ReactNode, type RefObject } from 'react';
 import { Link } from 'react-router-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
@@ -6,13 +6,29 @@ import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState 
 import { formatDate, formatTime, formatWeekdayDate, humanize, ISSUE_STATUS_LABELS, safeUrl, todayIso } from '../services/format';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
-import { IssueCard, MeetingCard } from '../components/Cards';
+import { IssueCard, KeepTallies, MeetingCard } from '../components/Cards';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
-import type { CivicDocument, Issue, Meeting } from '../types/civic';
+import type { CivicDocument, Issue, IssueStatus, Meeting } from '../types/civic';
 import { usePlace, usePlaceHref, useRecordSources } from '../services/placeContext';
-import { BarTable, countBy, countStatuses, Figure, MeetingStrip, SourceLine, StatusBar, statusSentence } from '../components/DataDesk';
+import {
+  countBy,
+  countStatuses,
+  DECIDED,
+  Figure,
+  listSentence,
+  MeetingColumns,
+  plural,
+  RecordTimeline,
+  shortDate,
+  SourceLine,
+  StatusTrack,
+  StatusUnits,
+  statusOf,
+  statusSentence,
+  TopicBars,
+} from '../components/DataDesk';
 
 /**
  * Upcoming = not held or canceled, and dated today or later. A "scheduled" meeting with no
@@ -62,15 +78,15 @@ export function CitywidePage() {
   const checked = ready && !anyMock ? lastChecked(ready[0]) : null;
 
   return (
-    <div className="page">
-      <section className="hero hero--cover" aria-labelledby="citywide-title">
-        <div className="hero__inner">
-          <div className="hero__main">
-            <p className="hero__place">{place?.name}, Georgia</p>
-            <h1 id="citywide-title" className="hero__title">
-              <span className="hero__line">What’s on the table</span> <span className="hero__line">in {place?.name}</span>
-            </h1>
-            <p className="hero__lede">Recent decisions and public meetings of the {sources}, in plain language, with a link to every official record.</p>
+    <div className="page page--county">
+      <section className="cover" aria-labelledby="citywide-title">
+        <div className="cover__inner">
+          <p className="cover__place">{place?.name}, Georgia</p>
+          <h1 id="citywide-title" className="cover__title">
+            <span className="hero__line">What’s on the table</span> <span className="hero__line">in {place?.name}</span>
+          </h1>
+          <div className="cover__side">
+            <p className="cover__lede">Recent decisions and public meetings of the {sources}, in plain language, with a link to every official record.</p>
             <form
               className="hero-search"
               role="search"
@@ -83,31 +99,25 @@ export function CitywidePage() {
               <label htmlFor="hero-q" className="visually-hidden">
                 Search issues
               </label>
-              <input
-                id="hero-q"
-                type="search"
-                value={query}
-                placeholder="Search issues, e.g. property tax"
-                onChange={(e) => onQuery(e.target.value)}
-              />
+              <input id="hero-q" type="search" value={query} placeholder="Search issues, e.g. property tax" onChange={(e) => onQuery(e.target.value)} />
               <button type="submit" className="hero-search__button">
                 Search
               </button>
             </form>
             {ready && (
-              <p className="hero__note">
+              <p className="cover__note">
                 {anyMock
                   ? 'These records include sample data and are not city totals.'
                   : `A selection of recent items, not every decision.${checked ? ` Last checked against official county records on ${formatDate(checked)}.` : ''}`}
               </p>
             )}
           </div>
-          {ready && <Docket meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
         </div>
       </section>
 
       {state.status === 'loading' && <LoadingState rows={4} />}
       {state.status === 'error' && <ErrorState onRetry={state.retry} />}
+      {ready && <Lead meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
       {ready && (
         <CitywideContent
           meetings={ready[0]}
@@ -164,9 +174,9 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
 
   return (
     <>
-      <Glance meetings={meetings} issues={issues} documents={documents} topic={filters.topic} onTopic={(t) => setFilter('topic', t === filters.topic ? '' : t)} />
+      <Desk meetings={meetings} issues={issues} documents={documents} topic={filters.topic} onTopic={(t) => setFilter('topic', t === filters.topic ? '' : t)} />
       <div className="citywide-grid">
-        <section className="section" aria-labelledby="issues-heading">
+        <section className="section section--issues" aria-labelledby="issues-heading">
           <div className="section__head">
             <h2 id="issues-heading" ref={issuesHeading} tabIndex={-1}>
               Issues
@@ -182,23 +192,19 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
             {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
           </p>
 
-          {filtering ? (
-            matches.length ? (
-              <IssueList issues={matches} headingLevel={3} />
-            ) : (
-              <EmptyState
-                title="No issues match these filters."
-                action={
-                  <button type="button" className="button button--ghost" onClick={clearFilters}>
-                    Clear filters
-                  </button>
-                }
-              >
-                <p>Try a different word, or choose “All topics” and “Any status”.</p>
-              </EmptyState>
-            )
+          {filtering && !matches.length ? (
+            <EmptyState
+              title="No issues match these filters."
+              action={
+                <button type="button" className="button button--ghost" onClick={clearFilters}>
+                  Clear filters
+                </button>
+              }
+            >
+              <p>Try a different word, or choose “All topics” and “Any status”.</p>
+            </EmptyState>
           ) : (
-            <IssueList issues={byImportance(issues)} headingLevel={3} />
+            <IssueGroups issues={filtering ? matches : issues} />
           )}
         </section>
 
@@ -219,10 +225,12 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
 }
 
 /**
- * "The record in numbers": status, topic, and meeting figures counted from the records this page
- * loaded. Choosing a topic bar filters the issue list below (the results count announces it).
+ * "The record in numbers": four figures counted from the records this page loaded, each with a
+ * sentence title computed from the data. Choosing a topic bar filters the issue list below.
  */
-function Glance({
+const Desk = memo(DeskFigures, (a, b) => a.meetings === b.meetings && a.issues === b.issues && a.documents === b.documents && a.topic === b.topic);
+
+function DeskFigures({
   meetings,
   issues,
   documents,
@@ -236,50 +244,100 @@ function Glance({
   onTopic: (topic: string) => void;
 }) {
   const sources = useRecordSources();
+  const href = usePlaceHref();
   const sample = [...meetings, ...issues, ...documents].some(isMock);
   const checked = sample ? null : lastChecked(meetings);
-  const statuses = countStatuses(issues);
-  const topics = countBy(issues, (i) => i.category);
-  const source = <SourceLine source={sources} checked={checked} sample={sample} />;
   if (!issues.length) return null;
+
+  const statuses = countStatuses(issues);
+  const top = [...statuses].sort((a, b) => b.count - a.count)[0];
+  const topics = countBy(issues, (i) => i.category);
+  const leaders = topics.filter((t) => t.count === topics[0].count);
+
+  const busiest = countBy(
+    issues.filter((i) => i.statusAsOf),
+    (i) => i.statusAsOf!,
+  )[0];
+  const perMeeting = meetings
+    .filter((m) => m.date)
+    .map((m) => ({ m, n: issues.filter((i) => m.issueIds.includes(i.id) || i.meetingIds.includes(m.id)).length }))
+    .sort((a, b) => b.n - a.n || a.m.date!.localeCompare(b.m.date!));
+  const most = perMeeting[0];
+  const decided = issues.filter((i) => DECIDED.includes(statusOf(i))).length;
+
   return (
-    <section className="glance" aria-labelledby="glance-title">
-      <div className="glance__inner">
-        <h2 id="glance-title" className="glance__title">
-          The record in numbers
-        </h2>
-        <p className="glance__lead">
-          {issues.length} {issues.length === 1 ? 'item' : 'items'} on record: {statusSentence(statuses)}.
-        </p>
-        <p className="glance__note">Counts cover the items collected in this app, not every decision the county made.</p>
-        <div className="glance__grid">
-          <Figure id="fig-status" title="Where each item stands" className="figure--wide">
-            <StatusBar counts={statuses} label="Items by current status" />
+    <section className="desk" aria-labelledby="desk-title">
+      <div className="desk__inner">
+        <header className="desk__head">
+          <h2 id="desk-title" className="desk__title">
+            The record in numbers
+          </h2>
+          <p className="desk__lead">
+            {plural(issues.length, 'item')} on record: {statusSentence(statuses)}.
+          </p>
+          <p className="desk__note">
+            {decided} of {issues.length} have a final decision recorded. Counts cover the items collected in this app, not every decision the county made.
+          </p>
+        </header>
+
+        <div className="desk__grid">
+          <Figure
+            id="fig-status"
+            className="figure--wide"
+            title={`${top.count} of ${issues.length} items are ${ISSUE_STATUS_LABELS[top.status].toLowerCase()}`}
+            subtitle="Each square is one item, grouped by its current status. Point at a square to see which item it is."
+          >
+            <StatusUnits issues={issues} label="Items by current status" />
           </Figure>
-          <Figure id="fig-topics" title="Items by topic">
-            <p className="figure__hint">Choose a topic to filter the list below.</p>
-            <BarTable
-              caption="Items by topic"
-              unit="Items"
+
+          <Figure
+            id="fig-timeline"
+            className="figure--wide"
+            title={
+              busiest && busiest.count > 1
+                ? `${formatDate(busiest.key).replace(/, \d{4}$/, '')} was the busiest day: ${busiest.count} items reached their current status`
+                : 'When each item reached its current status'
+            }
+            subtitle="Each dot is one item, placed on the date its current status was recorded and colored by that status. Rings under the line are board meetings."
+          >
+            <RecordTimeline issues={issues} meetings={meetings} />
+          </Figure>
+
+          <Figure
+            id="fig-topics"
+            title={
+              leaders.length === 1
+                ? `${humanize(leaders[0].key)} leads with ${plural(leaders[0].count, 'item')}`
+                : `${listSentence(leaders.map((l) => humanize(l.key)))} lead with ${leaders[0].count} items each`
+            }
+            subtitle="Items by topic, split by current status. Choose a topic to filter the list below."
+          >
+            <TopicBars
+              caption="Items by topic and status"
               rows={topics.map((t) => ({
                 key: t.key,
                 label: humanize(t.key),
-                value: t.count,
+                issues: issues.filter((i) => i.category === t.key),
                 pressed: topic === t.key,
                 onSelect: () => onTopic(t.key),
-                actionLabel: `: ${t.count} ${t.count === 1 ? 'item' : 'items'}`,
               }))}
             />
           </Figure>
-          <Figure id="fig-meetings" title="When the board met">
-            <MeetingStrip meetings={meetings} />
+
+          <Figure
+            id="fig-meetings"
+            title={most && most.n ? `The ${shortDate(most.m.date!)} meeting took up the most: ${plural(most.n, 'item')}` : 'Items per meeting'}
+            subtitle="Items on each meeting’s agenda, split by their current status. Choose a column to open that meeting."
+          >
+            <MeetingColumns meetings={meetings} issues={issues} href={href} />
           </Figure>
         </div>
-        <div className="glance__source">{source}</div>
+        <SourceLine source={sources} checked={checked} sample={sample} />
       </div>
     </section>
   );
 }
+
 
 function IssueFilters({
   issues,
@@ -325,19 +383,36 @@ function IssueFilters({
   );
 }
 
-/** Main items first, then the most recently decided. */
-const byImportance = (issues: Issue[]) =>
-  [...issues].sort((a, b) => Number(b.featured) - Number(a.featured) || (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? ''));
+/** The list, grouped by where each item stands: open items first, then outcomes. */
+const GROUPS: { key: string; title: string; statuses: IssueStatus[] }[] = [
+  { key: 'open', title: 'Still open', statuses: ['under_consideration', 'proposed'] },
+  { key: 'denied', title: 'Denied or withdrawn', statuses: ['denied', 'withdrawn'] },
+  { key: 'approved', title: 'Approved or completed', statuses: ['approved', 'completed'] },
+  { key: 'other', title: 'Status not recorded', statuses: ['unknown'] },
+];
 
-function IssueList({ issues, headingLevel }: { issues: Issue[]; headingLevel: 3 | 4 }) {
+const latestFirst = (a: Issue, b: Issue) => (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? '') || Number(b.featured) - Number(a.featured);
+
+function IssueGroups({ issues }: { issues: Issue[] }) {
+  const groups = GROUPS.map((g) => ({ ...g, items: issues.filter((i) => g.statuses.includes(statusOf(i))).sort(latestFirst) })).filter((g) => g.items.length);
   return (
-    <ul className="issue-list">
-      {issues.map((i) => (
-        <li key={i.id}>
-          <IssueCard issue={i} headingLevel={headingLevel} />
-        </li>
+    <div className="issue-groups">
+      {groups.map((g) => (
+        <section key={g.key} className={`issue-group issue-group--${g.key}`} aria-labelledby={`group-${g.key}`}>
+          <h3 id={`group-${g.key}`} className="issue-group__title">
+            {g.title}
+            <span className="issue-group__count">{g.items.length}</span>
+          </h3>
+          <ul className="issue-list">
+            {g.items.map((i) => (
+              <li key={i.id}>
+                <IssueCard issue={i} headingLevel={4} />
+              </li>
+            ))}
+          </ul>
+        </section>
       ))}
-    </ul>
+    </div>
   );
 }
 
@@ -361,61 +436,86 @@ function MeetingGroup({ title, meetings, documents, empty }: { title: string; me
 }
 
 /**
- * "Next at <meeting place>": the next scheduled meeting, what is on its agenda, and the most
- * recent recorded decision. Everything shown comes from the dataset; nothing is invented.
+ * The lead: the most recent recorded decision, told as a story (headline, status, summary, why it
+ * may matter, and its path through the board's meetings), plus the next scheduled meeting when
+ * there is one. Everything shown comes from the dataset; nothing is invented.
  */
-function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: Issue[]; documents: CivicDocument[] }) {
+const Lead = memo(LeadStory);
+
+function LeadStory({ meetings, issues, documents }: { meetings: Meeting[]; issues: Issue[]; documents: CivicDocument[] }) {
   const href = usePlaceHref();
   const meetingPlace = usePlace()?.recordSources[0]?.meetingPlace ?? 'City Hall';
   const next = splitMeetings(meetings).upcoming[0] ?? null;
   const onAgenda = next ? issues.filter((i) => next.issueIds.includes(i.id)) : [];
   const decided = issues
-    .filter((i) => ['approved', 'denied', 'withdrawn', 'completed'].includes(i.status) && i.statusAsOf)
-    .sort((a, b) => b.statusAsOf!.localeCompare(a.statusAsOf!))[0];
+    .filter((i) => DECIDED.includes(statusOf(i)) && i.statusAsOf)
+    .sort((a, b) => b.statusAsOf!.localeCompare(a.statusAsOf!) || Number(b.featured) - Number(a.featured))[0];
   const agenda = next ? agendaFor(next, documents) : null;
   if (!next && !decided) return null;
+  const path = decided ? meetings.filter((m) => decided.meetingIds.includes(m.id)) : [];
   return (
-    <aside className="docket" aria-label={next ? `Next at ${meetingPlace}` : 'Latest decision'}>
-      {next && (
-        <div className="docket__block">
-          <p className="docket__kicker">Next at {meetingPlace}</p>
-          <p className="docket__date">
-            <time dateTime={next.date ?? undefined}>{formatWeekdayDate(next.date)}</time>
-            {next.startTime && <span className="docket__time">{formatTime(next.startTime)}</span>}
-          </p>
-          <p className="docket__title">
-            <Link to={href(`/meetings/${encodeURIComponent(next.id)}`)}>{next.title}</Link>
-          </p>
-          {onAgenda.length > 0 && (
-            <>
-              <p className="docket__label">On the agenda</p>
-              <ul className="docket__list">
-                {onAgenda.map((i) => (
-                  <li key={i.id}>
-                    <Link to={href(`/issues/${encodeURIComponent(i.id)}`)}>{i.title}</Link>
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-          {agenda && safeUrl(agenda.url) && !isMock(agenda) && (
-            <a className="docket__source" href={safeUrl(agenda.url)!} target="_blank" rel="noopener noreferrer">
-              Read the agenda (PDF)<span className="visually-hidden"> for {next.title}, opens in a new tab</span>
-            </a>
-          )}
-        </div>
-      )}
+    <aside className={`lead${next ? ' lead--with-next' : ''}`} aria-label={next ? `Next at ${meetingPlace}` : 'Latest decision'}>
       {decided && (
-        <div className="docket__block docket__block--decided">
-          <p className="docket__kicker">Latest decision</p>
-          <p className="docket__title docket__title--small">
-            <Link to={href(`/issues/${encodeURIComponent(decided.id)}`)}>{decided.title}</Link>
+        <article className="lead__story">
+          <p className="lead__kicker">
+            Latest decision<span className="lead__topic">{humanize(decided.category)}</span>
           </p>
-          <p className="docket__meta">
+          <h2 className="lead__title">
+            <Link to={href(`/issues/${encodeURIComponent(decided.id)}`)}>{decided.title}</Link>
+          </h2>
+          <p className="lead__meta">
             <IssueStatusBadge status={decided.status} /> on {formatDate(decided.statusAsOf)}
           </p>
-        </div>
+          {decided.summary && (
+            <p className="lead__summary">
+              <KeepTallies text={decided.summary} />
+            </p>
+          )}
+        </article>
       )}
+      <div className="lead__side">
+        {next && (
+          <div className="lead__next">
+            <p className="lead__kicker">Next at {meetingPlace}</p>
+            <p className="lead__date">
+              <time dateTime={next.date ?? undefined}>{formatWeekdayDate(next.date)}</time>
+              {next.startTime && <span className="lead__time">{formatTime(next.startTime)}</span>}
+            </p>
+            <p className="lead__next-title">
+              <Link to={href(`/meetings/${encodeURIComponent(next.id)}`)}>{next.title}</Link>
+            </p>
+            {onAgenda.length > 0 && (
+              <>
+                <p className="lead__label">On the agenda</p>
+                <ul className="lead__list">
+                  {onAgenda.map((i) => (
+                    <li key={i.id}>
+                      <Link to={href(`/issues/${encodeURIComponent(i.id)}`)}>{i.title}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            {agenda && safeUrl(agenda.url) && !isMock(agenda) && (
+              <a className="lead__source" href={safeUrl(agenda.url)!} target="_blank" rel="noopener noreferrer">
+                Read the agenda (PDF)<span className="visually-hidden"> for {next.title}, opens in a new tab</span>
+              </a>
+            )}
+          </div>
+        )}
+        {decided?.whyItMayMatter && (
+          <div className="lead__why">
+            <p className="lead__label">Why it may matter</p>
+            <p className="lead__why-text">{decided.whyItMayMatter}</p>
+          </div>
+        )}
+        {decided && path.length > 0 && (
+          <div className="lead__path">
+            <p className="lead__label">How it got here</p>
+            <StatusTrack issue={decided} meetings={path} />
+          </div>
+        )}
+      </div>
     </aside>
   );
 }

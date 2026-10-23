@@ -11,7 +11,7 @@ import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import { BackLink } from '../components/BackLink';
 import { usePlaceHref } from '../services/placeContext';
-import { countStatuses, StatusBar, statusSentence } from '../components/DataDesk';
+import { countStatuses, MeetingOutcome, statusSentence } from '../components/DataDesk';
 
 export function MeetingDetailPage() {
   const href = usePlaceHref();
@@ -58,32 +58,19 @@ export function MeetingDetailPage() {
             <p className="prose">{meeting.summary || 'No summary has been written for this meeting yet.'}</p>
           </section>
 
-          <section aria-labelledby="m-docs-h">
-            <h2 id="m-docs-h">Agenda and documents</h2>
-            {documents.length ? (
-              <ul className="card-grid card-grid--tight">
-                {documents.map((d) => (
-                  <li key={d.id}>
-                    <DocumentCard document={d} />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <EmptyState title="No agenda or documents are linked to this meeting yet." />
-            )}
-            {missingDocs > 0 && <p className="card__note">{missingDocs} linked document(s) could not be found in the dataset.</p>}
-          </section>
+          {issues.length > 0 && (
+            <section aria-labelledby="m-glance-h" className="glance-box">
+              <h2 id="m-glance-h">At this meeting</h2>
+              <p className="glance-box__lead">
+                {issues.length} {issues.length === 1 ? 'item' : 'items'} in this app {issues.length === 1 ? 'is' : 'are'} linked to this meeting. Their
+                current status: {statusSentence(countStatuses(issues))}.
+              </p>
+              <MeetingOutcome meeting={meeting} issues={issues} />
+            </section>
+          )}
 
           <section aria-labelledby="m-issues-h">
             <h2 id="m-issues-h">Issues on the agenda</h2>
-            {issues.length > 0 && (
-              <div className="agenda-figure">
-                <p className="agenda-figure__lead">
-                  {issues.length} {issues.length === 1 ? 'item' : 'items'} in this app are linked to this meeting. Their current status: {statusSentence(countStatuses(issues))}.
-                </p>
-                <StatusBar counts={countStatuses(issues)} label="Items from this meeting by current status" />
-              </div>
-            )}
             {issues.length ? (
               <ol className="agenda-items">
                 {issues.map((i) => (
@@ -110,6 +97,22 @@ export function MeetingDetailPage() {
               <EmptyState title="No issues are linked to this meeting." />
             )}
             <p className="fine-print">Being on an agenda does not mean an item was approved. Check each issue’s status.</p>
+          </section>
+
+          <section aria-labelledby="m-docs-h">
+            <h2 id="m-docs-h">Agenda and documents</h2>
+            {documents.length ? (
+              <ul className="card-grid card-grid--tight">
+                {documents.map((d) => (
+                  <li key={d.id}>
+                    <DocumentCard document={d} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <EmptyState title="No agenda or documents are linked to this meeting yet." />
+            )}
+            {missingDocs > 0 && <p className="card__note">{missingDocs} linked document(s) could not be found in the dataset.</p>}
           </section>
         </div>
 
