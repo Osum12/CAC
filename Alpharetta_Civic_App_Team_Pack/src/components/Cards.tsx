@@ -85,11 +85,14 @@ export function MeetingCard({
   meeting,
   agenda,
   headingLevel = 3,
+  note,
 }: {
   meeting: Meeting;
   /** The meeting's agenda document, if one exists in the dataset. */
   agenda?: CivicDocument | null;
   headingLevel?: HeadingLevel;
+  /** An optional line under the meeting, such as how many issues were on its agenda. */
+  note?: string;
 }) {
   const href = usePlaceHref();
   const H = `h${headingLevel}` as const;
@@ -102,9 +105,9 @@ export function MeetingCard({
       <div className="datechip" aria-hidden="true">
         {short ? (
           <>
-            <span className="datechip__weekday">{weekday}</span>
-            <span className="datechip__day">{short.day}</span>
             <span className="datechip__month">{short.month}</span>
+            <span className="datechip__day">{short.day}</span>
+            <span className="datechip__weekday">{weekday}</span>
           </>
         ) : (
           <span className="datechip__month">TBD</span>
@@ -121,8 +124,12 @@ export function MeetingCard({
           <div className="facts__row">
             <dt>When</dt>
             <dd>
-              <time dateTime={meeting.date ?? undefined}>{formatCompactDate(meeting.date)}</time>
-              {time ? `, ${time}` : ''}
+              {/* The date chip shows the date to sighted readers; the full date stays here for screen readers. */}
+              <time dateTime={meeting.date ?? undefined} className={short ? 'visually-hidden' : undefined}>
+                {formatCompactDate(meeting.date)}
+                {short ? ', ' : ''}
+              </time>
+              {short ? (time ?? 'Time not listed') : time ? `, ${time}` : ''}
             </dd>
           </div>
           <div className="facts__row">
@@ -142,6 +149,7 @@ export function MeetingCard({
             {isMock(meeting) && <MockBadge record={meeting} />}
           </div>
         )}
+        {note && <p className="card__note">{note}</p>}
       </div>
     </article>
   );

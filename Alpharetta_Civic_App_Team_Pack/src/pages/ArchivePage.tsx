@@ -137,7 +137,8 @@ export function ArchivePage() {
       {state.status === 'ready' && (
         <>
           <div className="results-row">
-            <p className="results-count" role="status" aria-live="polite">
+            {/* With no matches the empty state below says so; the count stays for screen readers only. */}
+            <p className={visible.length ? 'results-count' : 'visually-hidden'} role="status" aria-live="polite">
               {visible.length} {visible.length === 1 ? 'record' : 'records'}
               {q ? ` matching “${q}”` : ''}
             </p>

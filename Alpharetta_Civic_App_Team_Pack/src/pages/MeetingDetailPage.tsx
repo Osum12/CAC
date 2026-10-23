@@ -58,9 +58,9 @@ export function MeetingDetailPage() {
             <div className="datechip datechip--lg" aria-hidden="true">
               {short ? (
                 <>
-                  <span className="datechip__weekday">{formatWeekday(meeting.date)}</span>
-                  <span className="datechip__day">{short.day}</span>
                   <span className="datechip__month">{short.month}</span>
+                  <span className="datechip__day">{short.day}</span>
+                  <span className="datechip__weekday">{formatWeekday(meeting.date)}</span>
                 </>
               ) : (
                 <span className="datechip__month">TBD</span>
@@ -92,6 +92,23 @@ export function MeetingDetailPage() {
       </div>
 
       <div className="detail__grid">
+        <aside className="detail__side detail__side--first">
+          <section className="panel" aria-labelledby="m-watch-h">
+            <h2 id="m-watch-h">Watch and verify</h2>
+            <ul className="plain-list">
+              <li>
+                <SourceAction url={meeting.recordingUrl} label="Watch the recording" unavailableText={meeting.status === 'scheduled' ? 'No recording yet: this meeting hasn’t happened' : 'Recording not available'} />
+              </li>
+              <li>
+                <SourceAction url={meeting.officialPageUrl} label="Official meeting page" unavailableText="Official page not linked yet" />
+              </li>
+            </ul>
+            <p className="muted">
+              {meeting.lastVerifiedAt ? `Last checked ${formatDate(meeting.lastVerifiedAt.slice(0, 10))}.` : 'Not yet checked against an official source.'}
+            </p>
+          </section>
+        </aside>
+
         <div className="detail__main">
           <section aria-labelledby="m-issues-h">
             <h2 id="m-issues-h">Issues on the agenda</h2>
@@ -121,22 +138,6 @@ export function MeetingDetailPage() {
           </section>
         </div>
 
-        <aside className="detail__side">
-          <section className="panel" aria-labelledby="m-watch-h">
-            <h2 id="m-watch-h">Watch and verify</h2>
-            <ul className="plain-list">
-              <li>
-                <SourceAction url={meeting.recordingUrl} label="Watch the recording" unavailableText={meeting.status === 'scheduled' ? 'No recording yet: this meeting hasn’t happened' : 'Recording not available'} />
-              </li>
-              <li>
-                <SourceAction url={meeting.officialPageUrl} label="Official meeting page" unavailableText="Official page not linked yet" />
-              </li>
-            </ul>
-            <p className="muted">
-              {meeting.lastVerifiedAt ? `Last checked ${formatDate(meeting.lastVerifiedAt.slice(0, 10))}.` : 'Not yet checked against an official source.'}
-            </p>
-          </section>
-        </aside>
       </div>
     </article>
   );

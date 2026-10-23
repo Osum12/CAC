@@ -41,6 +41,10 @@ const OPEN: IssueStatus[] = ['under_consideration', 'proposed'];
 /** Statuses that record a finished outcome. */
 const DECIDED: IssueStatus[] = ['approved', 'denied', 'withdrawn', 'completed'];
 
+/** Decided items with a date, newest first. */
+const decidedNewestFirst = (issues: Issue[]) =>
+  issues.filter((i) => DECIDED.includes(i.status) && i.statusAsOf).sort((a, b) => b.statusAsOf!.localeCompare(a.statusAsOf!));
+
 // In-page jumps also move keyboard focus, so screen-reader users land where sighted users do.
 function jumpTo(el: HTMLElement | null) {
   if (!el) return;
@@ -127,6 +131,8 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
   }
 
   const filtering = isFiltering(filters);
+  // The hero panel shows the newest decision (see Docket), so the decisions list skips it.
+  const heroDecision = decidedNewestFirst(issues)[0]?.id ?? null;
   const matches = filterIssues(issues, filters);
 
   return (
@@ -134,7 +140,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
       <StillOpen issues={issues} meetings={meetings} />
 
       <div className="briefing-pair">
-        <LatestDecisions issues={issues} />
+        <LatestDecisions issues={issues} skip={heroDecision} />
 
         <MeetingsAside meetings={meetings} issues={issues} documents={documents} />
       </div>
@@ -144,7 +150,8 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
         active={filters.topic}
         onPick={(topic) => {
           setFilter('topic', topic);
-          jumpTo(issuesHeading.current);
+          // Choosing a topic moves to the filtered list; clearing one leaves focus on the button.
+          if (topic) jumpTo(issuesHeading.current);
         }}
       />
 
@@ -231,7 +238,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
             </EmptyState>
           )
         ) : (
-          <IssueList issues={byImportance(issues)} />
+          <IssueList issues={issues} />
         )}
       </section>
     </>
@@ -295,9 +302,10 @@ const StillOpen = memo(function StillOpen({ issues, meetings }: { issues: Issue[
 });
 
 /** 2. The most recent decisions, grouped by the day they were made. */
-const LatestDecisions = memo(function LatestDecisions({ issues }: { issues: Issue[] }) {
+const LatestDecisions = memo(function LatestDecisions({ issues, skip }: { issues: Issue[]; skip: string | null }) {
   const href = usePlaceHref();
-  const decided = issues.filter((i) => DECIDED.includes(i.status) && i.statusAsOf).sort((a, b) => b.statusAsOf!.localeCompare(a.statusAsOf!));
+  // The newest decision already leads the panel beside the headline, so the list starts after it.
+  const decided = decidedNewestFirst(issues).filter((i) => i.id !== skip);
   // Whole days only, until at least eight decisions are shown, so no day is cut in half.
   const days: { date: string; items: Issue[] }[] = [];
   let shown = 0;
@@ -313,6 +321,7 @@ const LatestDecisions = memo(function LatestDecisions({ issues }: { issues: Issu
       <h2 id="decisions-heading" className="brief__title">
         Latest decisions
       </h2>
+      {skip && days.length > 0 && <p className="brief__lede">Newest first, after the decision shown at the top of the page.</p>}
       {days.length === 0 ? (
         <p className="brief__empty">No decisions are recorded in these records yet.</p>
       ) : (
@@ -402,19 +411,36 @@ const TopicOverview = memo(
   (a, b) => a.issues === b.issues && a.active === b.active,
 );
 
-/** Main items first, then the most recently decided. */
-const byImportance = (issues: Issue[]) =>
-  [...issues].sort((a, b) => Number(b.featured) - Number(a.featured) || (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? ''));
+const monthLabel = (ym: string) => {
+  const [y, m] = ym.split('-').map(Number);
+  return new Date(y, m - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+};
 
+/** Every item, newest status first, under one heading per month. Months with no items are never shown. */
 function IssueList({ issues }: { issues: Issue[] }) {
+  const sorted = [...issues].sort((a, b) => (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? ''));
+  const groups: { key: string; label: string; items: Issue[] }[] = [];
+  for (const i of sorted) {
+    const key = i.statusAsOf ? i.statusAsOf.slice(0, 7) : 'none';
+    const last = groups.at(-1);
+    if (last && last.key === key) last.items.push(i);
+    else groups.push({ key, label: key === 'none' ? 'No status date recorded' : monthLabel(key), items: [i] });
+  }
   return (
-    <ul className="issue-list">
-      {issues.map((i) => (
-        <li key={i.id}>
-          <IssueCard issue={i} headingLevel={3} />
-        </li>
+    <div className="month-groups">
+      {groups.map((g) => (
+        <div key={g.key} className="month">
+          <h3 className="month__title">{g.label}</h3>
+          <ul className="issue-list">
+            {g.items.map((i) => (
+              <li key={i.id}>
+                <IssueCard issue={i} headingLevel={4} />
+              </li>
+            ))}
+          </ul>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }
 
@@ -439,12 +465,18 @@ function MeetingGroup({
           const onAgenda = issues.filter((i) => m.issueIds.includes(i.id)).length;
           return (
             <li key={m.id} className={k === 0 && featureFirst ? 'stack__featured' : undefined}>
-              <MeetingCard meeting={m} agenda={agendaFor(m, documents)} headingLevel={4} />
-              {k === 0 && featureFirst && onAgenda > 0 && (
-                <p className="stack__note">
-                  {onAgenda === 1 ? 'One issue in these records was on its agenda.' : `${onAgenda} issues in these records were on its agenda.`}
-                </p>
-              )}
+              <MeetingCard
+                meeting={m}
+                agenda={agendaFor(m, documents)}
+                headingLevel={4}
+                note={
+                  k === 0 && featureFirst && onAgenda > 0
+                    ? onAgenda === 1
+                      ? 'One issue in these records was on its agenda.'
+                      : `${onAgenda} issues in these records were on its agenda.`
+                    : undefined
+                }
+              />
             </li>
           );
         })}
@@ -462,7 +494,7 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
   const meetingPlace = usePlace()?.recordSources[0]?.meetingPlace ?? 'City Hall';
   const next = splitMeetings(meetings).upcoming[0] ?? null;
   const onAgenda = next ? issues.filter((i) => next.issueIds.includes(i.id)) : [];
-  const decided = issues.filter((i) => DECIDED.includes(i.status) && i.statusAsOf).sort((a, b) => b.statusAsOf!.localeCompare(a.statusAsOf!))[0];
+  const decided = decidedNewestFirst(issues)[0];
   const agenda = next ? agendaFor(next, documents) : null;
   if (!next && !decided) return null;
   return (

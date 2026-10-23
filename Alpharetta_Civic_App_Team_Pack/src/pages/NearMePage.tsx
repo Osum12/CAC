@@ -49,10 +49,23 @@ export function NearMePage() {
     [ranked],
   );
   const pinNumber = (id: string) => points.find((p) => p.id === id)?.number ?? null;
+  const mapped = ranked.filter((r) => r.coords);
+  const unmapped = ranked.filter((r) => !r.coords);
+  const feedItem = (r: RankedIssue) => (
+    <FeedItem
+      ranked={r}
+      number={pinNumber(r.issue.id)}
+      selected={r.issue.id === selectedId}
+      onShowOnMap={() => {
+        fromFeed.current = r.issue.id !== selectedId;
+        updateParam('issue', r.issue.id === selectedId ? null : r.issue.id);
+      }}
+    />
+  );
 
   // When a marker is chosen, bring its card into view. When the choice came from a card's
   // "Show on map" button on the stacked layout, bring the map into view instead.
-  const listRef = useRef<HTMLOListElement>(null);
+  const listRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<HTMLElement>(null);
   const fromFeed = useRef(false);
   useEffect(() => {
@@ -130,21 +143,31 @@ export function NearMePage() {
               <h2 id="feed-h" className="nearme__feed-title">
                 {points.length ? `Sorted by distance from ${origin.label}` : 'Countywide items, without a map location'}
               </h2>
-              <ol className="feed" ref={listRef}>
-                {ranked.map((r) => (
-                  <li key={r.issue.id}>
-                    <FeedItem
-                      ranked={r}
-                      number={pinNumber(r.issue.id)}
-                      selected={r.issue.id === selectedId}
-                      onShowOnMap={() => {
-                        fromFeed.current = r.issue.id !== selectedId;
-                        updateParam('issue', r.issue.id === selectedId ? null : r.issue.id);
-                      }}
-                    />
-                  </li>
-                ))}
-              </ol>
+              <div ref={listRef}>
+                {mapped.length > 0 && (
+                  <ol className="feed">
+                    {mapped.map((r) => (
+                      <li key={r.issue.id}>{feedItem(r)}</li>
+                    ))}
+                  </ol>
+                )}
+                {unmapped.length > 0 && (
+                  <div className="feed-group">
+                    {mapped.length > 0 && <h3 className="feed-group__title">Countywide items, without a map location</h3>}
+                    {/* Said once for the whole group instead of under every item. */}
+                    <p className="feed-group__intro">
+                      {unmapped.length === 1
+                        ? unmapped[0].reason
+                        : `These ${unmapped.length} records have no map location, so they are listed as countywide items instead of being ranked by distance.`}
+                    </p>
+                    <ul className="feed">
+                      {unmapped.map((r) => (
+                        <li key={r.issue.id}>{feedItem(r)}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+              </div>
             </section>
           </div>
         ))}
@@ -175,10 +198,12 @@ function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIss
         <h3 className="feed-item__title">
           <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)}>{issue.title}</Link>
         </h3>
-        <p className="feed-item__reason">
-          <span className="visually-hidden">Why it’s listed: </span>
-          {reason}
-        </p>
+        {coords && (
+          <p className="feed-item__reason">
+            <span className="visually-hidden">Why it’s listed: </span>
+            {reason}
+          </p>
+        )}
         <div className="card__foot">
           {isMock(issue) && <MockBadge record={issue} />}
           {coords && (

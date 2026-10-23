@@ -65,32 +65,36 @@ export function DocumentDetailPage() {
         </div>
       </div>
 
-      <div className="detail__single">
-        <section aria-labelledby="d-meeting-h">
-          <h2 id="d-meeting-h">From meeting</h2>
-          {meeting ? (
-            <div className="stack stack--single">
-              <MeetingCard meeting={meeting} />
-            </div>
-          ) : (
-            <EmptyState title={doc.meetingId ? 'The linked meeting could not be found in the dataset.' : 'This document is not tied to a meeting.'} />
-          )}
-        </section>
+      <div className="detail__grid">
+        <div className="detail__main">
+          <section aria-labelledby="d-issues-h">
+            <h2 id="d-issues-h">Related issues</h2>
+            {issues.length ? (
+              <ul className="issue-list">
+                {issues.map((i) => (
+                  <li key={i.id}>
+                    <IssueCard issue={i} />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <EmptyState title="No issues are linked to this document." />
+            )}
+          </section>
+        </div>
 
-        <section aria-labelledby="d-issues-h">
-          <h2 id="d-issues-h">Related issues</h2>
-          {issues.length ? (
-            <ul className="issue-list">
-              {issues.map((i) => (
-                <li key={i.id}>
-                  <IssueCard issue={i} />
-                </li>
-              ))}
-            </ul>
-          ) : (
-            <EmptyState title="No issues are linked to this document." />
-          )}
-        </section>
+        <aside className="detail__side">
+          <section className="panel" aria-labelledby="d-meeting-h">
+            <h2 id="d-meeting-h">From meeting</h2>
+            {meeting ? (
+              <div className="stack stack--single">
+                <MeetingCard meeting={meeting} />
+              </div>
+            ) : (
+              <p className="muted">{doc.meetingId ? 'The linked meeting could not be found in the dataset.' : 'This document is not tied to a meeting.'}</p>
+            )}
+          </section>
+        </aside>
       </div>
     </article>
   );

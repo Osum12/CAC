@@ -12,12 +12,13 @@ export function BackLink({ fallbackTo, fallbackLabel }: { fallbackTo: string; fa
     <nav aria-label="Back" className="backlink">
       {canGoBack ? (
         <button type="button" className="backlink__button" onClick={() => navigate(-1)}>
-          <span aria-hidden="true" className="icon-lead">←</span>Back
+          <span aria-hidden="true" className="icon-lead">←</span>
+          <span className="backlink__text">Back</span>
         </button>
       ) : (
         <Link to={fallbackTo}>
           <span aria-hidden="true" className="icon-lead">←</span>
-          {fallbackLabel}
+          <span className="backlink__text">{fallbackLabel}</span>
         </Link>
       )}
     </nav>

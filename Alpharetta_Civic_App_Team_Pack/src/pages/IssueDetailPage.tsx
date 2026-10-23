@@ -79,29 +79,36 @@ export function IssueDetailPage() {
         </div>
       </div>
 
-      <div className="detail__single">
-        <section aria-labelledby="summary-h">
-          <h2 id="summary-h">What happened</h2>
-          <p className="prose">{issue.summary || 'No summary has been written for this issue yet.'}</p>
-          {!isMock(issue) && (
-            <p className="fine-print">This summary is a plain-language rewrite of the official records listed below. Check them for the exact wording.</p>
-          )}
-        </section>
+      <div className="detail__grid">
+        <div className="detail__main">
+          <section aria-labelledby="summary-h">
+            <h2 id="summary-h">What happened</h2>
+            <p className="prose">{issue.summary || 'No summary has been written for this issue yet.'}</p>
+            {!isMock(issue) && (
+              <p className="fine-print">This summary is a plain-language rewrite of the official records on this page. Check them for the exact wording.</p>
+            )}
+          </section>
 
-        <section aria-labelledby="timeline-h">
-          <h2 id="timeline-h">Timeline</h2>
-          {meetings.length ? <StatusStepper issue={issue} meetings={sortedMeetings} /> : <EmptyState title="No related meetings are linked to this issue." />}
-          {missingMeetings > 0 && <MissingNote count={missingMeetings} noun="meeting" />}
-          <p className="fine-print">
-            Being on an agenda does not mean an item was approved.
-            {!isMock(issue) && ' The status above comes from the recorded vote or official recommendation.'}
-          </p>
-        </section>
+          <section aria-labelledby="timeline-h">
+            <h2 id="timeline-h">Timeline</h2>
+            {meetings.length ? <StatusStepper issue={issue} meetings={sortedMeetings} /> : <EmptyState title="No related meetings are linked to this issue." />}
+            {missingMeetings > 0 && <MissingNote count={missingMeetings} noun="meeting" />}
+            <p className="fine-print">
+              Being on an agenda does not mean an item was approved.
+              {!isMock(issue) && ' The status above comes from the recorded vote or official recommendation.'}
+            </p>
+          </section>
 
-        <section aria-labelledby="docs-h">
-          <h2 id="docs-h">Records and sources</h2>
-          <div className="doc-group">
-            <h3 className="doc-group__title">Official item record</h3>
+          <section aria-labelledby="docs-h">
+            <h2 id="docs-h">Documents</h2>
+            {documents.length ? <DocumentGroups documents={documents} /> : <EmptyState title="No documents are linked to this issue." />}
+            {missingDocs > 0 && <MissingNote count={missingDocs} noun="document" />}
+          </section>
+        </div>
+
+        <aside className="detail__side">
+          <section className="panel" aria-labelledby="sources-h">
+            <h2 id="sources-h">Official sources</h2>
             {issue.sourceUrls.length ? (
               <ul className="source-list">
                 {issue.sourceUrls.map((url, i) => (
@@ -115,12 +122,9 @@ export function IssueDetailPage() {
                 <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
               </p>
             )}
-          </div>
-          {documents.length ? <DocumentGroups documents={documents} /> : <EmptyState title="No documents are linked to this issue." />}
-          {missingDocs > 0 && <MissingNote count={missingDocs} noun="document" />}
-        </section>
-
-        <LocationPanel issue={issue} />
+          </section>
+          <LocationPanel issue={issue} />
+        </aside>
       </div>
     </article>
   );
@@ -238,7 +242,7 @@ function LocationPanel({ issue }: { issue: Issue }) {
   const loc = issue.location;
   const coords = getValidCoordinates(issue);
   return (
-    <section className="location" aria-labelledby="location-h">
+    <section className="panel" aria-labelledby="location-h">
       <h2 id="location-h">Location</h2>
       {!loc ? (
         <p className="muted">No location is recorded for this issue, so it does not appear on the map.</p>
