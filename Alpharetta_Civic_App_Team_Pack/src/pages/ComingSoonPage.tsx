@@ -51,6 +51,12 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
                   : `${place.level === 'municipality' && place.countyIds.length > 1 ? 'Part of ' : ''}${place.name} is in ${home.name}, which has its own page.`}
               </p>
             )}
+            {!ownRecords && (
+              <p className="soon__why fine-print">
+                Georgia Civic only shows records that have been checked against official sources. None have been added for {place.name} yet, so this page
+                shows no issues, meetings, or documents.
+              </p>
+            )}
             <div className="soon__actions">
               {explore && (
                 <Link to={countyPath(explore)} className="soon__primary">
@@ -68,12 +74,6 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
       {/* A city's county is named once, in the detail line above, with one "Explore" action. */}
       {place.level === 'county' && <CountyPlaces county={place} cities={municipalitiesInCounty(place.id)} />}
 
-      {!ownRecords && (
-        <p className="soon__why fine-print">
-          Georgia Civic only shows records that have been checked against official sources. None have been added for {place.name} yet, so this page
-          shows no issues, meetings, or documents.
-        </p>
-      )}
     </div>
   );
 }

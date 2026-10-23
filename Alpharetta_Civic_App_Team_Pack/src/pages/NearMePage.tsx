@@ -82,34 +82,36 @@ export function NearMePage() {
         </p>
       </header>
 
-      <p className="nearme__start">
-        <PinIcon className="nearme__start-icon" />
-        <span>
-          Distances are measured from <strong>{origin.label}</strong>, {origin.description}.
-        </span>
-      </p>
+      <div className="toolbar">
+        <p className="nearme__start">
+          <PinIcon className="nearme__start-icon" />
+          <span>
+            Distances are measured from <strong>{origin.label}</strong>, {origin.description}.
+          </span>
+        </p>
 
+        {state.status === 'ready' && topics.length > 0 && (
+          <form className="filters nearme__filters" role="search" aria-label="Filter issues by category" onSubmit={(e) => e.preventDefault()}>
+            <div className="filters__field">
+              <label htmlFor="nearme-topic">Category</label>
+              <select id="nearme-topic" value={topic} onChange={(e) => setTopic(e.target.value)}>
+                <option value="">All categories</option>
+                {topics.map((t) => (
+                  <option key={t} value={t}>
+                    {humanize(t)}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <p className="results-count nearme__count" role="status" aria-live="polite">
+              {ranked.length} {ranked.length === 1 ? 'issue' : 'issues'}
+              {topic ? ` in ${humanize(topic)}` : ''}, {points.length} on the map
+            </p>
+          </form>
+        )}
+      </div>
       {state.status === 'loading' && <LoadingState rows={4} />}
       {state.status === 'error' && <ErrorState onRetry={state.retry} />}
-      {state.status === 'ready' && topics.length > 0 && (
-        <form className="filters nearme__filters" role="search" aria-label="Filter issues by category" onSubmit={(e) => e.preventDefault()}>
-          <div className="filters__field">
-            <label htmlFor="nearme-topic">Category</label>
-            <select id="nearme-topic" value={topic} onChange={(e) => setTopic(e.target.value)}>
-              <option value="">All categories</option>
-              {topics.map((t) => (
-                <option key={t} value={t}>
-                  {humanize(t)}
-                </option>
-              ))}
-            </select>
-          </div>
-          <p className="results-count nearme__count" role="status" aria-live="polite">
-            {ranked.length} {ranked.length === 1 ? 'issue' : 'issues'}
-            {topic ? ` in ${humanize(topic)}` : ''}, {points.length} on the map
-          </p>
-        </form>
-      )}
       {state.status === 'ready' &&
         (ranked.length === 0 ? (
           <EmptyState title="No issues are in the dataset yet." />

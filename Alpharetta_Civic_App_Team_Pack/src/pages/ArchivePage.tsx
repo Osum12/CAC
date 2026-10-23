@@ -90,69 +90,76 @@ export function ArchivePage() {
         </p>
       </header>
 
-      <form className="filters filters--compact" role="search" aria-label="Search the archive" onSubmit={(e) => e.preventDefault()}>
-        <div className="filters__field filters__field--grow">
-          <label htmlFor="archive-q">Search meetings and documents</label>
-          <input id="archive-q" type="search" value={query} placeholder="e.g. property tax, housing, September" onChange={(e) => setQuery(e.target.value)} />
-        </div>
-      </form>
+      <div className="board board--archive">
+        <div className="board__label">
+          <form className="filters filters--compact" role="search" aria-label="Search the archive" onSubmit={(e) => e.preventDefault()}>
+            <div className="filters__field filters__field--grow">
+              <label htmlFor="archive-q">Search meetings and documents</label>
+              <input id="archive-q" type="search" value={query} placeholder="e.g. property tax, housing, September" onChange={(e) => setQuery(e.target.value)} />
+            </div>
+          </form>
 
-      <div className="filter-bar" role="group" aria-label="Filter by record type">
-        {FILTERS.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            className="chip"
-            aria-pressed={filter === f.id}
-            onClick={() => setFilter(f.id)}
-            disabled={state.status !== 'ready'}
-          >
-            {f.label}
-            {state.status === 'ready' && <span className="chip__count">{count(f.id)}</span>}
-          </button>
-        ))}
-      </div>
-
-      {state.status === 'loading' && <LoadingState rows={5} />}
-      {state.status === 'error' && <ErrorState onRetry={state.retry} />}
-      {state.status === 'ready' && (
-        <>
-          <p className="results-count" role="status" aria-live="polite">
-            {visible.length} {visible.length === 1 ? 'record' : 'records'}
-            {q ? ` matching “${q}”` : ''}
-          </p>
-          {visible.length ? (
-            <>
-            <RegisterHead className="register-head--archive" columns={['Type', 'Record', 'Date', 'Status']} />
-            <ol className="archive-list register">
-              {visible.map((e) => (
-                <li key={`${e.kind}-${e.id}`}>
-                  <ArchiveRow entry={e} />
-                </li>
-              ))}
-            </ol>
-            </>
-          ) : (
-            <EmptyState
-              title={emptyTitle(filter, q, count('all'))}
-              action={
-                <div className="button-row">
-                  {q && filter !== 'all' && count('all') > 0 && (
-                    <button type="button" className="button button--ghost" onClick={() => setFilter('all')}>
-                      Show all types
-                    </button>
-                  )}
-                  {(q || filter !== 'all') && (
-                    <button type="button" className="button button--ghost" onClick={clearParams}>
-                      Show all records
-                    </button>
-                  )}
-                </div>
-              }
-            />
+          <div className="filter-bar" role="group" aria-label="Filter by record type">
+            {FILTERS.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                className="chip"
+                aria-pressed={filter === f.id}
+                onClick={() => setFilter(f.id)}
+                disabled={state.status !== 'ready'}
+              >
+                {f.label}
+                {state.status === 'ready' && <span className="chip__count">{count(f.id)}</span>}
+              </button>
+            ))}
+          </div>
+          {state.status === 'ready' && (
+            <p className="results-count" role="status" aria-live="polite">
+              {visible.length} {visible.length === 1 ? 'record' : 'records'}
+              {q ? ` matching “${q}”` : ''}
+            </p>
           )}
-        </>
-      )}
+        </div>
+        <div className="board__rows">
+          {state.status === 'loading' && <LoadingState rows={5} />}
+          {state.status === 'error' && <ErrorState onRetry={state.retry} />}
+          {state.status === 'ready' && (
+            <>
+              {visible.length ? (
+                <>
+                <RegisterHead className="register-head--archive" columns={['Type', 'Record', 'Date', 'Status']} />
+                <ol className="archive-list register">
+                  {visible.map((e) => (
+                    <li key={`${e.kind}-${e.id}`}>
+                      <ArchiveRow entry={e} />
+                    </li>
+                  ))}
+                </ol>
+                </>
+              ) : (
+                <EmptyState
+                  title={emptyTitle(filter, q, count('all'))}
+                  action={
+                    <div className="button-row">
+                      {q && filter !== 'all' && count('all') > 0 && (
+                        <button type="button" className="button button--ghost" onClick={() => setFilter('all')}>
+                          Show all types
+                        </button>
+                      )}
+                      {(q || filter !== 'all') && (
+                        <button type="button" className="button button--ghost" onClick={clearParams}>
+                          Show all records
+                        </button>
+                      )}
+                    </div>
+                  }
+                />
+              )}
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 }
