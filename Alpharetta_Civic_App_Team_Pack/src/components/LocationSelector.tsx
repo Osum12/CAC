@@ -110,9 +110,6 @@ export function LocationSelector() {
       </p>
       <button type="submit" className="chooser__go">
         Explore civic information
-        <span aria-hidden="true" className="chooser__arrow">
-          →
-        </span>
       </button>
     </form>
   );

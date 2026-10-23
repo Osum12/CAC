@@ -1,7 +1,7 @@
 /* Georgia Civic design system.
-   Direction: a modern civic "public notice" look. Warm paper, deep evergreen ink,
-   a brick accent, editorial serif headings (Fraunces) over the calm, humanist
-   text face Source Sans 3. All colors are tokens so dark mode is a token swap. */
+   The tokens below are the original set; the Capitol layer at the end of this file
+   replaces them (limestone, granite, capitol gold, Public Sans). All colors are tokens
+   so dark mode is a token swap. */
 
 :root {
   --paper: #f5f1e8;
@@ -2527,12 +2527,6 @@ h2 {
   outline: 3px solid #1f6feb;
   outline-offset: 3px;
 }
-.chooser__arrow {
-  transition: transform 0.2s var(--ease);
-}
-.chooser__go:hover .chooser__arrow {
-  transform: translateX(3px);
-}
 
 /* ---- Available-now section ---- */
 .statewide__note {
@@ -2634,12 +2628,6 @@ h2 {
 .soon :focus-visible {
   outline-color: var(--ivory);
 }
-.soon__motif {
-  width: 100%;
-  max-width: 240px;
-  justify-self: end;
-  color: var(--ember);
-}
 .soon__main > * {
   animation: hero-rise 0.7s cubic-bezier(0.16, 0.8, 0.24, 1) both;
 }
@@ -2709,9 +2697,6 @@ h2 {
 @media (max-width: 720px) {
   .soon__inner {
     grid-template-columns: minmax(0, 1fr);
-  }
-  .soon__motif {
-    display: none;
   }
 }
 @media (max-width: 560px) {
@@ -2815,4 +2800,355 @@ h2 {
   .nearme__count {
     padding-bottom: 0;
   }
+}
+
+/* ---------- Capitol layer ----------
+   Identity from Georgia's public buildings: limestone paper, granite ink and header,
+   and capitol-dome gold used only to mark what is current or selected (the latest
+   decision, the page you are on, the chosen pin). One typeface, Public Sans, the
+   U.S. government's open typeface. Flat white records on a light page; no dark hero. */
+:root {
+  --paper: #eef0ed;
+  --paper-2: #e2e5e1;
+  --surface: #ffffff;
+  --ink: #1a2128;
+  --ink-2: #3a444d;
+  --muted: #56606a;
+  --line: #d6dad6;
+  --line-strong: #a9b0ab;
+  --tag-bg: #e7ebee;
+  --tag-ink: #2b3945;
+  --granite: #22303b;
+  --granite-2: #34444f;
+  --gold: #c99a2e;
+  --gold-ink: #7a5a10;
+  --evergreen: var(--granite);
+  --evergreen-2: var(--granite-2);
+  --on-evergreen: #f3f5f6;
+  --ivory: #f3f5f6;
+  --ember: var(--gold);
+  --accent: var(--granite);
+  --accent-ink: #111a22;
+  --on-accent: #ffffff;
+  --btn-bg: var(--granite);
+  --btn-bg-hover: var(--granite-2);
+  --btn-ink: #ffffff;
+  --font-display: 'Public Sans', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'Public Sans', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
+  --radius: 6px;
+  --radius-lg: 8px;
+  --shadow: none;
+  --shadow-lift: 0 0 0 1px var(--line-strong);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --paper: #13181d;
+    --paper-2: #1b2128;
+    --surface: #1d242b;
+    --ink: #e8ebee;
+    --ink-2: #c3c9cf;
+    --muted: #9aa3ab;
+    --line: #2f3841;
+    --line-strong: #4a5560;
+    --tag-bg: #26303a;
+    --tag-ink: #c9d3dc;
+    --granite: #0e1317;
+    --granite-2: #26313b;
+    --gold: #d9ae4a;
+    --gold-ink: #e3bd62;
+    --accent: #c9d3dc;
+    --accent-ink: #e8ebee;
+    --on-accent: #13181d;
+    --btn-bg: #c9d3dc;
+    --btn-bg-hover: #e1e7ec;
+    --btn-ink: #13181d;
+    --masthead-edge: #2f3841;
+  }
+}
+
+/* One family: hierarchy comes from size and weight, not a second face. */
+h1,
+h2,
+h3,
+h4,
+.card__title,
+.timeline__title,
+.page-header h1,
+.detail__title,
+.brand__name,
+.docket__date {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  font-variation-settings: normal;
+}
+.card__title {
+  font-size: 1.2rem;
+  line-height: 1.3;
+}
+h2 {
+  font-size: clamp(1.4rem, 2.2vw, 1.7rem);
+}
+.page-header h1,
+.detail__title {
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  letter-spacing: -0.03em;
+}
+
+/* Header: granite bar; the page you are on is underlined in gold instead of a pill. */
+.brand__mark rect {
+  fill: var(--gold);
+}
+.brand__mark path {
+  fill: var(--granite);
+}
+.brand__name {
+  font-size: 1.15rem;
+}
+.primary-nav__link {
+  border-radius: 0;
+}
+.primary-nav__link.active {
+  background: none;
+  color: var(--on-evergreen);
+  box-shadow: inset 0 -3px 0 var(--gold);
+}
+.placebar {
+  border-radius: var(--radius);
+  border-color: rgb(243 245 246 / 0.24);
+}
+.placebar__change {
+  border-radius: 4px;
+}
+
+/* Hero: on the page itself, divided from the lists by one rule. */
+.hero--cover,
+.soon {
+  background: transparent;
+  color: var(--ink);
+  border-bottom: 1px solid var(--line-strong);
+  padding: clamp(36px, 5vw, 72px) 0 clamp(36px, 5vw, 64px);
+}
+.hero--cover .hero__title,
+.soon__title {
+  color: var(--ink);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+.hero--cover .hero__place,
+.soon__badge,
+.soon__where {
+  color: var(--gold-ink);
+}
+.hero--cover .hero__lede,
+.soon__lede,
+.soon__detail {
+  color: var(--ink-2);
+  opacity: 1;
+}
+.hero--cover .hero__note {
+  color: var(--muted);
+  opacity: 1;
+}
+.hero--cover :focus-visible,
+.soon :focus-visible,
+.docket :focus-visible {
+  outline-color: var(--focus);
+}
+.hero--cover .hero-search {
+  background: var(--surface);
+  border: 1.5px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: none;
+}
+.hero--cover .hero-search input[type='search'] {
+  color: var(--ink);
+}
+.hero--cover .hero-search input[type='search']::placeholder {
+  color: var(--muted);
+}
+.hero-search__button {
+  border-radius: 4px;
+  background: var(--btn-bg);
+  color: var(--btn-ink);
+}
+.hero-search__button:hover {
+  background: var(--btn-bg-hover);
+}
+
+/* The latest decision: a white record with a gold edge, the one bold mark on the page. */
+.docket {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-top: 6px solid var(--gold);
+  border-radius: var(--radius);
+}
+.docket__kicker {
+  color: var(--gold-ink);
+}
+.docket a {
+  color: var(--ink);
+  text-decoration-color: var(--line-strong);
+}
+.docket a:hover {
+  text-decoration-color: var(--ink);
+}
+.docket .docket__source {
+  color: var(--ink);
+}
+.docket__title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+.docket__block + .docket__block {
+  border-top-color: var(--line);
+}
+.docket__list li {
+  border-left-color: var(--gold);
+}
+
+/* Location chooser: a white form on the page, same gold edge. */
+.chooser {
+  background: var(--surface);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-top: 6px solid var(--gold);
+  border-radius: var(--radius);
+  box-shadow: none;
+}
+.chooser__title,
+.chooser__field label {
+  color: var(--ink);
+}
+.chooser__optional,
+.chooser__status {
+  color: var(--muted);
+}
+.chooser__icon {
+  color: var(--gold-ink);
+}
+.chooser select {
+  border-color: #6b7682; /* 3:1 or more against white */
+  border-radius: 4px;
+  background-color: #fff;
+  color: #1a2128;
+}
+.chooser select:hover:not(:disabled),
+.chooser select:focus-visible {
+  border-color: var(--granite);
+}
+.chooser select:disabled {
+  background-color: #eef0ed;
+  color: #56606a;
+}
+.chooser__go {
+  border-radius: 4px;
+  background: var(--btn-bg);
+  color: var(--btn-ink);
+}
+.chooser__go:hover {
+  background: var(--btn-bg-hover);
+}
+@media (prefers-color-scheme: dark) {
+  .chooser select {
+    border-color: #6b7682;
+    background-color: #13181d;
+    color: #e8ebee;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23c9d3dc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+  .chooser select option {
+    background: #1d242b;
+    color: #e8ebee;
+  }
+  .chooser select:disabled {
+    background-color: #1b2128;
+    color: #9aa3ab;
+  }
+}
+
+/* Coming soon: same light page. */
+.soon__primary {
+  border-radius: 4px;
+  background: var(--btn-bg);
+  color: var(--btn-ink);
+}
+.soon__primary:hover {
+  background: var(--btn-bg-hover);
+}
+.soon__secondary {
+  border-radius: 4px;
+  color: var(--ink);
+  border-color: var(--line-strong);
+}
+.soon__secondary:hover {
+  border-color: var(--ink);
+  background: var(--surface);
+}
+/* One column now that the decorative motif is gone. */
+.soon__inner {
+  grid-template-columns: minmax(0, 1fr);
+}
+.soon__badge {
+  border-radius: 4px;
+}
+/* The latest decision lines up with the top of the headline. */
+.hero__inner {
+  align-items: start;
+}
+.hero--cover .docket {
+  margin-top: 2.4rem;
+}
+@media (max-width: 900px) {
+  .hero--cover .docket {
+    margin-top: 0;
+  }
+}
+
+/* Records: flat white, one hairline, no shadows. */
+.card,
+.feed-item,
+.archive-row,
+.panel,
+.filters,
+.soon-place {
+  box-shadow: none;
+  border-radius: var(--radius);
+}
+.card:hover,
+.soon-place:hover {
+  box-shadow: none;
+  border-color: var(--line-strong);
+}
+.tag {
+  border-radius: 4px;
+}
+
+/* Map and Near Me: granite pins; the selected pin and card are marked in gold. */
+.pin--selected {
+  background: var(--gold);
+}
+.pin--selected span,
+.feed-item--selected .feed-item__num {
+  color: #1a2128;
+}
+.feed-item--selected .feed-item__num {
+  background: var(--gold);
+}
+.feed-item--selected {
+  border-color: var(--gold);
+  box-shadow: inset 4px 0 0 var(--gold);
+}
+.nearme__start {
+  border-left-color: var(--gold);
+}
+.nearme__start-icon {
+  color: var(--gold-ink);
+}
+
+/* Buttons share the 4px corner of the search, chooser and coming-soon actions. */
+.button {
+  border-radius: 4px;
 }

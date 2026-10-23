@@ -47,6 +47,8 @@ On 2026-10-22, also at the session runner's request, Claude Code did a UI/UX ref
 - On the team's request, replaced the City of Alpharetta records with 50 Fulton County Board of Commissioners records researched from the county's Legistar system (meetings, agenda items, recorded motions, roll-call votes, agendas, attachments, videos). Every URL was checked, and statuses follow the recorded motions. Map pins come from addresses in county documents, geocoded with the U.S. Census geocoder.
 - Simplified the interface for the demo video: removed the shortcut tiles and date filters, gave Near Me one fixed public starting point (no address box), and replaced text glyphs with SVG icons. Design checks followed the priority rules of the "ui-ux-pro-max" skill the team linked (its scripts were not installed or run).
 
+- Added a Category filter to Near Me, and restyled the app following the team-linked "frontend-design" skill: a palette from Georgia's public buildings (limestone, granite, capitol gold), the Public Sans typeface, a light hero with the latest decision as the one marked element, and flat record cards.
+
 The AI did not change the PRDs and did not deploy anything.
 
 ## Student contributions (TO BE COMPLETED BY THE TEAM)

@@ -62,7 +62,6 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
               </Link>
             </div>
           </div>
-          <SoonMotif />
         </div>
       </section>
 
@@ -126,22 +125,6 @@ function ClockIcon() {
     <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
       <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" strokeWidth="2" />
       <path d="M12 7v5l3 2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-/** Decorative: a location pin with survey rings, drawn in the hero's ember line color. */
-function SoonMotif() {
-  return (
-    <svg className="soon__motif" viewBox="0 0 240 240" aria-hidden="true" focusable="false">
-      <g fill="none" stroke="currentColor">
-        <circle cx="120" cy="150" r="34" strokeWidth="1.5" opacity="0.7" />
-        <circle cx="120" cy="150" r="62" strokeWidth="1.2" opacity="0.45" strokeDasharray="3 7" />
-        <circle cx="120" cy="150" r="90" strokeWidth="1" opacity="0.28" />
-        <circle cx="120" cy="150" r="116" strokeWidth="1" opacity="0.16" strokeDasharray="2 9" />
-        <path d="M120 150s-30-26-30-52a30 30 0 0 1 60 0c0 26-30 52-30 52Z" strokeWidth="3" strokeLinejoin="round" />
-        <circle cx="120" cy="98" r="10" strokeWidth="3" />
-      </g>
     </svg>
   );
 }
