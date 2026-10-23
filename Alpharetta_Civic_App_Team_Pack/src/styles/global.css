@@ -1220,7 +1220,7 @@ input[type='search']::-webkit-search-cancel-button {
   }
   .card--issue.row,
   .register-head {
-    grid-template-columns: 10rem minmax(0, 1fr) 8.5rem 11rem;
+    grid-template-columns: 12.5rem minmax(0, 1fr) 8.5rem 11rem;
   }
   .archive-row.row,
   .register-head--archive {
@@ -2215,6 +2215,8 @@ input[type='search']::-webkit-search-cancel-button {
 .hero--state .hero__title .hero__line {
   display: block;
   font-size: clamp(1.5rem, 9.47cqi, 7.6rem);
+  /* In em on the line itself, so smaller lines aren’t set as tight as the full-size title. */
+  letter-spacing: -0.045em;
 }
 
 /* =========================================================================
@@ -2475,5 +2477,27 @@ input[type='search']::-webkit-search-cancel-button {
 @media (max-width: 359px) {
   .primary-nav__link {
     padding: 0 9px;
+  }
+}
+
+/* Summaries are never cut short: a cut summary can contradict its status (for example
+   "failed on September 16" next to an Approved badge, when the item passed on October 7). */
+.citywide-grid .card--issue .card__summary {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: none;
+  overflow: visible;
+}
+
+/* Phones: the headline stays the largest text on Home. */
+@media (max-width: 479px) {
+  .chooser__title {
+    font-size: 1.25rem;
+  }
+  .steps__title {
+    font-size: 1.375rem;
+  }
+  .steps__name {
+    font-size: 1.125rem;
   }
 }
