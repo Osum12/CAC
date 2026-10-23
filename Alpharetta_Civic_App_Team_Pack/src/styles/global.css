@@ -2145,7 +2145,7 @@ input[type='search']:focus-visible {
   }
 }
 
-/* Coming soon: the place that is available now, as a white panel in the hero's right column
+/* Coming soon: the place that has records, as a white panel in the hero's right column
    (the same panel language as the home chooser). */
 .soon-card {
   background: var(--page);

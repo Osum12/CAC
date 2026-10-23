@@ -61,7 +61,6 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
           </div>
           {explore && (
             <aside className="soon-card" aria-labelledby="soon-card-h">
-              <p className="soon-card__kicker">Available now</p>
               <h2 id="soon-card-h" className="soon-card__title">
                 {explore.name}
               </h2>
