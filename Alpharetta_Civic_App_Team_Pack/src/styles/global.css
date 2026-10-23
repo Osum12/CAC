@@ -3604,8 +3604,81 @@ time {
   inset: 0;
   z-index: -1;
   pointer-events: none;
-  background: var(--atlas) calc(50% + var(--atlas-x, 0px)) var(--atlas-y, 0px) / 1600px auto repeat;
+  overflow: hidden;
+}
+.atlas-backdrop__far,
+.atlas-backdrop__near {
+  position: absolute;
+  inset: 0;
+}
+/* Far layer: larger and fainter, drifting slowly the other way. */
+.atlas-backdrop__far {
+  background: var(--atlas) calc(30% + var(--far-x, 0px)) calc(-200px + var(--far-y, 0px)) / 2400px auto repeat;
+  opacity: 0.45;
+}
+/* Near layer: the working map, drifting faster. */
+.atlas-backdrop__near {
+  background: var(--atlas) calc(50% + var(--near-x, 0px)) var(--near-y, 0px) / 1600px auto repeat;
   opacity: 0.85;
+}
+/* The route: a faint dashed plan, and the travelled part drawn solid as you scroll. */
+/* The route lane is the right-hand page margin; it only appears when that margin is wide enough. */
+.atlas-route {
+  position: absolute;
+  top: var(--header-h, 72px);
+  bottom: 0;
+  right: 0;
+  width: calc((100vw - var(--container)) / 2 - 12px);
+  display: none;
+}
+.atlas-route > svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+@media (min-width: 1340px) {
+  .atlas-route {
+    display: block;
+  }
+}
+.atlas-route > svg path {
+  fill: none;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: round;
+}
+.atlas-route__planned {
+  stroke: rgb(47 58 143 / 0.16);
+  stroke-width: 1.5;
+  stroke-dasharray: 2 7;
+}
+.atlas-route__travelled {
+  stroke: rgb(47 58 143 / 0.42);
+  stroke-width: 2;
+}
+.atlas-route__marker {
+  position: absolute;
+  left: 94%;
+  top: 0;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  background: var(--bg);
+  box-shadow: 0 0 0 1px rgb(47 58 143 / 0.28), 0 0 0 7px rgb(47 58 143 / 0.06);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+}
+.atlas-route__marker .compass {
+  width: 22px;
+  height: 22px;
+}
+.atlas-backdrop--still .atlas-route__travelled,
+.atlas-backdrop--still .atlas-route__marker {
+  display: none;
 }
 /* The page-margin linework would double up with the moving layer. */
 .main:has(.atlas-backdrop)::before {
