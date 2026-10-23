@@ -83,6 +83,10 @@ export function IssueMap({ points, origin, selectedId, onSelect }: Props) {
     if (!containerRef.current) return;
     // No initial view here: the marker effect below sets it, so tiles load once at the right zoom.
     const map = L.map(containerRef.current, { scrollWheelZoom: false });
+    // Keyboard users meet the zoom buttons before the pins: the control layer goes first in the
+    // DOM. It is absolutely positioned, so nothing moves on screen.
+    const controls = map.getContainer().querySelector('.leaflet-control-container');
+    if (controls) map.getContainer().prepend(controls);
     const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',

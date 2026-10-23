@@ -109,7 +109,7 @@ export function Figure({
 }
 
 /** The text equivalent of a chart, one click away (Our World in Data's "Table" tab). */
-export function NumbersTable({ caption, head, rows }: { caption: string; head: string[]; rows: (string | number)[][] }) {
+export function NumbersTable({ caption, head, rows, children }: { caption: string; head: string[]; rows: (string | number)[][]; children?: ReactNode }) {
   return (
     <details className="numbers">
       <summary className="numbers__toggle">
@@ -147,6 +147,7 @@ export function NumbersTable({ caption, head, rows }: { caption: string; head: s
         </tbody>
       </table>
       </div>
+      {children}
     </details>
   );
 }
@@ -211,9 +212,24 @@ export function StatusUnits({ issues, label }: { issues: Issue[]; label: string 
       </div>
       <NumbersTable
         caption={label}
-        head={['Status', 'Items', 'Share', 'Which items']}
-        rows={groups.map((g) => [ISSUE_STATUS_LABELS[g.status], g.items.length, `${Math.round((g.items.length / total) * 100)}%`, g.items.map((i) => i.title).join('; ')])}
-      />
+        head={['Status', 'Items', 'Share']}
+        rows={groups.map((g) => [ISSUE_STATUS_LABELS[g.status], g.items.length, `${Math.round((g.items.length / total) * 100)}%`])}
+      >
+        <div className="numbers__lists">
+          {groups.map((g) => (
+            <div key={g.status} className="numbers__group">
+              <p className="numbers__listhead">
+                {ISSUE_STATUS_LABELS[g.status]} ({g.items.length})
+              </p>
+              <ul className="numbers__list">
+                {g.items.map((i) => (
+                  <li key={i.id}>{i.title}</li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </NumbersTable>
     </div>
   );
 }
@@ -266,8 +282,8 @@ export function TopicBars({ rows, caption }: { rows: TopicRow[]; caption: string
       </ul>
       <NumbersTable
         caption={caption}
-        head={['Topic', 'Items', ...used.map((s) => ISSUE_STATUS_LABELS[s])]}
-        rows={rows.map((r) => [r.label, r.issues.length, ...used.map((s) => r.issues.filter((i) => statusOf(i) === s).length)])}
+        head={['Topic', 'Items', 'By status']}
+        rows={rows.map((r) => [r.label, r.issues.length, statusSentence(countStatuses(r.issues))])}
       />
     </div>
   );
@@ -334,7 +350,7 @@ export function RecordTimeline({ issues, meetings }: { issues: Issue[]; meetings
             className={`tl__note${axis.at(busiest[0]) > 55 ? ' tl__note--left' : ''}`}
             style={{ left: colLeft.get(busiest[0]), '--k': busiest[1].length } as CSSProperties}
           >
-            <strong>{shortDate(busiest[0])}</strong> is the latest status date for {plural(busiest[1].length, 'item')}
+            <strong>{plural(busiest[1].length, 'item')}</strong> as of {shortDate(busiest[0])}
           </span>
         )}
         <span className="tl__axis" />
@@ -416,11 +432,11 @@ export function MeetingColumns({ meetings, issues, href }: { meetings: Meeting[]
       </div>
       <NumbersTable
         caption="Items in this app linked to each meeting, by current status"
-        head={['Meeting', 'Items here', ...used.map((s) => ISSUE_STATUS_LABELS[s])]}
+        head={['Meeting', 'Items here', 'By status']}
         rows={rows.map((r) => [
           `${formatDate(r.m.date)}${sameDay(r) ? ((r.m.startTime ?? '') >= '12:00' ? ', evening' : ', daytime') : ''}`,
           r.items.length,
-          ...used.map((s) => r.items.filter((i) => statusOf(i) === s).length),
+          r.items.length ? statusSentence(countStatuses(r.items)) : 'None',
         ])}
       />
     </div>

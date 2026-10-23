@@ -3226,17 +3226,14 @@ section > .fine-print {
 }
 .atlas__title {
   font-weight: 800;
-  font-size: clamp(1.375rem, 4vw, 3rem);
-  line-height: 1.06;
+  font-size: clamp(1.375rem, 3.2vw, 2.5rem);
+  line-height: 1.1;
   letter-spacing: -0.03em;
-  max-width: 22ch;
+  max-width: 26ch;
+  text-wrap: balance;
 }
 .atlas__num {
   font-variant-numeric: lining-nums;
-  text-decoration: underline;
-  text-decoration-thickness: 0.08em;
-  text-underline-offset: 0.12em;
-  text-decoration-color: var(--rule-strong);
 }
 .atlas__note {
   font-size: 1rem;
@@ -3257,14 +3254,38 @@ section > .fine-print {
 .numbers__table {
   margin-top: 0;
 }
+/* Cells wrap; only the numbers stay on one line, so tables fit their column. */
 .numbers__table th,
 .numbers__table td {
+  white-space: normal;
+}
+.numbers__table .num {
   white-space: nowrap;
 }
-.numbers__table .numbers__text {
-  white-space: normal;
-  min-width: 18ch;
-  max-width: 48ch;
+.numbers__table tbody th {
+  min-width: 9ch;
+}
+.numbers__lists {
+  display: grid;
+  gap: 16px 32px;
+  margin-top: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+}
+.numbers__listhead {
+  font-weight: 700;
+  font-size: 0.9375rem;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--rule-strong);
+}
+.numbers__list {
+  margin-top: 6px;
+  padding-left: 1.1em;
+  font-size: 0.9375rem;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.numbers__list li + li {
+  margin-top: 3px;
 }
 
 /* On this page */
@@ -3376,4 +3397,44 @@ section > .fine-print {
 }
 .track__stop--multi .track__label {
   top: calc(100% + 2px);
+}
+
+/* Legends: the key sits beside the first line of a wrapped label. */
+.tl__legend li {
+  align-items: flex-start;
+}
+.tl__legend-dot,
+.tl__legend-meeting {
+  flex: none;
+  margin-top: 0.35em;
+}
+.outcome__title {
+  text-wrap: balance;
+}
+.outcome__note,
+.figure__sub,
+.feed__intro {
+  text-wrap: pretty;
+}
+.feed__intro--top {
+  margin: 12px 0 4px;
+}
+
+/* Glyphs on status swatches: white on the darker hues; in dark mode the lighter hues take a
+   dark glyph so each stays at 3:1 or better. */
+.swatch,
+.unit__glyph,
+.track__glyph {
+  color: var(--on-c, #fff);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) :is(.seg--proposed, .seg--completed, .seg--withdrawn, .seg--unknown) {
+    --on-c: #0f141b;
+  }
+}
+:root[data-theme='dark'] :is(.seg--proposed, .seg--completed, .seg--withdrawn, .seg--unknown) {
+  --on-c: #0f141b;
+}
+.numbers__table tr > :last-child {
+  padding-right: 0;
 }

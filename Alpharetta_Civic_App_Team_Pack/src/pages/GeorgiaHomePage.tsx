@@ -44,11 +44,11 @@ export function GeorgiaHomePage() {
       <section className="atlas" aria-labelledby="atlas-title">
         <div className="atlas__inner">
           <h2 id="atlas-title" className="atlas__title">
-            Start with any of Georgia’s <span className="atlas__num">{COUNTIES.length}</span> counties and{' '}
-            <span className="atlas__num">{MUNICIPALITIES.length}</span> cities and towns.
+            The chooser lists all <span className="atlas__num">{COUNTIES.length}</span> Georgia counties and{' '}
+            <span className="atlas__num">{MUNICIPALITIES.length}</span> cities, towns, and consolidated governments.
           </h2>
           <p className="atlas__note">
-            The location list covers every Georgia county and every incorporated city, town, and consolidated government in the{' '}
+            Counties and incorporated places come from the{' '}
             <a href={DIRECTORY_SOURCE.urls[1]} target="_blank" rel="noreferrer">
               <WithArrow text="U.S. Census Bureau’s 2020 place list" />
               <span className="visually-hidden"> (opens in a new tab)</span>
