@@ -9,10 +9,11 @@ import { SourceAction } from '../components/SourceAction';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import { BackLink } from '../components/BackLink';
-import { usePlaceHref } from '../services/placeContext';
+import { usePlaceHref, useRecordSources } from '../services/placeContext';
 
 export function DocumentDetailPage() {
   const href = usePlaceHref();
+  const sources = useRecordSources();
   const { documentId = '' } = useParams();
   const state = useAsync(async () => {
     const document = await getDocumentById(documentId);
@@ -34,18 +35,34 @@ export function DocumentDetailPage() {
   return (
     <article className="page detail">
       <BackLink fallbackTo={href('/archive')} fallbackLabel="Archive" />
-      <header className="detail__header">
-        <div className="card__top">
-          <span className="tag">{humanize(doc.documentType)}</span>
-          {isMock(doc) && <MockBadge record={doc} size="lg" />}
-        </div>
-        <h1 className="detail__title">{doc.title}</h1>
-        {doc.publishedDate && <p className="muted">Published {formatDate(doc.publishedDate)}</p>}
-      </header>
-      <MockNotice record={doc} kind="document" />
-
       <div className="detail__grid">
+        <header className="detail__header">
+          <div className="card__top detail__kicker">
+            <span className="tag">{humanize(doc.documentType)}</span>
+            {sources && <span className="detail__body">{sources}</span>}
+            {isMock(doc) && <MockBadge record={doc} size="lg" />}
+          </div>
+          <h1 className="detail__title">{doc.title}</h1>
+        </header>
+
+        <aside className="detail__side">
+          {doc.publishedDate && (
+            <dl className="record-meta">
+              <div className="record-meta__row">
+                <dt>Published</dt>
+                <dd className="record-meta__mono">{formatDate(doc.publishedDate)}</dd>
+              </div>
+            </dl>
+          )}
+          <section className="panel panel--sources" aria-labelledby="d-file-h">
+            <h2 id="d-file-h">Original file</h2>
+            <SourceAction url={doc.url} label="Open the original document" unavailableText="No file is linked for this record" />
+            <p className="panel__checked">Source: {doc.sourceName ?? 'not recorded'}</p>
+          </section>
+        </aside>
+
         <div className="detail__main">
+          <MockNotice record={doc} kind="document" />
           <section aria-labelledby="d-about-h">
             <h2 id="d-about-h">About this document</h2>
             <p className="prose">{doc.description || 'No description has been recorded for this document.'}</p>
@@ -75,14 +92,6 @@ export function DocumentDetailPage() {
             )}
           </section>
         </div>
-
-        <aside className="detail__side">
-          <section className="panel" aria-labelledby="d-file-h">
-            <h2 id="d-file-h">Original file</h2>
-            <SourceAction url={doc.url} label="Open the original document" unavailableText="No file is linked for this record" />
-            <p className="muted">Source: {doc.sourceName ?? 'not recorded'}</p>
-          </section>
-        </aside>
       </div>
     </article>
   );

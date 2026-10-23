@@ -10,10 +10,11 @@ import { MeetingStatusBadge } from '../components/StatusBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import { BackLink } from '../components/BackLink';
-import { usePlaceHref } from '../services/placeContext';
+import { usePlaceHref, useRecordSources } from '../services/placeContext';
 
 export function MeetingDetailPage() {
   const href = usePlaceHref();
+  const sources = useRecordSources();
   const { meetingId = '' } = useParams();
   const state = useAsync(async () => {
     const meeting = await getMeetingById(meetingId);
@@ -34,24 +35,50 @@ export function MeetingDetailPage() {
   return (
     <article className="page detail">
       <BackLink fallbackTo={href('/archive')} fallbackLabel="Archive" />
-      <header className="detail__header">
-        <div className="card__top">
-          <span className="tag">{meetingTypeLabel(meeting.meetingType)}</span>
-          {isMock(meeting) && <MockBadge record={meeting} size="lg" />}
-        </div>
-        <h1 className="detail__title">{meeting.title}</h1>
-        <div className="detail__status">
-          <MeetingStatusBadge status={meeting.status} />
-          <span className="muted">
-            {formatDate(meeting.date)}
-            {time ? ` at ${time}` : meeting.date ? ' (time not listed)' : ''}
-          </span>
-        </div>
-      </header>
-      <MockNotice record={meeting} kind="meeting" />
-
       <div className="detail__grid">
+        <header className="detail__header">
+          <div className="card__top detail__kicker">
+            <span className="tag">{meetingTypeLabel(meeting.meetingType)}</span>
+            {sources && <span className="detail__body">{sources}</span>}
+            {isMock(meeting) && <MockBadge record={meeting} size="lg" />}
+          </div>
+          <h1 className="detail__title">{meeting.title}</h1>
+        </header>
+
+        <aside className="detail__side">
+          <dl className="record-meta">
+            <div className="record-meta__row">
+              <dt>Status</dt>
+              <dd>
+                <MeetingStatusBadge status={meeting.status} />
+              </dd>
+            </div>
+            <div className="record-meta__row">
+              <dt>Date</dt>
+              <dd className="record-meta__mono">
+                {formatDate(meeting.date)}
+                {time ? ` at ${time}` : meeting.date ? ' (time not listed)' : ''}
+              </dd>
+            </div>
+          </dl>
+          <section className="panel panel--sources" aria-labelledby="m-watch-h">
+            <h2 id="m-watch-h">Watch and verify</h2>
+            <ul className="plain-list">
+              <li>
+                <SourceAction url={meeting.recordingUrl} label="Watch the recording" unavailableText={meeting.status === 'scheduled' ? 'No recording yet: this meeting hasn’t happened' : 'Recording not available'} />
+              </li>
+              <li>
+                <SourceAction url={meeting.officialPageUrl} label="Official meeting page" unavailableText="Official page not linked yet" />
+              </li>
+            </ul>
+            <p className="panel__checked">
+              {meeting.lastVerifiedAt ? `Last checked ${formatDate(meeting.lastVerifiedAt.slice(0, 10))}.` : 'Not yet checked against an official source.'}
+            </p>
+          </section>
+        </aside>
+
         <div className="detail__main">
+          <MockNotice record={meeting} kind="meeting" />
           <section aria-labelledby="m-summary-h">
             <h2 id="m-summary-h">About this meeting</h2>
             <p className="prose">{meeting.summary || 'No summary has been written for this meeting yet.'}</p>
@@ -60,7 +87,7 @@ export function MeetingDetailPage() {
           <section aria-labelledby="m-docs-h">
             <h2 id="m-docs-h">Agenda and documents</h2>
             {documents.length ? (
-              <ul className="card-grid card-grid--tight">
+              <ul className="doc-list">
                 {documents.map((d) => (
                   <li key={d.id}>
                     <DocumentCard document={d} />
@@ -89,23 +116,6 @@ export function MeetingDetailPage() {
             <p className="fine-print">Being on an agenda does not mean an item was approved. Check each issue’s status.</p>
           </section>
         </div>
-
-        <aside className="detail__side">
-          <section className="panel" aria-labelledby="m-watch-h">
-            <h2 id="m-watch-h">Watch and verify</h2>
-            <ul className="plain-list">
-              <li>
-                <SourceAction url={meeting.recordingUrl} label="Watch the recording" unavailableText={meeting.status === 'scheduled' ? 'No recording yet: this meeting hasn’t happened' : 'Recording not available'} />
-              </li>
-              <li>
-                <SourceAction url={meeting.officialPageUrl} label="Official meeting page" unavailableText="Official page not linked yet" />
-              </li>
-            </ul>
-            <p className="muted">
-              {meeting.lastVerifiedAt ? `Last checked ${formatDate(meeting.lastVerifiedAt.slice(0, 10))}.` : 'Not yet checked against an official source.'}
-            </p>
-          </section>
-        </aside>
       </div>
     </article>
   );

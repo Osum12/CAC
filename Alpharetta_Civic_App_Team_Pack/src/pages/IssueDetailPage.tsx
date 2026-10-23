@@ -12,10 +12,11 @@ import { IssueStatusBadge } from '../components/StatusBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import type { Issue, Meeting } from '../types/civic';
-import { usePlaceHref } from '../services/placeContext';
+import { usePlaceHref, useRecordSources } from '../services/placeContext';
 
 export function IssueDetailPage() {
   const href = usePlaceHref();
+  const sources = useRecordSources();
   const { issueId = '' } = useParams();
   const state = useAsync(async () => {
     const issue = await getIssueById(issueId);
@@ -36,26 +37,56 @@ export function IssueDetailPage() {
   return (
     <article className="page detail">
       <BackLink fallbackTo={href('/')} fallbackLabel="All issues" />
-      <header className="detail__header">
-        <div className="card__top">
-          <span className="tag">{humanize(issue.category)}</span>
-          {isMock(issue) && <MockBadge record={issue} size="lg" />}
-        </div>
-        <h1 className="detail__title">{issue.title}</h1>
-        <div className="detail__status">
-          <IssueStatusBadge status={issue.status} />
-          <span className="muted">{issue.statusAsOf ? `Status as of ${formatDate(issue.statusAsOf)}` : 'No status date recorded'}</span>
-        </div>
-      </header>
-      <MockNotice record={issue} kind="issue" />
-
       <div className="detail__grid">
+        <header className="detail__header">
+          <div className="card__top detail__kicker">
+            <span className="tag">{humanize(issue.category)}</span>
+            {sources && <span className="detail__body">{sources}</span>}
+            {isMock(issue) && <MockBadge record={issue} size="lg" />}
+          </div>
+          <h1 className="detail__title">{issue.title}</h1>
+        </header>
+
+        <aside className="detail__side">
+          <dl className="record-meta">
+            <div className="record-meta__row">
+              <dt>Status</dt>
+              <dd>
+                <IssueStatusBadge status={issue.status} />
+                <span className="record-meta__note">{issue.statusAsOf ? `Status as of ${formatDate(issue.statusAsOf)}` : 'No status date recorded'}</span>
+              </dd>
+            </div>
+            <div className="record-meta__row">
+              <dt>Meetings</dt>
+              <dd className="record-meta__mono">
+                {meetings.length} linked
+              </dd>
+            </div>
+          </dl>
+          <section className="panel panel--sources" aria-labelledby="sources-h">
+            <h2 id="sources-h">Official sources</h2>
+            <p className="panel__lede">The summary on this page is based on these records.</p>
+            {issue.sourceUrls.length ? (
+              <ul className="plain-list">
+                {issue.sourceUrls.map((url, i) => (
+                  <li key={i}>
+                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
+            )}
+          </section>
+        </aside>
+
         <div className="detail__main">
+          <MockNotice record={issue} kind="issue" />
           <section aria-labelledby="summary-h">
             <h2 id="summary-h">In plain language</h2>
             <p className="prose">{issue.summary || 'No summary has been written for this issue yet.'}</p>
             {!isMock(issue) && (
-              <p className="fine-print">This summary is a plain-language rewrite of the official documents listed below. Check them for the exact wording.</p>
+              <p className="disclosure">This summary is a plain-language rewrite of the official documents listed below. Check them for the exact wording.</p>
             )}
           </section>
 
@@ -70,14 +101,16 @@ export function IssueDetailPage() {
             {missingMeetings > 0 && <MissingNote count={missingMeetings} noun="meeting" />}
             <p className="fine-print">
               Being on an agenda does not mean an item was approved.
-              {!isMock(issue) && ' The status above comes from the recorded vote or official recommendation.'}
+              {!isMock(issue) && ' The status shown on this page comes from the recorded vote or official recommendation.'}
             </p>
           </section>
+
+          <LocationPanel issue={issue} />
 
           <section aria-labelledby="docs-h">
             <h2 id="docs-h">Documents</h2>
             {documents.length ? (
-              <ul className="card-grid card-grid--tight">
+              <ul className="doc-list">
                 {documents.map((d) => (
                   <li key={d.id}>
                     <DocumentCard document={d} />
@@ -90,24 +123,6 @@ export function IssueDetailPage() {
             {missingDocs > 0 && <MissingNote count={missingDocs} noun="document" />}
           </section>
         </div>
-
-        <aside className="detail__side">
-          <section className="panel" aria-labelledby="sources-h">
-            <h2 id="sources-h">Official sources</h2>
-            {issue.sourceUrls.length ? (
-              <ul className="plain-list">
-                {issue.sourceUrls.map((url, i) => (
-                  <li key={i}>
-                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
-            )}
-          </section>
-          <LocationPanel issue={issue} />
-        </aside>
       </div>
     </article>
   );
@@ -151,7 +166,7 @@ function LocationPanel({ issue }: { issue: Issue }) {
   const loc = issue.location;
   const coords = getValidCoordinates(issue);
   return (
-    <section className="panel" aria-labelledby="location-h">
+    <section className="panel panel--location" aria-labelledby="location-h">
       <h2 id="location-h">Location</h2>
       {!loc ? (
         <p className="muted">No location is recorded for this issue, so it does not appear on the map.</p>
