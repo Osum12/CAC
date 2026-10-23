@@ -747,9 +747,10 @@ select[aria-invalid='true'] {
   background: var(--tonal);
   color: var(--link);
 }
+/* The first step is filled in dark indigo in both themes; the others stay tonal. */
 .steps__item:first-child::before {
-  background: var(--accent);
-  color: var(--accent-ink);
+  background: #2f3a8f;
+  color: #ffffff;
 }
 .steps__name {
   font-size: 1.5rem;
