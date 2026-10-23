@@ -53,15 +53,20 @@ Durable record of the AI-assisted build session (Claude Code) started 2026-10-21
 | 2026-10-22 | County model (user decision): one Fulton County page, cities Coming Soon, city dropdown kept, "available now" signs removed | `npm test` 8 files, 119 passed; typecheck, lint, build passed |
 | 2026-10-22 | Sweep: 16 routes x 320/375/430/768/1024/1440 (Edge) | 0 horizontal overflow, 0 console errors. Flags are exempt: inline text links, the Near Me radio (whole card is the target), decorative badge dots |
 | 2026-10-22 | Keyboard check of the chooser (Edge) | Tab order logical; type-ahead selects county and city; Enter opens the page and moves focus to main; 3px focus ring |
+| 2026-10-22 | Fulton County data (user decision: replace the Alpharetta records) | 50 records from Fulton County Legistar: 8 Board of Commissioners meetings (Aug 3 – Oct 7, 2026), 24 agenda items, 18 documents. Statuses from recorded motions and roll calls (19 approved, 3 under consideration, 2 denied); 6 addresses geocoded with the Census geocoder; 62/62 URLs returned HTTP 200 |
+| 2026-10-22 | Simplified UI for the demo video | Removed shortcut tiles and date filters; Near Me uses one public start (Fulton County Government Center), no address box; SVG row icons; standalone links at least 24px tall |
+| 2026-10-22 | `npm test`, typecheck, lint, build | 8 files, 120 tests passed; all others passed |
+| 2026-10-22 | Sweep: 13 routes x 320/375/430/768/1024/1440 (Edge), plus dark mode | 0 horizontal overflow, 0 console errors |
 
 ## Known limitations
 
-- Only Fulton County has a page, and its records are all from the City of Alpharetta (labelled). Fulton County government and the other 14 Fulton cities have no records yet. Every other county and every city shows Coming Soon.
+- Only Fulton County has a page, with 50 Fulton County Board of Commissioners records (Aug 3 – Oct 7, 2026). City governments in Fulton have no records yet. Every other county and every city shows Coming Soon.
+- Minutes for these meetings were not published on 2026-10-22, so results come from Legistar's recorded motions and roll calls. Check them against the minutes when published.
 - The Georgia directory is the Census 2020 list: places incorporated since (e.g. Mableton, 2023; Mulberry, 2024) are missing.
 
 - 2026-10-22: replaced the fictional records with 19 curated real records (see `data/README.md`). The fictional pack moved to `src/test/fixtures/` for tests. Each fact was checked against downloaded official minutes, agendas or packets. The team should still open every source link themselves.
 - Map points for real issues are approximate (U.S. Census geocoder, from addresses in city documents) and labelled as such.
-- No geocoding in the app: typed addresses are rejected with an honest message. The only starting location is Alpharetta City Hall.
+- No geocoding in the app. Near Me measures from one public place, the Fulton County Government Center.
 - Map tiles come from the public OpenStreetMap server and need internet access. The list still works offline.
 - Citywide has keyword, topic, status and "Updated" date filters; the Archive has keyword search, date and type filters. Date ranges are relative to today, so results change as time passes. Issues are dated by `statusAsOf`, and records with no date never match a date range.
 

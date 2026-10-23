@@ -30,7 +30,7 @@ describe('nearMe', () => {
     expect(distanceMiles({ latitude: 34, longitude: -84 }, { latitude: 34.01, longitude: -84 })).toBeCloseTo(0.69, 1);
   });
 
-  it('accepts only finite coordinates inside the Alpharetta area', () => {
+  it('accepts only finite coordinates inside the Fulton County area', () => {
     expect(getValidCoordinates(at('a', 34.07, -84.29))).not.toBeNull();
     expect(getValidCoordinates(at('b', null, -84.29))).toBeNull();
     expect(getValidCoordinates(at('c', 0, 0))).toBeNull();

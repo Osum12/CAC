@@ -23,7 +23,7 @@ export function NotFound({ kind = 'page' }: { kind?: keyof typeof COPY }) {
           {city ? (
             <>
               <Link to={href('/')} className="button">
-                Go to Citywide
+                Go to Countywide
               </Link>
               <Link to={href('/archive')} className="button button--ghost">
                 Browse the archive

@@ -2,9 +2,9 @@
 
 A student prototype for the Congressional App Challenge. It helps Georgia residents see what their local government is working on: meetings, proposals, and public documents in one place, in plain language, with a path back to the original source.
 
-> **Coverage: only Fulton County has civic records, and they all come from the City of Alpharetta.** You can choose any of Georgia's 159 counties and, within a county, any of 538 incorporated cities, towns and consolidated governments. "All of Fulton County" opens the Fulton County page; every other county, and every city (Alpharetta included), shows a "Coming soon" page with no records. The Fulton County page labels its records "From the City of Alpharetta" and says other Fulton cities and Fulton County government aren't included yet.
+> **Coverage: only Fulton County has civic records, from the Fulton County Board of Commissioners.** You can choose any of Georgia's 159 counties and, within a county, any of 538 incorporated cities, towns and consolidated governments. "All of Fulton County" opens the Fulton County page; every other county, and every city, shows a "Coming soon" page with no records. City governments inside Fulton County are not included.
 
-> **Data:** `data/` holds 19 real records (5 meetings, 5 issues, 9 documents) from City of Alpharetta City Council and Planning Commission meetings in September and October 2026. Each was checked against official agendas and minutes on 2026-10-22 and links to its source. This is a small selected set, not a complete or live archive. See `data/README.md`.
+> **Data:** `data/` holds 50 real records (8 meetings, 24 agenda items, 18 documents) from Fulton County Board of Commissioners meetings between August 3 and October 7, 2026, taken from the county's official Legistar system on 2026-10-22. Each links to its official record. This is a selected set, not a complete or live archive. See `data/README.md`.
 
 ## Features (P0 demo scope)
 
@@ -13,10 +13,10 @@ A student prototype for the Congressional App Challenge. It helps Georgia reside
 | Georgia home | `/` | Location chooser: county (all 159), then an optional city or town filtered to that county, with "All of <county>" first. The selection is kept in the URL (`/?county=fulton`), so refresh and Back keep it, and changing the county clears the city. Shows no records. |
 | Other counties | `/county/:countyId` | "Coming soon" on every sub-path (e.g. `/county/cobb/archive?q=…`), with links to the cities and towns in the county. No records. Unknown ids show "Location not found". |
 | Cities | `/:cityId/*` | Every city shows "Coming soon" on every sub-path; cities in Fulton County point to the Fulton County page. No records. |
-| Countywide (Fulton) | `/county/fulton` | Cover hero ("What's on the table in Fulton County") with a prominent issue search and a "Next at Alpharetta City Hall" panel (next meeting, its agenda items and agenda PDF, latest recorded decision, all from the data); shortcut tiles (issues near me, upcoming meetings, recordings, agendas and minutes); issues with topic, status and "Updated" date filters (kept in the URL, e.g. `/county/fulton?topic=transportation&when=30d`); issue and meeting lists are labelled "From the City of Alpharetta"; each issue card links to its official record and, when it has a map point, to Near Me with that issue selected; upcoming and recent meetings with agenda PDF links. |
+| Countywide (Fulton) | `/county/fulton` | Cover hero ("What's on the table in Fulton County") with an issue search and a panel showing the next meeting (when one is scheduled) and the latest decision; issues with topic and status filters (kept in the URL, e.g. `/county/fulton?topic=transportation&when=30d`); issue and meeting lists are labelled "From the Fulton County Board of Commissioners"; each issue card links to its official record and, when it has a map point, to Near Me with that issue selected; upcoming and recent meetings with agenda PDF links. |
 | Issue detail | `/county/fulton/issues/:issueId` | Plain-language summary (labelled as a rewrite of the sources), status with its "as of" date, why it may matter, a dated timeline of related meetings, documents with direct PDF links, official sources, location with "View on map". |
-| Near Me | `/county/fulton/near-me` | Start from Alpharetta City Hall to sort issues by straight-line distance. A Leaflet map shows pins only for issues with coordinates; these are approximate points looked up from addresses in city documents, and the map labels them that way. Choosing a pin highlights the matching list item, and the reverse. Every item says why it's listed. |
-| Archive | `/county/fulton/archive` | Meetings and documents in one list, with keyword search (`?q=`), a date filter (`?when=upcoming|30d|90d|year`) and type filters for All, Videos, Agendas and Documents (`?type=`); rows link straight to recordings and PDFs. |
+| Near Me | `/county/fulton/near-me` | Issues are sorted by straight-line distance from one public place, the Fulton County Government Center; the app never asks for an address. A Leaflet map shows pins only for issues with coordinates; these are approximate points looked up from addresses in county documents, and the map labels them that way. Choosing a pin highlights the matching list item, and the reverse. Every item says why it's listed. |
+| Archive | `/county/fulton/archive` | Meetings and documents in one list, with keyword search (`?q=`) and type filters for All, Videos, Agendas and Documents (`?type=`); rows link straight to recordings and PDFs. |
 | Meeting detail | `/county/fulton/meetings/:meetingId` | Date and time, recording and official-page links when they exist, agenda and documents, related issues. |
 | Document detail | `/county/fulton/documents/:documentId` | Description, source, parent meeting, related issues, and the original file link when one exists. |
 
@@ -29,7 +29,7 @@ Honesty rules built into the code:
 
 The original links (`/archive`, `/near-me`, `/issues/…`, `/meetings/…`, `/documents/…`) redirect to the same page under `/county/fulton`, keeping their query string, and so do old filtered links to `/` (e.g. `/?topic=…`).
 
-Out of scope for this version: live city data, accounts, notifications, civic records for any place other than the City of Alpharetta records on the Fulton County page.
+Out of scope for this version: live city data, accounts, notifications, civic records for any place other than Fulton County.
 
 ## Tech stack
 
@@ -67,11 +67,11 @@ The map background needs internet access. Without it, the app shows a notice and
 ## How the code is organized
 
 ```text
-data/                 meetings.json, issues.json, documents.json (Alpharetta records)
+data/                 meetings.json, issues.json, documents.json (Fulton County records)
   georgia/            directory.json (counties and municipalities) built from source/ (Census files)
 scripts/              build-georgia-directory.mjs
 src/
-  config/coverage.ts  The one list of counties that have civic records, and their sources (Fulton: City of Alpharetta)
+  config/coverage.ts  The one list of counties that have civic records, and their sources (Fulton: Board of Commissioners)
   types/civic.ts      Shared Meeting / Issue / CivicDocument types (matches docs/DATA_CONTRACT.md)
   services/
     civicData.ts      The only module that reads the fixtures; list, lookup and relationship functions

@@ -32,9 +32,9 @@ describe('Georgia county directory', () => {
     expect(COUNTIES.every((c) => /^13\d{3}$/.test(c.fips))).toBe(true);
   });
 
-  it('gives only Fulton County civic records, and says they come from the City of Alpharetta', () => {
-    // Tripwire: the only dataset is City of Alpharetta records. Change this only with a new verified dataset.
-    expect(CIVIC_DATA_COVERAGE).toEqual({ fulton: [{ name: 'City of Alpharetta', meetingPlace: 'Alpharetta City Hall' }] });
+  it('gives only Fulton County civic records, from the Fulton County Board of Commissioners', () => {
+    // Tripwire: the only dataset is Fulton County Board of Commissioners records. Change this only with a new verified dataset.
+    expect(CIVIC_DATA_COVERAGE).toEqual({ fulton: [{ name: 'Fulton County Board of Commissioners', meetingPlace: 'the Government Center' }] });
     expect(availableCounties().map((c) => c.id)).toEqual(['fulton']);
     expect(COUNTIES.filter((c) => c.id !== 'fulton').every((c) => !c.civicDataAvailable && c.recordSources.length === 0)).toBe(true);
     expect(getCounty(LEGACY_COUNTY_ID)?.civicDataAvailable).toBe(true);

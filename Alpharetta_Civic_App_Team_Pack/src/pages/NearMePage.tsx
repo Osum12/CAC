@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useUrlParams } from '../services/useUrlParams';
 import { getIssues } from '../services/civicData';
@@ -11,11 +11,13 @@ import { MockBadge, isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { usePlaceHref } from '../services/placeContext';
+import { PinIcon } from '../components/PinIcon';
 
 export function NearMePage() {
   usePageTitle('Near Me');
   const { params, setParam } = useUrlParams();
-  const origin = DEMO_LOCATIONS.find((l) => l.id === params.get('loc')) ?? null;
+  // One public starting point; nothing about the viewer's own location is asked for or stored.
+  const origin = DEMO_LOCATIONS[0];
   const selectedId = params.get('issue');
   const state = useAsync(() => getIssues(), []);
 
@@ -62,12 +64,17 @@ export function NearMePage() {
       <header className="page-header">
         <h1>Near Me</h1>
         <p className="page-header__lede">
-          See which issues have a map point close to a location. Every issue stays in the list. Distance helps you sort them, but
-          it doesn’t tell you whether an issue affects a particular home.
+          Issues with a map location, nearest first. Distance helps you find nearby items, but it doesn’t tell you whether an issue
+          affects a particular home.
         </p>
       </header>
 
-      <LocationPicker originId={origin?.id ?? null} onChoose={(id) => updateParam('loc', id)} />
+      <p className="nearme__start">
+        <PinIcon className="nearme__start-icon" />
+        <span>
+          Distances are measured from <strong>{origin.label}</strong>, {origin.description}.
+        </span>
+      </p>
 
       {state.status === 'loading' && <LoadingState rows={4} />}
       {state.status === 'error' && <ErrorState onRetry={state.retry} />}
@@ -89,9 +96,8 @@ export function NearMePage() {
             </section>
             <section className="nearme__feed" aria-labelledby="feed-h">
               <h2 id="feed-h" className="nearme__feed-title">
-                {origin ? `Sorted by distance from ${origin.label}` : 'All issues'}
+                Sorted by distance from {origin.label}
               </h2>
-              {!origin && <p className="muted">Choose a starting location above to sort this list by distance.</p>}
               <ol className="feed" ref={listRef}>
                 {ranked.map((r) => (
                   <li key={r.issue.id}>
@@ -111,84 +117,6 @@ export function NearMePage() {
           </div>
         ))}
     </div>
-  );
-}
-
-function LocationPicker({ originId, onChoose }: { originId: string | null; onChoose: (id: string | null) => void }) {
-  const [address, setAddress] = useState('');
-  const [message, setMessage] = useState<{ tone: 'error' | 'info'; text: string } | null>(null);
-
-  // There is no geocoding service in this app. An entered address is never
-  // looked up, stored, or logged; the user is told plainly and offered the example locations.
-  const onSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const value = address.trim();
-    if (!value) {
-      setMessage({ tone: 'error', text: 'Enter an address, or choose a starting location instead.' });
-      return;
-    }
-    if (value.length < 5 || !/[a-z]/i.test(value)) {
-      setMessage({ tone: 'error', text: 'That doesn’t look like a street address. Try something like a street number and name.' });
-      return;
-    }
-    setAddress('');
-    setMessage({
-      tone: 'info',
-      text: 'Address lookup isn’t available yet, so we didn’t search for that address and haven’t saved it. Choose a starting location above instead.',
-    });
-  };
-
-  return (
-    <section className="locator" aria-labelledby="locator-h">
-      <h2 id="locator-h" className="locator__title">
-        Choose a location
-      </h2>
-      <div className="locator__grid">
-        <fieldset className="locator__demo">
-          <legend>Start from</legend>
-          <div className="locator__options">
-            {[{ id: null, label: 'No location', description: 'Show every issue unsorted' }, ...DEMO_LOCATIONS].map((l) => (
-              <label key={l.id ?? 'none'} className="radio-card">
-                <input
-                  type="radio"
-                  name="demo-location"
-                  checked={originId === l.id}
-                  onChange={() => {
-                    onChoose(l.id);
-                    setMessage(null);
-                  }}
-                />
-                <span className="radio-card__label">{l.label}</span>
-                <span className="radio-card__desc">{l.description}</span>
-              </label>
-            ))}
-          </div>
-        </fieldset>
-        <form className="locator__address" onSubmit={onSubmit} noValidate>
-          <label htmlFor="address-input">Or enter an address</label>
-          <div className="input-row">
-            <input
-              id="address-input"
-              type="text"
-              autoComplete="off"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              aria-describedby="address-help address-msg"
-              aria-invalid={message?.tone === 'error'}
-            />
-            <button type="submit" className="button">
-              Search
-            </button>
-          </div>
-          <p id="address-help" className="fine-print">
-            Address search isn’t available yet. Your address is never saved.
-          </p>
-          <p id="address-msg" className={`form-msg${message ? ` form-msg--${message.tone}` : ''}`} role="status" aria-live="polite">
-            {message?.text}
-          </p>
-        </form>
-      </div>
-    </section>
   );
 }
 

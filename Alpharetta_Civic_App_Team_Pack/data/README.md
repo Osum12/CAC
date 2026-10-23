@@ -1,31 +1,38 @@
-# Alpharetta Civic App — Data
+# Georgia Civic — Data
 
-The records in this folder are what the app shows. As of 2026-10-22 they are **curated real records** (`dataMode: "curated"`, `mockOnly: false`): 5 meetings, 5 issues and 9 documents from City of Alpharetta City Council and Planning Commission meetings in September and October 2026.
+The records in this folder are what the app shows. As of 2026-10-22 they are **curated real records** (`dataMode: "curated"`, `mockOnly: false`) from the **Fulton County Board of Commissioners**: 8 meetings (August 3 to October 7, 2026), 24 agenda items ("issues"), and 18 documents (8 agendas and 10 supporting PDFs). That is 50 records.
 
-The original fictional fixture pack lives in `src/test/fixtures/` and is used only by the automated tests.
+The earlier City of Alpharetta records were removed from the app on 2026-10-22 at the team's request; they remain in the git history. The fictional fixture pack in `src/test/fixtures/` is used only by the automated tests.
 
 ## Where the facts come from
 
-Every record was checked against official City of Alpharetta documents on the city's meeting portal, https://alpharettaga.portal.civicclerk.com/, which is linked from https://www.alpharetta.ga.us/public-meetings:
+Everything comes from Fulton County's official agenda system, Legistar (https://fulton.legistar.com/), read through its public web API on 2026-10-22:
 
-| Meeting | Portal page | Evidence used |
-|---|---|---|
-| Planning Commission, Sept 3, 2026 | event/4577 | Agenda (fileId 11516). Its outcome is taken from the Sept 28 Council minutes, not from the "unofficial" Planning Commission minutes. |
-| City Council, Sept 14, 2026 | event/4615 | Agenda (11541), Official Minutes (11626) |
-| City Council, Sept 28, 2026 | event/4616 | Agenda (11577), Official Minutes (11625) |
-| Planning Commission, Oct 1, 2026 | event/4578 | Agenda (11569), packet (11576). Its outcome is taken from the Oct 26 Council packet. |
-| City Council, Oct 26, 2026 (scheduled) | event/4619 | Agenda (11623), packet (11624) |
+- Meetings: `https://webapi.legistar.com/v1/fulton/events` (Board of Commissioners, August 1 to November 15, 2026). No later meetings were listed.
+- Agenda items, motions and results: `https://webapi.legistar.com/v1/fulton/events/{id}/eventitems`, and roll-call votes from `/eventitems/{id}/votes`.
+- Agendas: the official agenda PDF for each meeting. These are issued before the meeting, so they list items but not results.
+- Supporting documents: the PDFs attached to each item (resolutions, fact sheets, presentations). Amounts, addresses and unit counts in the summaries come from these.
+- Recordings: each meeting's video in the county's Granicus player, linked from Legistar.
 
-Issue statuses come only from votes recorded in official minutes or official agenda packets. Agenda inclusion is never treated as approval. **Royal 400 Data Center is "under consideration" until City Council votes; update it after the Oct 26, 2026 meeting.**
+Statuses come from the recorded motions, not from the item titles:
+- "Approved" means a motion to approve passed. Vote counts are from the roll call.
+- "Denied" is used for items whose motion to approve failed (26-0601, 26-0678; 26-0679 is described inside the AI policy issue).
+- "Under consideration" is used for items that were held (26-0604, 26-0674) and for the ethics code, which was introduced but still needs an adopting ordinance.
+
+Minutes for these meetings were not yet published on 2026-10-22. When they are, check each result against them.
+
+All 62 URLs in the data returned HTTP 200 on 2026-10-22.
 
 ## Map locations
 
-Street addresses are quoted from the city documents. Their coordinates were looked up with the U.S. Census Bureau geocoder (https://geocoding.geo.census.gov/) on 2026-10-22, so they are marked `locationType: "approximate"` and `verified: false`. The app labels them as approximate. Items whose documents give no street address have no coordinates and no map pin.
+Six items have a street address in their documents: the county jail (901 Rice Street NW), St. Mark AME Church (491 James P. Brawley Dr NW), and four affordable housing sites (834 Thurmond St NW, 280 James P. Brawley Dr NW, 383 Paines Ave NW, 404 Oliver St NW). Their coordinates were looked up with the U.S. Census Bureau geocoder on 2026-10-22, so they are `locationType: "approximate"` and `verified: false`. All other items are countywide or have no single address, so they have no pin.
+
+Near Me measures distance from one public place, the Fulton County Government Center (141 Pryor Street SW, Atlanta), also geocoded with the Census geocoder. The app never asks for or stores anyone's own address.
 
 ## Adding or updating a record
 
-1. Find the item on the city portal and open the official agenda, minutes, or staff report.
-2. Write the summary using only what the document says. Distinguish what was discussed from what was decided.
+1. Find the item on https://fulton.legistar.com/ and open its item record, agenda and attachments.
+2. Write the summary using only what the documents and the recorded motion say. Distinguish what was discussed from what was decided.
 3. Use only URLs you have opened. Set `lastVerifiedAt` (meetings) and `statusAsOf` (issues).
 4. Keep IDs stable and update relationships in both directions (issue ↔ meeting, issue ↔ document, meeting → agenda document).
 5. Run `npm run validate:data` and `npm test`.
@@ -43,4 +50,4 @@ Street addresses are quoted from the city documents. Their coordinates were look
 
 Census-designated places (unincorporated communities) are left out. The two "(balance)" rows for Athens-Clarke and Augusta-Richmond are kept under the government's name. A place can be in several counties (Atlanta is in DeKalb and Fulton). The list is as of 2020, so places incorporated since then aren't in it yet.
 
-Which places have civic records is decided only in `src/config/coverage.ts`. Today that is Fulton County, whose page shows the City of Alpharetta records in this folder, labelled with that source. Cities have no pages of their own yet. To add a place, first build and verify its own dataset; never copy or relabel Alpharetta's records.
+Which places have civic records is decided only in `src/config/coverage.ts`. Today that is Fulton County, whose page shows the Board of Commissioners records in this folder. Cities have no pages of their own yet. To add a place, first build and verify its own dataset; never copy or relabel another place's records.

@@ -156,11 +156,11 @@ export function DocumentCard({ document, headingLevel = 3 }: { document: CivicDo
           {document.title}
         </Link>
       </H>
-      <p className="card__when">Published {formatDate(document.publishedDate, 'date not provided')}</p>
+      {document.publishedDate && <p className="card__when">Published {formatDate(document.publishedDate)}</p>}
       <div className="card__actions">
         {url ? (
           <ExternalAction href={url} context={document.title}>
-            {/GetMeetingFileStream/.test(url) ? 'Open PDF' : 'Open document'}
+            {/GetMeetingFileStream|\.pdf$/i.test(url) ? 'Open PDF' : 'Open document'}
           </ExternalAction>
         ) : (
           <span className="card__action card__action--muted">No file linked yet</span>

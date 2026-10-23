@@ -89,7 +89,7 @@ describe('Location chooser', () => {
     expect(screen.getByRole('status')).toHaveTextContent('Alpharetta is coming soon. Choose “All of Fulton County”');
     await explore();
     expect(screen.getByRole('heading', { level: 1, name: 'Alpharetta is coming soon.' })).toBeInTheDocument();
-    expect(screen.getByText('Records from the City of Alpharetta are on the Fulton County page for now.')).toBeInTheDocument();
+    expect(screen.getByText('Alpharetta is in Fulton County, which has its own page.')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Explore Fulton County' })).toHaveAttribute('href', '/county/fulton');
     expect(url()).toBe('/alpharetta');
     expect(loads).toBe(0);
@@ -200,7 +200,7 @@ describe('Routing', () => {
 
   it.each([
     ['/archive?type=videos', '/county/fulton/archive?type=videos'],
-    ['/near-me?loc=city-hall', '/county/fulton/near-me?loc=city-hall'],
+    ['/near-me?issue=issue-mock-005', '/county/fulton/near-me?issue=issue-mock-005'],
     ['/issues/issue-mock-001', '/county/fulton/issues/issue-mock-001'],
     ['/meetings/meeting-mock-001', '/county/fulton/meetings/meeting-mock-001'],
     ['/documents/document-mock-001', '/county/fulton/documents/document-mock-001'],

@@ -50,6 +50,7 @@ export function humanize(value: string | null | undefined): string {
 const MEETING_TYPE_LABELS: Record<string, string> = {
   city_council: 'City Council',
   planning_commission: 'Planning Commission',
+  board_of_commissioners: 'Board of Commissioners',
   other_public_meeting: 'Public meeting',
 };
 export const meetingTypeLabel = (t: string) => MEETING_TYPE_LABELS[t] ?? humanize(t);
@@ -89,6 +90,9 @@ export function formatWeekday(iso: string | null): string | null {
 
 /** Names a source link by where it points, so readers know what they will open. */
 export function sourceLabel(url: string, index = 0): string {
+  if (/legistar\.com\/LegislationDetail\.aspx/.test(url)) return 'Item record on the county’s Legistar site';
+  if (/legistar\.com\/MeetingDetail\.aspx/.test(url)) return 'Meeting page on the county’s Legistar site';
+  if (/legistar1\.com\/.*\.pdf$/i.test(url)) return 'Official document (PDF)';
   if (/portal\.civicclerk\.com\/event\//.test(url)) return 'Meeting page on the city’s portal';
   if (/civicclerk\.com\/.*GetMeetingFileStream/.test(url)) return 'Official meeting document (PDF)';
   return `Official source ${index + 1}`;

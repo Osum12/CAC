@@ -2,9 +2,8 @@ import { useRef, type ReactNode, type RefObject } from 'react';
 import { Link } from 'react-router-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
-import { DATE_RANGE_LABELS, filterIssues, isFiltering, statusesIn, topicsIn, type DateRange, type IssueFilterState } from '../services/filters';
+import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState } from '../services/filters';
 import { formatDate, formatTime, formatWeekdayDate, humanize, ISSUE_STATUS_LABELS, safeUrl, todayIso } from '../services/format';
-import { DEMO_LOCATIONS } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
 import { IssueCard, MeetingCard } from '../components/Cards';
@@ -26,9 +25,6 @@ export function splitMeetings(meetings: Meeting[], today = todayIso()) {
   return { upcoming, recent };
 }
 
-/** Issue dates (when a status was set) are never in the future, so "Upcoming" isn't offered here. */
-const ISSUE_DATE_RANGES: Exclude<DateRange, '' | 'upcoming'>[] = ['30d', '90d', 'year'];
-
 /** The agenda for a meeting: prefers a plain agenda over a packet. */
 export function agendaFor(meeting: Meeting, documents: CivicDocument[]): CivicDocument | null {
   const docs = meeting.agendaDocumentIds.map((id) => documents.find((d) => d.id === id)).filter((d): d is CivicDocument => Boolean(d));
@@ -42,7 +38,6 @@ function lastChecked(meetings: Meeting[]): string | null {
 }
 
 export function CitywidePage() {
-  const href = usePlaceHref();
   usePageTitle('Countywide');
   const place = usePlace();
   const sources = useRecordSources();
@@ -74,7 +69,7 @@ export function CitywidePage() {
             <h1 id="citywide-title" className="hero__title">
               <span className="hero__line">What’s on the table</span> <span className="hero__line">in {place?.name}</span>
             </h1>
-            <p className="hero__lede">Recent proposals, decisions, and public meetings, explained in plain language with a link to every official source.</p>
+            <p className="hero__lede">Recent decisions and public meetings of the {sources}, in plain language, with a link to every official record.</p>
             <form
               className="hero-search"
               role="search"
@@ -85,13 +80,13 @@ export function CitywidePage() {
               }}
             >
               <label htmlFor="hero-q" className="visually-hidden">
-                Search city issues
+                Search issues
               </label>
               <input
                 id="hero-q"
                 type="search"
                 value={query}
-                placeholder="Search issues, e.g. speed limit"
+                placeholder="Search issues, e.g. property tax"
                 onChange={(e) => onQuery(e.target.value)}
               />
               <button type="submit" className="hero-search__button">
@@ -102,48 +97,13 @@ export function CitywidePage() {
               <p className="hero__note">
                 {anyMock
                   ? 'These records include sample data and are not city totals.'
-                  : `A selected set of recent records from the ${sources}. Other ${place?.name} cities and the county government aren’t included yet.${checked ? ` Meeting records last checked against official documents on ${formatDate(checked)}.` : ''}`}
+                  : `A selection of recent items, not every decision.${checked ? ` Last checked against official county records on ${formatDate(checked)}.` : ''}`}
               </p>
             )}
           </div>
           {ready && <Docket meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
         </div>
       </section>
-
-      {ready && (
-        <nav className="quicklinks" aria-label="Shortcuts">
-          <ul>
-            <li>
-              <Link to={href(`/near-me?loc=${DEMO_LOCATIONS[0].id}`)} className="quicklink">
-                <QuickIcon name="pin" />
-                <span className="quicklink__label">Find issues near me</span>
-                <span className="quicklink__hint">Sorted by distance from {DEMO_LOCATIONS[0].label}</span>
-              </Link>
-            </li>
-            <li>
-              <button type="button" className="quicklink" onClick={() => jumpTo(meetingsHeading.current)}>
-                <QuickIcon name="calendar" />
-                <span className="quicklink__label">Upcoming meetings</span>
-                <span className="quicklink__hint">{plural(splitMeetings(ready[0]).upcoming.length, 'meeting')} scheduled</span>
-              </button>
-            </li>
-            <li>
-              <Link to={href('/archive?type=videos')} className="quicklink">
-                <QuickIcon name="play" />
-                <span className="quicklink__label">Meeting recordings</span>
-                <span className="quicklink__hint">{plural(ready[0].filter((m) => safeUrl(m.recordingUrl)).length, 'video')} on the city portal</span>
-              </Link>
-            </li>
-            <li>
-              <Link to={href('/archive')} className="quicklink">
-                <QuickIcon name="document" />
-                <span className="quicklink__label">Agendas and minutes</span>
-                <span className="quicklink__hint">{plural(ready[2].length, 'official document')}</span>
-              </Link>
-            </li>
-          </ul>
-        </nav>
-      )}
 
       {state.status === 'loading' && <LoadingState rows={4} />}
       {state.status === 'error' && <ErrorState onRetry={state.retry} />}
@@ -176,12 +136,11 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
   // link never filters by something the dropdowns can't show.
   const rawTopic = params.get('topic') ?? '';
   const rawStatus = params.get('status') ?? '';
-  const rawWhen = params.get('when') ?? '';
   const filters: IssueFilterState = {
     q: params.get('q') ?? '',
     topic: topicsIn(issues).includes(rawTopic) ? rawTopic : '',
     status: (statusesIn(issues) as string[]).includes(rawStatus) ? rawStatus : '',
-    when: (ISSUE_DATE_RANGES as string[]).includes(rawWhen) ? (rawWhen as DateRange) : '',
+    when: '',
   };
   const setFilter = (key: keyof IssueFilterState, value: string) => {
     setParam(key, value);
@@ -236,10 +195,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
             </EmptyState>
           )
         ) : (
-          <>
-            <IssueGroup title="Featured" issues={issues.filter((i) => i.featured)} />
-            <IssueGroup title="More issues" issues={issues.filter((i) => !i.featured)} />
-          </>
+          <IssueList issues={byImportance(issues)} headingLevel={3} />
         )}
       </section>
 
@@ -248,8 +204,8 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
           Meetings
         </h2>
         <p className="section__source">From the {sources}</p>
-        <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="No upcoming meetings in this dataset." />
-        <MeetingGroup title="Recent" meetings={recent} documents={documents} empty="No past meetings in this dataset." />
+        {upcoming.length > 0 && <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="" />}
+        <MeetingGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} empty="No past meetings in this dataset." />
         <Link to={href('/archive')} className="text-link">
           Browse all meetings and documents
         </Link>
@@ -293,17 +249,6 @@ function IssueFilters({
           ))}
         </select>
       </div>
-      <div className="filters__field">
-        <label htmlFor="issue-when">Updated</label>
-        <select id="issue-when" value={filters.when} onChange={(e) => onChange('when', e.target.value)}>
-          <option value="">Any time</option>
-          {ISSUE_DATE_RANGES.map((r) => (
-            <option key={r} value={r}>
-              {DATE_RANGE_LABELS[r]}
-            </option>
-          ))}
-        </select>
-      </div>
       {isFiltering(filters) && (
         <button type="button" className="button button--ghost filters__clear" onClick={onClear}>
           Clear
@@ -313,15 +258,9 @@ function IssueFilters({
   );
 }
 
-function IssueGroup({ title, issues }: { title: string; issues: Issue[] }) {
-  if (!issues.length) return null;
-  return (
-    <>
-      <h3 className="subhead">{title}</h3>
-      <IssueList issues={issues} headingLevel={4} />
-    </>
-  );
-}
+/** Main items first, then the most recently decided. */
+const byImportance = (issues: Issue[]) =>
+  [...issues].sort((a, b) => Number(b.featured) - Number(a.featured) || (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? ''));
 
 function IssueList({ issues, headingLevel }: { issues: Issue[]; headingLevel: 3 | 4 }) {
   return (
@@ -354,25 +293,6 @@ function MeetingGroup({ title, meetings, documents, empty }: { title: string; me
   );
 }
 
-const plural = (n: number, word: string) => `${n} ${word}${n === 1 ? '' : 's'}`;
-
-/** Simple line icons for the shortcut row. Decorative; the link text carries the meaning. */
-function QuickIcon({ name }: { name: 'pin' | 'calendar' | 'play' | 'document' }) {
-  const paths = {
-    pin: <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z" />,
-    calendar: <path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm3 8h2m3 0h2m-7 4h2m3 0h2" />,
-    play: <path d="M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm6 4v6l5-3-5-3Z" />,
-    document: <path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm7 0v5h5M9 13h6m-6 4h6" />,
-  };
-  return (
-    <span className="quicklink__icon" aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
-        {paths[name]}
-      </svg>
-    </span>
-  );
-}
-
 /**
  * "Next at <meeting place>": the next scheduled meeting, what is on its agenda, and the most
  * recent recorded decision. Everything shown comes from the dataset; nothing is invented.
@@ -388,7 +308,7 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
   const agenda = next ? agendaFor(next, documents) : null;
   if (!next && !decided) return null;
   return (
-    <aside className="docket" aria-label={`Next at ${meetingPlace}`}>
+    <aside className="docket" aria-label={next ? `Next at ${meetingPlace}` : 'Latest decision'}>
       {next && (
         <div className="docket__block">
           <p className="docket__kicker">Next at {meetingPlace}</p>

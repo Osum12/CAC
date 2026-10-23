@@ -17,34 +17,34 @@ Checked 2026-10-21 against the official 2026 rulebook: https://www.congressional
 
 ## Status of the app (verified 2026-10-22)
 
-- All P0 pages work with the fixture data. `npm test` (39 tests), typecheck, lint and build all pass.
-- Every route checked at 375px and 1366px, in light and dark mode: no horizontal overflow, no console errors.
-- **The data is real**: 5 issues, 5 meetings and 9 documents from September and October 2026, each linked to official city agendas or minutes. It is a selected set, not a complete or live archive, so say that in the demo.
-- **Royal 400 Data Center goes before City Council on Oct 26, 2026, the same day as the noon submission deadline.** The meeting is at 6:30 PM, after the deadline, so the submitted app will correctly show it as under consideration. Update it after the vote for any later demo.
+- All pages work. `npm test` (120 tests), typecheck, lint and build pass.
+- 13 routes checked at 320, 375, 430, 768, 1024 and 1440px: no horizontal overflow, no console errors. Dark mode checked.
+- **The data is real**: 24 agenda items, 8 meetings and 18 documents from the Fulton County Board of Commissioners (August to October 2026), each linked to the county's official Legistar records. It is a selected set, not a complete or live archive, so say that in the demo.
+- **The data is Fulton County Board of Commissioners records** (August 3 to October 7, 2026), taken from the county's Legistar system. Minutes were not published yet when it was checked, so check the results against them once they are. The TSPLOST referendum the board called is on the November 3, 2026 ballot; update that item after the election.
 
 ## Must do before submitting (student team)
 
 1. **Make and document real student technical work** (required by the AI rule). Each item below is a meaningful, self-contained piece of work:
-   - Verify the 5 AI-researched records yourselves (open every source link), then research and add more items, e.g. the other Oct 26 agenda items (see `data/README.md`). This needs real research skill and is core to the product.
+   - Verify the AI-researched records yourselves (open every source link), then research and add more items, for example from a Fulton city's own agenda system (see `data/README.md`). This needs real research skill and is core to the product.
    - Add a custom date picker ("from / to") alongside the preset date ranges in `src/services/filters.ts`.
    - Let users pick their own starting location on Near Me from a list of public places.
    - Write tests for whatever you add.
 2. **Read and understand the code** well enough to explain it to a judge: the data flow (`page → civicData.ts → JSON`), how Near Me ranking works (`nearMe.ts`), and why null URLs are never links (`SourceAction.tsx`).
 3. **Fill in `AI_ASSISTANCE.md`** honestly, and put a matching disclosure in the submission form.
 4. **List open-source libraries** in the submission: React, React Router, Leaflet, OpenStreetMap data, Vite, Vitest, Testing Library, ESLint, Google Fonts (Fraunces, Source Sans 3).
-5. **Record the demo video** (1–3 min). Say that the records are a small, hand-checked set of real Alpharetta items (not live or complete), and that the app is a student project not affiliated with the City of Alpharetta. The site no longer has a footer saying so, so say it in the video and the written answers.
+5. **Record the demo video** (1–3 min). Say that the records are a selected, checked set of real Fulton County Board of Commissioners items (not live or complete), and that the app is a student project not affiliated with Fulton County or any government. The site has no footer saying so, so say it in the video and the written answers.
 6. **Confirm eligibility**: grades, residency, district, team size ≤ 4.
 7. **Merge to `main`** only after the team reviews `integration`, if the team wants `main` to be the submitted version.
-8. **Update Royal 400 after the Oct 26, 2026 City Council vote** (status, `statusAsOf`, the official minutes as source) before any later demo.
+8. **Update the TSPLOST item after the November 3, 2026 election**, and check every result against the official minutes when the county publishes them.
 9. **Check the data yourselves** against the linked PDFs. An AI did the research and an AI reviewer re-checked it, but the team should be able to vouch for every record.
-10. **Explain the statewide scope honestly.** The app lists every Georgia county and city, but only Fulton County has a page, and its records all come from the City of Alpharetta (the page says so). Say this in the video and the written answers, and be ready to explain how a new place would be added (its own verified dataset, then one entry in `src/config/coverage.ts`). A good student contribution: research and verify records for Fulton County government or another Fulton city.
+10. **Explain the statewide scope honestly.** The app lists every Georgia county and city, but only Fulton County has records, all from the Board of Commissioners. Say this in the video and the written answers, and be ready to explain how a new place would be added (its own verified dataset, then one entry in `src/config/coverage.ts`). A good student contribution: add records for a Fulton city, or another county, from its official agenda system.
 
 ## Honest demo script (about 2½ minutes)
 
-1. **0:00–0:20.** Team names, "Georgia Civic", the one-sentence purpose (understand what your local government is considering, with a path to the source), and the audience. On the home page choose Fulton County, keep "All of Fulton County", and say plainly that the records come from the City of Alpharetta and that other places show "Coming soon".
-2. **0:20–0:50 Citywide.** Open the Royal 400 Data Center issue: status "Under consideration", the Planning Commission recommendation, and the upcoming Oct 26 Council meeting. Then open the North Main Street item and click through to the official minutes PDF.
-3. **0:50–1:30 Near Me.** Choose Alpharetta City Hall. The list re-sorts by distance, each item explains why it's listed, and selecting a pin highlights the matching card. Point out that pins are approximate, and that items with no street address stay in the list without a pin.
-4. **1:30–2:00 Archive.** Switch to Videos and open the Sept 14 City Council meeting recording on the city portal. Open a meeting and follow its links to issues and documents.
+1. **0:00–0:20.** Team names, "Georgia Civic", the one-sentence purpose (understand what your local government is considering, with a path to the source), and the audience. On the home page choose Fulton County, keep "All of Fulton County", and say plainly that Fulton County is the only place with records today and that other places show "Coming soon".
+2. **0:20–0:50 Countywide.** Open "2026 county property tax rates": the proposed rate, the three public hearings, the failed rollback motion, and the adopted rate. Then open "Limiting public comment at board meetings" to show a denied item, and follow a link to the county's official item record.
+3. **0:50–1:30 Near Me.** The list is sorted by distance from the Fulton County Government Center, each item says why it is listed, and selecting a pin highlights the matching card. Point out that pins are approximate, and that countywide items stay in the list without a pin.
+4. **1:30–2:00 Archive.** Switch to Videos and open a Board of Commissioners meeting recording. Search for "housing" and open a fact sheet PDF.
 5. **2:00–2:30 Tools and learning.** React, TypeScript, Vite, Leaflet/OpenStreetMap, Vitest. Name the technical challenge your team actually solved, and disclose AI use.
 
 Do not say the data is live, official or complete, or that distance means an issue affects someone's home.

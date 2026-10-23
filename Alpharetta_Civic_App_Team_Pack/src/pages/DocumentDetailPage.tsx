@@ -40,7 +40,7 @@ export function DocumentDetailPage() {
           {isMock(doc) && <MockBadge record={doc} size="lg" />}
         </div>
         <h1 className="detail__title">{doc.title}</h1>
-        <p className="muted">Published {formatDate(doc.publishedDate, 'date not provided')}</p>
+        {doc.publishedDate && <p className="muted">Published {formatDate(doc.publishedDate)}</p>}
       </header>
       <MockNotice record={doc} kind="document" />
 

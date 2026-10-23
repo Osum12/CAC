@@ -98,7 +98,7 @@ export function IssueDetailPage() {
               <ul className="plain-list">
                 {issue.sourceUrls.map((url, i) => (
                   <li key={i}>
-                    <SourceAction url={url} label={sourceLabel(url, i)} unavailableText="Source link is not valid" />
+                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
                   </li>
                 ))}
               </ul>
@@ -188,4 +188,11 @@ function MissingNote({ count, noun }: { count: number; noun: string }) {
       {count > 1 ? 's' : ''} could not be found in the dataset.
     </p>
   );
+}
+
+/** Source labels, numbered when several links share one ("Item record … (1 of 2)"), so each is distinct. */
+function numberedSourceLabel(urls: string[], i: number): string {
+  const labels = urls.map((u, k) => sourceLabel(u, k));
+  const same = labels.map((l, k) => (l === labels[i] ? k : -1)).filter((k) => k >= 0);
+  return same.length > 1 ? `${labels[i]} (${same.indexOf(i) + 1} of ${same.length})` : labels[i];
 }

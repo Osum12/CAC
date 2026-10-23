@@ -12,7 +12,7 @@ export function usePlaceHref() {
   return (path = '/') => (place ? countyPath(place, path) : path);
 }
 
-/** "City of Alpharetta" — the governments the current records come from, for labels. */
+/** "Fulton County Board of Commissioners" — the governments the current records come from, for labels. */
 export function useRecordSources(): string {
   const names = (usePlace()?.recordSources ?? []).map((s) => s.name);
   return names.length < 3 ? names.join(' and ') : `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;

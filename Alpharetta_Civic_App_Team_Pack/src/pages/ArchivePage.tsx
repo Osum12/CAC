@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getMeetings } from '../services/civicData';
 import { formatDate, formatTime, humanize, meetingTypeLabel, safeUrl } from '../services/format';
-import { DATE_RANGE_LABELS, documentMatches, inDateRange, isDateRange, meetingMatches, type DateRange } from '../services/filters';
+import { documentMatches, meetingMatches } from '../services/filters';
 import { MeetingStatusBadge } from '../components/StatusBadge';
 import { ExternalAction } from '../components/Cards';
 import { useAsync } from '../services/useAsync';
@@ -75,14 +75,8 @@ export function ArchivePage() {
   const q = params.get('q') ?? '';
   // The search box keeps its own text so fast typing is never lost; the URL follows it.
   const [query, setQuery] = useUrlText(params, setUrlParam, 'q');
-  const rawWhen = params.get('when') ?? '';
-  const when: DateRange = isDateRange(rawWhen) ? rawWhen : '';
-  const setParam = (key: 'q' | 'when', next: string) => {
-    if (key === 'q') setQuery(next);
-    else setUrlParam(key, next);
-  };
 
-  const entries = state.status === 'ready' ? buildArchiveEntries(state.data[0], state.data[1]).filter((e) => entryMatches(e, q) && inDateRange(e.date, when)) : [];
+  const entries = state.status === 'ready' ? buildArchiveEntries(state.data[0], state.data[1]).filter((e) => entryMatches(e, q)) : [];
   const visible = entries.filter((e) => e.groups.includes(filter));
   const count = (f: ArchiveFilter) => entries.filter((e) => e.groups.includes(f)).length;
 
@@ -91,25 +85,14 @@ export function ArchivePage() {
       <header className="page-header">
         <h1>Archive</h1>
         <p className="page-header__lede">
-          Meetings, recordings, agendas, and minutes, each linked to the original file. This is a small selected set of records, not the city’s complete archive.
+          Meetings, recordings, agendas, and supporting documents, each linked to the original file. This is a selected set, not the county’s complete archive.
         </p>
       </header>
 
       <form className="filters filters--compact" role="search" aria-label="Search the archive" onSubmit={(e) => e.preventDefault()}>
         <div className="filters__field filters__field--grow">
           <label htmlFor="archive-q">Search meetings and documents</label>
-          <input id="archive-q" type="search" value={query} placeholder="e.g. minutes, Planning Commission, September" onChange={(e) => setParam('q', e.target.value)} />
-        </div>
-        <div className="filters__field">
-          <label htmlFor="archive-when">Date</label>
-          <select id="archive-when" value={when} onChange={(e) => setParam('when', e.target.value)}>
-            <option value="">Any time</option>
-            {(Object.keys(DATE_RANGE_LABELS) as (keyof typeof DATE_RANGE_LABELS)[]).map((r) => (
-              <option key={r} value={r}>
-                {DATE_RANGE_LABELS[r]}
-              </option>
-            ))}
-          </select>
+          <input id="archive-q" type="search" value={query} placeholder="e.g. property tax, housing, September" onChange={(e) => setQuery(e.target.value)} />
         </div>
       </form>
 
@@ -136,7 +119,6 @@ export function ArchivePage() {
           <p className="results-count" role="status" aria-live="polite">
             {visible.length} {visible.length === 1 ? 'record' : 'records'}
             {q ? ` matching “${q}”` : ''}
-            {when ? `, ${DATE_RANGE_LABELS[when].toLowerCase()}` : ''}
           </p>
           {visible.length ? (
             <ol className="archive-list">
@@ -148,7 +130,7 @@ export function ArchivePage() {
             </ol>
           ) : (
             <EmptyState
-              title={when ? `No ${filter === 'all' ? 'records' : FILTERS.find((f) => f.id === filter)!.label.toLowerCase()} match these filters for “${DATE_RANGE_LABELS[when]}”.` : emptyTitle(filter, q, count('all'))}
+              title={emptyTitle(filter, q, count('all'))}
               action={
                 <div className="button-row">
                   {q && filter !== 'all' && count('all') > 0 && (
@@ -156,7 +138,7 @@ export function ArchivePage() {
                       Show all types
                     </button>
                   )}
-                  {(q || when || filter !== 'all') && (
+                  {(q || filter !== 'all') && (
                     <button type="button" className="button button--ghost" onClick={clearParams}>
                       Show all records
                     </button>
@@ -196,7 +178,7 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
   return (
     <article className={`archive-row archive-row--${entry.kind}`}>
       <span className="archive-row__icon" aria-hidden="true">
-        {isMeeting ? '◷' : '▤'}
+        <RowIcon kind={isMeeting ? 'meeting' : 'document'} />
       </span>
       <div className="archive-row__body">
         <div className="card__top">
@@ -217,7 +199,8 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
             </>
           ) : entry.record.meetingId && entry.date !== entry.record.publishedDate ? (
             <>
-              For the <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time> meeting. Published {formatDate(entry.record.publishedDate, 'date not provided')}.
+              For the <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time> meeting.
+              {entry.record.publishedDate ? ` Published ${formatDate(entry.record.publishedDate)}.` : ''}
             </>
           ) : (
             <>
@@ -246,5 +229,18 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
         </div>
       </div>
     </article>
+  );
+}
+
+/** Decorative row icon; the type label next to it carries the meaning. */
+function RowIcon({ kind }: { kind: 'meeting' | 'document' }) {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" focusable="false">
+      {kind === 'meeting' ? (
+        <path d="M7 3v3m10-3v3M4 9h16M5 5h14a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z" />
+      ) : (
+        <path d="M7 3h7l5 5v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Zm7 0v5h5M9 13h6m-6 4h6" />
+      )}
+    </svg>
   );
 }

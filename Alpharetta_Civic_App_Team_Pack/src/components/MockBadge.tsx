@@ -20,9 +20,9 @@ export function MockBadge({ record, size = 'sm' }: { record: ProvenancedRecord; 
 
 /** Inline notice for record detail pages explaining what a mock record is. */
 const NOTICE_DETAIL = {
-  issue: 'Its title, dates, status, and map point do not describe a real Alpharetta proposal or decision.',
-  meeting: 'Its title, date, and agenda do not describe a real Alpharetta meeting.',
-  document: 'Its title and details do not describe a real Alpharetta document, and no file is attached.',
+  issue: 'Its title, dates, status, and map point do not describe a real government proposal or decision.',
+  meeting: 'Its title, date, and agenda do not describe a real government meeting.',
+  document: 'Its title and details do not describe a real government document, and no file is attached.',
 };
 
 export function MockNotice({ record, kind }: { record: ProvenancedRecord; kind: keyof typeof NOTICE_DETAIL }) {

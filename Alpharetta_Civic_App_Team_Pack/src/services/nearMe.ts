@@ -1,7 +1,7 @@
 // Near Me demo ranking. Deliberately simple and explainable:
 //   1. Issues with valid coordinates, nearest first (straight-line distance).
-//   2. Issues with no usable coordinates, kept in the feed as citywide items.
-// No geocoding happens in the app: the only starting points are the preset example locations below.
+//   2. Issues with no usable coordinates, kept in the feed as countywide items.
+// No geocoding happens in the app: distances are measured from the public starting point below.
 
 import type { Issue, LatLng } from '../types/civic';
 
@@ -10,7 +10,7 @@ export type DemoLocation = LatLng & { id: string; label: string; description: st
 // Public example locations, never the user's own address. Coordinates come from the
 // U.S. Census Bureau geocoder for the published street address (checked 2026-10-22).
 export const DEMO_LOCATIONS: DemoLocation[] = [
-  { id: 'city-hall', label: 'Alpharetta City Hall', description: '2 Park Plaza, downtown', latitude: 34.0746, longitude: -84.29258 },
+  { id: 'government-center', label: 'Fulton County Government Center', description: '141 Pryor Street SW, Atlanta', latitude: 33.752699, longitude: -84.390034 },
 ];
 
 /** Short description of how trustworthy an issue's map point is. */
@@ -22,8 +22,8 @@ export function pointKind(issue: Issue): string {
   return 'unverified map point';
 }
 
-/** Rough Alpharetta-area bounds, used only to reject obviously misplaced coordinates. */
-const AREA_BOUNDS = { minLat: 33.95, maxLat: 34.2, minLng: -84.45, maxLng: -84.15 };
+/** Rough Fulton County bounds, used only to reject obviously misplaced coordinates. */
+const AREA_BOUNDS = { minLat: 33.5, maxLat: 34.2, minLng: -84.86, maxLng: -84.09 };
 
 export function getValidCoordinates(issue: Issue): LatLng | null {
   const lat = issue.location?.latitude;
@@ -70,5 +70,5 @@ function explain(issue: Issue, coords: LatLng | null, distance: number | null, o
     return `About ${miles} mi away in a straight line, measured to its ${point}. This is distance only, not a claim that the issue affects this spot.`;
   }
   if (coords && !origin) return `Has ${/^[aeiou]/.test(point) ? 'an' : 'a'} ${point} on the map. Choose a starting location to sort by distance.`;
-  return 'This record has no map location, so it is listed as a citywide item instead of being ranked by distance.';
+  return 'This record has no map location, so it is listed as a countywide item instead of being ranked by distance.';
 }
