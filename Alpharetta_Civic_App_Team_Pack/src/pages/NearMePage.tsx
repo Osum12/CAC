@@ -158,7 +158,7 @@ export function NearMePage() {
                     <p className="feed-group__intro">
                       {unmapped.length === 1
                         ? unmapped[0].reason
-                        : `These ${unmapped.length} records have no map location, so they are listed as countywide items instead of being ranked by distance.`}
+                        : `These ${unmapped.length} issues have no map location, so they are listed as countywide items instead of being ranked by distance.`}
                     </p>
                     <ul className="feed">
                       {unmapped.map((r) => (

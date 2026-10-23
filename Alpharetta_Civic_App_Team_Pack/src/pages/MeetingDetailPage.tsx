@@ -71,8 +71,9 @@ export function MeetingDetailPage() {
                 <MeetingStatusBadge status={meeting.status} />
               </p>
               <p className="standing__asof">
-                {formatDate(meeting.date)}
-                {time ? ` at ${time}` : meeting.date ? ' (time not listed)' : ''}
+                {/* The chip shows the date; next to it only the time is repeated. */}
+                {short ? <span className="visually-hidden">{formatDate(meeting.date)} </span> : formatDate(meeting.date)}
+                {time ? `${short ? '' : ' at '}${time}` : meeting.date ? (short ? 'Time not listed' : ' (time not listed)') : ''}
               </p>
               {issues.length > 0 && (
                 <p className="standing__sentence">
@@ -92,7 +93,7 @@ export function MeetingDetailPage() {
       </div>
 
       <div className="detail__grid">
-        <aside className="detail__side detail__side--first">
+        <aside className="detail__side">
           <section className="panel" aria-labelledby="m-watch-h">
             <h2 id="m-watch-h">Watch and verify</h2>
             <ul className="plain-list">

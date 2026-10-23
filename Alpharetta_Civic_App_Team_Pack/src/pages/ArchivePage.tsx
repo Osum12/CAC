@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getMeetings } from '../services/civicData';
-import { formatDate, formatTime, humanize, meetingTypeLabel, safeUrl } from '../services/format';
+import { formatDate, formatTime, humanize, meetingTypeLabel, parseIsoDate, safeUrl } from '../services/format';
 import { documentMatches, meetingMatches } from '../services/filters';
 import { MeetingStatusBadge } from '../components/StatusBadge';
 import { ExternalAction } from '../components/Cards';
@@ -150,11 +150,18 @@ export function ArchivePage() {
           </div>
           {visible.length ? (
             <ol className="archive-list">
-              {visible.map((e) => (
-                <li key={`${e.kind}-${e.id}`}>
-                  <ArchiveRow entry={e} />
-                </li>
-              ))}
+              {visible.map((e, k) => {
+                // A month label opens each month, as on Countywide. It sits inside the row's list item
+                // so the list keeps exactly one item per record.
+                const month = monthOf(e.date);
+                const startsMonth = k === 0 || monthOf(visible[k - 1].date) !== month;
+                return (
+                  <li key={`${e.kind}-${e.id}`} className={startsMonth ? 'archive-list__first' : undefined}>
+                    {startsMonth && <p className="month__title archive-month">{month}</p>}
+                    <ArchiveRow entry={e} />
+                  </li>
+                );
+              })}
             </ol>
           ) : (
             <EmptyState
@@ -189,6 +196,12 @@ function emptyTitle(filter: ArchiveFilter, q: string, matchesInAll: number): str
   return matchesInAll > 0
     ? `No ${type} match “${q}”. ${matchesInAll} other ${matchesInAll === 1 ? 'record matches' : 'records match'} in All.`
     : `No records match “${q}”.`;
+}
+
+/** "October 2026", or a plain label for undated records. */
+function monthOf(iso: string | null): string {
+  const d = parseIsoDate(iso);
+  return d ? d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) : 'Date not recorded';
 }
 
 const entryMatches = (e: ArchiveEntry, q: string) => (e.kind === 'meeting' ? meetingMatches(e.record, q) : documentMatches(e.record, q));

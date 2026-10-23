@@ -2664,14 +2664,32 @@ input[type='search']:focus-visible {
 .detail__main .stepper {
   max-width: none;
 }
+/* The record rail sits on the left at 960px+, first in reading and tab order, and stays in view. */
 @media (min-width: 960px) {
-  .detail__grid > .detail__main {
-    grid-column: 1;
-    grid-row: 1;
+  .detail__grid {
+    grid-template-columns: 280px minmax(0, 1fr);
   }
-  .detail__grid > .detail__side {
-    grid-column: 2;
-    grid-row: 1;
+  .detail__side {
+    position: sticky;
+    top: 150px;
+  }
+}
+/* Below 960 the rail stacks first, and its headings take the same accent bar as the sections. */
+@media (max-width: 959px) {
+  .detail__side {
+    padding-top: 40px;
+  }
+  .detail__side .panel {
+    padding-top: 0;
+    border-top: 0;
+  }
+  .detail__side .panel > h2::before {
+    content: '';
+    display: block;
+    width: 48px;
+    height: 5px;
+    margin-bottom: 14px;
+    background: var(--marker);
   }
 }
 .detail__side .source-list {
@@ -2739,6 +2757,103 @@ input[type='search']:focus-visible {
   margin-bottom: 8px;
   color: var(--ink-2);
   font-size: 1.0625rem;
+}
+
+/* ---------- Round 3, second audit pass ---------- */
+.month-groups__note {
+  margin-top: 4px;
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+.compact__label {
+  margin-top: 20px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.month .issue-list + .compact__label {
+  margin-top: 8px;
+}
+.compact-list {
+  list-style: none;
+  margin-top: 6px;
+  border-top: 1px solid var(--rule);
+}
+.compact-list > li {
+  border-bottom: 1px solid var(--rule);
+}
+.compact {
+  display: grid;
+  grid-template-columns: 14rem minmax(0, 1fr) auto;
+  column-gap: 40px;
+  align-items: center;
+  padding: 8px 0;
+}
+.compact .status {
+  justify-self: start;
+  font-size: 1rem;
+  white-space: nowrap;
+}
+.compact__title {
+  font-weight: 700;
+  font-size: 1.0625rem;
+  line-height: 1.3;
+  padding-block: 6px;
+}
+.compact__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0 20px;
+}
+.compact__links .card__action {
+  font-size: 1rem;
+  min-height: 36px;
+}
+@media (max-width: 759px) {
+  .compact {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: 2px;
+    padding: 12px 0 4px;
+  }
+  .compact__links {
+    justify-content: flex-start;
+  }
+}
+
+/* Topic rows: room around the text for the focus ring. */
+.topic {
+  padding: 12px 12px;
+}
+.topic:focus-visible {
+  outline-offset: 2px;
+}
+
+/* Issue meta: the same stacked layout at every width. */
+.issue__meta {
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+}
+
+/* Near Me: countywide items line up with their group heading. */
+.feed-group .feed-item {
+  padding-left: 0;
+  border-left: 0;
+}
+
+/* Archive: a month label opens each month. */
+.archive-list {
+  border-top: 0;
+}
+.archive-list > li.archive-list__first {
+  border-top: 0;
+}
+.archive-month {
+  margin-top: 32px;
+}
+.archive-list > li:first-child .archive-month {
+  margin-top: 8px;
 }
 
 /* ---------- Home and Coming soon: the same section marker ---------- */

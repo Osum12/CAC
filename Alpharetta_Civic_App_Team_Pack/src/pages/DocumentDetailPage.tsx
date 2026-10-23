@@ -66,6 +66,19 @@ export function DocumentDetailPage() {
       </div>
 
       <div className="detail__grid">
+        <aside className="detail__side">
+          <section className="panel" aria-labelledby="d-meeting-h">
+            <h2 id="d-meeting-h">From meeting</h2>
+            {meeting ? (
+              <div className="stack stack--single">
+                <MeetingCard meeting={meeting} />
+              </div>
+            ) : (
+              <p className="muted">{doc.meetingId ? 'The linked meeting could not be found in the dataset.' : 'This document is not tied to a meeting.'}</p>
+            )}
+          </section>
+        </aside>
+
         <div className="detail__main">
           <section aria-labelledby="d-issues-h">
             <h2 id="d-issues-h">Related issues</h2>
@@ -83,18 +96,6 @@ export function DocumentDetailPage() {
           </section>
         </div>
 
-        <aside className="detail__side">
-          <section className="panel" aria-labelledby="d-meeting-h">
-            <h2 id="d-meeting-h">From meeting</h2>
-            {meeting ? (
-              <div className="stack stack--single">
-                <MeetingCard meeting={meeting} />
-              </div>
-            ) : (
-              <p className="muted">{doc.meetingId ? 'The linked meeting could not be found in the dataset.' : 'This document is not tied to a meeting.'}</p>
-            )}
-          </section>
-        </aside>
       </div>
     </article>
   );

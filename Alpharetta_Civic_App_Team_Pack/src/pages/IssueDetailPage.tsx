@@ -80,6 +80,26 @@ export function IssueDetailPage() {
       </div>
 
       <div className="detail__grid">
+        <aside className="detail__side">
+          <section className="panel" aria-labelledby="sources-h">
+            <h2 id="sources-h">Official sources</h2>
+            {issue.sourceUrls.length ? (
+              <ul className="source-list">
+                {issue.sourceUrls.map((url, i) => (
+                  <li key={i}>
+                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p>
+                <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
+              </p>
+            )}
+          </section>
+          <LocationPanel issue={issue} />
+        </aside>
+
         <div className="detail__main">
           <section aria-labelledby="summary-h">
             <h2 id="summary-h">What happened</h2>
@@ -106,25 +126,6 @@ export function IssueDetailPage() {
           </section>
         </div>
 
-        <aside className="detail__side">
-          <section className="panel" aria-labelledby="sources-h">
-            <h2 id="sources-h">Official sources</h2>
-            {issue.sourceUrls.length ? (
-              <ul className="source-list">
-                {issue.sourceUrls.map((url, i) => (
-                  <li key={i}>
-                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>
-                <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
-              </p>
-            )}
-          </section>
-          <LocationPanel issue={issue} />
-        </aside>
       </div>
     </article>
   );

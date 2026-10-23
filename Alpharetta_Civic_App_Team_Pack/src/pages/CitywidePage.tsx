@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
 import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState } from '../services/filters';
-import { formatDate, formatTime, formatWeekdayDate, humanize, ISSUE_STATUS_LABELS, safeUrl, todayIso } from '../services/format';
+import { formatDate, formatTime, formatWeekdayDate, humanize, ISSUE_STATUS_LABELS, primarySource, safeUrl, todayIso } from '../services/format';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
-import { IssueCard, MeetingCard } from '../components/Cards';
+import { ExternalAction, IssueCard, MeetingCard } from '../components/Cards';
+import { getValidCoordinates } from '../services/nearMe';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { MockBadge, isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
@@ -134,6 +135,12 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
   // The hero panel shows the newest decision (see Docket), so the decisions list skips it.
   const heroDecision = decidedNewestFirst(issues)[0]?.id ?? null;
   const matches = filterIssues(issues, filters);
+  // Items the briefing above already explains: the hero's decision, the open items and the latest decisions.
+  const shownAbove = new Set<string>([
+    ...(heroDecision ? [heroDecision] : []),
+    ...issues.filter((i) => OPEN.includes(i.status)).map((i) => i.id),
+    ...decisionDays(issues, heroDecision).flatMap((d) => d.items.map((i) => i.id)),
+  ]);
 
   return (
     <>
@@ -238,7 +245,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
             </EmptyState>
           )
         ) : (
-          <IssueList issues={issues} />
+          <IssueList issues={issues} shownAbove={shownAbove} />
         )}
       </section>
     </>
@@ -301,12 +308,12 @@ const StillOpen = memo(function StillOpen({ issues, meetings }: { issues: Issue[
   );
 });
 
-/** 2. The most recent decisions, grouped by the day they were made. */
-const LatestDecisions = memo(function LatestDecisions({ issues, skip }: { issues: Issue[]; skip: string | null }) {
-  const href = usePlaceHref();
-  // The newest decision already leads the panel beside the headline, so the list starts after it.
+/**
+ * The decisions listed under "Latest decisions": newest first, after the one in the hero panel,
+ * whole days only until at least eight are shown, so no day is cut in half.
+ */
+function decisionDays(issues: Issue[], skip: string | null) {
   const decided = decidedNewestFirst(issues).filter((i) => i.id !== skip);
-  // Whole days only, until at least eight decisions are shown, so no day is cut in half.
   const days: { date: string; items: Issue[] }[] = [];
   let shown = 0;
   for (const i of decided) {
@@ -316,6 +323,13 @@ const LatestDecisions = memo(function LatestDecisions({ issues, skip }: { issues
     else days.push({ date: i.statusAsOf!, items: [i] });
     shown += 1;
   }
+  return days;
+}
+
+/** 2. The most recent decisions, grouped by the day they were made. */
+const LatestDecisions = memo(function LatestDecisions({ issues, skip }: { issues: Issue[]; skip: string | null }) {
+  const href = usePlaceHref();
+  const days = decisionDays(issues, skip);
   return (
     <section className="brief brief--decisions" aria-labelledby="decisions-heading">
       <h2 id="decisions-heading" className="brief__title">
@@ -416,8 +430,11 @@ const monthLabel = (ym: string) => {
   return new Date(y, m - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
 };
 
-/** Every item, newest status first, under one heading per month. Months with no items are never shown. */
-function IssueList({ issues }: { issues: Issue[] }) {
+/**
+ * Every item, newest status first, under one heading per month (months with no items are never
+ * shown). Items the briefing already covers become one short line each, with their record links.
+ */
+function IssueList({ issues, shownAbove }: { issues: Issue[]; shownAbove?: Set<string> }) {
   const sorted = [...issues].sort((a, b) => (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? ''));
   const groups: { key: string; label: string; items: Issue[] }[] = [];
   for (const i of sorted) {
@@ -428,18 +445,63 @@ function IssueList({ issues }: { issues: Issue[] }) {
   }
   return (
     <div className="month-groups">
-      {groups.map((g) => (
-        <div key={g.key} className="month">
-          <h3 className="month__title">{g.label}</h3>
-          <ul className="issue-list">
-            {g.items.map((i) => (
-              <li key={i.id}>
-                <IssueCard issue={i} headingLevel={4} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+      <p className="month-groups__note">Grouped by the month of each item’s latest status, newest first.</p>
+      {groups.map((g) => {
+        const full = g.items.filter((i) => !shownAbove?.has(i.id));
+        const short = g.items.filter((i) => shownAbove?.has(i.id));
+        return (
+          <div key={g.key} className="month">
+            <h3 className="month__title">{g.label}</h3>
+            {full.length > 0 && (
+              <ul className="issue-list">
+                {full.map((i) => (
+                  <li key={i.id}>
+                    <IssueCard issue={i} headingLevel={4} />
+                  </li>
+                ))}
+              </ul>
+            )}
+            {short.length > 0 && (
+              <>
+                <p className="compact__label">{full.length ? 'Also this month, explained above' : 'Explained above'}</p>
+                <ul className="compact-list">
+                  {short.map((i) => (
+                    <li key={i.id}>
+                      <CompactIssue issue={i} />
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/** One line for an item the briefing already covers: status, title and its record links. */
+function CompactIssue({ issue }: { issue: Issue }) {
+  const href = usePlaceHref();
+  const source = isMock(issue) ? null : primarySource(issue.sourceUrls);
+  return (
+    <div className="compact">
+      <IssueStatusBadge status={issue.status} />
+      <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)} className="compact__title">
+        {issue.title}
+      </Link>
+      <span className="compact__links">
+        {getValidCoordinates(issue) && (
+          <Link className="card__action" to={href(`/near-me?issue=${encodeURIComponent(issue.id)}`)}>
+            View on map<span className="visually-hidden">: {issue.title}</span>
+          </Link>
+        )}
+        {source && (
+          <ExternalAction href={source} context={issue.title}>
+            Official record
+          </ExternalAction>
+        )}
+      </span>
     </div>
   );
 }
