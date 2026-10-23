@@ -660,6 +660,7 @@ select:disabled {
   .hero__inner {
     grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
     gap: 64px;
+    align-items: center;
   }
 }
 .hero__place {
