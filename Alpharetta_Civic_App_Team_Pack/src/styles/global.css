@@ -2139,9 +2139,13 @@ input[type='search']:focus-visible {
   .citywide-grid {
     align-items: start;
   }
+  /* If the column is taller than the window it scrolls on its own, so every meeting stays reachable. */
   .section--meetings {
     position: sticky;
     top: 136px;
+    max-height: calc(100vh - 152px);
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
 }
 
@@ -2206,4 +2210,23 @@ input[type='search']:focus-visible {
 }
 .soon__why {
   margin-top: 32px;
+}
+
+/* Summaries are never cut short: a cut summary can contradict its status (for example
+   "failed on September 16" next to an Approved badge, when the item passed on October 7). */
+.issue-list .card--issue .card__summary {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: none;
+  overflow: visible;
+}
+
+/* Phones: the home headline stays the largest type on the page. */
+@media (max-width: 479px) {
+  .chooser__title {
+    font-size: 1.25rem;
+  }
+  .steps__title {
+    font-size: 1.375rem;
+  }
 }
