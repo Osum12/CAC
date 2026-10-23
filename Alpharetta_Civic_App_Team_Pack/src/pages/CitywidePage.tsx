@@ -6,7 +6,7 @@ import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState 
 import {
   formatCompactDate,
   formatDate,
-  formatTime,
+  formatTime as formatTimeRaw,
   formatWeekdayDate,
   humanize,
   ISSUE_STATUS_LABELS,
@@ -40,6 +40,9 @@ export function agendaFor(meeting: Meeting, documents: CivicDocument[]): CivicDo
   const docs = meeting.agendaDocumentIds.map((id) => documents.find((d) => d.id === id)).filter((d): d is CivicDocument => Boolean(d));
   return docs.find((d) => d.documentType === 'agenda') ?? docs[0] ?? null;
 }
+
+/** "10:00 AM" with a non-breaking space, so AM/PM never wraps onto a line of its own. */
+const formatTime = (hhmm: string | null) => formatTimeRaw(hhmm)?.replace(' ', ' ') ?? null;
 
 /** Most recent verification date across curated records, or null when none is recorded. */
 function lastChecked(meetings: Meeting[]): string | null {
@@ -206,6 +209,37 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
 
   return (
     <div className="county-body">
+      <aside className="rail" aria-labelledby="meetings-heading">
+        <h2 id="meetings-heading" className="rail__title">
+          Meetings
+        </h2>
+        <p className="rail__source">From the {sources}</p>
+        {sessions.some((x) => x.meeting) && (
+          <nav aria-label="Jump to a meeting" className="rail__nav">
+            <ul className="rail__list">
+              {sessions
+                .filter((x) => x.meeting)
+                .map((x) => (
+                  <li key={x.key}>
+                    <a href={`#session-${x.key}`} className="rail__jump">
+                      <span className="rail__date">
+                        {formatCompactDate(x.meeting!.date, 'Date to be announced')}
+                        {sessions.some((o) => o !== x && o.meeting?.date && o.meeting.date === x.meeting!.date) && formatTime(x.meeting!.startTime)
+                          ? `, ${formatTime(x.meeting!.startTime)}`
+                          : ''}
+                      </span>{' '}
+                      <span className="rail__name">{shortTitle(x.meeting!)}</span>{' '}
+                      <span className="rail__count">{x.upcoming ? 'Coming up' : itemCount(x.issues.length + x.also.length)}</span>
+                    </a>
+                  </li>
+                ))}
+            </ul>
+          </nav>
+        )}
+        <Link to={href('/archive')} className="rail__more">
+          Browse all meetings and documents
+        </Link>
+      </aside>
       <section className="record" aria-labelledby="issues-heading">
         <header className="record__head">
           <h2 id="issues-heading" ref={issuesHeading} tabIndex={-1}>
@@ -245,37 +279,6 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
         )}
       </section>
 
-      <aside className="rail" aria-labelledby="meetings-heading">
-        <h2 id="meetings-heading" className="rail__title">
-          Meetings
-        </h2>
-        <p className="rail__source">From the {sources}</p>
-        {sessions.some((x) => x.meeting) && (
-          <nav aria-label="Jump to a meeting" className="rail__nav">
-            <ul className="rail__list">
-              {sessions
-                .filter((x) => x.meeting)
-                .map((x) => (
-                  <li key={x.key}>
-                    <a href={`#session-${x.key}`} className="rail__jump">
-                      <span className="rail__date">
-                        {formatCompactDate(x.meeting!.date, 'Date to be announced')}
-                        {sessions.some((o) => o !== x && o.meeting?.date && o.meeting.date === x.meeting!.date) && formatTime(x.meeting!.startTime)
-                          ? `, ${formatTime(x.meeting!.startTime)}`
-                          : ''}
-                      </span>{' '}
-                      <span className="rail__name">{shortTitle(x.meeting!)}</span>{' '}
-                      <span className="rail__count">{x.upcoming ? 'Coming up' : itemCount(x.issues.length + x.also.length)}</span>
-                    </a>
-                  </li>
-                ))}
-            </ul>
-          </nav>
-        )}
-        <Link to={href('/archive')} className="rail__more">
-          Browse all meetings and documents
-        </Link>
-      </aside>
     </div>
   );
 }

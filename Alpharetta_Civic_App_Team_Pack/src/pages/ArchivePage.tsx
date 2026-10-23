@@ -16,7 +16,7 @@ export type ArchiveFilter = 'all' | 'videos' | 'agendas' | 'documents';
 
 export type ArchiveEntry =
   | { kind: 'meeting'; id: string; date: string | null; record: Meeting; groups: ArchiveFilter[] }
-  | { kind: 'document'; id: string; date: string | null; record: CivicDocument; groups: ArchiveFilter[] };
+  | { kind: 'document'; id: string; date: string | null; record: CivicDocument; groups: ArchiveFilter[]; forMeeting?: boolean };
 
 const FILTERS: { id: ArchiveFilter; label: string }[] = [
   { id: 'all', label: 'All' },
@@ -49,6 +49,7 @@ export function buildArchiveEntries(meetings: Meeting[], documents: CivicDocumen
       kind: 'document' as const,
       id: d.id,
       date: meetingDate(d) ?? d.publishedDate,
+      forMeeting: meetingDate(d) !== null,
       record: d,
       groups: ['all', AGENDA_TYPES.has(d.documentType) ? 'agendas' : 'documents'] as ArchiveFilter[],
     })),
@@ -211,10 +212,10 @@ function ArchiveRow({ entry, nested }: { entry: ArchiveEntry; nested: boolean })
               <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time>
               {time ? ` at ${time}` : ''}
             </>
-          ) : entry.record.meetingId && entry.date !== entry.record.publishedDate ? (
+          ) : entry.forMeeting ? (
             <>
               For the <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time> meeting.
-              {entry.record.publishedDate ? ` Published ${formatDate(entry.record.publishedDate)}.` : ''}
+              {entry.record.publishedDate && entry.record.publishedDate !== entry.date ? ` Published ${formatDate(entry.record.publishedDate)}.` : ''}
             </>
           ) : (
             <>

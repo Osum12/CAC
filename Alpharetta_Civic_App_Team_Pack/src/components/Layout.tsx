@@ -45,6 +45,21 @@ export function Layout() {
   // users start at the new page content; scroll back to the top. Comparing with the
   // previous pathname (not a "first run" flag) keeps this from firing on the initial
   // load, even when React StrictMode runs effects twice in development.
+  // The sticky header's real height feeds --head-h, which scroll-padding and the sticky columns use,
+  // so jump targets and focused items always land just below it whatever wraps at a given width.
+  const headRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const head = headRef.current;
+    if (!head || typeof ResizeObserver === 'undefined') return;
+    const root = document.documentElement;
+    const ro = new ResizeObserver(() => root.style.setProperty('--head-h', `${Math.ceil(head.getBoundingClientRect().height)}px`));
+    ro.observe(head);
+    return () => {
+      ro.disconnect();
+      root.style.removeProperty('--head-h');
+    };
+  }, []);
+
   const prevPath = useRef(pathname);
   useEffect(() => {
     if (prevPath.current === pathname) return;
@@ -58,7 +73,7 @@ export function Layout() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <header className="masthead">
+      <header className="masthead" ref={headRef}>
         <div className="masthead__inner">
           <NavLink to="/" className="brand" aria-label="Georgia Civic, choose a location" end>
             <svg className="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
