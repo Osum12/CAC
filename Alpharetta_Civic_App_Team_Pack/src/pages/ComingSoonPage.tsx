@@ -65,28 +65,8 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
         </div>
       </section>
 
-      {place.level === 'county' ? (
-        <CountyPlaces county={place} cities={municipalitiesInCounty(place.id)} />
-      ) : (
-        <section className="soon-more" aria-labelledby="soon-counties-h">
-          <h2 id="soon-counties-h" className="soon-more__title">
-            {place.countyIds.length > 1 ? `${place.name} spans ${place.countyIds.length} counties` : `${place.name} is in ${countyNames(countiesOf(place))}`}
-          </h2>
-          <ul className="soon-places">
-            {countiesOf(place).map((c) => (
-              <li key={c.id}>
-                <Link to={countyPath(c)} className="soon-place">
-                  <span className="soon-place__name">{c.name}</span>{' '}
-                  <span className={`soon-place__status${c.civicDataAvailable ? ' soon-place__status--live' : ''}`}>
-                    <span className="soon-place__dot" aria-hidden="true" />
-                    {c.civicDataAvailable ? 'Issues, meetings, map, and archive' : 'Coming soon'}
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      {/* A city's county is named once, in the detail line above, with one "Explore" action. */}
+      {place.level === 'county' && <CountyPlaces county={place} cities={municipalitiesInCounty(place.id)} />}
 
       {!ownRecords && (
         <p className="soon__why fine-print">

@@ -20,10 +20,14 @@ export function SourceAction({ url, label, unavailableText }: Props) {
       </span>
     );
   }
+  const cut = label.lastIndexOf(' ') + 1;
   return (
     <a className="source-action" href={href} target="_blank" rel="noopener noreferrer">
-      {label}
-      <span aria-hidden="true"> ↗</span>
+      {label.slice(0, cut)}
+      <span className="nowrap">
+        {label.slice(cut)}
+        <span aria-hidden="true">{' '}↗</span>
+      </span>
       <span className="visually-hidden"> (opens in a new tab)</span>
     </a>
   );

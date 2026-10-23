@@ -34,7 +34,7 @@ export function IssueDetailPage() {
   const missingDocs = issue.documentIds.filter((id) => !documents.some((d) => d.id === id)).length;
 
   return (
-    <article className="page detail">
+    <article className="page detail detail--issue">
       <BackLink fallbackTo={href('/')} fallbackLabel="All issues" />
       <header className="detail__header">
         <div className="card__top">
@@ -58,6 +58,25 @@ export function IssueDetailPage() {
               <p className="fine-print">This summary is a plain-language rewrite of the official documents listed below. Check them for the exact wording.</p>
             )}
           </section>
+
+          {/* Sources and location come right after the summary on phones; on wide screens they form the right rail. */}
+          <aside className="detail__side">
+            <section className="panel" aria-labelledby="sources-h">
+              <h2 id="sources-h">Official sources</h2>
+              {issue.sourceUrls.length ? (
+                <ul className="plain-list">
+                  {issue.sourceUrls.map((url, i) => (
+                    <li key={i}>
+                      <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
+              )}
+            </section>
+            <LocationPanel issue={issue} />
+          </aside>
 
           <section aria-labelledby="why-h" className="callout">
             <h2 id="why-h">Why it may matter</h2>
@@ -90,24 +109,6 @@ export function IssueDetailPage() {
             {missingDocs > 0 && <MissingNote count={missingDocs} noun="document" />}
           </section>
         </div>
-
-        <aside className="detail__side">
-          <section className="panel" aria-labelledby="sources-h">
-            <h2 id="sources-h">Official sources</h2>
-            {issue.sourceUrls.length ? (
-              <ul className="plain-list">
-                {issue.sourceUrls.map((url, i) => (
-                  <li key={i}>
-                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
-            )}
-          </section>
-          <LocationPanel issue={issue} />
-        </aside>
       </div>
     </article>
   );

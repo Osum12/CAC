@@ -29,6 +29,12 @@ export function Layout() {
   const mainRef = useRef<HTMLElement>(null);
   const place = placeFromPath(pathname);
   const covered = place?.level === 'county' && place.civicDataAvailable ? place : null;
+  // Detail pages belong to a section: issues to Countywide, meetings and documents to the Archive.
+  const section = /^\/county\/[^/]+\/issues\//.test(pathname)
+    ? '/'
+    : /^\/county\/[^/]+\/(meetings|documents)\//.test(pathname)
+      ? '/archive'
+      : null;
 
   // On route change, move focus to the main region so keyboard and screen-reader
   // users start at the new page content; scroll back to the top. Comparing with the
@@ -73,11 +79,17 @@ export function Layout() {
           )}
           {covered && (
             <nav aria-label={`${covered.name} pages`} className="primary-nav">
-              {COUNTY_NAV.map((n) => (
-                <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className="primary-nav__link">
-                  {n.label}
-                </NavLink>
-              ))}
+              {COUNTY_NAV.map((n) =>
+                n.path === section ? (
+                  <Link key={n.path} to={countyPath(covered, n.path)} className="primary-nav__link active" aria-current="page">
+                    {n.label}
+                  </Link>
+                ) : (
+                  <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className="primary-nav__link">
+                    {n.label}
+                  </NavLink>
+                ),
+              )}
             </nav>
           )}
         </div>
