@@ -13,6 +13,7 @@ import { isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
 import { Ripples } from '../components/Ripples';
 import { CompassMark } from '../components/CompassMark';
+import { AtlasBackdrop } from '../components/AtlasBackdrop';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 import { usePlace, usePlaceHref, useRecordSources } from '../services/placeContext';
 import { nb } from '../components/nb';
@@ -66,6 +67,7 @@ export function CitywidePage() {
 
   return (
     <div className="page">
+      <AtlasBackdrop />
       <section className="hero hero--county" aria-labelledby="citywide-title">
         <div className="hero__inner">
           <div className="hero__main">

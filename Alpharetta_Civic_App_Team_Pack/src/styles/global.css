@@ -3595,3 +3595,19 @@ time {
 .detail__header .tag--topic {
   background: none;
 }
+
+/* ---------- Countywide: the atlas drifts as you scroll ---------- */
+/* A fixed layer behind the whole page; JS moves it slower than the content (see AtlasBackdrop).
+   The hero band, the search sheet and the issue sheets sit on top of it. */
+.atlas-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: var(--atlas) calc(50% + var(--atlas-x, 0px)) var(--atlas-y, 0px) / 1600px auto repeat;
+  opacity: 0.85;
+}
+/* The page-margin linework would double up with the moving layer. */
+.main:has(.atlas-backdrop)::before {
+  display: none;
+}
