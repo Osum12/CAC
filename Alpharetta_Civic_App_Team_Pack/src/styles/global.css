@@ -215,38 +215,6 @@ h2[tabindex='-1']:focus {
   padding: 0 var(--gutter) 72px;
 }
 
-/* Honest identity strip: the USWDS "official website" banner, inverted to say what this is not. */
-.identity {
-  background: var(--wash);
-  border-bottom: 1px solid var(--rule);
-  color: var(--ink-2);
-  font-size: 0.9375rem;
-  line-height: 1.4;
-}
-.identity__inner {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 8px var(--gutter);
-}
-.identity__flag {
-  flex: none;
-  width: 18px;
-  height: 18px;
-  margin-top: 1px;
-  border-radius: 50%;
-  border: 2px solid var(--ink-2);
-  display: grid;
-  place-items: center;
-}
-.identity__flag::before {
-  content: 'i';
-  font-size: 0.8125rem;
-  font-weight: 800;
-  line-height: 1;
-}
 
 /* ---------- Masthead ---------- */
 .masthead {
@@ -411,26 +379,6 @@ h2[tabindex='-1']:focus {
 }
 
 /* ---------- Footer ---------- */
-.site-footer {
-  border-top: 4px solid var(--navy-2);
-  background: var(--wash);
-  color: var(--ink-2);
-  font-size: 1.0625rem;
-}
-.site-footer__inner {
-  max-width: var(--maxw);
-  margin: 0 auto;
-  padding: 28px var(--gutter) 36px;
-  display: grid;
-  gap: 6px;
-}
-.site-footer__inner p:last-child {
-  max-width: 64ch;
-}
-.site-footer__name {
-  font-weight: 800;
-  color: var(--ink);
-}
 
 /* ---------- Shared bits ---------- */
 .muted {
@@ -2093,9 +2041,17 @@ input[type='search']:focus-visible {
 }
 
 @media print {
-  .masthead,
-  .identity,
-  .site-footer {
+  .masthead {
     position: static;
   }
+}
+
+/* Home headline: always two set lines ("Know what’s happening / in your community.").
+   Each line is sized from the headline's own width, so the longer line always fits. */
+.hero--state .hero__title {
+  container-type: inline-size;
+}
+.hero--state .hero__title .hero__line {
+  display: block;
+  font-size: clamp(1.5rem, 8.79cqi, 3.5rem);
 }

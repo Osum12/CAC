@@ -54,13 +54,6 @@ export function Layout() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <p className="identity">
-        <span className="identity__inner">
-          <span className="identity__flag" aria-hidden="true" />
-          An independent student project that explains public records. It is not
-          an official government website.
-        </span>
-      </p>
       <header className="masthead">
         <div className="masthead__bar">
           <div className="masthead__inner">
@@ -125,16 +118,6 @@ export function Layout() {
       <main id="main" ref={mainRef} tabIndex={-1} className="main">
         <Outlet />
       </main>
-      <footer className="site-footer">
-        <div className="site-footer__inner">
-          <p className="site-footer__name">Georgia Civic</p>
-          <p>
-            Summaries here are written in plain language from public records.
-            Before you rely on a detail, open the official record linked on each
-            page.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }
