@@ -4,6 +4,6 @@ import { usePlace } from './placeContext';
 export function usePageTitle(title: string | null) {
   const place = usePlace();
   useEffect(() => {
-    document.title = [title, place?.name, 'Georgia Civic'].filter(Boolean).join(' · ');
+    document.title = [title, place?.name, 'Porchlight'].filter(Boolean).join(' · ');
   }, [title, place]);
 }

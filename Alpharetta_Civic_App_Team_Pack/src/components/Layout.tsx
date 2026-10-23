@@ -60,13 +60,13 @@ export function Layout() {
       </a>
       <header className="masthead">
         <div className="masthead__inner">
-          <NavLink to="/" className="brand" aria-label="Georgia Civic, choose a location" end>
+          <NavLink to="/" className="brand" aria-label="Porchlight, choose a location" end>
             <svg className="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
               <rect className="brand__tile" width="32" height="32" rx="3" />
               <path className="brand__bars" d="M7 25V17h4v8zm7 0V11h4v14zm7 0V7h4v18z" />
             </svg>
             <span className="brand__text">
-              <span className="brand__name">Georgia Civic</span>
+              <span className="brand__name">Porchlight</span>
               <span className="brand__tag">Local government, explained</span>
             </span>
           </NavLink>
