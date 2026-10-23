@@ -71,7 +71,7 @@ export function Layout() {
             <NavLink
               to="/"
               className="brand"
-              aria-label="Georgia Civic, choose a location"
+              aria-label="Porchlight, choose a location"
               end
             >
               <svg
@@ -87,7 +87,7 @@ export function Layout() {
                 <path className="brand__mark-base" d="M3 30h30v3H3z" />
               </svg>
               <span className="brand__text">
-                <span className="brand__name">Georgia Civic</span>
+                <span className="brand__name">Porchlight</span>
                 <span className="brand__tag">Local government, explained</span>
               </span>
             </NavLink>
