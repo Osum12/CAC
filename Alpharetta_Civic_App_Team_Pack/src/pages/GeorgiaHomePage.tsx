@@ -24,7 +24,6 @@ export function GeorgiaHomePage() {
   return (
     <div className="page page--home">
       <section className="home-hero" aria-labelledby="home-title">
-        <p className="kicker">Georgia Civic</p>
         <h1 id="home-title" className="home-hero__title">
           <span className="hero__line">Know what’s happening</span> <span className="hero__line">in your community.</span>
         </h1>
