@@ -349,29 +349,6 @@ ol {
   height: 40px;
   flex: none;
 }
-.brand__tile {
-  fill: #2f3a8f;
-}
-.brand__ring {
-  fill: none;
-  stroke: #f2b33d;
-  stroke-width: 1.4;
-  opacity: 0.45;
-}
-.brand__pin {
-  fill: #f2b33d;
-}
-.brand__dot {
-  fill: #2f3a8f;
-}
-@media (prefers-color-scheme: dark) {
-  .brand__tile {
-    fill: #3b48aa;
-  }
-  .brand__dot {
-    fill: #3b48aa;
-  }
-}
 .brand__text {
   display: grid;
   line-height: 1.15;
