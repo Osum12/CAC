@@ -1,3 +1,5 @@
+import { CompassMark } from './CompassMark';
+
 /** Decorative rings, like the ripple around a map pin: "this is about where you live". */
 export function Ripples() {
   return (
@@ -5,7 +7,9 @@ export function Ripples() {
       <span className="ripples__ring" />
       <span className="ripples__ring" />
       <span className="ripples__ring" />
-      <span className="ripples__dot" />
+      <span className="ripples__dot">
+        <CompassMark />
+      </span>
     </div>
   );
 }

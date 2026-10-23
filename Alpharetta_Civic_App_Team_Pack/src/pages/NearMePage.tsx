@@ -13,7 +13,7 @@ import { IssueStatusBadge } from '../components/StatusBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { usePlaceHref } from '../services/placeContext';
 import { PinIcon } from '../components/PinIcon';
-
+import { CompassMark } from '../components/CompassMark';
 export function NearMePage() {
   usePageTitle('Near Me');
   const { params, setParam } = useUrlParams();
@@ -91,7 +91,10 @@ export function NearMePage() {
   return (
     <div className="page">
       <header className="page-header">
-        <h1>Near Me</h1>
+        <h1>
+          <CompassMark className="compass--heading" />
+          Near Me
+        </h1>
         <p className="page-header__lede">
           Issues with a map location come first, nearest at the top, followed by countywide items. Distance helps you find nearby items, but it doesn’t tell you whether an issue
           affects a particular home.

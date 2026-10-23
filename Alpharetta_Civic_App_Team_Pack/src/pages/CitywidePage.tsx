@@ -12,6 +12,7 @@ import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
 import { Ripples } from '../components/Ripples';
+import { CompassMark } from '../components/CompassMark';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 import { usePlace, usePlaceHref, useRecordSources } from '../services/placeContext';
 import { nb } from '../components/nb';
@@ -67,9 +68,11 @@ export function CitywidePage() {
     <div className="page">
       <section className="hero hero--county" aria-labelledby="citywide-title">
         <div className="hero__inner">
-          <Ripples />
           <div className="hero__main">
-            <p className="hero__place">{place?.name}, Georgia</p>
+            <p className="hero__place">
+              <CompassMark />
+              {place?.name}, Georgia
+            </p>
             <h1 id="citywide-title" className="hero__title">
               <span className="hero__line">What’s on the table</span> <span className="hero__line">in {place?.name}</span>
             </h1>
@@ -218,7 +221,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
           Meetings
         </h2>
         <p className="section__source">From the {sources}</p>
-        {upcoming.length > 0 && <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="" />}
+        {upcoming.length > 0 && <MeetingGroup title="Coming up" upcoming meetings={upcoming} documents={documents} empty="" />}
         <MeetingGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} empty="No past meetings in this dataset." />
         <Link to={href('/archive')} className="text-link">
           Browse all meetings and documents
@@ -405,12 +408,24 @@ function IssueList({ issues, headingLevel }: { issues: Issue[]; headingLevel: 3 
   );
 }
 
-function MeetingGroup({ title, meetings, documents, empty }: { title: string; meetings: Meeting[]; documents: CivicDocument[]; empty: ReactNode }) {
+function MeetingGroup({
+  title,
+  meetings,
+  documents,
+  empty,
+  upcoming = false,
+}: {
+  title: string;
+  meetings: Meeting[];
+  documents: CivicDocument[];
+  empty: ReactNode;
+  upcoming?: boolean;
+}) {
   return (
     <>
       <h3 className="subhead">{title}</h3>
       {meetings.length ? (
-        <ul className="stack">
+        <ul className={`stack calendar${upcoming ? ' calendar--upcoming' : ''}`}>
           {meetings.map((m) => (
             <li key={m.id}>
               <MeetingCard meeting={m} agenda={agendaFor(m, documents)} headingLevel={4} />
@@ -440,6 +455,8 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
   if (!next && !decided) return null;
   return (
     <aside className="docket" aria-label={next ? `Next at ${meetingPlace}` : 'Latest decision'}>
+      {/* The rings centre on the featured record, like the ripple around a map pin. */}
+      <Ripples />
       {next && (
         <div className="docket__block">
           <p className="docket__kicker">Next at {meetingPlace}</p>
