@@ -386,8 +386,8 @@ const TopicOverview = memo(
                 <span className="topic__name">{humanize(t)}</span>
                 <span className="topic__detail">
                   <span className="topic__count">{count}</span>
-                  <span>{count === 1 ? ' item' : ' items'}</span>
-                  {open > 0 && <span>{`, ${open} still open`}</span>}
+                  <span>{count === 1 ? ' issue' : ' issues'}</span>
+                  {open > 0 && <span>{`, ${open} still being decided`}</span>}
                 </span>
                 <svg className="topic__chev" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">
                   <path d="m9 6 6 6-6 6" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />

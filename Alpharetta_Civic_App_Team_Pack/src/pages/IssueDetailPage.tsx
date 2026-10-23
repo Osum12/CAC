@@ -26,8 +26,18 @@ export function IssueDetailPage() {
   }, [issueId]);
   usePageTitle(state.status === 'ready' && state.data ? state.data.issue.title : 'Issue');
 
-  if (state.status === 'loading') return <div className="page"><LoadingState /></div>;
-  if (state.status === 'error') return <div className="page"><ErrorState onRetry={state.retry} /></div>;
+  if (state.status === 'loading')
+    return (
+      <div className="page">
+        <LoadingState />
+      </div>
+    );
+  if (state.status === 'error')
+    return (
+      <div className="page">
+        <ErrorState onRetry={state.retry} />
+      </div>
+    );
   if (!state.data) return <NotFound kind="issue" />;
 
   const { issue, meetings, documents } = state.data;
@@ -69,56 +79,48 @@ export function IssueDetailPage() {
         </div>
       </div>
 
-      <div className="detail__grid">
-        <div className="detail__main">
-          <section aria-labelledby="summary-h">
-            <h2 id="summary-h">What happened</h2>
-            <p className="prose">{issue.summary || 'No summary has been written for this issue yet.'}</p>
-            {!isMock(issue) && (
-              <p className="fine-print">This summary is a plain-language rewrite of the official records listed below. Check them for the exact wording.</p>
-            )}
-          </section>
+      <div className="detail__single">
+        <section aria-labelledby="summary-h">
+          <h2 id="summary-h">What happened</h2>
+          <p className="prose">{issue.summary || 'No summary has been written for this issue yet.'}</p>
+          {!isMock(issue) && (
+            <p className="fine-print">This summary is a plain-language rewrite of the official records listed below. Check them for the exact wording.</p>
+          )}
+        </section>
 
-          <section aria-labelledby="timeline-h">
-            <h2 id="timeline-h">Timeline</h2>
-            {meetings.length ? (
-              <StatusStepper issue={issue} meetings={sortedMeetings} />
+        <section aria-labelledby="timeline-h">
+          <h2 id="timeline-h">Timeline</h2>
+          {meetings.length ? <StatusStepper issue={issue} meetings={sortedMeetings} /> : <EmptyState title="No related meetings are linked to this issue." />}
+          {missingMeetings > 0 && <MissingNote count={missingMeetings} noun="meeting" />}
+          <p className="fine-print">
+            Being on an agenda does not mean an item was approved.
+            {!isMock(issue) && ' The status above comes from the recorded vote or official recommendation.'}
+          </p>
+        </section>
+
+        <section aria-labelledby="docs-h">
+          <h2 id="docs-h">Records and sources</h2>
+          <div className="doc-group">
+            <h3 className="doc-group__title">Official item record</h3>
+            {issue.sourceUrls.length ? (
+              <ul className="source-list">
+                {issue.sourceUrls.map((url, i) => (
+                  <li key={i}>
+                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
+                  </li>
+                ))}
+              </ul>
             ) : (
-              <EmptyState title="No related meetings are linked to this issue." />
+              <p>
+                <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
+              </p>
             )}
-            {missingMeetings > 0 && <MissingNote count={missingMeetings} noun="meeting" />}
-            <p className="fine-print">
-              Being on an agenda does not mean an item was approved.
-              {!isMock(issue) && ' The status above comes from the recorded vote or official recommendation.'}
-            </p>
-          </section>
+          </div>
+          {documents.length ? <DocumentGroups documents={documents} /> : <EmptyState title="No documents are linked to this issue." />}
+          {missingDocs > 0 && <MissingNote count={missingDocs} noun="document" />}
+        </section>
 
-          <section aria-labelledby="docs-h">
-            <h2 id="docs-h">Records and sources</h2>
-            <div className="doc-group">
-              <h3 className="doc-group__title">Official item record</h3>
-              {issue.sourceUrls.length ? (
-                <ul className="source-list">
-                  {issue.sourceUrls.map((url, i) => (
-                    <li key={i}>
-                      <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>
-                  <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
-                </p>
-              )}
-            </div>
-            {documents.length ? <DocumentGroups documents={documents} /> : <EmptyState title="No documents are linked to this issue." />}
-            {missingDocs > 0 && <MissingNote count={missingDocs} noun="document" />}
-          </section>
-        </div>
-
-        <aside className="detail__side">
-          <LocationPanel issue={issue} />
-        </aside>
+        <LocationPanel issue={issue} />
       </div>
     </article>
   );
@@ -130,7 +132,11 @@ function standingSentence(issue: Issue, meetings: Meeting[]): string {
   const dated = meetings.filter((m) => m.date);
   const last = dated.at(-1) ?? null;
   const times =
-    meetings.length > 1 ? ` It came up at ${meetings.length} meetings in these records.` : meetings.length === 1 ? ' It came up at one meeting in these records.' : '';
+    meetings.length > 1
+      ? ` It came up at ${meetings.length} meetings in these records.`
+      : meetings.length === 1
+        ? ' It came up at one meeting in these records.'
+        : '';
   switch (issue.status) {
     case 'approved':
       return `The board approved this${on ? ` on ${on}` : ''}.${times}`;
@@ -232,7 +238,7 @@ function LocationPanel({ issue }: { issue: Issue }) {
   const loc = issue.location;
   const coords = getValidCoordinates(issue);
   return (
-    <section className="panel" aria-labelledby="location-h">
+    <section className="location" aria-labelledby="location-h">
       <h2 id="location-h">Location</h2>
       {!loc ? (
         <p className="muted">No location is recorded for this issue, so it does not appear on the map.</p>

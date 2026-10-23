@@ -2413,6 +2413,21 @@ input[type='search']:focus-visible {
 .detail__single {
   max-width: 860px;
 }
+/* Phones and tablets: "Watch and verify" comes before the long agenda, not after it. */
+@media (max-width: 959px) {
+  .detail__side {
+    order: -1;
+  }
+}
+.location {
+  display: grid;
+  gap: 8px;
+  justify-items: start;
+}
+.location .muted {
+  font-size: 1.0625rem;
+  max-width: 62ch;
+}
 .detail__side {
   display: grid;
   gap: 32px;
