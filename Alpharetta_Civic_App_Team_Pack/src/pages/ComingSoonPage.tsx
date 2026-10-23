@@ -11,6 +11,7 @@ import {
   type Municipality,
 } from '../services/jurisdictions';
 import { usePageTitle } from '../services/usePageTitle';
+import { Ripples } from '../components/Ripples';
 
 const joinNames = (names: string[]) =>
   names.length < 3 ? names.join(' and ') : `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
@@ -31,6 +32,7 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
   return (
     <div className="page">
       <section className="soon" aria-labelledby="soon-title">
+        <Ripples />
         <div className="soon__inner">
           <div className="soon__main">
             <p className="soon__badge">

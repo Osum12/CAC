@@ -33,9 +33,9 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
   const source = isMock(issue) ? null : primarySource(issue.sourceUrls);
   const mappable = getValidCoordinates(issue) !== null;
   return (
-    <article className="card card--issue">
+    <article className="card card--issue" data-topic={issue.category}>
       <div className="card__top">
-        <span className="tag">{humanize(issue.category)}</span>
+        <span className="tag tag--topic">{humanize(issue.category)}</span>
         {isMock(issue) && <MockBadge record={issue} />}
       </div>
       <H className="card__title">

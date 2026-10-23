@@ -156,7 +156,7 @@ function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIss
   const href = usePlaceHref();
   const { issue, coords, reason } = ranked;
   return (
-    <article className={`feed-item${selected ? ' feed-item--selected' : ''}`} data-issue-id={issue.id}>
+    <article className={`feed-item${selected ? ' feed-item--selected' : ''}`} data-issue-id={issue.id} data-topic={issue.category}>
       {number !== null ? (
         <span className="feed-item__num">
           <span className="visually-hidden">Map pin </span>
@@ -169,7 +169,7 @@ function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIss
       )}
       <div className="feed-item__body">
         <div className="card__top">
-          <span className="tag">{humanize(issue.category)}</span>
+          <span className="tag tag--topic">{humanize(issue.category)}</span>
           <IssueStatusBadge status={issue.status} />
         </div>
         <h3 className="feed-item__title">

@@ -32,7 +32,7 @@ export function DocumentDetailPage() {
   const { document: doc, meeting, issues } = state.data;
 
   return (
-    <article className="page detail">
+    <article className="page detail detail--document">
       <BackLink fallbackTo={href('/archive')} fallbackLabel="Archive" />
       <header className="detail__header">
         <div className="card__top">

@@ -1,4 +1,5 @@
 import { LocationSelector } from '../components/LocationSelector';
+import { Ripples } from '../components/Ripples';
 import { COUNTIES, DIRECTORY_SOURCE, MUNICIPALITIES } from '../services/jurisdictions';
 import { usePageTitle } from '../services/usePageTitle';
 
@@ -23,8 +24,9 @@ export function GeorgiaHomePage() {
   usePageTitle(null);
   return (
     <div className="page">
-      <section className="hero hero--cover hero--state" aria-labelledby="home-title">
+      <section className="hero hero--state" aria-labelledby="home-title">
         <div className="hero__inner">
+          <Ripples />
           <div className="hero__main">
             <p className="hero__place">Georgia Civic</p>
             <h1 id="home-title" className="hero__title">
@@ -65,3 +67,4 @@ export function GeorgiaHomePage() {
     </div>
   );
 }
+

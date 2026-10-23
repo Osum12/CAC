@@ -34,11 +34,11 @@ export function IssueDetailPage() {
   const missingDocs = issue.documentIds.filter((id) => !documents.some((d) => d.id === id)).length;
 
   return (
-    <article className="page detail">
+    <article className="page detail detail--issue" data-topic={issue.category}>
       <BackLink fallbackTo={href('/')} fallbackLabel="All issues" />
       <header className="detail__header">
         <div className="card__top">
-          <span className="tag">{humanize(issue.category)}</span>
+          <span className="tag tag--topic">{humanize(issue.category)}</span>
           {isMock(issue) && <MockBadge record={issue} size="lg" />}
         </div>
         <h1 className="detail__title">{issue.title}</h1>

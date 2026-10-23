@@ -32,7 +32,7 @@ export function MeetingDetailPage() {
   const missingDocs = meeting.agendaDocumentIds.filter((id) => !documents.some((d) => d.id === id)).length;
 
   return (
-    <article className="page detail">
+    <article className="page detail detail--meeting">
       <BackLink fallbackTo={href('/archive')} fallbackLabel="Archive" />
       <header className="detail__header">
         <div className="card__top">

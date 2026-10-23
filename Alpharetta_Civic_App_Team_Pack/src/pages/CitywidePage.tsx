@@ -1,5 +1,5 @@
 import { useRef, type ReactNode, type RefObject } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
 import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState } from '../services/filters';
@@ -10,6 +10,7 @@ import { IssueCard, MeetingCard } from '../components/Cards';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
+import { Ripples } from '../components/Ripples';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 import { usePlace, usePlaceHref, useRecordSources } from '../services/placeContext';
 
@@ -62,14 +63,20 @@ export function CitywidePage() {
 
   return (
     <div className="page">
-      <section className="hero hero--cover" aria-labelledby="citywide-title">
+      <section className="hero hero--county" aria-labelledby="citywide-title">
         <div className="hero__inner">
+          <Ripples />
           <div className="hero__main">
             <p className="hero__place">{place?.name}, Georgia</p>
             <h1 id="citywide-title" className="hero__title">
               <span className="hero__line">What’s on the table</span> <span className="hero__line">in {place?.name}</span>
             </h1>
             <p className="hero__lede">Recent decisions and public meetings of the {sources}, in plain language, with a link to every official record.</p>
+          </div>
+          <div className="searchpanel">
+            <p className="searchpanel__prompt" aria-hidden="true">
+              What can we help you find?
+            </p>
             <form
               className="hero-search"
               role="search"
@@ -82,6 +89,7 @@ export function CitywidePage() {
               <label htmlFor="hero-q" className="visually-hidden">
                 Search issues
               </label>
+              <SearchIcon />
               <input
                 id="hero-q"
                 type="search"
@@ -93,6 +101,7 @@ export function CitywidePage() {
                 Search
               </button>
             </form>
+            {ready && <TopicStrip issues={ready[1]} onPick={() => setTimeout(() => jumpTo(issuesHeading.current), 0)} />}
             {ready && (
               <p className="hero__note">
                 {anyMock
@@ -350,5 +359,60 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
         </div>
       )}
     </aside>
+  );
+}
+
+/**
+ * One shortcut per topic that has issues in the data, with its count. Each link opens the
+ * issue list filtered to that topic, so a shortcut never leads to an empty list.
+ */
+function TopicStrip({ issues, onPick }: { issues: Issue[]; onPick: () => void }) {
+  const [params] = useSearchParams();
+  const active = params.get('topic') ?? '';
+  const topics = topicsIn(issues);
+  if (!topics.length) return null;
+  return (
+    <nav className="topics" aria-labelledby="topics-title">
+      <p id="topics-title" className="topics__title">
+        Browse by topic
+      </p>
+      <ul className="topics__list">
+        {topics.map((t) => {
+          const count = issues.filter((i) => i.category === t).length;
+          const current = t === active;
+          return (
+            <li key={t}>
+              <Link
+                to={{ search: `?topic=${encodeURIComponent(t)}` }}
+                className="topic"
+                data-topic={t}
+                aria-current={current ? 'true' : undefined}
+                onClick={onPick}
+              >
+                {current && (
+                  <span className="topic__check" aria-hidden="true">
+                    ✓
+                  </span>
+                )}
+                <span className="topic__name">{humanize(t)}</span>
+                <span className="topic__count">
+                  {count}
+                  <span className="visually-hidden">{count === 1 ? ' issue' : ' issues'}</span>
+                </span>
+              </Link>
+            </li>
+          );
+        })}
+      </ul>
+    </nav>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg className="hero-search__icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+      <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2.2" />
+      <path d="m15.5 15.5 5 5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+    </svg>
   );
 }
