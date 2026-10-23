@@ -68,29 +68,14 @@ export function Layout() {
         <div className="masthead__inner">
           <NavLink to="/" className="brand" aria-label="Porchlight, choose a location" end>
             <svg className="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
-              <defs>
-                <linearGradient id="pl-sky" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#3b48aa"/><stop offset="1" stopColor="#1c2366"/>
-                </linearGradient>
-                <radialGradient id="pl-glow" cx="17.5" cy="17.5" r="12" gradientUnits="userSpaceOnUse">
-                  <stop offset="0" stopColor="#f2b33d" stopOpacity="0.7"/>
-                  <stop offset="0.5" stopColor="#f2b33d" stopOpacity="0.18"/>
-                  <stop offset="1" stopColor="#f2b33d" stopOpacity="0"/>
-                </radialGradient>
-                <linearGradient id="pl-pane" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stopColor="#ffe7a8"/><stop offset="1" stopColor="#f2b33d"/>
-                </linearGradient>
-              </defs>
-              <rect width="32" height="32" rx="9" fill="url(#pl-sky)"/>
-              <g transform="translate(1.6 -1.4)">
-                <circle cx="17.5" cy="17.5" r="12" fill="url(#pl-glow)"/>
-                <rect x="5" y="8" width="2.6" height="8" rx="1.3" fill="#fbf1dc"/>
-                <path d="M7.4 10.2h7.4a2.7 2.7 0 0 1 2.7 2.7" fill="none" stroke="#fbf1dc" strokeWidth="1.6" strokeLinecap="round"/>
-                <path d="M12.2 15.4 17.5 11.8l5.3 3.6z" fill="#fbf1dc" stroke="#fbf1dc" strokeWidth="1.2" strokeLinejoin="round"/>
-                <rect x="13.2" y="15.4" width="8.6" height="9.4" rx="1" fill="url(#pl-pane)"/>
-                <path d="M17.5 15.6v9M13.4 20.1h8.2" stroke="#2f3a8f" strokeWidth="0.8" opacity="0.4"/>
-                <rect x="12.4" y="24.6" width="10.2" height="2" rx="1" fill="#fbf1dc"/>
-              </g>
+              <rect width="32" height="32" rx="3" fill="#2f3a8f"/>
+              <path d="M14.5 22.6h8l6 9.4h-20z" fill="#4655c4"/>
+              <path d="M6 5h2.4v8.6H6z" fill="#fbf1dc"/>
+              <path d="M8.4 7.6h10.1V10" fill="none" stroke="#fbf1dc" strokeWidth="1.6"/>
+              <path d="M13 13.6 18.5 9.6l5.5 4z" fill="#fbf1dc"/>
+              <path d="M14.5 13.6h8v9h-8z" fill="#f2b33d"/>
+              <path d="M18.5 13.6v9M14.5 18.1h8" stroke="#2f3a8f" strokeWidth="0.9"/>
+              <path d="M13.5 22.6h10v2h-10z" fill="#fbf1dc"/>
             </svg>
             <span className="brand__text">
               <span className="brand__name">Porchlight</span>
