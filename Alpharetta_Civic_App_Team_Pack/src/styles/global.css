@@ -113,7 +113,7 @@
     --accent: #f2b33d;
     --accent-ink: #161b3d;
     --accent-hover: #f5c463;
-    --accent-soft: #2e2716;
+    --accent-soft: #262338;
     --tonal: #262b52;
     --tonal-hover: #303668;
 
@@ -2139,6 +2139,12 @@ select[aria-invalid='true'] {
   color: var(--link);
   border: 2px solid var(--surface);
 }
+@media (prefers-color-scheme: dark) {
+  .soon__secondary {
+    background: var(--tonal);
+    border-color: var(--tonal);
+  }
+}
 .soon__primary:hover,
 .soon__secondary:hover {
   transform: translateY(-2px);
@@ -2241,12 +2247,13 @@ select[aria-invalid='true'] {
   content: '';
   position: absolute;
   z-index: -1;
-  right: -90px;
-  bottom: -110px;
+  right: -80px;
+  bottom: -80px;
   width: 220px;
   height: 220px;
   border-radius: 50%;
-  background: radial-gradient(circle, var(--glow) 0 18%, var(--band) 19%);
+  border: 1.5px solid var(--ring);
+  background: radial-gradient(circle, var(--accent) 0 10px, var(--glow) 11px 30px, transparent 31px, transparent 64px, var(--ring) 65px 66.5px, transparent 67.5px);
 }
 .state--page .state__title {
   font-size: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
@@ -2772,5 +2779,19 @@ select[aria-invalid='true'] {
   .archive-list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: stretch;
+  }
+}
+
+/* Dark: the meetings column steps one tone up so its cards still read as cards. */
+@media (prefers-color-scheme: dark) {
+  .section--meetings {
+    background: var(--surface);
+  }
+  .section--meetings .card {
+    background: var(--surface-2);
+  }
+  .section--meetings .tag,
+  .section--meetings .datechip {
+    background: var(--tonal);
   }
 }
