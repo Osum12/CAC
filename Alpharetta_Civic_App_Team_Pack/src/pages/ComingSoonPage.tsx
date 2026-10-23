@@ -53,7 +53,7 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
             )}
             {!ownRecords && (
               <p className="soon__why fine-print">
-                Georgia Civic only shows records that have been checked against official sources. None have been added for {place.name} yet, so this page
+                Porchlight only shows records that have been checked against official sources. None have been added for {place.name} yet, so this page
                 shows no issues, meetings, or documents.
               </p>
             )}
