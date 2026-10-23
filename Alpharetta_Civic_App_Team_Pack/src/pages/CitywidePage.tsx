@@ -1,5 +1,6 @@
-import { useRef, type MouseEvent, type ReactNode, type RefObject } from 'react';
+import { useRef, useState, type MouseEvent, type ReactNode, type RefObject } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
+import { flushSync } from 'react-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
 import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState } from '../services/filters';
@@ -208,7 +209,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
             </EmptyState>
           )
         ) : (
-          <GroupedIssues issues={issues} />
+          <GroupedIssues issues={issues} shorten />
         )}
       </section>
 
@@ -288,15 +289,34 @@ const GROUPS: { id: string; title: string; glyph: string; statuses: string[] }[]
 ];
 const groupOf = (i: Issue) => GROUPS.find((g) => g.statuses.includes(i.status)) ?? GROUPS[GROUPS.length - 1];
 
-function GroupedIssues({ issues }: { issues: Issue[] }) {
+/** A long group shows its first few issues, whole, and a button for the rest. */
+const SHORT_LENGTH = 6;
+
+function GroupedIssues({ issues, shorten = false }: { issues: Issue[]; shorten?: boolean }) {
   const sorted = byImportance(issues);
+  const [opened, setOpened] = useState<string[]>([]);
+  const groupRefs = useRef<Record<string, HTMLElement | null>>({});
+  const showAll = (id: string) => {
+    flushSync(() => setOpened((o) => [...o, id]));
+    // Move focus to the first issue that just appeared, so keyboard users carry on reading.
+    groupRefs.current[id]?.querySelector<HTMLElement>(`.issue-list > li:nth-child(${SHORT_LENGTH + 1}) a`)?.focus();
+  };
   return (
     <div className="issue-groups">
       {GROUPS.map((g) => {
         const members = sorted.filter((i) => groupOf(i) === g);
         if (!members.length) return null;
+        // Only cut when it saves real scrolling: never hide just one or two issues.
+        const short = shorten && !opened.includes(g.id) && members.length > SHORT_LENGTH + 2;
         return (
-          <section key={g.id} className={`issue-group issue-group--${g.id.replace('issues-', '')}`} aria-labelledby={g.id}>
+          <section
+            key={g.id}
+            ref={(el) => {
+              groupRefs.current[g.id] = el;
+            }}
+            className={`issue-group issue-group--${g.id.replace('issues-', '')}`}
+            aria-labelledby={g.id}
+          >
             <h3 id={g.id} className="issue-group__title" tabIndex={-1}>
               <span className="issue-group__glyph" aria-hidden="true">
                 {g.glyph}
@@ -307,7 +327,12 @@ function GroupedIssues({ issues }: { issues: Issue[] }) {
                 <span className="visually-hidden">{members.length === 1 ? ' issue' : ' issues'}</span>
               </span>
             </h3>
-            <IssueList issues={members} headingLevel={4} />
+            <IssueList issues={short ? members.slice(0, SHORT_LENGTH) : members} headingLevel={4} />
+            {short && (
+              <button type="button" className="button button--ghost issue-group__more" onClick={() => showAll(g.id)}>
+                Show all {members.length} {g.title.toLowerCase()} issues
+              </button>
+            )}
           </section>
         );
       })}

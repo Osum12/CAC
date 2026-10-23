@@ -2992,6 +2992,15 @@ dd {
   color: var(--ink-soft);
   font-variant-numeric: tabular-nums;
 }
+.issue-group__more {
+  margin-top: 16px;
+  width: 100%;
+}
+@media (min-width: 600px) {
+  .issue-group__more {
+    width: auto;
+  }
+}
 /* Tighter cards: the group heading already says where an issue stands. */
 .citywide-grid .card--issue {
   padding: 20px 22px 18px;

@@ -165,6 +165,10 @@ describe('With the real curated records in /data', () => {
     renderAt('/county/fulton');
     expect((await screen.findAllByRole('link', { name: /^Transportation sales tax \(TSPLOST\) referendum$/ })).length).toBeGreaterThan(0);
     expect(screen.queryByText(/Sample data|Alpharetta/)).not.toBeInTheDocument();
+    // The long Approved group starts with its first 6 issues and a button for the rest.
+    expect(screen.getAllByRole('link', { name: /^Official record/ })).toHaveLength(11); // 3 pending + 6 approved + 2 denied
+    await userEvent.click(screen.getByRole('button', { name: 'Show all 19 approved issues' }));
+    expect(screen.queryByRole('button', { name: /^Show all/ })).not.toBeInTheDocument();
     // Every issue card links to the county's own Legistar record, never a made-up URL.
     const records = screen.getAllByRole('link', { name: /^Official record/ });
     expect(records).toHaveLength(24);
