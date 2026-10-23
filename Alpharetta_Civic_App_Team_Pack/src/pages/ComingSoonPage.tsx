@@ -87,15 +87,20 @@ function CountyPlaces({ county, cities }: { county: County; cities: Municipality
         Cities and towns in {county.name}
       </h2>
       {cities.length ? (
+        <>
+        <p className="soon-more__note">
+          None of these {cities.length === 1 ? 'place has' : `${cities.length} places have`} records yet. Each one has its own page, ready for when its records are added.
+        </p>
         <ul className="soon-places">
           {cities.map((m) => (
             <li key={m.id}>
               <Link to={`/${m.id}`} className="soon-place">
-                <span className="soon-place__name">{m.name}</span> <span className="soon-place__status">Coming soon</span>
+                <span className="soon-place__name">{m.name}</span> <span className="soon-place__status visually-hidden">Coming soon</span>
               </Link>
             </li>
           ))}
         </ul>
+        </>
       ) : (
         <p className="muted">Our directory has no incorporated cities or towns listed for {county.name}.</p>
       )}

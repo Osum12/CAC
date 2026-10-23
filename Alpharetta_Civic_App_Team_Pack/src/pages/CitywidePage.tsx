@@ -1,4 +1,4 @@
-import { useRef, type ReactNode, type RefObject } from 'react';
+import { useRef, type MouseEvent, type ReactNode, type RefObject } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
@@ -184,6 +184,8 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
           </Link>
         </div>
 
+        <PageJumps issues={filtering ? matches : issues} meetingCount={upcoming.length + Math.min(recent.length, 4)} />
+
         <IssueFilters issues={issues} filters={filters} onChange={setFilter} onClear={clearFilters} />
         <p className="results-count" role="status" aria-live="polite">
           {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
@@ -191,7 +193,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
 
         {filtering ? (
           matches.length ? (
-            <IssueList issues={matches} headingLevel={3} />
+            <GroupedIssues issues={matches} />
           ) : (
             <EmptyState
               title="No issues match these filters."
@@ -205,7 +207,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
             </EmptyState>
           )
         ) : (
-          <IssueList issues={byImportance(issues)} headingLevel={3} />
+          <GroupedIssues issues={issues} />
         )}
       </section>
 
@@ -271,6 +273,94 @@ function IssueFilters({
 /** Main items first, then the most recently decided. */
 const byImportance = (issues: Issue[]) =>
   [...issues].sort((a, b) => Number(b.featured) - Number(a.featured) || (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? ''));
+
+/**
+ * Issues are grouped by where they stand, so the long list reads as three short ones.
+ * Grouping is presentational: it runs on whatever the search and filters already matched,
+ * and a group with nothing in it is not shown.
+ */
+const GROUPS: { id: string; title: string; glyph: string; statuses: string[] }[] = [
+  { id: 'issues-pending', title: 'Still being decided', glyph: '◐', statuses: ['proposed', 'under_consideration'] },
+  { id: 'issues-approved', title: 'Approved', glyph: '●', statuses: ['approved', 'completed'] },
+  { id: 'issues-denied', title: 'Denied', glyph: '✕', statuses: ['denied'] },
+  { id: 'issues-other', title: 'Withdrawn or status not recorded', glyph: '–', statuses: ['withdrawn', 'unknown'] },
+];
+const groupOf = (i: Issue) => GROUPS.find((g) => g.statuses.includes(i.status)) ?? GROUPS[GROUPS.length - 1];
+
+function GroupedIssues({ issues }: { issues: Issue[] }) {
+  const sorted = byImportance(issues);
+  return (
+    <div className="issue-groups">
+      {GROUPS.map((g) => {
+        const members = sorted.filter((i) => groupOf(i) === g);
+        if (!members.length) return null;
+        return (
+          <section key={g.id} className={`issue-group issue-group--${g.id.replace('issues-', '')}`} aria-labelledby={g.id}>
+            <h3 id={g.id} className="issue-group__title" tabIndex={-1}>
+              <span className="issue-group__glyph" aria-hidden="true">
+                {g.glyph}
+              </span>
+              {g.title}
+              <span className="issue-group__count">
+                {members.length}
+                <span className="visually-hidden">{members.length === 1 ? ' issue' : ' issues'}</span>
+              </span>
+            </h3>
+            <IssueList issues={members} headingLevel={4} />
+          </section>
+        );
+      })}
+    </div>
+  );
+}
+
+/** A compact "on this page" row: each status group with its count, and the meetings column. */
+function PageJumps({ issues, meetingCount }: { issues: Issue[]; meetingCount: number }) {
+  const go = (id: string) => (e: MouseEvent<HTMLAnchorElement>) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    e.preventDefault();
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    el.scrollIntoView?.({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+    el.focus({ preventScroll: true });
+  };
+  const present = GROUPS.map((g) => ({ g, n: issues.filter((i) => groupOf(i) === g).length })).filter((x) => x.n > 0);
+  return (
+    <nav className="jumps" aria-label="On this page">
+      <ul className="jumps__list">
+        {present.map(({ g, n }) => (
+          <li key={g.id}>
+            <a className="jumps__link" href={`#${g.id}`} onClick={go(g.id)}>
+              <span aria-hidden="true" className="jumps__glyph">
+                {g.glyph}
+              </span>
+              {g.title}
+              <span className="jumps__count">{n}</span>
+            </a>
+          </li>
+        ))}
+        {meetingCount > 0 && (
+          <li className="jumps__meetings">
+            <a className="jumps__link" href="#meetings-heading" onClick={go('meetings-heading')}>
+              <CalendarIcon />
+              Meetings
+              <span className="jumps__count">{meetingCount}</span>
+            </a>
+          </li>
+        )}
+      </ul>
+    </nav>
+  );
+}
+
+function CalendarIcon() {
+  return (
+    <svg className="jumps__glyph" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+      <rect x="4" y="5" width="16" height="15" rx="3" fill="none" stroke="currentColor" strokeWidth="2" />
+      <path d="M4 10h16M9 3v4M15 3v4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+    </svg>
+  );
+}
 
 function IssueList({ issues, headingLevel }: { issues: Issue[]; headingLevel: 3 | 4 }) {
   return (

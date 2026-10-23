@@ -578,13 +578,14 @@ ol {
   border-width: 2px;
   border-style: dashed;
   border-color: rgb(47 58 143 / 0.32);
-  background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
 }
 .ripples__dot {
   width: 30px;
   height: 30px;
   background: var(--ring-dot);
-  box-shadow: 0 0 0 10px var(--glow);
+  box-shadow:
+    0 0 0 6px rgb(242 179 61 / 0.3),
+    0 0 0 13px rgb(242 179 61 / 0.12);
 }
 @media (prefers-color-scheme: dark) {
   .ripples__ring:nth-child(1) {
@@ -1216,8 +1217,7 @@ select[aria-invalid='true'] {
   font-size: 0.95em;
 }
 .status--approved,
-.status--completed,
-.status--meeting-completed {
+.status--completed {
   background: var(--ok-bg);
   color: var(--ok-ink);
 }
@@ -1689,7 +1689,7 @@ select[aria-invalid='true'] {
 }
 @media (prefers-color-scheme: dark) {
   .leaflet-tile-pane {
-    filter: brightness(0.8) contrast(1.05);
+    filter: brightness(0.7) contrast(1.1);
   }
 }
 .map__notices {
@@ -2253,7 +2253,7 @@ select[aria-invalid='true'] {
   height: 220px;
   border-radius: 50%;
   border: 1.5px solid var(--ring);
-  background: radial-gradient(circle, var(--accent) 0 10px, var(--glow) 11px 30px, transparent 31px, transparent 64px, var(--ring) 65px 66.5px, transparent 67.5px);
+  background: radial-gradient(circle, var(--accent) 0 12px, rgb(242 179 61 / 0.3) 12.5px 19px, transparent 19.5px 33%, var(--ring) 33.3% 33.9%, transparent 34.3%);
 }
 .state--page .state__title {
   font-size: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
@@ -2794,4 +2794,418 @@ select[aria-invalid='true'] {
   .section--meetings .datechip {
     background: var(--tonal);
   }
+}
+
+/* ==========================================================================
+   Round 3, audit pass
+   ========================================================================== */
+
+p,
+li,
+dd {
+  text-wrap: pretty;
+}
+
+/* ---------- Affordance: actions look like actions, labels stay plain ----------
+   Static labels (topic tags, meeting type, date chips) are small rounded rectangles.
+   Actions are pills: filled primary for the main action, outlined primary for the rest. */
+.tag {
+  border-radius: 8px;
+  font-weight: 600;
+  min-height: 28px;
+  padding: 2px 10px;
+}
+.datechip {
+  background: transparent;
+  box-shadow: inset 0 0 0 1.5px var(--line);
+  color: var(--heading);
+}
+.card__action,
+.button--ghost,
+.backlink a,
+.backlink__button {
+  background: transparent;
+  color: var(--link);
+  box-shadow: inset 0 0 0 1.5px var(--primary);
+  border-color: transparent;
+}
+.card__action:hover,
+.button--ghost:hover {
+  background: var(--tonal);
+  color: var(--link);
+  border-color: transparent;
+}
+.backlink a,
+.backlink__button {
+  margin-left: 0;
+  padding: 0 18px 0 14px;
+}
+.backlink a:hover,
+.backlink__button:hover {
+  background: var(--tonal);
+}
+.card__action--muted,
+.card__action--muted:hover {
+  box-shadow: none;
+}
+/* Topic shortcuts and archive type chips are toggles: outlined pills, filled when on. */
+.topic,
+.chip {
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px var(--line-strong);
+}
+.topic:hover,
+.chip:hover:not(:disabled) {
+  background: var(--tonal);
+  box-shadow: inset 0 0 0 1.5px var(--primary);
+}
+.topic[aria-current='true'],
+.chip[aria-pressed='true'] {
+  background: var(--primary);
+  color: var(--primary-ink);
+  box-shadow: none;
+}
+.topic__count,
+.chip__count {
+  background: var(--surface-2);
+}
+.topic[aria-current='true'] .topic__count,
+.chip[aria-pressed='true'] .chip__count {
+  background: var(--surface);
+  color: var(--ink);
+}
+/* One button shape everywhere: sidebar source links are pills too. */
+.source-action {
+  border-radius: var(--pill);
+  padding: 11px 22px;
+  text-wrap: balance;
+}
+.source-action--unavailable {
+  border-radius: var(--r-small);
+}
+.panel__strong {
+  text-wrap: balance;
+}
+.facts__note {
+  white-space: nowrap;
+}
+
+/* ---------- Status: a meeting that was held is a fact, not an approval ---------- */
+.status--meeting-completed,
+.status--meeting-unknown {
+  background: var(--neutral-bg);
+  color: var(--neutral-ink);
+}
+.status--meeting-completed::before {
+  content: '✓';
+}
+.status--meeting-scheduled::before {
+  content: '○';
+}
+.status--meeting-canceled::before {
+  content: '✕';
+}
+
+/* ---------- Callout: its own tone, not the "under consideration" amber ---------- */
+.callout {
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgb(22 27 61 / 0.05);
+}
+
+/* ---------- Countywide: grouped issues and an "on this page" row ---------- */
+.jumps {
+  margin: 0 0 24px;
+}
+.jumps__list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.jumps__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 0 6px 0 14px;
+  border-radius: var(--pill);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px var(--line-strong);
+  color: var(--heading);
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+}
+.jumps__link:hover {
+  color: var(--heading);
+  background: var(--tonal);
+  box-shadow: inset 0 0 0 1.5px var(--primary);
+}
+.jumps__glyph {
+  color: var(--link);
+}
+.jumps__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 7px;
+  border-radius: var(--pill);
+  background: var(--surface-2);
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+/* Meetings sit beside the list on wide screens, so the jump is only needed when stacked. */
+@media (min-width: 900px) {
+  .jumps__meetings {
+    display: none;
+  }
+}
+.issue-groups {
+  display: grid;
+  gap: 40px;
+}
+.issue-group__title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.75rem);
+  font-weight: 800;
+  padding-bottom: 12px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+.issue-group__glyph {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 1rem;
+}
+.issue-group--pending .issue-group__glyph {
+  background: var(--wait-bg);
+  color: var(--wait-ink);
+}
+.issue-group--approved .issue-group__glyph {
+  background: var(--ok-bg);
+  color: var(--ok-ink);
+}
+.issue-group--denied .issue-group__glyph {
+  background: var(--no-bg);
+  color: var(--no-ink);
+}
+.issue-group--other .issue-group__glyph {
+  background: var(--neutral-bg);
+  color: var(--neutral-ink);
+}
+.issue-group__count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  padding: 0 8px;
+  border-radius: var(--pill);
+  background: var(--surface-2);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+/* Tighter cards: the group heading already says where an issue stands. */
+.citywide-grid .card--issue {
+  padding: 20px 22px 18px;
+  gap: 8px 20px;
+}
+.citywide-grid .card__summary {
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+.citywide-grid .card--issue .facts__row:first-child {
+  grid-template-columns: minmax(0, 1fr);
+}
+.citywide-grid .card--issue .facts__row:first-child dt {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.citywide-grid .card--issue .card__title {
+  font-size: clamp(1.25rem, 1.12rem + 0.4vw, 1.4375rem);
+}
+.citywide-grid .issue-list {
+  gap: 12px;
+}
+
+/* ---------- Near Me: one note for all the countywide items ---------- */
+.feed__group {
+  font-size: 1.375rem;
+  font-weight: 800;
+  margin: 32px 0 6px;
+}
+.feed__intro {
+  color: var(--ink-soft);
+  font-size: 1rem;
+  margin: 0 0 14px;
+  max-width: 60ch;
+}
+.feed--countywide .feed-item {
+  padding: 16px 20px;
+}
+
+/* ---------- Archive ---------- */
+.search-field {
+  position: relative;
+}
+.search-field__icon {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--heading);
+  pointer-events: none;
+}
+.search-field input[type='search'] {
+  padding-left: 52px;
+}
+.archive-list > li {
+  display: flex;
+}
+.archive-list > li > .archive-row {
+  flex: 1;
+  align-content: start;
+}
+
+/* ---------- Coming soon: one statement, then a plain list of names ---------- */
+.soon-more__note {
+  color: var(--ink-soft);
+  margin: -8px 0 20px;
+  max-width: 60ch;
+}
+.soon-places {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.soon-place {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  height: auto;
+  padding: 0 18px;
+  border-radius: var(--pill);
+  background: var(--surface);
+  box-shadow: inset 0 0 0 1.5px var(--line-strong);
+}
+.soon-place:hover {
+  transform: none;
+  background: var(--tonal);
+  box-shadow: inset 0 0 0 1.5px var(--primary);
+}
+.soon-place__name {
+  font-size: 1.0625rem;
+}
+
+/* ---------- Not found: on the grid, in the band, with the porch light ---------- */
+.page > .state--page,
+.state--page {
+  margin: 0;
+  max-width: none;
+  min-height: calc(100vh - var(--header-h, 74px));
+  padding: 72px 0 64px;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  overflow: visible;
+  align-content: center;
+}
+.state--page::before {
+  content: '';
+  position: absolute;
+  z-index: -2;
+  inset: 0 calc(50% - 50vw);
+  background: var(--band);
+}
+.state--page::after {
+  right: 0;
+  top: 50%;
+  bottom: auto;
+  translate: 0 -50%;
+  width: min(360px, 60vw);
+  height: min(360px, 60vw);
+}
+.state--page .state__title,
+.state--page .state__body {
+  max-width: 34rem;
+}
+@media (prefers-color-scheme: dark) {
+  .state--page {
+    box-shadow: none;
+  }
+}
+@media (max-width: 599px) {
+  .state--page {
+    padding-top: 200px;
+    align-content: start;
+  }
+  .state--page::after {
+    top: 24px;
+    right: 0;
+    translate: none;
+    width: 160px;
+    height: 160px;
+  }
+}
+
+/* ---------- Phones ---------- */
+@media (max-width: 599px) {
+  /* Topic shortcuts wrap instead of hiding behind a sideways scroll. */
+  .topics__list {
+    flex-wrap: wrap;
+    overflow: visible;
+    margin-inline: 0;
+    padding: 0;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .topics__list {
+    gap: 8px;
+  }
+  .topic {
+    min-height: 36px;
+    padding: 2px 4px 2px 12px;
+    font-size: 0.9375rem;
+    gap: 6px;
+    white-space: normal;
+  }
+  .topic__count {
+    min-width: 26px;
+    height: 26px;
+    font-size: 0.875rem;
+  }
+}
+
+/* ---------- Home at tablet widths ---------- */
+@media (min-width: 768px) {
+  .steps__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (min-width: 600px) and (max-width: 899px) {
+  .hero--state .ripples,
+  .soon .ripples {
+    width: 320px;
+    height: 320px;
+    right: -110px;
+    top: -215px;
+  }
+}
+
+.page:has(> .state--page) {
+  padding-bottom: 0;
 }

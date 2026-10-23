@@ -2,6 +2,7 @@ import { LocationSelector } from '../components/LocationSelector';
 import { Ripples } from '../components/Ripples';
 import { COUNTIES, DIRECTORY_SOURCE, MUNICIPALITIES } from '../services/jurisdictions';
 import { usePageTitle } from '../services/usePageTitle';
+import { ArrowLabel } from '../components/SourceAction';
 
 // What a visitor does here, in order. Describes the app, not any place's records.
 const STEPS = [
@@ -59,8 +60,9 @@ export function GeorgiaHomePage() {
       <p className="statewide__note fine-print">
         The location list covers all {COUNTIES.length} Georgia counties and {MUNICIPALITIES.length} incorporated cities, towns, and consolidated
         governments, from the{' '}
-        <a href={DIRECTORY_SOURCE.urls[1]} rel="noreferrer">
-          U.S. Census Bureau’s 2020 place list
+        <a href={DIRECTORY_SOURCE.urls[1]} target="_blank" rel="noreferrer">
+          <ArrowLabel text="U.S. Census Bureau’s 2020 place list" />
+          <span className="visually-hidden"> (opens in a new tab)</span>
         </a>
         . Places incorporated since 2020 aren’t listed yet.
       </p>
