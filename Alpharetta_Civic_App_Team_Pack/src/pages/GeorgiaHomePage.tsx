@@ -29,7 +29,7 @@ export function GeorgiaHomePage() {
         <div className="hero__inner">
           <Ripples />
           <div className="hero__main">
-            <p className="hero__place">Georgia Civic</p>
+            <p className="hero__place">Porchlight</p>
             <h1 id="home-title" className="hero__title">
               <span className="hero__line">Know what’s happening</span> <span className="hero__line">in your community.</span>
             </h1>

@@ -66,7 +66,7 @@ export function Layout() {
       </a>
       <header className="masthead" ref={headerRef}>
         <div className="masthead__inner">
-          <NavLink to="/" className="brand" aria-label="Georgia Civic, choose a location" end>
+          <NavLink to="/" className="brand" aria-label="Porchlight, choose a location" end>
             <svg className="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
               <rect className="brand__tile" width="32" height="32" rx="10" />
               <circle className="brand__ring" cx="16" cy="16" r="10.5" />
@@ -74,7 +74,7 @@ export function Layout() {
               <circle className="brand__dot" cx="16" cy="14.6" r="2.3" />
             </svg>
             <span className="brand__text">
-              <span className="brand__name">Georgia Civic</span>
+              <span className="brand__name">Porchlight</span>
               <span className="brand__tag">Local government, explained</span>
             </span>
           </NavLink>

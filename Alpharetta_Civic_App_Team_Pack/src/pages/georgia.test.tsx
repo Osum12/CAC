@@ -135,10 +135,10 @@ describe('Location chooser', () => {
     expect(url()).toBe('/?county=cobb');
   });
 
-  it('follows the URL when it changes from outside the form (the Georgia Civic home link)', async () => {
+  it('follows the URL when it changes from outside the form (the Porchlight home link)', async () => {
     renderAt('/?county=fulton&city=alpharetta');
     await userEvent.selectOptions(county(), 'cobb');
-    await userEvent.click(screen.getByRole('link', { name: 'Georgia Civic, choose a location' }));
+    await userEvent.click(screen.getByRole('link', { name: 'Porchlight, choose a location' }));
     expect(url()).toBe('/');
     expect(county().value).toBe('');
     expect(city()).toBeDisabled();
@@ -183,7 +183,7 @@ describe('No records outside the Fulton County page', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Roswell is coming soon.' })).toBeInTheDocument();
     expect(screen.getByText('Roswell, Cobb and Fulton counties')).toBeInTheDocument();
     expect(screen.queryByRole('navigation', { name: /pages/ })).toBeNull();
-    expect(document.title).toBe('Roswell: coming soon · Georgia Civic');
+    expect(document.title).toBe('Roswell: coming soon · Porchlight');
   });
 });
 
@@ -218,7 +218,7 @@ describe('Routing', () => {
   it('keeps search and filters working on the Fulton County page', async () => {
     renderAt('/county/fulton?q=crossing');
     expect(await screen.findByText(/^1 of \d+ issues match$/)).toBeInTheDocument();
-    expect(document.title).toBe('Countywide · Fulton County · Georgia Civic');
+    expect(document.title).toBe('Countywide · Fulton County · Porchlight');
   });
 
   it('empties a search box when the URL is reset by a nav link', async () => {
