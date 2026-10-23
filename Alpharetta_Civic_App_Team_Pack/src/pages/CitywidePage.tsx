@@ -191,7 +191,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
                 </button>
               }
             >
-              <p>Try a different word, or choose “All topics”, “Any status”, and “Any time”.</p>
+              <p>Try a different word, or choose “All topics” and “Any status”.</p>
             </EmptyState>
           )
         ) : (
