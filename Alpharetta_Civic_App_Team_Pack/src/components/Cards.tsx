@@ -5,6 +5,7 @@ import { getValidCoordinates } from '../services/nearMe';
 import { MockBadge, isMock } from './MockBadge';
 import { IssueStatusBadge, MeetingStatusBadge } from './StatusBadge';
 import { usePlaceHref } from '../services/placeContext';
+import { lastWord, lead } from './linkText';
 
 // Cards use a "stretched link": the title link's click area covers the whole card,
 // so screen readers hear one clear link per card. Secondary actions (map, source,
@@ -19,9 +20,15 @@ type HeadingLevel = 2 | 3 | 4;
 export function ExternalAction({ href, children, context }: { href: string; children: string; context: string }) {
   return (
     <a className="card__action" href={href} target="_blank" rel="noopener noreferrer">
-      {children}
-      <span className="visually-hidden">: {context}</span>
-      <span aria-hidden="true"> ↗</span>
+      {/* One inline run, so the flex link keeps the space before the last word. */}
+      <span>
+        {lead(children)}
+        <span className="nowrap">
+          {lastWord(children)}
+          <span className="visually-hidden">: {context}</span>
+          <span aria-hidden="true"> ↗</span>
+        </span>
+      </span>
       <span className="visually-hidden"> (opens in a new tab)</span>
     </a>
   );
@@ -52,7 +59,7 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
             <span className="facts__note">{issue.statusAsOf ? ` as of ${formatDate(issue.statusAsOf)}` : ' (no date recorded)'}</span>
           </dd>
         </div>
-        <div className="facts__row">
+        <div className={`facts__row${issue.location?.label ? '' : ' facts__row--no-place'}`}>
           <dt>Where</dt>
           <dd>{issue.location?.label ?? 'No specific address in the record'}</dd>
         </div>

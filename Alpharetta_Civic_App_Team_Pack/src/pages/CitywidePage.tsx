@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
 import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState } from '../services/filters';
-import { formatDate, formatTime, formatWeekdayDate, humanize, ISSUE_STATUS_LABELS, safeUrl, todayIso } from '../services/format';
+import { formatCompactDate, formatDate, formatTime, formatWeekdayDate, humanize, ISSUE_STATUS_LABELS, safeUrl, todayIso } from '../services/format';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
 import { IssueCard, MeetingCard } from '../components/Cards';
@@ -302,9 +302,12 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
   const meetingPlace = usePlace()?.recordSources[0]?.meetingPlace ?? 'City Hall';
   const next = splitMeetings(meetings).upcoming[0] ?? null;
   const onAgenda = next ? issues.filter((i) => next.issueIds.includes(i.id)) : [];
-  const decided = issues
+  const decisions = issues
     .filter((i) => ['approved', 'denied', 'withdrawn', 'completed'].includes(i.status) && i.statusAsOf)
-    .sort((a, b) => b.statusAsOf!.localeCompare(a.statusAsOf!))[0];
+    .sort((a, b) => b.statusAsOf!.localeCompare(a.statusAsOf!));
+  const decided = decisions[0];
+  // With no meeting to announce, the panel also lists the few decisions before the latest one.
+  const earlier = next ? [] : decisions.slice(1, 4);
   const agenda = next ? agendaFor(next, documents) : null;
   if (!next && !decided) return null;
   return (
@@ -347,6 +350,21 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
           <p className="docket__meta">
             <IssueStatusBadge status={decided.status} /> on {formatDate(decided.statusAsOf)}
           </p>
+          {earlier.length > 0 && (
+            <>
+              <p className="docket__label docket__label--rule">Earlier decisions</p>
+              <ul className="docket__decisions">
+                {earlier.map((i) => (
+                  <li key={i.id}>
+                    <Link to={href(`/issues/${encodeURIComponent(i.id)}`)}>{i.title}</Link>
+                    <span className="docket__when">
+                      <IssueStatusBadge status={i.status} /> {formatCompactDate(i.statusAsOf)}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
         </div>
       )}
     </aside>

@@ -3,8 +3,8 @@ import { usePlace, usePlaceHref } from '../services/placeContext';
 import { usePageTitle } from '../services/usePageTitle';
 
 const COPY = {
-  page: { title: 'Page not found', body: 'That address doesn’t match a page in this app.' },
-  location: { title: 'Location not found', body: 'That address doesn’t match a Georgia county or city in our directory. Choose a location to continue.' },
+  page: { title: 'Page not found', body: 'That link doesn’t match a page in this app.' },
+  location: { title: 'Location not found', body: 'That link doesn’t match a Georgia county or city in our directory. Choose a location to continue.' },
   issue: { title: 'Issue not found', body: 'This issue isn’t in the current dataset. It may have been removed or the link may be mistyped.' },
   meeting: { title: 'Meeting not found', body: 'This meeting isn’t in the current dataset. It may have been removed or the link may be mistyped.' },
   document: { title: 'Document not found', body: 'This document isn’t in the current dataset. It may have been removed or the link may be mistyped.' },

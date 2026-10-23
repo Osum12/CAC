@@ -25,8 +25,12 @@
   --accent-ink: #93380f; /* the only orange allowed as small text */
   --accent-soft: #e9a37c; /* orange on forest */
   --on-accent: #ffffff;
-  --focus: #1d5fc4;
+  --focus: #a8431a; /* rust: the accent, darkened to 5.3:1 on paper */
   --focus-on-dark: #f6c8a8;
+
+  /* Height of the part of the masthead that stays on screen when it is stuck.
+     Measured per breakpoint (see the Responsive section); scroll targets clear it. */
+  --head-h: 69px;
 
   --btn-bg: var(--forest);
   --btn-bg-hover: var(--forest-2);
@@ -48,6 +52,7 @@
   --st-neutral-ink: #45403a;
 
   --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='20' height='20'%3E%3Cpath d='m6 9 6 6 6-6' fill='none' stroke='%2315201c' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  --clear-x: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6l12 12M18 6 6 18' fill='none' stroke='%2315201c' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
 
   --font-head: 'Newsreader', Georgia, 'Times New Roman', serif;
   --font-body: 'Public Sans', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
@@ -82,7 +87,7 @@
     --accent-ink: #f0a57f;
     --accent-soft: #e8875a;
     --on-accent: #1a0d06;
-    --focus: #8ab8ff;
+    --focus: #e8875a;
     --focus-on-dark: #f6c8a8;
 
     --btn-bg: #cfe3d7;
@@ -105,6 +110,7 @@
     --st-neutral-ink: #d4cfc6;
 
     --chevron: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='20' height='20'%3E%3Cpath d='m6 9 6 6 6-6' fill='none' stroke='%23eee7d8' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    --clear-x: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M6 6l12 12M18 6 6 18' fill='none' stroke='%23eee7d8' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E");
     color-scheme: dark;
   }
 }
@@ -118,6 +124,11 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* Jumps, focus moves and scrollIntoView stop below the sticky masthead. */
+  scroll-padding-top: calc(var(--head-h) + 16px);
+}
+.nowrap {
+  white-space: nowrap;
 }
 body {
   margin: 0;
@@ -354,7 +365,7 @@ a:hover {
 .primary-nav {
   margin-left: auto;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 4px;
 }
 .primary-nav__link {
@@ -367,6 +378,7 @@ a:hover {
   text-decoration: none;
   font-weight: 600;
   font-size: 1.0625rem;
+  white-space: nowrap;
 }
 .primary-nav__link::after {
   content: '';
@@ -571,6 +583,7 @@ a:hover {
   background: var(--surface);
 }
 .hero-search:focus-within {
+  border-color: var(--ink);
   outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
@@ -586,6 +599,22 @@ a:hover {
 .hero-search input::placeholder {
   color: var(--muted);
   opacity: 1;
+}
+/* The browser's clear button, redrawn as an ink cross that turns rust on hover. */
+.hero-search input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  margin: 0 -4px 0 8px;
+  border-radius: 50%;
+  background: var(--clear-x) center / 16px no-repeat;
+  cursor: pointer;
+  opacity: 0.75;
+}
+.hero-search input::-webkit-search-cancel-button:hover {
+  opacity: 1;
+  background-color: color-mix(in srgb, var(--accent) 14%, transparent);
 }
 .hero-search__button {
   flex: none;
@@ -824,6 +853,51 @@ select:hover:not(:disabled),
 .docket__meta .status {
   font-family: var(--font-body);
 }
+.docket__label--rule {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  color: var(--accent-ink);
+  margin: 20px 0 0;
+  padding-top: 16px;
+  border-top: 1px solid var(--rule);
+}
+.docket__decisions {
+  list-style: none;
+  margin: 0;
+}
+.docket__decisions > li {
+  display: grid;
+  gap: 6px;
+  padding: 12px 0;
+  font-size: 1.0625rem;
+  line-height: 1.35;
+  font-weight: 600;
+}
+.docket__decisions > li + li {
+  border-top: 1px solid var(--rule);
+}
+.docket__decisions > li:last-child {
+  padding-bottom: 0;
+}
+.docket__decisions a {
+  display: inline-block;
+  padding: 2px 0;
+  text-decoration-thickness: 0.06em;
+}
+.docket__when {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 10px;
+  font-family: var(--font-mono);
+  font-weight: 400;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+.docket__when .status {
+  font-family: var(--font-body);
+}
 .docket__source {
   display: inline-flex;
   align-items: center;
@@ -872,7 +946,7 @@ select:hover:not(:disabled),
   margin: 0;
 }
 .section--meetings > h2 {
-  font-size: clamp(1.75rem, 1.5rem + 0.8vw, 2.125rem);
+  font-size: clamp(2rem, 1.6rem + 1.2vw, 2.5rem);
 }
 .section--meetings > .section__source {
   padding-bottom: 12px;
@@ -950,7 +1024,7 @@ select:hover:not(:disabled),
 }
 .card {
   position: relative;
-  padding: 22px 0 24px;
+  padding: 20px 0 20px;
 }
 .card__title {
   font-size: clamp(1.375rem, 1.2rem + 0.6vw, 1.625rem);
@@ -982,7 +1056,47 @@ select:hover:not(:disabled),
 .card__summary {
   color: var(--ink-2);
   max-width: 64ch;
-  margin: 0 0 14px;
+  margin: 0 0 12px;
+}
+/* Countywide is a scan of 24 items: three lines each here, the full text on the issue page
+   (and all of it stays in the DOM for screen readers). */
+.citywide-grid .card__summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.facts .facts__row--no-place {
+  display: none;
+}
+/* Countywide rows end in one metadata line: status (and place) on the left, the
+   map and source links on the right; it wraps to two lines when space runs out. */
+.citywide-grid .card--issue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 4px 24px;
+}
+.citywide-grid .card--issue > * {
+  flex: 0 0 100%;
+}
+.citywide-grid .card--issue > .facts,
+.citywide-grid .card--issue > .card__actions {
+  flex: 0 1 auto;
+  margin-bottom: 0;
+}
+.citywide-grid .card--issue > .card__actions {
+  margin-left: auto;
+}
+@media (max-width: 720px) {
+  .citywide-grid .card--issue > .card__actions {
+    flex-basis: 100%;
+    margin-left: 0;
+  }
+}
+.citywide-grid .card--issue > .card__title {
+  margin-bottom: 6px;
 }
 .card__when {
   font-family: var(--font-mono);
@@ -1135,7 +1249,7 @@ select:hover:not(:disabled),
   grid-row: 1 / span 2;
   align-self: start;
   position: sticky;
-  top: 96px;
+  top: calc(var(--head-h) + 28px);
   padding-top: 6px;
 }
 .detail__main {
@@ -1213,6 +1327,7 @@ select:hover:not(:disabled),
 }
 .source-action {
   display: inline-block;
+  text-wrap: pretty;
   padding: 3px 0;
   font-weight: 600;
   font-size: 1rem;
@@ -1467,7 +1582,7 @@ select:hover:not(:disabled),
 }
 .nearme__map {
   position: sticky;
-  top: 96px;
+  top: calc(var(--head-h) + 28px);
 }
 .nearme__map .fine-print {
   margin-top: 12px;
@@ -1480,13 +1595,22 @@ select:hover:not(:disabled),
 }
 .map {
   position: relative;
+  isolation: isolate; /* Leaflet's panes (z-index 400-1000) stay inside the map, under the masthead */
   border: 1px solid var(--rule-strong);
   border-radius: var(--radius);
   overflow: hidden;
 }
 .map__canvas {
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
   height: min(600px, 66vh);
   background: var(--paper-2);
+}
+@media (prefers-color-scheme: dark) {
+  .leaflet-tile-pane {
+    filter: brightness(0.8) contrast(1.05);
+  }
 }
 .map__notices {
   position: absolute;
@@ -1547,14 +1671,17 @@ select:hover:not(:disabled),
   outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
+/* Starting point: a bullseye (white disc, forest ring, rust centre), unlike any numbered pin. */
 .origin-dot {
   display: block;
   width: 22px;
   height: 22px;
   border-radius: 50%;
-  background: var(--accent);
-  border: 3px solid #fff;
-  box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 30%, transparent);
+  background: radial-gradient(circle, #b4491b 0 3.5px, #fff 4px);
+  border: 4px solid #1e3b32;
+  box-shadow:
+    0 0 0 2px #fff,
+    0 2px 6px rgb(0 0 0 / 0.4);
 }
 .feed > li {
   border-bottom: 1px solid var(--rule);
@@ -1887,6 +2014,33 @@ select:hover:not(:disabled),
   }
 }
 
+/* Wide screens: the Meetings column stays in view beside the long issue list, pinned under
+   the masthead. When it is taller than the window it scrolls on its own (thin rule-colored
+   scrollbar); keyboard focus scrolls it too, so nothing focused sits under the masthead. */
+@media (min-width: 1200px) {
+  /* Wide enough for the source line to set on one row, so both head rules line up. */
+  .citywide-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 25.5rem);
+  }
+}
+@media (min-width: 961px) {
+  .section--meetings {
+    position: sticky;
+    top: calc(var(--head-h) + 24px);
+    max-height: calc(100vh - var(--head-h) - 48px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--rule-strong) transparent;
+    /* room for the cards' focus outline inside the scroll box */
+    margin: -8px -10px 0;
+    padding: 8px 10px 8px;
+  }
+  .section--meetings .card--meeting .tag {
+    /* every row here is from the same board, named in the source line above */
+    display: none;
+  }
+}
+
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
   .detail__grid {
@@ -1897,6 +2051,20 @@ select:hover:not(:disabled),
   }
 }
 @media (max-width: 960px) {
+  /* Masthead: brand and place on one row, then a full-width nav row with its own rule. */
+  :root:has(.primary-nav) {
+    --head-h: 108px;
+  }
+  .masthead:has(.primary-nav) .masthead__inner {
+    padding-bottom: 0;
+  }
+  .primary-nav {
+    order: 4;
+    flex: 0 0 calc(100% + 2 * var(--gutter));
+    margin: 0 calc(-1 * var(--gutter));
+    padding: 0 calc(var(--gutter) - 12px);
+    border-top: 1px solid color-mix(in srgb, var(--on-forest) 18%, transparent);
+  }
   .hero__inner {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -1960,21 +2128,65 @@ select:hover:not(:disabled),
   body {
     font-size: 1.125rem;
   }
+  /* Phones: three short rows (brand, place, nav), 118px in all. Once the page scrolls,
+     only the nav row stays on screen: the masthead sticks 72px above the top edge. */
+  :root {
+    --head-h: 45px;
+  }
+  :root:has(.placebar) {
+    --head-h: 77px;
+  }
+  :root:has(.primary-nav) {
+    --head-h: 46px;
+  }
+  .masthead:has(.primary-nav) {
+    top: -72px;
+  }
   .masthead__inner {
-    padding-top: 8px;
-    padding-bottom: 6px;
-    gap: 4px 12px;
+    min-height: 0;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    gap: 0 12px;
+  }
+  .brand {
+    min-height: 36px;
+    gap: 10px;
+  }
+  .brand__mark {
+    width: 28px;
+    height: 28px;
+  }
+  .brand__name {
+    font-size: 1.3125rem;
+  }
+  .brand__tag {
+    display: none;
   }
   .placebar {
     order: 3;
+    flex: 0 0 100%;
+    min-height: 32px;
     border-left: 0;
-    padding-left: 0;
+    padding: 0;
+    gap: 6px;
+    font-size: 0.9375rem;
   }
-  .primary-nav {
-    order: 4;
-    width: 100%;
-    margin-left: -12px;
-    border-top: 1px solid color-mix(in srgb, var(--on-forest) 18%, transparent);
+  .placebar__change {
+    min-height: 32px;
+    margin-left: 2px;
+  }
+  .chooser__title {
+    font-size: 1.25rem;
+    margin-bottom: 14px;
+  }
+  .steps__title {
+    font-size: 1.25rem;
+  }
+  .steps__name {
+    font-size: 1.1875rem;
+  }
+  .steps__item::before {
+    font-size: 2.25rem;
   }
   .steps__list {
     grid-template-columns: minmax(0, 1fr);
@@ -2007,9 +2219,6 @@ select:hover:not(:disabled),
   }
 }
 @media (max-width: 420px) {
-  .brand__tag {
-    display: none;
-  }
   .hero-search {
     flex-direction: column;
   }
@@ -2040,4 +2249,16 @@ select:hover:not(:disabled),
 .hero--state .hero__title .hero__line {
   display: block;
   font-size: clamp(1.5rem, 8.83cqi, 5.2rem);
+}
+/* Single-column home: the headline takes the column's width (not 12ch), so on phones it is
+   clearly the largest type on the page; the section titles below drop to 20px. */
+@media (max-width: 960px) {
+  .hero--state .hero__title {
+    max-width: 34rem;
+  }
+}
+@media (max-width: 720px) {
+  .hero--state .hero__title {
+    max-width: none;
+  }
 }

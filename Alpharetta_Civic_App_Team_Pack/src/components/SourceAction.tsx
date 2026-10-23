@@ -1,4 +1,5 @@
 import { safeUrl } from '../services/format';
+import { lastWord, lead } from './linkText';
 
 type Props = {
   url: string | null | undefined;
@@ -22,8 +23,11 @@ export function SourceAction({ url, label, unavailableText }: Props) {
   }
   return (
     <a className="source-action" href={href} target="_blank" rel="noopener noreferrer">
-      {label}
-      <span aria-hidden="true"> ↗</span>
+      {lead(label)}
+      <span className="nowrap">
+        {lastWord(label)}
+        <span aria-hidden="true"> ↗</span>
+      </span>
       <span className="visually-hidden"> (opens in a new tab)</span>
     </a>
   );

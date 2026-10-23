@@ -67,7 +67,8 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
 
       {place.level === 'county' ? (
         <CountyPlaces county={place} cities={municipalitiesInCounty(place.id)} />
-      ) : (
+      ) : home ? null : (
+        // A city in a covered county already says so above, next to its one "Explore" action.
         <section className="soon-more" aria-labelledby="soon-counties-h">
           <h2 id="soon-counties-h" className="soon-more__title">
             {place.countyIds.length > 1 ? `${place.name} spans ${place.countyIds.length} counties` : `${place.name} is in ${countyNames(countiesOf(place))}`}

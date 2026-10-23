@@ -24,8 +24,19 @@ function placeFromPath(pathname: string) {
   return first === 'county' ? getCounty(second) : getMunicipality(first);
 }
 
+/**
+ * Record pages have no nav item of their own, so they mark the list they belong to:
+ * issues belong to Countywide, meetings and documents to the Archive.
+ */
+function sectionFor(pathname: string): string | null {
+  if (pathname.includes('/issues/')) return '/';
+  if (pathname.includes('/meetings/') || pathname.includes('/documents/')) return '/archive';
+  return null;
+}
+
 export function Layout() {
   const { pathname } = useLocation();
+  const section = sectionFor(pathname);
   const mainRef = useRef<HTMLElement>(null);
   const place = placeFromPath(pathname);
   const covered = place?.level === 'county' && place.civicDataAvailable ? place : null;
@@ -73,11 +84,17 @@ export function Layout() {
           )}
           {covered && (
             <nav aria-label={`${covered.name} pages`} className="primary-nav">
-              {COUNTY_NAV.map((n) => (
-                <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className="primary-nav__link">
-                  {n.label}
-                </NavLink>
-              ))}
+              {COUNTY_NAV.map((n) =>
+                section === n.path ? (
+                  <Link key={n.path} to={countyPath(covered, n.path)} className="primary-nav__link active" aria-current="page">
+                    {n.label}
+                  </Link>
+                ) : (
+                  <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className="primary-nav__link">
+                    {n.label}
+                  </NavLink>
+                ),
+              )}
             </nav>
           )}
         </div>
