@@ -15,8 +15,7 @@ export function GeorgiaHomePage() {
               <span className="hero__line">Know what’s happening</span> <span className="hero__line">in your community.</span>
             </h1>
             <p className="hero__lede">
-              Explore local proposals, county commission decisions, and public meetings. Starting with Fulton County, with more Georgia
-              communities to come.
+              Explore local proposals, public meetings, and decisions that shape the places you call home.
             </p>
           </div>
           <LocationSelector />
