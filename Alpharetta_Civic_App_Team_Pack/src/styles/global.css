@@ -400,14 +400,12 @@ ol {
 .page > .hero,
 .page > .glance,
 .page > .steps,
-.page > .coverage-band,
 .page > .soon {
   width: 100%;
 }
 .hero__inner,
 .glance__inner,
 .steps__inner,
-.coverage-band__inner,
 .soon__inner {
   width: min(100% - 2 * var(--gutter), var(--wrap));
   margin-inline: auto;
@@ -1462,45 +1460,6 @@ select:disabled {
   min-height: 52px;
 }
 
-.coverage-band {
-  padding-block: clamp(40px, 6vw, 72px);
-  border-bottom: 1px solid var(--line);
-}
-.coverage-band__inner {
-  display: grid;
-  gap: 28px;
-  align-items: center;
-}
-@media (min-width: 900px) {
-  .coverage-band__inner {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
-    gap: 64px;
-  }
-}
-.coverage-band__title {
-  font-weight: 700;
-  font-size: 1.25rem;
-  border-top: 2px solid var(--ink);
-  padding-top: 12px;
-}
-.coverage-band__lead {
-  margin-top: 12px;
-  font-family: var(--serif);
-  font-weight: 600;
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  line-height: 1.3;
-  color: var(--heading);
-  max-width: 30ch;
-}
-.coverage-band__figure {
-  font-variant-numeric: lining-nums;
-}
-.coverage-band__note {
-  margin-top: 14px;
-  color: var(--ink-2);
-  max-width: 60ch;
-}
-
 .steps {
   background: var(--band);
   padding-block: clamp(40px, 6vw, 72px);
@@ -2324,4 +2283,14 @@ section > .fine-print {
   .nearme__map {
     display: none;
   }
+}
+
+/* Home headline: always two set lines ("Know what’s happening / in your community.").
+   Each line is sized from the headline's own width, so the longer line always fits. */
+.hero--state .hero__title {
+  container-type: inline-size;
+}
+.hero--state .hero__title .hero__line {
+  display: block;
+  font-size: clamp(1.5rem, 9.06cqi, 4.25rem);
 }
