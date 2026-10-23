@@ -5,7 +5,7 @@ import { getValidCoordinates } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
 import { BackLink } from '../components/BackLink';
-import { DocumentCard } from '../components/Cards';
+import { DocumentGroups } from '../components/Cards';
 import { MockBadge, MockNotice, isMock } from '../components/MockBadge';
 import { SourceAction } from '../components/SourceAction';
 import { IssueStatusBadge, StatusIcon, issueIconKind } from '../components/StatusBadge';
@@ -34,8 +34,10 @@ export function IssueDetailPage() {
   const missingMeetings = issue.meetingIds.filter((id) => !meetings.some((m) => m.id === id)).length;
   const missingDocs = issue.documentIds.filter((id) => !documents.some((d) => d.id === id)).length;
 
+  const sortedMeetings = [...meetings].sort((a, b) => (a.date ?? '9999').localeCompare(b.date ?? '9999'));
+
   return (
-    <article className="page detail">
+    <article className="page detail detail--issue">
       <BackLink fallbackTo={href('/')} fallbackLabel="All issues" />
       <header className="detail__header">
         <div className="card__top">
@@ -46,81 +48,105 @@ export function IssueDetailPage() {
       </header>
       <MockNotice record={issue} kind="issue" />
 
-      <section className="statusband" aria-labelledby="timeline-h">
-        <div className="statusband__inner">
-          <div className="detail__status statusband__now">
-            <span className="statusband__label">Current status:</span>
-            <IssueStatusBadge status={issue.status} />
-            <span className="statusband__asof">{issue.statusAsOf ? `Status as of ${formatDate(issue.statusAsOf)}` : 'No status date recorded'}</span>
-          </div>
-          <h2 id="timeline-h" className="statusband__title">
-            Timeline
-          </h2>
-          {meetings.length ? (
-            <StatusStepper issue={issue} meetings={meetings} />
-          ) : (
-            <EmptyState title="No related meetings are linked to this issue." />
-          )}
-          {missingMeetings > 0 && <MissingNote count={missingMeetings} noun="meeting" />}
-          <p className="statusband__note">
-            Being on an agenda does not mean an item was approved.
-            {!isMock(issue) && ' The status above comes from the recorded vote or official recommendation.'}
-          </p>
+      <div className="standing">
+        <div className="standing__inner">
+          <section className="standing__now" aria-labelledby="standing-h">
+            <h2 id="standing-h" className="standing__label">
+              Where it stands
+            </h2>
+            <p className="standing__status">
+              <IssueStatusBadge status={issue.status} />
+            </p>
+            <p className="standing__asof">{issue.statusAsOf ? `Status as of ${formatDate(issue.statusAsOf)}` : 'No status date recorded'}</p>
+            <p className="standing__sentence">{standingSentence(issue, sortedMeetings)}</p>
+          </section>
+          <section className="standing__means" aria-labelledby="why-h">
+            <h2 id="why-h" className="standing__label">
+              What this means
+            </h2>
+            <p className="standing__why">{issue.whyItMayMatter || 'No explanation has been recorded for this issue.'}</p>
+          </section>
         </div>
-      </section>
+      </div>
 
       <div className="detail__grid">
         <div className="detail__main">
           <section aria-labelledby="summary-h">
-            <h2 id="summary-h">In plain language</h2>
+            <h2 id="summary-h">What happened</h2>
             <p className="prose">{issue.summary || 'No summary has been written for this issue yet.'}</p>
             {!isMock(issue) && (
-              <p className="fine-print">This summary is a plain-language rewrite of the official documents listed below. Check them for the exact wording.</p>
+              <p className="fine-print">This summary is a plain-language rewrite of the official records listed below. Check them for the exact wording.</p>
             )}
           </section>
 
-          <section aria-labelledby="why-h" className="callout">
-            <h2 id="why-h">Why it may matter</h2>
-            <p className="prose">{issue.whyItMayMatter || 'No explanation has been recorded for this issue.'}</p>
+          <section aria-labelledby="timeline-h">
+            <h2 id="timeline-h">Timeline</h2>
+            {meetings.length ? (
+              <StatusStepper issue={issue} meetings={sortedMeetings} />
+            ) : (
+              <EmptyState title="No related meetings are linked to this issue." />
+            )}
+            {missingMeetings > 0 && <MissingNote count={missingMeetings} noun="meeting" />}
+            <p className="fine-print">
+              Being on an agenda does not mean an item was approved.
+              {!isMock(issue) && ' The status above comes from the recorded vote or official recommendation.'}
+            </p>
           </section>
 
           <section aria-labelledby="docs-h">
-            <h2 id="docs-h">Documents</h2>
-            {documents.length ? (
-              <ul className="card-grid card-grid--tight">
-                {documents.map((d) => (
-                  <li key={d.id}>
-                    <DocumentCard document={d} />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <EmptyState title="No documents are linked to this issue." />
-            )}
+            <h2 id="docs-h">Records and sources</h2>
+            <div className="doc-group">
+              <h3 className="doc-group__title">Official item record</h3>
+              {issue.sourceUrls.length ? (
+                <ul className="source-list">
+                  {issue.sourceUrls.map((url, i) => (
+                    <li key={i}>
+                      <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>
+                  <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
+                </p>
+              )}
+            </div>
+            {documents.length ? <DocumentGroups documents={documents} /> : <EmptyState title="No documents are linked to this issue." />}
             {missingDocs > 0 && <MissingNote count={missingDocs} noun="document" />}
           </section>
         </div>
 
         <aside className="detail__side">
-          <section className="panel" aria-labelledby="sources-h">
-            <h2 id="sources-h">Official sources</h2>
-            {issue.sourceUrls.length ? (
-              <ul className="plain-list">
-                {issue.sourceUrls.map((url, i) => (
-                  <li key={i}>
-                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
-            )}
-          </section>
           <LocationPanel issue={issue} />
         </aside>
       </div>
     </article>
   );
+}
+
+/** One plain sentence on where the item stands, built only from the record's status, dates and meetings. */
+function standingSentence(issue: Issue, meetings: Meeting[]): string {
+  const on = issue.statusAsOf ? formatDate(issue.statusAsOf) : null;
+  const dated = meetings.filter((m) => m.date);
+  const last = dated.at(-1) ?? null;
+  const times =
+    meetings.length > 1 ? ` It came up at ${meetings.length} meetings in these records.` : meetings.length === 1 ? ' It came up at one meeting in these records.' : '';
+  switch (issue.status) {
+    case 'approved':
+      return `The board approved this${on ? ` on ${on}` : ''}.${times}`;
+    case 'completed':
+      return `This was completed${on ? ` on ${on}` : ''}.${times}`;
+    case 'denied':
+      return `This was not approved${on ? `. That is the recorded outcome as of ${on}` : ''}.${times}`;
+    case 'withdrawn':
+      return `This was withdrawn${on ? ` on ${on}` : ''}.${times}`;
+    case 'under_consideration':
+      return `The board has not made a final decision yet.${last ? ` It was last on the agenda on ${formatDate(last.date)}.` : ''}${times}`;
+    case 'proposed':
+      return `This has been proposed and has no recorded vote yet.${times}`;
+    default:
+      return 'We could not confirm where this stands. Check the official record for the latest.';
+  }
 }
 
 /** What the last step says: the recorded status in one sentence, with its date when there is one. */

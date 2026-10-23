@@ -894,80 +894,6 @@ input[type='search']:focus-visible {
   margin-top: 32px;
 }
 
-/* ---------- Countywide hero ---------- */
-.hero--cover:not(.hero--state) {
-  border-bottom: 1px solid var(--rule);
-}
-.hero--cover:not(.hero--state) .hero__inner {
-  display: grid;
-  gap: 32px;
-  padding: 40px 0 44px;
-  align-items: start;
-}
-@media (min-width: 1000px) {
-  .hero--cover:not(.hero--state) .hero__inner {
-    grid-template-columns: minmax(0, 1fr) 380px;
-    gap: 64px;
-    padding: 56px 0;
-  }
-}
-.hero--cover:not(.hero--state) .hero__place {
-  font-weight: 700;
-  color: var(--ink-2);
-}
-.hero--cover:not(.hero--state) .hero__title {
-  margin-top: 8px;
-  font-size: clamp(2.25rem, 1.4rem + 3vw, 3.5rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  line-height: 1.06;
-  color: var(--ink);
-}
-.hero--cover:not(.hero--state) .hero__lede {
-  margin-top: 16px;
-  font-size: 1.25rem;
-  color: var(--ink-2);
-  max-width: 56ch;
-}
-.hero-search {
-  margin-top: 28px;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  max-width: 640px;
-}
-.hero-search__label {
-  grid-column: 1 / -1;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-.hero-search input {
-  min-height: 56px;
-  border-right: 0;
-}
-.hero-search__button {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 56px;
-  padding: 0 20px;
-  background: var(--blue);
-  color: var(--on-blue);
-  border: 2px solid var(--blue);
-  font-weight: 700;
-  cursor: pointer;
-}
-.hero-search__button:hover {
-  background: var(--blue-hover);
-  border-color: var(--blue-hover);
-}
-@media (max-width: 420px) {
-  .hero-search__button {
-    padding: 0 14px;
-  }
-  .hero-search__button svg {
-    display: none;
-  }
-}
 .examples {
   display: flex;
   flex-wrap: wrap;
@@ -1002,110 +928,6 @@ input[type='search']:focus-visible {
   font-size: 1rem;
   color: var(--ink-2);
   max-width: 60ch;
-}
-
-/* Docket: next meeting and latest decision, on the status band's cream */
-.docket {
-  background: var(--cream);
-  border: 1px solid var(--cream-rule);
-  border-top: 6px solid var(--navy-2);
-}
-.docket__block {
-  padding: 20px 24px 24px;
-}
-.docket__block + .docket__block {
-  border-top: 1px solid var(--cream-rule);
-}
-.docket__kicker {
-  font-weight: 700;
-  color: var(--ink-2);
-  font-size: 1.0625rem;
-}
-.docket__date {
-  margin-top: 6px;
-  font-size: 1.375rem;
-  font-weight: 800;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 10px;
-}
-.docket__time {
-  font-weight: 400;
-  color: var(--ink-2);
-}
-.docket__title {
-  margin-top: 8px;
-  font-size: 1.25rem;
-  font-weight: 700;
-  line-height: 1.3;
-}
-.docket__title--small {
-  font-size: 1.25rem;
-}
-.docket__label {
-  margin-top: 16px;
-  font-weight: 700;
-  font-size: 1rem;
-}
-.docket__list {
-  margin-top: 4px;
-  padding-left: 1.2em;
-  display: grid;
-  gap: 4px;
-}
-.docket__source {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  margin-top: 8px;
-  font-weight: 700;
-}
-.docket__meta {
-  margin-top: 12px;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 8px;
-  color: var(--ink-2);
-}
-
-/* ---------- Countywide body ---------- */
-.citywide-grid {
-  display: grid;
-  gap: 56px;
-  padding-top: 40px;
-}
-@media (min-width: 1100px) {
-  .citywide-grid {
-    grid-template-columns: minmax(0, 1fr) 340px;
-    gap: 64px;
-  }
-}
-.section h2 {
-  font-size: clamp(1.75rem, 1.4rem + 1vw, 2.25rem);
-  font-weight: 800;
-}
-.section__head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 4px 20px;
-}
-.section__head h2 {
-  flex-basis: 100%;
-}
-.section__source {
-  color: var(--ink-2);
-  margin-top: 4px;
-}
-.section__head .text-link {
-  margin-left: auto;
-}
-.section--meetings .section__source {
-  margin-bottom: 4px;
-}
-.section--meetings > .text-link {
-  margin-top: 12px;
 }
 
 /* GOV.UK / Documenters-style filter panel: visible labels, a result count, a clear button. */
@@ -1280,30 +1102,6 @@ input[type='search']:focus-visible {
   font-size: 1.0625rem;
 }
 
-.card--issue {
-  display: grid;
-  gap: 10px;
-  padding: 24px 0 14px;
-  grid-template-areas: 'top' 'title' 'summary' 'facts' 'actions';
-}
-.card--issue .card__top {
-  grid-area: top;
-}
-.card--issue .card__title {
-  grid-area: title;
-}
-.card--issue .card__summary {
-  grid-area: summary;
-}
-.card--issue .facts {
-  grid-area: facts;
-}
-.card--issue .card__actions {
-  grid-area: actions;
-}
-.card--issue:hover .card__link {
-  text-decoration-thickness: 3px;
-}
 .facts {
   margin: 0;
   display: grid;
@@ -1320,92 +1118,6 @@ input[type='search']:focus-visible {
 }
 .facts dd {
   margin: 0;
-}
-.facts__note {
-  display: block;
-  margin-top: 4px;
-  font-size: 1rem;
-  color: var(--ink-2);
-}
-.card--issue .facts {
-  padding: 14px 16px;
-  background: var(--wash);
-  border-left: 4px solid var(--rule-strong);
-}
-.card--approved .facts,
-.card--completed .facts {
-  border-left-color: var(--ok);
-}
-.card--denied .facts {
-  border-left-color: var(--stop);
-}
-.card--under_consideration .facts {
-  border-left-color: var(--wait-icon);
-}
-.card--issue .facts dd {
-  font-size: 1.0625rem;
-}
-@container (min-width: 620px) {
-  .card--issue {
-    grid-template-columns: minmax(0, 1fr) 240px;
-    grid-template-areas: 'top facts' 'title facts' 'summary facts' 'actions facts';
-    column-gap: 32px;
-    align-items: start;
-    grid-template-rows: auto auto auto 1fr;
-  }
-  .card--issue .facts {
-    padding: 2px 0 2px 16px;
-    background: none;
-    align-self: start;
-  }
-}
-
-/* ---------- Meeting cards ---------- */
-.stack {
-  list-style: none;
-}
-.stack > li + li {
-  border-top: 1px solid var(--rule);
-}
-.card--meeting {
-  display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
-  gap: 16px;
-  padding: 18px 0;
-}
-.datechip {
-  display: grid;
-  justify-items: center;
-  align-content: start;
-  padding: 6px 0 8px;
-  background: var(--navy-2);
-  color: #ffffff;
-  border-radius: var(--radius);
-  line-height: 1.1;
-  align-self: start;
-}
-.datechip__weekday,
-.datechip__month {
-  font-size: 0.9375rem;
-}
-.datechip__day {
-  font-size: 1.75rem;
-  font-weight: 800;
-}
-.card--meeting .card__body {
-  display: grid;
-  gap: 6px;
-}
-.card--meeting .card__title {
-  font-size: 1.1875rem;
-}
-.card--meeting .facts {
-  gap: 4px;
-  font-size: 1.0625rem;
-}
-.card--meeting .facts__row {
-  grid-template-columns: 4.5em minmax(0, 1fr);
-  align-items: baseline;
 }
 
 /* ---------- Document cards ---------- */
@@ -1469,53 +1181,6 @@ input[type='search']:focus-visible {
 .detail > .muted,
 .detail__header .muted {
   font-size: 1.0625rem;
-}
-
-/* Signature: the full-width "Current status" band with a dated stepper. */
-.statusband {
-  background: var(--cream);
-  border-image: linear-gradient(to bottom, var(--cream-rule) 0 1px, var(--cream) 1px calc(100% - 1px), var(--cream-rule) calc(100% - 1px)) fill 0 / 0 / 0
-    100vmax;
-}
-.statusband__inner {
-  padding: 28px 0 32px;
-  container-type: inline-size;
-}
-.statusband--slim .statusband__inner {
-  padding: 20px 0;
-}
-.statusband__now {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 14px;
-}
-.statusband__label {
-  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
-  font-weight: 800;
-}
-.statusband__now .status {
-  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
-  font-weight: 800;
-}
-.statusband__asof {
-  color: var(--ink-2);
-  font-size: 1.0625rem;
-}
-.statusband__title {
-  margin-top: 28px;
-  font-size: 1.25rem;
-  font-weight: 800;
-}
-.statusband__note {
-  margin-top: 20px;
-  font-size: 1rem;
-  color: var(--ink-2);
-  max-width: 75ch;
-}
-.statusband .state--empty {
-  background: var(--page);
-  margin: 12px 0 0;
 }
 
 .stepper {
@@ -1624,37 +1289,6 @@ input[type='search']:focus-visible {
   font-size: 1.25rem;
   font-weight: 800;
 }
-@container (min-width: 760px) {
-  .stepper {
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(0, 1fr);
-    gap: 0;
-  }
-  .stepper--2,
-  .stepper--3 {
-    grid-auto-columns: minmax(0, 300px);
-  }
-  .stepper__step {
-    padding: 52px 28px 0 0;
-  }
-  .stepper__step:not(:last-child)::before {
-    left: 40px;
-    right: 4px;
-    top: 16px;
-    bottom: auto;
-    width: auto;
-    height: 4px;
-  }
-  .stepper__step:has(+ .stepper__step--current)::before,
-  .stepper__step:has(+ .stepper__step--unknown)::before,
-  .stepper__step--upcoming:not(:last-child)::before {
-    background: repeating-linear-gradient(to right, var(--rule-strong) 0 6px, transparent 6px 11px);
-  }
-  .stepper__kicker {
-    padding-top: 0;
-  }
-}
-
 .detail__grid {
   display: grid;
   gap: 40px;
@@ -2101,6 +1735,878 @@ input[type='search']:focus-visible {
   }
 }
 
+/* =====================================================================
+   Round 3: the county page as a briefing, detail pages as explainers.
+   One section marker (a short bar over each section title), one cream
+   band for "what is still open / where it stands", and ruled lists
+   instead of boxes. Spacing steps: 8, 12, 16, 24, 32, 48, 72.
+   ===================================================================== */
+:root {
+  --marker: #1a4480;
+  --section-gap: clamp(56px, 4rem + 2vw, 88px);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --marker: #8cc3f2;
+  }
+}
+
+/* Section titles share one marker. */
+.brief__title,
+.detail__main > section > h2,
+.detail__single > section > h2,
+.steps__title,
+.soon-more__title {
+  font-size: clamp(1.625rem, 1.3rem + 1vw, 2.125rem);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+.brief__title::before,
+.detail__main > section > h2::before,
+.detail__single > section > h2::before,
+.steps__title::before,
+.soon-more__title::before {
+  content: '';
+  display: block;
+  width: 48px;
+  height: 5px;
+  margin-bottom: 14px;
+  background: var(--marker);
+}
+.brief__lede,
+.brief__source {
+  margin-top: 8px;
+  color: var(--ink-2);
+}
+.brief__empty {
+  margin-top: 16px;
+  color: var(--ink-2);
+}
+/* A small heading over a ruled list, like GOV.UK's result count over its 2px rule. */
+.brief__subhead,
+.decided__day,
+.doc-group__title,
+.agenda-group__title {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--ink-2);
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--ink);
+}
+
+/* ---------- Countywide hero ---------- */
+.page--briefing .hero__inner {
+  display: grid;
+  gap: 32px;
+  padding: 40px 0 48px;
+  align-items: start;
+}
+@media (min-width: 1000px) {
+  .page--briefing .hero__inner {
+    grid-template-columns: minmax(0, 1fr) 400px;
+    gap: 72px;
+    padding: 64px 0;
+    align-items: center;
+  }
+}
+.page--briefing .hero__place {
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.page--briefing .hero__title {
+  margin-top: 8px;
+  font-size: clamp(2.25rem, 1.4rem + 3vw, 3.5rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+}
+.page--briefing .hero__lede {
+  margin-top: 16px;
+  font-size: clamp(1.1875rem, 1.05rem + 0.4vw, 1.3125rem);
+  color: var(--ink-2);
+  max-width: 52ch;
+}
+.page--briefing .hero__note {
+  margin-top: 16px;
+  font-size: 1rem;
+  color: var(--ink-2);
+  max-width: 60ch;
+}
+
+/* The docket: one quiet panel beside the headline (nyc.gov's "today" card). */
+.docket {
+  background: var(--wash);
+  border-top: 5px solid var(--marker);
+}
+.docket__block {
+  padding: 22px 26px 26px;
+}
+.docket__block + .docket__block {
+  border-top: 1px solid var(--rule);
+}
+.docket__kicker {
+  font-weight: 700;
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+.docket__date {
+  margin-top: 6px;
+  font-size: 1.375rem;
+  font-weight: 800;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 10px;
+}
+.docket__time {
+  font-weight: 400;
+  color: var(--ink-2);
+}
+.docket__title {
+  margin-top: 6px;
+  font-size: 1.3125rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.docket__label {
+  margin-top: 16px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+.docket__list {
+  margin-top: 4px;
+  padding-left: 1.2em;
+  display: grid;
+  gap: 4px;
+}
+.docket__source {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  margin-top: 8px;
+  font-weight: 700;
+}
+.docket__meta {
+  margin-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+  color: var(--ink-2);
+}
+.docket__why {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--rule);
+  font-size: 1.0625rem;
+  color: var(--ink-2);
+}
+
+/* 1. Still being decided: the cream band, the one bold surface on the page. */
+.openband {
+  background: var(--cream);
+  border-image: linear-gradient(to bottom, var(--cream-rule) 0 1px, var(--cream) 1px calc(100% - 1px), var(--cream-rule) calc(100% - 1px)) fill 0 / 0 / 0
+    100vmax;
+}
+.openband__inner {
+  padding: 48px 0 56px;
+}
+.openband__lede {
+  margin-top: 8px;
+  font-size: 1.25rem;
+  color: var(--ink-2);
+  max-width: 56ch;
+}
+.open-list {
+  list-style: none;
+  margin-top: 28px;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+}
+.open-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 22px 24px 20px;
+  background: var(--page);
+  border-radius: 6px;
+  border-bottom: 3px solid var(--wait-icon);
+}
+.open-item__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+.open-item__asof {
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+.open-item__title {
+  font-size: 1.375rem;
+  line-height: 1.25;
+}
+.open-item__meta {
+  margin-top: auto;
+  padding-top: 6px;
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+
+/* 2 + 3. Latest decisions beside the meetings. */
+.briefing-pair {
+  display: grid;
+  gap: var(--section-gap);
+  padding-top: var(--section-gap);
+}
+@media (min-width: 1000px) {
+  .briefing-pair {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 400px);
+    gap: 72px;
+    align-items: start;
+  }
+}
+.decided {
+  margin-top: 28px;
+}
+.decided + .decided {
+  margin-top: 32px;
+}
+.decided__list {
+  list-style: none;
+}
+.decided__item {
+  display: grid;
+  grid-template-columns: 11rem minmax(0, 1fr);
+  gap: 4px 16px;
+  align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+}
+.decided__item .status {
+  align-self: start;
+  margin-top: 2px;
+}
+.decided__link {
+  font-weight: 700;
+  font-size: 1.1875rem;
+  line-height: 1.3;
+}
+@media (max-width: 559px) {
+  .decided__item {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.brief--meetings .brief__subhead {
+  margin-top: 28px;
+}
+.brief--meetings > .text-link {
+  margin-top: 12px;
+}
+.stack {
+  list-style: none;
+}
+.stack > li + li {
+  border-top: 1px solid var(--rule);
+}
+.stack__featured .card--meeting {
+  padding-top: 22px;
+}
+.stack__featured .card--meeting .card__title {
+  font-size: 1.375rem;
+}
+.stack__featured .datechip {
+  padding: 8px 0 10px;
+}
+.stack__featured .datechip__day {
+  font-size: 2.125rem;
+}
+.stack__note {
+  margin: -8px 0 18px 80px;
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+
+/* Meeting rows: date chip, type, title, then one quiet line (the labels stay for screen readers). */
+.card--meeting {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 16px;
+  padding: 18px 0;
+}
+.card--meeting .card__body {
+  display: grid;
+  gap: 4px;
+}
+.card--meeting .card__title {
+  font-size: 1.1875rem;
+  line-height: 1.3;
+}
+.card--meeting .facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  font-size: 1.0625rem;
+  color: var(--ink-2);
+}
+.card--meeting .facts__row {
+  display: block;
+}
+.card--meeting .facts dt {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.card--meeting:hover .card__link {
+  text-decoration-thickness: 3px;
+}
+.datechip {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  padding: 6px 0 8px;
+  background: var(--navy-2);
+  color: #ffffff;
+  border-radius: var(--radius);
+  line-height: 1.1;
+  align-self: start;
+}
+@media (prefers-color-scheme: dark) {
+  .datechip {
+    background: #2b5389;
+  }
+}
+.datechip__weekday,
+.datechip__month {
+  font-size: 0.9375rem;
+}
+.datechip__day {
+  font-size: 1.75rem;
+  font-weight: 800;
+}
+
+/* 4. Topics: GOV.UK-style ruled rows; each one is a button that filters the list below. */
+.brief--topics {
+  margin-top: var(--section-gap);
+}
+.topics {
+  list-style: none;
+  margin-top: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+  column-gap: 40px;
+  border-top: 2px solid var(--ink);
+}
+.topics > li {
+  border-bottom: 1px solid var(--rule);
+}
+.topic {
+  width: 100%;
+  min-height: 68px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'name chev' 'detail chev';
+  align-items: center;
+  gap: 2px 12px;
+  padding: 12px 4px;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  text-align: left;
+  cursor: pointer;
+}
+.topic__name {
+  grid-area: name;
+  font-weight: 700;
+  font-size: 1.1875rem;
+  line-height: 1.3;
+  color: var(--blue);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.18em;
+}
+.topic__detail {
+  grid-area: detail;
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+.topic__count {
+  font-weight: 700;
+  color: var(--ink);
+}
+.topic__chev {
+  grid-area: chev;
+  color: var(--blue);
+  transition: transform var(--dur) ease;
+}
+.topic:hover .topic__name {
+  color: var(--blue-hover);
+  text-decoration-thickness: 3px;
+}
+.topic:hover .topic__chev {
+  transform: translateX(3px);
+}
+.topic:focus-visible {
+  outline-offset: -3px;
+}
+.topic[aria-pressed='true'] {
+  padding-left: 16px;
+  background: var(--wash);
+  box-shadow: inset 5px 0 0 var(--blue);
+}
+.topic[aria-pressed='true'] .topic__name {
+  color: var(--ink);
+  text-decoration: none;
+}
+.topic[aria-pressed='true'] .topic__chev {
+  transform: rotate(90deg);
+}
+
+/* 5. The full list, with a quiet toolbar above it. */
+.brief--issues {
+  margin-top: var(--section-gap);
+}
+.brief__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 20px;
+}
+.brief__head .brief__title {
+  flex-basis: 100%;
+}
+.brief__head .text-link {
+  margin-left: auto;
+}
+.toolbar {
+  margin-top: 20px;
+  padding: 16px clamp(16px, 2vw, 20px) 18px;
+  background: var(--wash);
+  border-radius: 6px;
+  display: grid;
+  gap: 12px 16px;
+}
+@media (min-width: 760px) {
+  .toolbar {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
+    align-items: end;
+  }
+}
+.toolbar__field {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.toolbar__field label {
+  font-weight: 700;
+  font-size: 1rem;
+}
+.toolbar select,
+.toolbar input[type='search'] {
+  min-height: 48px;
+  font-size: 1.0625rem;
+}
+.toolbar__search {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+.toolbar__search input {
+  border-right: 0;
+}
+.toolbar__go {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  min-height: 48px;
+  padding: 0;
+  background: var(--blue);
+  color: var(--on-blue);
+  border: 2px solid var(--blue);
+  cursor: pointer;
+}
+.toolbar__go:hover {
+  background: var(--blue-hover);
+  border-color: var(--blue-hover);
+}
+.brief--issues .results-row {
+  margin-top: 20px;
+  padding-top: 0;
+  border-top: 0;
+}
+
+/* Issue items: status on the left like a tracker's column, the explanation on the right.
+   No column headers: each item reads as a sentence. */
+.issue-list {
+  list-style: none;
+  container-type: inline-size;
+  margin-top: 12px;
+  border-top: 2px solid var(--ink);
+}
+.issue-list > li + li {
+  border-top: 1px solid var(--rule);
+}
+.card--issue {
+  display: grid;
+  gap: 12px;
+  padding: 24px 0;
+}
+.issue__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+}
+.issue__asof {
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+.issue__meta .status,
+.open-item__status .status {
+  white-space: nowrap;
+}
+/* In the briefing's meeting column the title already names the body, so the type line is dropped. */
+.brief--meetings .card--meeting .card__body > .tag {
+  display: none;
+}
+.issue__body {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+.card--issue .card__title {
+  font-size: 1.375rem;
+}
+.card--issue:hover .card__link {
+  text-decoration-thickness: 3px;
+}
+.issue__where {
+  display: flex;
+  align-items: baseline;
+  color: var(--ink-2);
+  font-size: 1.0625rem;
+}
+.issue__where .icon-lead {
+  align-self: center;
+}
+@container (min-width: 700px) {
+  .card--issue {
+    grid-template-columns: 14rem minmax(0, 1fr);
+    column-gap: 40px;
+    align-items: start;
+  }
+  .issue__meta {
+    display: grid;
+    justify-items: start;
+    gap: 6px;
+    padding-top: 4px;
+  }
+  .issue__meta .tag {
+    margin-top: 4px;
+  }
+}
+
+/* ---------- Detail pages: an explainer, top to bottom ---------- */
+.detail__header {
+  padding: 12px 0 32px;
+}
+.standing {
+  background: var(--cream);
+  border-image: linear-gradient(to bottom, var(--cream-rule) 0 1px, var(--cream) 1px calc(100% - 1px), var(--cream-rule) calc(100% - 1px)) fill 0 / 0 / 0
+    100vmax;
+}
+.standing__inner {
+  display: grid;
+  gap: 28px;
+  padding: 32px 0 36px;
+}
+@media (min-width: 900px) {
+  .standing__inner {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 56px;
+    padding: 40px 0 44px;
+  }
+  .standing__means {
+    padding-left: 40px;
+    border-left: 1px solid var(--cream-rule);
+  }
+}
+.standing__label {
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--ink-2);
+}
+.standing__status {
+  margin-top: 10px;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+  font-weight: 800;
+  line-height: 1.2;
+}
+.standing__status .status {
+  font-weight: 800;
+}
+.standing__status .status__icon {
+  width: 1em;
+  height: 1em;
+}
+.standing__asof {
+  margin-top: 6px;
+  color: var(--ink-2);
+  font-size: 1.0625rem;
+}
+.standing__sentence {
+  margin-top: 14px;
+  max-width: 44ch;
+}
+.standing__why {
+  margin-top: 10px;
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  line-height: 1.45;
+  max-width: 46ch;
+}
+.standing__when {
+  display: flex;
+  gap: 20px;
+  align-items: start;
+}
+.standing__when .standing__status {
+  margin-top: 0;
+}
+.datechip--lg {
+  flex: none;
+  width: 84px;
+  padding: 8px 0 10px;
+}
+.datechip--lg .datechip__day {
+  font-size: 2.375rem;
+}
+.standing__file {
+  margin-top: 6px;
+  font-size: 1.25rem;
+}
+.standing__file .source-action--unavailable {
+  font-size: 1.125rem;
+}
+
+.detail__grid {
+  display: grid;
+  gap: 8px;
+}
+@media (min-width: 960px) {
+  .detail__grid {
+    grid-template-columns: minmax(0, 1fr) 300px;
+    gap: 72px;
+  }
+}
+.detail__main > section,
+.detail__single > section {
+  margin-top: 56px;
+}
+.detail__main > section > h2,
+.detail__single > section > h2 {
+  margin-bottom: 16px;
+}
+.detail__single {
+  max-width: 860px;
+}
+.detail__side {
+  display: grid;
+  gap: 32px;
+  align-content: start;
+  padding-top: 56px;
+}
+.panel {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  padding: 16px 0 0;
+  background: none;
+  border-top: 5px solid var(--marker);
+}
+.doc-groups {
+  margin-top: 36px;
+}
+.detail__side .panel h2 {
+  font-size: 1.375rem;
+  font-weight: 800;
+  margin-bottom: 4px;
+}
+.panel__strong {
+  font-weight: 700;
+}
+.panel .muted {
+  font-size: 1rem;
+}
+.panel .button {
+  justify-self: start;
+  margin-top: 6px;
+}
+
+/* Timeline: a vertical line of steps (GOV.UK "step by step"), at every width. */
+.stepper {
+  list-style: none;
+  margin-top: 8px;
+  display: grid;
+  max-width: 62ch;
+}
+.stepper__node {
+  background: var(--page);
+}
+.stepper__step {
+  padding-bottom: 30px;
+}
+.stepper__kicker {
+  padding-top: 7px;
+}
+.stepper__title {
+  max-width: none;
+}
+
+/* Records, grouped by kind, as ruled rows: title and date on the left, the file link on the right. */
+.doc-group {
+  margin-top: 28px;
+}
+.doc-group:first-of-type {
+  margin-top: 8px;
+}
+.doc-list,
+.source-list {
+  list-style: none;
+}
+.doc-list > li + li,
+.source-list > li + li {
+  border-top: 1px solid var(--rule);
+}
+.source-list > li {
+  padding: 6px 0;
+}
+.doc-group > p {
+  padding: 10px 0;
+}
+.doc-list .card--document {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: 'top actions' 'title actions' 'when actions';
+  gap: 2px 24px;
+  align-items: center;
+  height: auto;
+  padding: 14px 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+}
+.doc-list .card--document:hover {
+  background: none;
+}
+.doc-list .card--document:hover .card__link {
+  text-decoration-thickness: 3px;
+}
+.doc-list .card__top {
+  grid-area: top;
+}
+.doc-list .card__top:not(:has(.badge--mock)) {
+  display: none;
+}
+.doc-list .card__top .tag {
+  display: none;
+}
+.doc-list .card__title {
+  grid-area: title;
+  font-size: 1.1875rem;
+}
+.doc-list .card__when {
+  grid-area: when;
+  font-size: 1rem;
+}
+.doc-list .card__actions {
+  grid-area: actions;
+}
+@media (max-width: 559px) {
+  .doc-list .card--document {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: 'top' 'title' 'when' 'actions';
+  }
+}
+.agenda-group {
+  margin-top: 28px;
+}
+.agenda-group:first-of-type {
+  margin-top: 8px;
+}
+.agenda-group .issue-list {
+  border-top: 0;
+  margin-top: 0;
+}
+.stack--single {
+  border-top: 2px solid var(--ink);
+}
+
+/* ---------- Archive and Near Me: the same quiet toolbar ---------- */
+.filter-panel,
+.nearme__filters {
+  background: var(--wash);
+  border-top: 0;
+  border-radius: 6px;
+}
+.nearme__start {
+  padding: 0;
+  background: none;
+  border: 0;
+  color: var(--ink-2);
+}
+.nearme__start strong {
+  color: var(--ink);
+}
+.archive-list {
+  border-top: 2px solid var(--ink);
+}
+.archive-list > li:first-child {
+  border-top: 0;
+}
+
+/* Archive: search and record type share one row on wide screens. */
+@media (min-width: 900px) {
+  .page > .filter-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas: 'search tlabel' 'search chips' 'examples examples';
+    column-gap: 32px;
+    align-items: end;
+  }
+  .page > .filter-panel > .filters {
+    grid-area: search;
+  }
+  .page > .filter-panel > .examples {
+    grid-area: examples;
+  }
+  .page > .filter-panel > .filter-bar__label {
+    grid-area: tlabel;
+    margin-top: 0;
+  }
+  .page > .filter-panel > .filter-bar {
+    grid-area: chips;
+    flex-wrap: nowrap;
+  }
+}
+
+/* ---------- Home and Coming soon: the same section marker ---------- */
+.steps {
+  padding-top: 72px;
+}
+.steps__list {
+  margin-top: 32px;
+}
+.soon-more {
+  padding-top: 64px;
+}
+.soon-places {
+  margin-top: 24px;
+}
+
 /* Home headline: always two set lines ("Know what’s happening / in your community.").
    Each line is sized from the headline's own width, so the longer line always fits. */
 .hero--state .hero__title {
@@ -2120,32 +2626,6 @@ input[type='search']:focus-visible {
 @media (prefers-color-scheme: dark) {
   .leaflet-tile-pane {
     filter: brightness(0.8) contrast(1.05);
-  }
-}
-
-/* Countywide: summaries clamp to three lines in the list (the full text stays in the DOM
-   and on the issue page), and the "Where" row is hidden when the record has no place. */
-.issue-list .card--issue .card__summary {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  overflow: hidden;
-}
-.facts__row--no-place {
-  display: none;
-}
-@media (min-width: 1100px) {
-  .citywide-grid {
-    align-items: start;
-  }
-  /* If the column is taller than the window it scrolls on its own, so every meeting stays reachable. */
-  .section--meetings {
-    position: sticky;
-    top: 136px;
-    max-height: calc(100vh - 152px);
-    overflow-y: auto;
-    scrollbar-width: thin;
   }
 }
 
@@ -2210,15 +2690,6 @@ input[type='search']:focus-visible {
 }
 .soon__why {
   margin-top: 32px;
-}
-
-/* Summaries are never cut short: a cut summary can contradict its status (for example
-   "failed on September 16" next to an Approved badge, when the item passed on October 7). */
-.issue-list .card--issue .card__summary {
-  display: block;
-  -webkit-line-clamp: unset;
-  line-clamp: none;
-  overflow: visible;
 }
 
 /* Phones: the home headline stays the largest type on the page. */

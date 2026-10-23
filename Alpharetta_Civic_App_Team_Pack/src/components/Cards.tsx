@@ -42,43 +42,40 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
   const mappable = getValidCoordinates(issue) !== null;
   return (
     <article className={`card card--issue card--${issue.status}`}>
-      <div className="card__top">
+      <div className="issue__meta">
+        <IssueStatusBadge status={issue.status} />
+        <p className="issue__asof">{issue.statusAsOf ? `as of ${formatDate(issue.statusAsOf)}` : 'No status date recorded'}</p>
         <span className="tag">{humanize(issue.category)}</span>
         {isMock(issue) && <MockBadge record={issue} />}
       </div>
-      <H className="card__title">
-        <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)} className="card__link">
-          {issue.title}
-        </Link>
-      </H>
-      <p className="card__summary">{issue.summary}</p>
-      <dl className="facts">
-        <div className="facts__row">
-          <dt>Status</dt>
-          <dd>
-            <IssueStatusBadge status={issue.status} />
-            <span className="facts__note">{issue.statusAsOf ? ` as of ${formatDate(issue.statusAsOf)}` : ' (no date recorded)'}</span>
-          </dd>
-        </div>
-        <div className={`facts__row${issue.location?.label ? '' : ' facts__row--no-place'}`}>
-          <dt>Where</dt>
-          <dd>{issue.location?.label ?? 'No specific address in the record'}</dd>
-        </div>
-      </dl>
-      <div className="card__actions">
-        {mappable && (
-          <Link className="card__action" to={href(`/near-me?issue=${encodeURIComponent(issue.id)}`)}>
-            <PinIcon className="icon-lead" />
-            View on map<span className="visually-hidden">: {issue.title}</span>
+      <div className="issue__body">
+        <H className="card__title">
+          <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)} className="card__link">
+            {issue.title}
           </Link>
+        </H>
+        <p className="card__summary">{issue.summary}</p>
+        {issue.location?.label && (
+          <p className="issue__where">
+            <PinIcon className="icon-lead" />
+            <span className="visually-hidden">Where: </span>
+            {issue.location.label}
+          </p>
         )}
-        {source ? (
-          <ExternalAction href={source} context={issue.title}>
-            Official record
-          </ExternalAction>
-        ) : (
-          <span className="card__action card__action--muted">No official source linked</span>
-        )}
+        <div className="card__actions">
+          {mappable && (
+            <Link className="card__action" to={href(`/near-me?issue=${encodeURIComponent(issue.id)}`)}>
+              View on map<span className="visually-hidden">: {issue.title}</span>
+            </Link>
+          )}
+          {source ? (
+            <ExternalAction href={source} context={issue.title}>
+              Official record
+            </ExternalAction>
+          ) : (
+            <span className="card__action card__action--muted">No official source linked</span>
+          )}
+        </div>
       </div>
     </article>
   );
@@ -176,5 +173,45 @@ export function DocumentCard({ document, headingLevel = 3 }: { document: CivicDo
         )}
       </div>
     </article>
+  );
+}
+
+const DOC_GROUP_LABELS: Record<string, string> = {
+  agenda: 'Agendas',
+  agenda_packet: 'Agenda packets',
+  minutes: 'Minutes',
+  presentation: 'Presentations',
+  resolution: 'Resolutions',
+  ordinance: 'Ordinances',
+  draft_policy: 'Draft policies',
+  fact_sheet: 'Fact sheets',
+  staff_report: 'Staff reports',
+  supporting_document: 'Supporting documents',
+};
+
+/** Documents sorted into labeled groups by type (agendas, presentations, …), in a fixed order. */
+export function DocumentGroups({ documents, headingLevel = 3 }: { documents: CivicDocument[]; headingLevel?: 3 | 4 }) {
+  const H = `h${headingLevel}` as const;
+  const order = Object.keys(DOC_GROUP_LABELS);
+  const types = [...new Set(documents.map((d) => d.documentType))].sort(
+    (a, b) => (order.indexOf(a) + 1 || 99) - (order.indexOf(b) + 1 || 99) || a.localeCompare(b),
+  );
+  return (
+    <div className="doc-groups">
+      {types.map((t) => (
+        <div key={t} className="doc-group">
+          <H className="doc-group__title">{DOC_GROUP_LABELS[t] ?? humanize(t)}</H>
+          <ul className="doc-list">
+            {documents
+              .filter((d) => d.documentType === t)
+              .map((d) => (
+                <li key={d.id}>
+                  <DocumentCard document={d} headingLevel={4} />
+                </li>
+              ))}
+          </ul>
+        </div>
+      ))}
+    </div>
   );
 }

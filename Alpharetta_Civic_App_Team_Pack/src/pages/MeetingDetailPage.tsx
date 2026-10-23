@@ -1,9 +1,9 @@
 import { useParams } from 'react-router-dom';
 import { getDocumentsForMeeting, getIssuesForMeeting, getMeetingById } from '../services/civicData';
-import { formatDate, formatTime, meetingTypeLabel } from '../services/format';
+import { formatDate, formatShortDate, formatTime, formatWeekday, meetingTypeLabel } from '../services/format';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
-import { DocumentCard, IssueCard } from '../components/Cards';
+import { DocumentGroups, IssueCard } from '../components/Cards';
 import { MockBadge, MockNotice, isMock } from '../components/MockBadge';
 import { SourceAction } from '../components/SourceAction';
 import { MeetingStatusBadge } from '../components/StatusBadge';
@@ -31,8 +31,18 @@ export function MeetingDetailPage() {
   const time = formatTime(meeting.startTime);
   const missingDocs = meeting.agendaDocumentIds.filter((id) => !documents.some((d) => d.id === id)).length;
 
+  const short = formatShortDate(meeting.date);
+  const open = issues.filter((i) => i.status === 'under_consideration' || i.status === 'proposed');
+  const decided = issues.filter((i) => ['approved', 'denied', 'withdrawn', 'completed'].includes(i.status));
+  const other = issues.filter((i) => !open.includes(i) && !decided.includes(i));
+  const groups = [
+    { key: 'open', title: 'Still being decided', items: open },
+    { key: 'decided', title: 'Decided', items: decided },
+    { key: 'other', title: 'Other items', items: other },
+  ].filter((g) => g.items.length);
+
   return (
-    <article className="page detail">
+    <article className="page detail detail--meeting">
       <BackLink fallbackTo={href('/archive')} fallbackLabel="Archive" />
       <header className="detail__header">
         <div className="card__top">
@@ -42,56 +52,72 @@ export function MeetingDetailPage() {
         <h1 className="detail__title">{meeting.title}</h1>
       </header>
       <MockNotice record={meeting} kind="meeting" />
-      <div className="statusband statusband--slim">
-        <div className="statusband__inner">
-          <div className="detail__status statusband__now">
-            <span className="statusband__label">Meeting status:</span>
-            <MeetingStatusBadge status={meeting.status} />
-            <span className="statusband__asof">
-              {formatDate(meeting.date)}
-              {time ? ` at ${time}` : meeting.date ? ' (time not listed)' : ''}
-            </span>
+      <div className="standing standing--meeting">
+        <div className="standing__inner">
+          <div className="standing__when">
+            <div className="datechip datechip--lg" aria-hidden="true">
+              {short ? (
+                <>
+                  <span className="datechip__weekday">{formatWeekday(meeting.date)}</span>
+                  <span className="datechip__day">{short.day}</span>
+                  <span className="datechip__month">{short.month}</span>
+                </>
+              ) : (
+                <span className="datechip__month">TBD</span>
+              )}
+            </div>
+            <div className="standing__now">
+              <p className="standing__status">
+                <MeetingStatusBadge status={meeting.status} />
+              </p>
+              <p className="standing__asof">
+                {formatDate(meeting.date)}
+                {time ? ` at ${time}` : meeting.date ? ' (time not listed)' : ''}
+              </p>
+              {issues.length > 0 && (
+                <p className="standing__sentence">
+                  {issues.length === 1 ? 'One issue in these records was on its agenda.' : `${issues.length} issues in these records were on its agenda.`}
+                  {open.length > 0 && ` ${open.length === 1 ? 'One is' : `${open.length} are`} still being decided.`}
+                </p>
+              )}
+            </div>
           </div>
+          <section className="standing__means" aria-labelledby="m-summary-h">
+            <h2 id="m-summary-h" className="standing__label">
+              About this meeting
+            </h2>
+            <p className="standing__why">{meeting.summary || 'No summary has been written for this meeting yet.'}</p>
+          </section>
         </div>
       </div>
 
       <div className="detail__grid">
         <div className="detail__main">
-          <section aria-labelledby="m-summary-h">
-            <h2 id="m-summary-h">About this meeting</h2>
-            <p className="prose">{meeting.summary || 'No summary has been written for this meeting yet.'}</p>
-          </section>
-
-          <section aria-labelledby="m-docs-h">
-            <h2 id="m-docs-h">Agenda and documents</h2>
-            {documents.length ? (
-              <ul className="card-grid card-grid--tight">
-                {documents.map((d) => (
-                  <li key={d.id}>
-                    <DocumentCard document={d} />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <EmptyState title="No agenda or documents are linked to this meeting yet." />
-            )}
-            {missingDocs > 0 && <p className="card__note">{missingDocs} linked document(s) could not be found in the dataset.</p>}
-          </section>
-
           <section aria-labelledby="m-issues-h">
             <h2 id="m-issues-h">Issues on the agenda</h2>
-            {issues.length ? (
-              <ul className="issue-list">
-                {issues.map((i) => (
-                  <li key={i.id}>
-                    <IssueCard issue={i} />
-                  </li>
-                ))}
-              </ul>
+            {groups.length ? (
+              groups.map((g) => (
+                <div key={g.key} className="agenda-group">
+                  <h3 className="agenda-group__title">{g.title}</h3>
+                  <ul className="issue-list">
+                    {g.items.map((i) => (
+                      <li key={i.id}>
+                        <IssueCard issue={i} headingLevel={4} />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))
             ) : (
               <EmptyState title="No issues are linked to this meeting." />
             )}
             <p className="fine-print">Being on an agenda does not mean an item was approved. Check each issue’s status.</p>
+          </section>
+
+          <section aria-labelledby="m-docs-h">
+            <h2 id="m-docs-h">Agenda and documents</h2>
+            {documents.length ? <DocumentGroups documents={documents} /> : <EmptyState title="No agenda or documents are linked to this meeting yet." />}
+            {missingDocs > 0 && <p className="card__note">{missingDocs} linked document(s) could not be found in the dataset.</p>}
           </section>
         </div>
 
