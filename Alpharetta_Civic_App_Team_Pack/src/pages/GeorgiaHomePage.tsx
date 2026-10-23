@@ -6,7 +6,7 @@ import { usePageTitle } from '../services/usePageTitle';
 const STEPS = [
   {
     title: 'Choose your place',
-    text: 'Pick your county, and your city or town if you like. You’ll go straight to its page, or see that it’s coming soon.',
+    text: 'Pick your county, and your city or town if you like. You’ll go straight to its page.',
   },
   {
     title: 'See what’s on the table',

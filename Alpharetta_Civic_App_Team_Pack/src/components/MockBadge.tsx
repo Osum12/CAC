@@ -6,7 +6,7 @@ export const isMock = (r: ProvenancedRecord) => r.mockOnly || r.dataMode === 'mo
 export function MockBadge({ record, size = 'sm' }: { record: ProvenancedRecord; size?: 'sm' | 'lg' }) {
   if (isMock(record)) {
     return (
-      <span className={`badge badge--mock badge--${size}`} title="Sample data — not an official city record">
+      <span className={`badge badge--mock badge--${size}`} title="Sample data — not an official government record">
         <svg aria-hidden="true" viewBox="0 0 16 16" width="12" height="12">
           <path d="M8 1.5 15 14H1z" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
           <path d="M8 6v3.6M8 11.4v.1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
@@ -29,7 +29,7 @@ export function MockNotice({ record, kind }: { record: ProvenancedRecord; kind: 
   if (!isMock(record)) return null;
   return (
     <p className="mock-notice" role="note">
-      <strong>Sample data — not an official city record.</strong> This {kind} is fictional test content used to build the app.{' '}
+      <strong>Sample data — not an official government record.</strong> This {kind} is fictional test content used to build the app.{' '}
       {NOTICE_DETAIL[kind]}
     </p>
   );
