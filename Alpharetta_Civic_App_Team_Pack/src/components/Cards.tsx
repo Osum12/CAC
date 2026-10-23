@@ -18,11 +18,18 @@ type HeadingLevel = 2 | 3 | 4;
  * is added for screen readers so repeated links like "Open PDF" are distinguishable.
  */
 export function ExternalAction({ href, children, context }: { href: string; children: string; context: string }) {
+  // The last word and the arrow share a no-wrap span so the arrow never sits alone on a line.
+  const cut = children.lastIndexOf(' ') + 1;
   return (
     <a className="card__action" href={href} target="_blank" rel="noopener noreferrer">
-      {children}
-      <span className="visually-hidden">: {context}</span>
-      <span aria-hidden="true"> ↗</span>
+      <span>
+        {children.slice(0, cut)}
+        <span className="nowrap">
+          {children.slice(cut)}
+          <span className="visually-hidden">: {context}</span>
+          <span aria-hidden="true">{'\u00a0'}↗</span>
+        </span>
+      </span>
       <span className="visually-hidden"> (opens in a new tab)</span>
     </a>
   );
@@ -53,7 +60,7 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
             <span className="facts__note">{issue.statusAsOf ? ` as of ${formatDate(issue.statusAsOf)}` : ' (no date recorded)'}</span>
           </dd>
         </div>
-        <div className="facts__row">
+        <div className={`facts__row${issue.location?.label ? '' : ' facts__row--no-place'}`}>
           <dt>Where</dt>
           <dd>{issue.location?.label ?? 'No specific address in the record'}</dd>
         </div>

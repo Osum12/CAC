@@ -86,7 +86,7 @@ export function CitywidePage() {
                 id="hero-q"
                 type="search"
                 value={query}
-                placeholder="Search issues, e.g. property tax"
+                placeholder="e.g. property tax"
                 onChange={(e) => onQuery(e.target.value)}
               />
               <button type="submit" className="hero-search__button">

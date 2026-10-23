@@ -20,10 +20,17 @@ export function SourceAction({ url, label, unavailableText }: Props) {
       </span>
     );
   }
+  // Keep the last word and the arrow together so the arrow never wraps alone.
+  const cut = label.lastIndexOf(' ') + 1;
   return (
     <a className="source-action" href={href} target="_blank" rel="noopener noreferrer">
-      {label}
-      <span aria-hidden="true"> ↗</span>
+      <span>
+        {label.slice(0, cut)}
+        <span className="nowrap">
+          {label.slice(cut)}
+          <span aria-hidden="true">{'\u00a0'}↗</span>
+        </span>
+      </span>
       <span className="visually-hidden"> (opens in a new tab)</span>
     </a>
   );

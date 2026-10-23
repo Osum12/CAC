@@ -30,6 +30,17 @@ function placeFromPath(pathname: string) {
   return first === "county" ? getCounty(second) : getMunicipality(first);
 }
 
+/**
+ * Detail pages belong to a section even though their URLs sit outside it:
+ * an issue page is part of Countywide, and meeting and document pages are part of the Archive.
+ */
+function sectionForDetail(pathname: string) {
+  const sub = pathname.split("/")[3];
+  if (sub === "issues") return "/";
+  if (sub === "meetings" || sub === "documents") return "/archive";
+  return null;
+}
+
 export function Layout() {
   const { pathname } = useLocation();
   const mainRef = useRef<HTMLElement>(null);
@@ -101,7 +112,17 @@ export function Layout() {
         {covered && (
           <div className="masthead__nav">
             <nav aria-label={`${covered.name} pages`} className="primary-nav">
-              {COUNTY_NAV.map((n) => (
+              {COUNTY_NAV.map((n) =>
+                sectionForDetail(pathname) === n.path ? (
+                  <Link
+                    key={n.path}
+                    to={countyPath(covered, n.path)}
+                    className="primary-nav__link active"
+                    aria-current="page"
+                  >
+                    {n.label}
+                  </Link>
+                ) : (
                 <NavLink
                   key={n.path}
                   to={countyPath(covered, n.path)}
@@ -110,7 +131,8 @@ export function Layout() {
                 >
                   {n.label}
                 </NavLink>
-              ))}
+                ),
+              )}
             </nav>
           </div>
         )}

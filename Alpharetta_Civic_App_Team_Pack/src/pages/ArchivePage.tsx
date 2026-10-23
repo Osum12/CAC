@@ -98,7 +98,7 @@ export function ArchivePage() {
         <form className="filters filters--compact" role="search" aria-label="Search the archive" onSubmit={(e) => e.preventDefault()}>
           <div className="filters__field filters__field--grow">
             <label htmlFor="archive-q">Search meetings and documents</label>
-            <input id="archive-q" type="search" value={query} placeholder="e.g. property tax, housing, September" onChange={(e) => setQuery(e.target.value)} />
+            <input id="archive-q" type="search" value={query} placeholder="e.g. property tax" onChange={(e) => setQuery(e.target.value)} />
           </div>
         </form>
         {examples.length > 0 && (

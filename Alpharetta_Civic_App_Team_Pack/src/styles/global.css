@@ -113,6 +113,13 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  /* Keep focus and jump targets clear of the sticky masthead (WCAG 2.4.11).
+     Measured masthead heights: 74–92px without the county nav, 119px (phones) or
+     121px (640px+) with it. Each value adds a 12–15px breathing gap. */
+  scroll-padding-top: 108px;
+}
+html:has(.masthead__nav) {
+  scroll-padding-top: 136px;
 }
 body {
   margin: 0;
@@ -344,25 +351,51 @@ h2[tabindex='-1']:focus {
 .primary-nav__link:focus-visible {
   outline-offset: -3px;
 }
+/* Phones: a two-line navy bar (brand, then place) and a 44px nav row, 119px in all,
+   so the sticky masthead never takes more than about a sixth of the screen. */
 @media (max-width: 639px) {
   .brand__tag {
     display: none;
   }
+  .brand {
+    min-height: 36px;
+    gap: 10px;
+  }
+  .brand__mark {
+    width: 28px;
+    height: 28px;
+  }
   .brand__name {
-    font-size: 1.25rem;
+    font-size: 1.1875rem;
   }
   .masthead__inner {
-    padding-block: 4px;
+    padding-block: 4px 2px;
+    gap: 0 16px;
   }
   .placebar {
     font-size: 1rem;
+    gap: 6px;
+  }
+  .placebar__change {
+    min-height: 32px;
   }
   .primary-nav__link {
-    min-height: 48px;
-    padding-inline: 12px;
+    min-height: 44px;
+    padding: 3px 12px 0;
   }
   .primary-nav__link:first-child {
     margin-left: -12px;
+  }
+}
+@media (max-width: 399px) {
+  .primary-nav {
+    gap: 2px;
+  }
+  .primary-nav__link {
+    padding-inline: 9px;
+  }
+  .primary-nav__link:first-child {
+    margin-left: -9px;
   }
 }
 
@@ -667,6 +700,8 @@ h2[tabindex='-1']:focus {
     grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
     gap: 64px;
     padding: 72px 0 80px;
+    /* The chooser is the taller column; center the headline beside it. */
+    align-items: center;
   }
 }
 .hero--state .hero__place {
@@ -937,17 +972,20 @@ input[type='search']:focus-visible {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0 4px;
-  margin-top: 10px;
+  gap: 4px 16px;
+  margin-top: 12px;
   font-size: 1.0625rem;
 }
 .examples__label {
   color: var(--ink-2);
-  margin-right: 4px;
 }
 .examples__term {
-  min-height: 44px;
-  padding: 0 8px;
+  min-height: 36px;
+  /* Short terms ("jail") still get a 24px+ target; text stays left-aligned with the label. */
+  min-width: 32px;
+  text-align: left;
+  padding: 0;
+  font: inherit;
   background: none;
   border: 0;
   color: var(--blue);
@@ -1176,7 +1214,12 @@ input[type='search']:focus-visible {
 .card__link {
   color: var(--blue);
 }
-.card__link::after {
+.card,
+.archive-row {
+  position: relative;
+}
+/* The stretched link only ever covers its own card or archive row. */
+:is(.card, .archive-row) .card__link::after {
   content: '';
   position: absolute;
   inset: 0;
@@ -1185,7 +1228,8 @@ input[type='search']:focus-visible {
 .card__link:focus-visible {
   outline: none;
 }
-.card:has(.card__link:focus-visible) {
+.card:has(.card__link:focus-visible),
+.archive-row:has(.card__link:focus-visible) {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
 }
@@ -1785,6 +1829,10 @@ input[type='search']:focus-visible {
   overflow: hidden;
 }
 .map__canvas {
+  /* Leaflet panes use z-index 400–1000; isolate them so the sticky masthead always paints on top. */
+  isolation: isolate;
+  position: relative;
+  z-index: 0;
   height: min(600px, 64vh);
   min-height: 320px;
   background: var(--wash);
@@ -1882,14 +1930,16 @@ input[type='search']:focus-visible {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: var(--navy-2);
-  color: #ffffff;
+  /* Same fill as the home steps: navy in light mode, light blue in dark mode. */
+  background: var(--step);
+  color: var(--page);
   display: grid;
   place-items: center;
   font-weight: 800;
 }
 .feed-item--selected .feed-item__num {
-  background: #005ea2;
+  background: var(--blue);
+  color: var(--on-blue);
   box-shadow: 0 0 0 3px #ffbe2e;
 }
 .feed-item__num--none {
@@ -1928,10 +1978,15 @@ input[type='search']:focus-visible {
   border-image: linear-gradient(var(--navy) 0 0) fill 0 / 0 / 0 100vmax;
 }
 .soon__inner {
+  display: grid;
+  gap: 40px;
   padding: 48px 0 56px;
 }
 @media (min-width: 960px) {
   .soon__inner {
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+    gap: 64px;
+    align-items: center;
     padding: 72px 0 80px;
   }
 }
@@ -2054,4 +2109,101 @@ input[type='search']:focus-visible {
 .hero--state .hero__title .hero__line {
   display: block;
   font-size: clamp(1.5rem, 8.79cqi, 3.5rem);
+}
+
+/* ---------- Review fixes ---------- */
+.nowrap {
+  white-space: nowrap;
+}
+
+/* Dark mode: dim the map tiles, not the pins. */
+@media (prefers-color-scheme: dark) {
+  .leaflet-tile-pane {
+    filter: brightness(0.8) contrast(1.05);
+  }
+}
+
+/* Countywide: summaries clamp to three lines in the list (the full text stays in the DOM
+   and on the issue page), and the "Where" row is hidden when the record has no place. */
+.issue-list .card--issue .card__summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.facts__row--no-place {
+  display: none;
+}
+@media (min-width: 1100px) {
+  .citywide-grid {
+    align-items: start;
+  }
+  .section--meetings {
+    position: sticky;
+    top: 136px;
+  }
+}
+
+/* Coming soon: the place that is available now, as a white panel in the hero's right column
+   (the same panel language as the home chooser). */
+.soon-card {
+  background: var(--page);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  border-top: 8px solid #73b3e7;
+  padding: clamp(20px, 3vw, 32px);
+  display: grid;
+  gap: 12px;
+  justify-items: start;
+}
+.soon-card__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ok);
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+.soon-card__kicker::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.soon-card__title {
+  font-size: clamp(1.625rem, 1.3rem + 1vw, 2.125rem);
+  font-weight: 800;
+  line-height: 1.15;
+}
+.soon-card__text {
+  color: var(--ink-2);
+  max-width: 40ch;
+}
+.soon-card .soon__primary {
+  margin-top: 8px;
+  background: var(--blue);
+  color: var(--on-blue);
+  box-shadow: 0 3px 0 var(--button-shadow);
+}
+.soon-card .soon__primary:hover {
+  background: var(--blue-hover);
+  color: var(--on-blue);
+}
+.soon-card__also {
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: 1rem;
+  color: var(--ink-2);
+  justify-self: stretch;
+}
+.soon-card :focus-visible {
+  outline-color: var(--focus);
+}
+.soon__why {
+  margin-top: 32px;
 }

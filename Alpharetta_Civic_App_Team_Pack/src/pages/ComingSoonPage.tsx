@@ -26,6 +26,8 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
   const home = place.level === 'municipality' ? (countiesOf(place).find((c) => c.civicDataAvailable) ?? null) : null;
   const explore = home ?? covered[0];
   const ownRecords = home?.recordSources.find((s) => s.name === `City of ${place.name}`);
+  // A city in several counties: the counties other than the one we point to.
+  const others = place.level === 'municipality' ? countiesOf(place).filter((c) => c.id !== explore?.id) : [];
   const where = place.level === 'county' ? 'County in Georgia' : `${capitalize(place.kind)} in ${countyNames(countiesOf(place))}, Georgia`;
 
   return (
@@ -52,38 +54,39 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
               </p>
             )}
             <div className="soon__actions">
-              {explore && (
-                <Link to={countyPath(explore)} className="soon__primary">
-                  Explore {explore.name}
-                </Link>
-              )}
               <Link to={chooserPath(place)} className="soon__secondary">
                 Change location
               </Link>
             </div>
           </div>
+          {explore && (
+            <aside className="soon-card" aria-labelledby="soon-card-h">
+              <p className="soon-card__kicker">Available now</p>
+              <h2 id="soon-card-h" className="soon-card__title">
+                {explore.name}
+              </h2>
+              <p className="soon-card__text">Issues, meetings, a map of where they happen, and an archive of records.</p>
+              <Link to={countyPath(explore)} className="soon__primary">
+                Explore {explore.name}
+              </Link>
+              {others.length > 0 && (
+                <p className="soon-card__also">
+                  {place.name} is also in{' '}
+                  {others.map((c, i) => (
+                    <span key={c.id}>
+                      {i > 0 ? ', ' : ''}
+                      <Link to={countyPath(c)}>{c.name}</Link>
+                    </span>
+                  ))}
+                  {others.length > 1 ? ', which are coming soon.' : ', which is coming soon.'}
+                </p>
+              )}
+            </aside>
+          )}
         </div>
       </section>
 
-      {place.level === 'county' ? (
-        <CountyPlaces county={place} cities={municipalitiesInCounty(place.id)} />
-      ) : (
-        <section className="soon-more" aria-labelledby="soon-counties-h">
-          <h2 id="soon-counties-h" className="soon-more__title">
-            {place.countyIds.length > 1 ? `${place.name} spans ${place.countyIds.length} counties` : `${place.name} is in ${countyNames(countiesOf(place))}`}
-          </h2>
-          <ul className="soon-places">
-            {countiesOf(place).map((c) => (
-              <li key={c.id}>
-                <Link to={countyPath(c)} className="soon-place">
-                  <span className="soon-place__name">{c.name}</span>{' '}
-                  <span className="soon-place__status">{c.civicDataAvailable ? 'Issues, meetings, map, and archive' : 'Coming soon'}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+      {place.level === 'county' && <CountyPlaces county={place} cities={municipalitiesInCounty(place.id)} />}
 
       {!ownRecords && (
         <p className="soon__why fine-print">
