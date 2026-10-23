@@ -59,10 +59,10 @@ function spreadPins(map: L.Map, entries: { id: string; latlng: L.LatLng }[]): Ma
 }
 
 /**
- * Leaflet map with OpenStreetMap tiles (free, no API key). Only records with valid
- * coordinates are passed in, so a record without a location never gets a marker.
- * Markers are created once per data change and only restyled on selection, so a
- * keyboard user's focus stays on the pin they chose.
+ * Leaflet map with a public Esri basemap. Only records with valid coordinates are
+ * passed in, so a record without a location never gets a marker. Markers are
+ * created once per data change and only restyled on selection, so a keyboard
+ * user's focus stays on the pin they chose.
  */
 export function IssueMap({ points, origin, selectedId, onSelect }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -87,9 +87,10 @@ export function IssueMap({ points, origin, selectedId, onSelect }: Props) {
     // DOM. It is absolutely positioned, so nothing moves on screen.
     const controls = map.getContainer().querySelector('.leaflet-control-container');
     if (controls) map.getContainer().prepend(controls);
-    const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    const tiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      attribution:
+        '&copy; <a href="https://www.esri.com/en-us/legal/terms-of-use">Esri</a> contributors',
     });
     let errors = 0;
     tiles.on('tileerror', () => {
