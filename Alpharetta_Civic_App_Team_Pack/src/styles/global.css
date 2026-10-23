@@ -495,8 +495,8 @@ ol {
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  background: var(--ring-dot);
-  box-shadow: 0 0 0 5px var(--glow);
+  background: var(--primary);
+  box-shadow: 0 0 0 5px var(--ring);
 }
 .hero__title {
   color: var(--band-ink);
@@ -3227,7 +3227,7 @@ time {
   .hero__place::before {
     box-shadow:
       0 0 0 3px var(--band),
-      0 0 0 4.5px #f2b33d;
+      0 0 0 4.5px var(--primary);
   }
   .state--page::after {
     background: radial-gradient(circle, #f2b33d 0 12px, var(--band) 12.5px 17px, #f2b33d 17.5px 19px, transparent 19.5px 33%, var(--ring) 33.3% 33.9%, transparent 34.3%);
