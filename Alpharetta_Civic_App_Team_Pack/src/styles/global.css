@@ -1,7 +1,7 @@
 /* Georgia Civic design system.
-   The tokens below are the original set; the Capitol layer at the end of this file
-   replaces them (limestone, granite, capitol gold, Public Sans). All colors are tokens
-   so dark mode is a token swap. */
+   The color tokens below are in use; the Capitol layer at the end of this file keeps
+   them and sets the layout and the Public Sans typeface. All colors are tokens so dark
+   mode is a token swap. */
 
 :root {
   --paper: #f5f1e8;
@@ -2803,67 +2803,21 @@ h2 {
 }
 
 /* ---------- Capitol layer ----------
-   Identity from Georgia's public buildings: limestone paper, granite ink and header,
-   and capitol-dome gold used only to mark what is current or selected (the latest
-   decision, the page you are on, the chosen pin). One typeface, Public Sans, the
-   U.S. government's open typeface. Flat white records on a light page; no dark hero. */
+   Layout and type from the Capitol restyle, colors from the original palette (warm paper,
+   evergreen header, brick accent). The accent marks what is current: the latest decision
+   and the page you are on. One typeface, Public Sans, the U.S. government's open typeface.
+   Flat records on a light page; no dark hero. */
 :root {
-  --paper: #eef0ed;
-  --paper-2: #e2e5e1;
-  --surface: #ffffff;
-  --ink: #1a2128;
-  --ink-2: #3a444d;
-  --muted: #56606a;
-  --line: #d6dad6;
-  --line-strong: #a9b0ab;
-  --tag-bg: #e7ebee;
-  --tag-ink: #2b3945;
-  --granite: #22303b;
-  --granite-2: #34444f;
-  --gold: #c99a2e;
-  --gold-ink: #7a5a10;
-  --evergreen: var(--granite);
-  --evergreen-2: var(--granite-2);
-  --on-evergreen: #f3f5f6;
-  --ivory: #f3f5f6;
-  --ember: var(--gold);
-  --accent: var(--granite);
-  --accent-ink: #111a22;
-  --on-accent: #ffffff;
-  --btn-bg: var(--granite);
-  --btn-bg-hover: var(--granite-2);
-  --btn-ink: #ffffff;
+  --granite: var(--evergreen);
+  --granite-2: var(--evergreen-2);
+  --gold: var(--accent);
+  --gold-ink: var(--accent-ink);
   --font-display: 'Public Sans', 'Segoe UI', system-ui, sans-serif;
   --font-body: 'Public Sans', 'Segoe UI', system-ui, -apple-system, Roboto, sans-serif;
   --radius: 6px;
   --radius-lg: 8px;
   --shadow: none;
   --shadow-lift: 0 0 0 1px var(--line-strong);
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #13181d;
-    --paper-2: #1b2128;
-    --surface: #1d242b;
-    --ink: #e8ebee;
-    --ink-2: #c3c9cf;
-    --muted: #9aa3ab;
-    --line: #2f3841;
-    --line-strong: #4a5560;
-    --tag-bg: #26303a;
-    --tag-ink: #c9d3dc;
-    --granite: #0e1317;
-    --granite-2: #26313b;
-    --gold: #d9ae4a;
-    --gold-ink: #e3bd62;
-    --accent: #c9d3dc;
-    --accent-ink: #e8ebee;
-    --on-accent: #13181d;
-    --btn-bg: #c9d3dc;
-    --btn-bg-hover: #e1e7ec;
-    --btn-ink: #13181d;
-    --masthead-edge: #2f3841;
-  }
 }
 
 /* One family: hierarchy comes from size and weight, not a second face. */
@@ -2896,12 +2850,6 @@ h2 {
 }
 
 /* Header: granite bar; the page you are on is underlined in gold instead of a pill. */
-.brand__mark rect {
-  fill: var(--gold);
-}
-.brand__mark path {
-  fill: var(--granite);
-}
 .brand__name {
   font-size: 1.15rem;
 }
@@ -2911,11 +2859,11 @@ h2 {
 .primary-nav__link.active {
   background: none;
   color: var(--on-evergreen);
-  box-shadow: inset 0 -3px 0 var(--gold);
+  box-shadow: inset 0 -3px 0 var(--ember);
 }
 .placebar {
   border-radius: var(--radius);
-  border-color: rgb(243 245 246 / 0.24);
+  border-color: rgb(244 237 224 / 0.22);
 }
 .placebar__change {
   border-radius: 4px;
@@ -2970,11 +2918,6 @@ h2 {
 }
 .hero-search__button {
   border-radius: 4px;
-  background: var(--btn-bg);
-  color: var(--btn-ink);
-}
-.hero-search__button:hover {
-  background: var(--btn-bg-hover);
 }
 
 /* The latest decision: a white record with a gold edge, the one bold mark on the page. */
@@ -3031,41 +2974,28 @@ h2 {
   color: var(--gold-ink);
 }
 .chooser select {
-  border-color: #6b7682; /* 3:1 or more against white */
   border-radius: 4px;
-  background-color: #fff;
-  color: #1a2128;
 }
 .chooser select:hover:not(:disabled),
 .chooser select:focus-visible {
   border-color: var(--granite);
 }
-.chooser select:disabled {
-  background-color: #eef0ed;
-  color: #56606a;
-}
 .chooser__go {
   border-radius: 4px;
-  background: var(--btn-bg);
-  color: var(--btn-ink);
-}
-.chooser__go:hover {
-  background: var(--btn-bg-hover);
 }
 @media (prefers-color-scheme: dark) {
   .chooser select {
-    border-color: #6b7682;
-    background-color: #13181d;
-    color: #e8ebee;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23c9d3dc' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-color: #121a17;
+    color: #ece7dc;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%23b9d8ca' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   }
   .chooser select option {
-    background: #1d242b;
-    color: #e8ebee;
+    background: #1b2622;
+    color: #ece7dc;
   }
   .chooser select:disabled {
-    background-color: #1b2128;
-    color: #9aa3ab;
+    background-color: #18221e;
+    color: #a39d91;
   }
 }
 
@@ -3124,28 +3054,6 @@ h2 {
 }
 .tag {
   border-radius: 4px;
-}
-
-/* Map and Near Me: granite pins; the selected pin and card are marked in gold. */
-.pin--selected {
-  background: var(--gold);
-}
-.pin--selected span,
-.feed-item--selected .feed-item__num {
-  color: #1a2128;
-}
-.feed-item--selected .feed-item__num {
-  background: var(--gold);
-}
-.feed-item--selected {
-  border-color: var(--gold);
-  box-shadow: inset 4px 0 0 var(--gold);
-}
-.nearme__start {
-  border-left-color: var(--gold);
-}
-.nearme__start-icon {
-  color: var(--gold-ink);
 }
 
 /* Buttons share the 4px corner of the search, chooser and coming-soon actions. */
