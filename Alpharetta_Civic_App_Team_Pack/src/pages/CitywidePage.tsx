@@ -1,14 +1,24 @@
-import { useRef, type ReactNode, type RefObject } from 'react';
+import { useRef, type RefObject } from 'react';
 import { Link } from 'react-router-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
 import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState } from '../services/filters';
-import { formatCompactDate, formatDate, formatTime, formatWeekdayDate, humanize, ISSUE_STATUS_LABELS, safeUrl, todayIso } from '../services/format';
+import {
+  formatCompactDate,
+  formatDate,
+  formatTime,
+  formatWeekdayDate,
+  humanize,
+  ISSUE_STATUS_LABELS,
+  parseIsoDate,
+  safeUrl,
+  todayIso,
+} from '../services/format';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
-import { IssueCard, MeetingCard } from '../components/Cards';
+import { ExternalAction, IssueCard } from '../components/Cards';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
-import { isMock } from '../components/MockBadge';
+import { MockBadge, isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 import { usePlace, usePlaceHref, useRecordSources } from '../services/placeContext';
@@ -37,13 +47,66 @@ function lastChecked(meetings: Meeting[]): string | null {
   return dates.length ? dates.sort().at(-1)! : null;
 }
 
+/**
+ * The meeting an issue is filed under on this page: the latest of its linked meetings held on or
+ * before the date its current status was recorded (the meeting where that status was set). If none
+ * qualifies (an item heading to a future meeting) it is the latest linked meeting. Presentation only:
+ * the issue's own meeting links are never changed.
+ */
+export function homeMeeting(issue: Issue, meetings: Meeting[]): Meeting | null {
+  const linked = issue.meetingIds.map((id) => meetings.find((m) => m.id === id)).filter((m): m is Meeting => Boolean(m));
+  if (!linked.length) return null;
+  const dated = linked.filter((m) => m.date).sort((a, b) => b.date!.localeCompare(a.date!));
+  const asOf = issue.statusAsOf;
+  return (asOf ? dated.find((m) => m.date! <= asOf) : undefined) ?? dated[0] ?? linked[0];
+}
+
+type Session = {
+  key: string;
+  meeting: Meeting | null;
+  upcoming: boolean;
+  /** Issues filed under this meeting. */
+  issues: Issue[];
+  /** Issues that were also on this meeting's agenda but are filed under another meeting. */
+  also: { issue: Issue; filedUnder: Meeting | null }[];
+};
+
+/** Main items first, then the most recently updated, then by title. */
+const byImportance = (a: Issue, b: Issue) =>
+  Number(b.featured) - Number(a.featured) || (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? '') || a.title.localeCompare(b.title);
+
+/**
+ * Groups issues into one chapter per meeting, newest first (upcoming meetings on top), with issues
+ * linked to no meeting in a last chapter. Chapters with nothing to show are left out.
+ */
+export function groupBySession(meetings: Meeting[], issues: Issue[], filtering: boolean): Session[] {
+  const { upcoming } = splitMeetings(meetings);
+  const home = new Map(issues.map((i) => [i.id, homeMeeting(i, meetings)]));
+  const sessions: Session[] = meetings.map((m) => ({
+    key: m.id,
+    meeting: m,
+    upcoming: upcoming.includes(m),
+    issues: issues.filter((i) => home.get(i.id)?.id === m.id).sort(byImportance),
+    also: issues
+      .filter((i) => i.meetingIds.includes(m.id) && home.get(i.id)?.id !== m.id)
+      .sort(byImportance)
+      .map((i) => ({ issue: i, filedUnder: home.get(i.id) ?? null })),
+  }));
+  const order = (s: Session) => (s.meeting?.date ?? (s.upcoming ? '9999' : '0000'));
+  const visible = sessions
+    .filter((s) => s.issues.length > 0 || (!filtering && s.also.length > 0))
+    .sort((a, b) => Number(b.upcoming) - Number(a.upcoming) || order(b).localeCompare(order(a)) || (b.meeting?.startTime ?? '').localeCompare(a.meeting?.startTime ?? ''));
+  const unfiled = issues.filter((i) => !home.get(i.id)).sort(byImportance);
+  if (unfiled.length) visible.push({ key: 'no-meeting', meeting: null, upcoming: false, issues: unfiled, also: [] });
+  return visible;
+}
+
 export function CitywidePage() {
   usePageTitle('Countywide');
   const place = usePlace();
   const sources = useRecordSources();
   const state = useAsync(() => Promise.all([getMeetings(), getIssues(), getDocuments()]), []);
   const issuesHeading = useRef<HTMLHeadingElement>(null);
-  const meetingsHeading = useRef<HTMLHeadingElement>(null);
   const { params, setParam } = useUrlParams();
   // The search box keeps its own text so fast typing is never lost; the URL follows it.
   const [query, onQuery] = useUrlText(params, setParam, 'q');
@@ -61,61 +124,45 @@ export function CitywidePage() {
   const checked = ready && !anyMock ? lastChecked(ready[0]) : null;
 
   return (
-    <div className="page">
-      <section className="hero hero--cover" aria-labelledby="citywide-title">
-        <div className="hero__inner">
-          <div className="hero__main">
-            <p className="hero__place">{place?.name}, Georgia</p>
-            <h1 id="citywide-title" className="hero__title">
-              <span className="hero__line">What’s on the table</span> <span className="hero__line">in {place?.name}</span>
-            </h1>
-            <p className="hero__lede">Recent decisions and public meetings of the {sources}, in plain language, with a link to every official record.</p>
-            <form
-              className="hero-search"
-              role="search"
-              aria-label="Issue search"
-              onSubmit={(e) => {
-                e.preventDefault();
-                jumpTo(issuesHeading.current);
-              }}
-            >
-              <label htmlFor="hero-q" className="visually-hidden">
-                Search issues
-              </label>
-              <input
-                id="hero-q"
-                type="search"
-                value={query}
-                placeholder="Search issues, e.g. property tax"
-                onChange={(e) => onQuery(e.target.value)}
-              />
-              <button type="submit" className="hero-search__button">
-                Search
-              </button>
-            </form>
-            {ready && (
-              <p className="hero__note">
-                {anyMock
-                  ? 'These records include sample data and are not city totals.'
-                  : `A selection of recent items, not every decision.${checked ? ` Last checked against official county records on ${formatDate(checked)}.` : ''}`}
-              </p>
-            )}
-          </div>
-          {ready && <Docket meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
+    <div className="page page--county">
+      <section className="county-hero" aria-labelledby="citywide-title">
+        <div className="county-hero__main">
+          <p className="kicker">{place?.name}, Georgia</p>
+          <h1 id="citywide-title" className="county-hero__title">
+            <span className="hero__line">What’s on the table</span> <span className="hero__line">in {place?.name}</span>
+          </h1>
+          <p className="county-hero__lede">Recent decisions and public meetings of the {sources}, in plain language, with a link to every official record.</p>
+          <form
+            className="hero-search"
+            role="search"
+            aria-label="Issue search"
+            onSubmit={(e) => {
+              e.preventDefault();
+              jumpTo(issuesHeading.current);
+            }}
+          >
+            <label htmlFor="hero-q" className="visually-hidden">
+              Search issues
+            </label>
+            <input id="hero-q" type="search" value={query} placeholder="Search issues, e.g. property tax" onChange={(e) => onQuery(e.target.value)} />
+            <button type="submit" className="hero-search__button">
+              Search
+            </button>
+          </form>
+          {ready && (
+            <p className="county-hero__note">
+              {anyMock
+                ? 'These records include sample data and are not city totals.'
+                : `A selection of recent items, not every decision.${checked ? ` Last checked against official county records on ${formatDate(checked)}.` : ''}`}
+            </p>
+          )}
         </div>
+        {ready && <Docket meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
       </section>
 
       {state.status === 'loading' && <LoadingState rows={4} />}
       {state.status === 'error' && <ErrorState onRetry={state.retry} />}
-      {ready && (
-        <CitywideContent
-          meetings={ready[0]}
-          issues={ready[1]}
-          documents={ready[2]}
-          issuesHeading={issuesHeading}
-          meetingsHeading={meetingsHeading}
-        />
-      )}
+      {ready && <CitywideContent meetings={ready[0]} issues={ready[1]} documents={ready[2]} issuesHeading={issuesHeading} />}
     </div>
   );
 }
@@ -125,10 +172,9 @@ type ContentProps = {
   issues: Issue[];
   documents: CivicDocument[];
   issuesHeading: RefObject<HTMLHeadingElement | null>;
-  meetingsHeading: RefObject<HTMLHeadingElement | null>;
 };
 
-function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsHeading }: ContentProps) {
+function CitywideContent({ meetings, issues, documents, issuesHeading }: ContentProps) {
   const sources = useRecordSources();
   const href = usePlaceHref();
   const { params, setParam, clearParams } = useUrlParams();
@@ -142,12 +188,6 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
     status: (statusesIn(issues) as string[]).includes(rawStatus) ? rawStatus : '',
     when: '',
   };
-  const setFilter = (key: keyof IssueFilterState, value: string) => {
-    setParam(key, value);
-  };
-  const clearFilters = () => {
-    clearParams();
-  };
 
   if (!meetings.length && !issues.length) {
     return (
@@ -160,57 +200,189 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
   const { upcoming, recent } = splitMeetings(meetings);
   const filtering = isFiltering(filters);
   const matches = filterIssues(issues, filters);
+  const sessions = groupBySession(meetings, matches, filtering);
 
   return (
-    <div className="citywide-grid">
-      <section className="section" aria-labelledby="issues-heading">
-        <div className="section__head">
+    <div className="county-body">
+      <section className="record" aria-labelledby="issues-heading">
+        <header className="record__head">
           <h2 id="issues-heading" ref={issuesHeading} tabIndex={-1}>
             Issues
           </h2>
-          <p className="section__source">From the {sources}</p>
-          <Link to={href('/near-me')} className="text-link">
-            See them on the map
-          </Link>
+          <p className="record__source">From the {sources}</p>
+          <p className="record__intro">
+            Filed by the meeting where each item was last decided or discussed, newest first.{' '}
+            <Link to={href('/near-me')}>See them on the map</Link>
+          </p>
+        </header>
+
+        <div className="record__tools">
+          <IssueFilters issues={issues} filters={filters} onChange={(k, v) => setParam(k, v)} onClear={clearParams} />
+          <p className="results-count" role="status" aria-live="polite">
+            {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
+          </p>
         </div>
 
-        <IssueFilters issues={issues} filters={filters} onChange={setFilter} onClear={clearFilters} />
-        <p className="results-count" role="status" aria-live="polite">
-          {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
-        </p>
-
-        {filtering ? (
-          matches.length ? (
-            <IssueList issues={matches} headingLevel={3} />
-          ) : (
-            <EmptyState
-              title="No issues match these filters."
-              action={
-                <button type="button" className="button button--ghost" onClick={clearFilters}>
-                  Clear filters
-                </button>
-              }
-            >
-              <p>Try a different word, or choose “All topics” and “Any status”.</p>
-            </EmptyState>
-          )
+        {filtering && !matches.length ? (
+          <EmptyState
+            title="No issues match these filters."
+            action={
+              <button type="button" className="button button--ghost" onClick={clearParams}>
+                Clear filters
+              </button>
+            }
+          >
+            <p>Try a different word, or choose “All topics” and “Any status”.</p>
+          </EmptyState>
         ) : (
-          <IssueList issues={byImportance(issues)} headingLevel={3} />
+          <div className="sessions">
+            {sessions.map((s) => (
+              <SessionChapter key={s.key} session={s} documents={documents} />
+            ))}
+          </div>
         )}
       </section>
 
-      <aside className="section section--meetings" aria-labelledby="meetings-heading">
-        <h2 id="meetings-heading" ref={meetingsHeading} tabIndex={-1}>
+      <aside className="rail" aria-labelledby="meetings-heading">
+        <h2 id="meetings-heading" className="rail__title">
           Meetings
         </h2>
-        <p className="section__source">From the {sources}</p>
-        {upcoming.length > 0 && <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="" />}
-        <MeetingGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} empty="No past meetings in this dataset." />
-        <Link to={href('/archive')} className="text-link">
+        <p className="rail__source">From the {sources}</p>
+        {upcoming.length > 0 && <RailGroup title="Coming up" meetings={upcoming} documents={documents} />}
+        {recent.length > 0 ? (
+          <RailGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} />
+        ) : (
+          <p className="muted">No past meetings in this dataset.</p>
+        )}
+        <Link to={href('/archive')} className="rail__more">
           Browse all meetings and documents
         </Link>
       </aside>
     </div>
+  );
+}
+
+/** "Board of Commissioners First Regular Meeting, October 7, 2026" reads without its date beside the big date. */
+function withoutDate(m: Meeting): string {
+  const tail = `, ${formatDate(m.date, '')}`;
+  return m.date && m.title.endsWith(tail) ? m.title.slice(0, -tail.length) : m.title;
+}
+
+/** Big chapter date: day numeral, month and year, weekday. Decorative copy of the heading's date. */
+function DateMark({ iso, upcoming }: { iso: string | null; upcoming: boolean }) {
+  const d = parseIsoDate(iso);
+  if (!d)
+    return (
+      <div className="datemark datemark--none" aria-hidden="true">
+        <span className="datemark__month">{upcoming ? 'Date to be announced' : 'No meeting'}</span>
+      </div>
+    );
+  return (
+    <div className="datemark" aria-hidden="true">
+      <span className="datemark__day">{d.getDate()}</span>
+      <span className="datemark__month">
+        {d.toLocaleDateString('en-US', { month: 'long' })} {d.getFullYear()}
+      </span>
+      <span className="datemark__weekday">{d.toLocaleDateString('en-US', { weekday: 'long' })}</span>
+    </div>
+  );
+}
+
+function SessionChapter({ session, documents }: { session: Session; documents: CivicDocument[] }) {
+  const href = usePlaceHref();
+  const { meeting, issues, also, upcoming } = session;
+  const headingId = `session-${session.key}`;
+  const decided = issues.length === 1 ? '1 item' : `${issues.length} items`;
+
+  if (!meeting) {
+    return (
+      <section className="session session--none" aria-labelledby={headingId}>
+        <DateMark iso={null} upcoming={false} />
+        <div className="session__body">
+          <header className="session__head">
+            <h3 id={headingId} className="session__title">
+              Not tied to a meeting
+            </h3>
+            <p className="session__meta">{decided} with no meeting linked in the records.</p>
+          </header>
+          <IssueEntries issues={issues} />
+        </div>
+      </section>
+    );
+  }
+
+  const mock = isMock(meeting);
+  const agenda = agendaFor(meeting, documents);
+  const agendaUrl = agenda && !isMock(agenda) ? safeUrl(agenda.url) : null;
+  const video = mock ? null : safeUrl(meeting.recordingUrl);
+  const official = mock ? null : safeUrl(meeting.officialPageUrl);
+  const time = formatTime(meeting.startTime);
+
+  return (
+    <section className={`session${upcoming ? ' session--upcoming' : ''}`} aria-labelledby={headingId}>
+      <DateMark iso={meeting.date} upcoming={upcoming} />
+      <div className="session__body">
+        <header className="session__head">
+          {upcoming && <p className="session__flag">Coming up</p>}
+          <h3 id={headingId} className="session__title">
+            <Link to={href(`/meetings/${encodeURIComponent(meeting.id)}`)}>{withoutDate(meeting)}</Link>
+          </h3>
+          <p className="session__meta">
+            <span>
+              <time dateTime={meeting.date ?? undefined}>{formatDate(meeting.date, 'Date to be announced')}</time>
+              {time ? `, ${time}` : ''}
+            </span>
+            {issues.length > 0 && <span className="session__count">{upcoming ? `${decided} on the agenda` : `${decided} filed here`}</span>}
+            {mock && <MockBadge record={meeting} />}
+          </p>
+          {(agendaUrl || video || official) && (
+            <div className="session__links">
+              {agendaUrl && (
+                <ExternalAction href={agendaUrl} context={meeting.title}>
+                  Official agenda
+                </ExternalAction>
+              )}
+              {video && (
+                <ExternalAction href={video} context={meeting.title}>
+                  Meeting video
+                </ExternalAction>
+              )}
+              {official && (
+                <ExternalAction href={official} context={meeting.title}>
+                  Meeting page
+                </ExternalAction>
+              )}
+            </div>
+          )}
+        </header>
+        {issues.length > 0 && <IssueEntries issues={issues} />}
+        {also.length > 0 && (
+          <div className="session__also">
+            <p className="session__also-title">Also on this agenda</p>
+            <ul>
+              {also.map(({ issue, filedUnder }) => (
+                <li key={issue.id}>
+                  <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)}>{issue.title}</Link>
+                  {filedUnder?.date && <span className="session__also-note"> Filed under {formatDate(filedUnder.date)}.</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function IssueEntries({ issues }: { issues: Issue[] }) {
+  return (
+    <ul className="issue-list">
+      {issues.map((i) => (
+        <li key={i.id}>
+          <IssueCard issue={i} headingLevel={4} />
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -258,37 +430,39 @@ function IssueFilters({
   );
 }
 
-/** Main items first, then the most recently decided. */
-const byImportance = (issues: Issue[]) =>
-  [...issues].sort((a, b) => Number(b.featured) - Number(a.featured) || (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? ''));
-
-function IssueList({ issues, headingLevel }: { issues: Issue[]; headingLevel: 3 | 4 }) {
-  return (
-    <ul className="issue-list">
-      {issues.map((i) => (
-        <li key={i.id}>
-          <IssueCard issue={i} headingLevel={headingLevel} />
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function MeetingGroup({ title, meetings, documents, empty }: { title: string; meetings: Meeting[]; documents: CivicDocument[]; empty: ReactNode }) {
+function RailGroup({ title, meetings, documents }: { title: string; meetings: Meeting[]; documents: CivicDocument[] }) {
+  const href = usePlaceHref();
   return (
     <>
-      <h3 className="subhead">{title}</h3>
-      {meetings.length ? (
-        <ul className="stack">
-          {meetings.map((m) => (
-            <li key={m.id}>
-              <MeetingCard meeting={m} agenda={agendaFor(m, documents)} headingLevel={4} />
+      <h3 className="rail__group">{title}</h3>
+      <ul className="rail__list">
+        {meetings.map((m) => {
+          const agenda = agendaFor(m, documents);
+          const agendaUrl = agenda && !isMock(agenda) ? safeUrl(agenda.url) : null;
+          const time = formatTime(m.startTime);
+          return (
+            <li key={m.id} className="rail__item">
+              <p className="rail__date">
+                <time dateTime={m.date ?? undefined}>{formatCompactDate(m.date, 'Date to be announced')}</time>
+                {time ? `, ${time}` : ''}
+              </p>
+              <h4 className="rail__name">
+                <Link to={href(`/meetings/${encodeURIComponent(m.id)}`)}>{m.title}</Link>
+              </h4>
+              {(agendaUrl || isMock(m)) && (
+                <div className="rail__actions">
+                  {agendaUrl && (
+                    <ExternalAction href={agendaUrl} context={m.title}>
+                      Agenda (PDF)
+                    </ExternalAction>
+                  )}
+                  {isMock(m) && <MockBadge record={m} />}
+                </div>
+              )}
             </li>
-          ))}
-        </ul>
-      ) : (
-        <EmptyState title={String(empty)} />
-      )}
+          );
+        })}
+      </ul>
     </>
   );
 }
@@ -344,7 +518,7 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
       {decided && (
         <div className="docket__block docket__block--decided">
           <p className="docket__kicker">Latest decision</p>
-          <p className="docket__title docket__title--small">
+          <p className="docket__title">
             <Link to={href(`/issues/${encodeURIComponent(decided.id)}`)}>{decided.title}</Link>
           </p>
           <p className="docket__meta">
@@ -352,7 +526,7 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
           </p>
           {earlier.length > 0 && (
             <>
-              <p className="docket__label docket__label--rule">Other recent decisions</p>
+              <p className="docket__label">Other recent decisions</p>
               <ul className="docket__decisions">
                 {earlier.map((i) => (
                   <li key={i.id}>

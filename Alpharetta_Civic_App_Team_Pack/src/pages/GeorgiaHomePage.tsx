@@ -22,39 +22,36 @@ const STEPS = [
 export function GeorgiaHomePage() {
   usePageTitle(null);
   return (
-    <div className="page">
-      <section className="hero hero--cover hero--state" aria-labelledby="home-title">
-        <div className="hero__inner">
-          <div className="hero__main">
-            <p className="hero__place">Georgia Civic</p>
-            <h1 id="home-title" className="hero__title">
-              <span className="hero__line">Know what’s happening</span> <span className="hero__line">in your community.</span>
-            </h1>
-            <p className="hero__lede">
-              Explore local proposals, public meetings, and decisions that shape the places you call home.
-            </p>
-          </div>
-          <LocationSelector />
-        </div>
+    <div className="page page--home">
+      <section className="home-hero" aria-labelledby="home-title">
+        <p className="kicker">Georgia Civic</p>
+        <h1 id="home-title" className="home-hero__title">
+          <span className="hero__line">Know what’s happening</span> <span className="hero__line">in your community.</span>
+        </h1>
+        <p className="home-hero__lede">Explore local proposals, public meetings, and decisions that shape the places you call home.</p>
       </section>
 
-      <section className="steps" aria-labelledby="steps-title">
-        <div className="steps__inner">
+      <div className="stage">
+        <LocationSelector />
+        <section className="steps" aria-labelledby="steps-title">
           <h2 id="steps-title" className="steps__title">
             How it works
           </h2>
           <ol className="steps__list">
-            {STEPS.map((s) => (
-              <li key={s.title} className="steps__item">
+            {STEPS.map((s, i) => (
+              <li key={s.title} className={`steps__item${i === 0 ? ' steps__item--here' : ''}`}>
+                <span className="steps__num" aria-hidden="true">
+                  {i + 1}
+                </span>
                 <h3 className="steps__name">{s.title}</h3>
                 <p className="steps__text">{s.text}</p>
               </li>
             ))}
           </ol>
-        </div>
-      </section>
+        </section>
+      </div>
 
-      <p className="statewide__note fine-print">
+      <p className="statewide__note">
         The location list covers all {COUNTIES.length} Georgia counties and {MUNICIPALITIES.length} incorporated cities, towns, and consolidated
         governments, from the{' '}
         <a href={DIRECTORY_SOURCE.urls[1]} rel="noreferrer">
