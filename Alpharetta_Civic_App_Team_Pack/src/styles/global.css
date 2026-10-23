@@ -187,7 +187,21 @@
 html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  scroll-padding-top: 140px;
+  /* --header-h is the sticky header's measured height (set in Layout.tsx); the fallbacks match it. */
+  scroll-padding-top: calc(var(--header-h, 112px) + 16px);
+}
+@media (min-width: 600px) {
+  html {
+    scroll-padding-top: calc(var(--header-h, 128px) + 16px);
+  }
+}
+@media (min-width: 1200px) {
+  html {
+    scroll-padding-top: calc(var(--header-h, 74px) + 16px);
+  }
+}
+.nowrap {
+  white-space: nowrap;
 }
 body {
   margin: 0;
@@ -774,6 +788,14 @@ select[aria-invalid='true'] {
 /* ---------- Countywide hero ---------- */
 .hero--county .hero__inner::before {
   margin-bottom: -84px;
+  grid-row: 1 / 3;
+}
+.hero--county .searchpanel {
+  grid-row: 3;
+}
+/* The ripple's centre dot would peek out from behind the Latest decision card. */
+.hero--county .ripples__dot {
+  display: none;
 }
 .searchpanel {
   display: grid;
@@ -903,7 +925,7 @@ select[aria-invalid='true'] {
 
 /* Docket: next meeting + latest decision */
 .docket {
-  grid-row: 3;
+  grid-row: 2;
   grid-column: 1 / -1;
   display: grid;
   gap: 14px;
@@ -1000,7 +1022,6 @@ select[aria-invalid='true'] {
 .section h2 {
   font-size: clamp(2rem, 1.5rem + 2vw, 2.75rem);
   font-weight: 800;
-  scroll-margin-top: 150px;
 }
 .section__head {
   display: flex;
@@ -1280,12 +1301,22 @@ select[aria-invalid='true'] {
   text-decoration: underline;
   text-decoration-thickness: 0.1em;
 }
+.card,
+.archive-row {
+  --edge: 2px;
+  --edge-left: 2px;
+}
+.card--issue {
+  --edge-left: 10px;
+}
+/* The stretched link covers the whole card, borders included, so its focus ring traces the card's outer edge. */
 .card__link::after {
   content: '';
   position: absolute;
-  inset: 0;
+  inset: calc(-1 * var(--edge, 0px));
+  left: calc(-1 * var(--edge-left, var(--edge, 0px)));
   z-index: 1;
-  border-radius: inherit;
+  border-radius: var(--r-card);
 }
 .card__link:focus-visible {
   outline: none;
@@ -1298,6 +1329,40 @@ select[aria-invalid='true'] {
 .card__summary {
   color: var(--ink);
   max-width: 68ch;
+}
+/* Countywide list only: a three-line preview. The full summary stays in the DOM and on the issue page. */
+.citywide-grid .card__summary {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+.citywide-grid .card--issue {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 24px;
+  padding-top: 20px;
+  padding-bottom: 18px;
+}
+.citywide-grid .card--issue > .card__top,
+.citywide-grid .card--issue > .card__title,
+.citywide-grid .card--issue > .card__summary {
+  flex: 1 1 100%;
+}
+/* Status and actions share the last row when there is room. */
+.citywide-grid .card--issue > .facts {
+  flex: 1 1 18rem;
+}
+.citywide-grid .card--issue > .card__actions {
+  flex: 0 1 auto;
+}
+.citywide-grid .issue-list {
+  gap: 14px;
+}
+.facts .facts__row--no-place {
+  display: none;
 }
 .card__when {
   color: var(--ink-soft);
@@ -1466,10 +1531,12 @@ select[aria-invalid='true'] {
 .chip__count {
   display: inline-grid;
   place-items: center;
-  min-width: 34px;
-  height: 34px;
-  padding: 0 8px;
-  border-radius: var(--pill);
+  min-width: 28px;
+  height: 28px;
+  padding: 0 7px;
+  border-radius: 999px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
   background: var(--band);
   color: var(--band-ink);
   font-size: 1rem;
@@ -1584,14 +1651,30 @@ select[aria-invalid='true'] {
 }
 .nearme__filters {
   margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+  gap: 10px 24px;
 }
-.nearme__filters .filters__field {
-  flex: 0 1 320px;
-}
+/* The count sits beside the select, centred on it (the field's label is above the select). */
 .nearme__count {
   margin: 0;
-  align-self: center;
-  flex: 1 1 200px;
+  display: flex;
+  align-items: center;
+  min-height: 56px;
+}
+@media (min-width: 600px) {
+  .nearme__filters {
+    width: fit-content;
+    max-width: 100%;
+    grid-template-columns: minmax(220px, 320px) auto;
+    padding-right: 28px;
+  }
+}
+@media (max-width: 599px) {
+  .nearme__count {
+    min-height: 0;
+  }
 }
 .nearme {
   display: grid;
@@ -1613,6 +1696,15 @@ select[aria-invalid='true'] {
 .map__canvas {
   height: 420px;
   background: var(--surface-2);
+  /* Leaflet's panes use z-index 400-1000; keep them inside the map so the sticky header always wins. */
+  position: relative;
+  z-index: 0;
+  isolation: isolate;
+}
+@media (prefers-color-scheme: dark) {
+  .leaflet-tile-pane {
+    filter: brightness(0.8) contrast(1.05);
+  }
 }
 .map__notices {
   position: absolute;
@@ -1703,7 +1795,7 @@ select[aria-invalid='true'] {
   border-left: 8px solid var(--topic, var(--line));
   border-radius: var(--r-card);
   padding: 18px;
-  scroll-margin: 150px;
+  scroll-margin: 16px;
   transition:
     border-color 0.2s var(--ease),
     box-shadow 0.2s var(--ease);
@@ -2296,20 +2388,33 @@ select[aria-invalid='true'] {
     width: 36px;
     height: 36px;
   }
+  /* Phones: two compact rows. Brand and place on the first, the three sections on the second. */
+  .masthead__inner:has(.placebar) .brand {
+    margin-right: 0;
+  }
   .placebar {
-    order: 3;
-    flex: 1 1 100%;
+    order: 2;
+    flex: 1 1 0;
+    min-width: 0;
     justify-content: space-between;
+    padding: 3px 3px 3px 12px;
+    font-size: 0.9375rem;
+    line-height: 1.2;
+  }
+  .placebar__change {
+    min-height: 34px;
+    padding: 0 12px;
   }
   .primary-nav {
-    order: 4;
+    order: 3;
     flex: 1 1 100%;
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    display: flex;
+    justify-content: space-between;
     gap: 4px;
   }
   .primary-nav__link {
-    padding: 0 6px;
+    flex: 1 1 auto;
+    padding: 0 12px;
     font-size: 1rem;
   }
   .primary-nav__link[aria-current='page']::before {
@@ -2329,13 +2434,17 @@ select[aria-invalid='true'] {
     right: -190px;
     top: -110px;
   }
+  /* A sideways strip: the right edge fades to show there is more, and the end padding lets
+     the last pill scroll fully clear of the fade. */
   .topics__list {
     flex-wrap: nowrap;
     overflow-x: auto;
     margin-inline: -18px;
-    padding: 10px 18px 12px;
+    padding: 10px 56px 12px 18px;
     scroll-padding-inline: 18px;
     scroll-snap-type: x proximity;
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent);
+    mask-image: linear-gradient(to right, #000 calc(100% - 48px), transparent);
   }
   .topics__list li {
     flex: none;
@@ -2365,6 +2474,7 @@ select[aria-invalid='true'] {
   .card--issue {
     border-left-width: 8px;
     padding-left: 16px;
+    --edge-left: 8px;
   }
   .card--meeting {
     grid-template-columns: minmax(0, 1fr);
@@ -2413,15 +2523,33 @@ select[aria-invalid='true'] {
     translate: none;
   }
 }
-@media (max-width: 359px) {
-  .placebar {
-    flex-wrap: wrap;
-    border-radius: var(--r-card);
-    padding: 6px 6px 6px 12px;
+@media (max-width: 539px) {
+  /* The brand keeps its pin mark and its accessible name; the place takes the room beside it. */
+  .masthead__inner:has(.placebar) .brand__text {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
   }
+}
+@media (max-width: 399px) {
+  .placebar__icon {
+    display: none;
+  }
+}
+@media (max-width: 359px) {
   .primary-nav__link {
     font-size: 0.9375rem;
-    padding: 0 4px;
+    padding: 0 10px;
+  }
+  .hero-search input[type='search'] {
+    padding-left: 48px;
+    font-size: 1.0625rem;
+  }
+  .hero-search__icon {
+    left: 16px;
   }
   .primary-nav__link[aria-current='page']::before {
     display: none;
@@ -2504,6 +2632,9 @@ select[aria-invalid='true'] {
   .hero--county .hero__main {
     padding-bottom: 8px;
   }
+  .hero--county .hero__inner::before {
+    grid-row: 1;
+  }
   .hero--county .docket {
     grid-row: 1;
     grid-column: 2;
@@ -2511,6 +2642,31 @@ select[aria-invalid='true'] {
   }
   .hero--county .searchpanel {
     grid-row: 2;
+  }
+  /* The meetings column stays beside the long issue list. When it is taller than the window it
+     scrolls on its own, and focusing a link inside scrolls it into view. */
+  .section--meetings {
+    position: sticky;
+    top: calc(var(--header-h, 128px) + 16px);
+    max-height: calc(100vh - var(--header-h, 128px) - 32px);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line-strong) transparent;
+    scroll-padding-block: 16px;
+  }
+  /* Issue page: sources and location sit beside the summary and run down beside the rest. */
+  .detail--issue .detail__grid {
+    grid-template-rows: auto 1fr;
+    row-gap: 44px;
+  }
+  .detail--issue .detail__main--lead,
+  .detail--issue .detail__main--rest {
+    grid-column: 1;
+  }
+  .detail--issue .detail__side {
+    grid-column: 2;
+    grid-row: 1 / span 2;
   }
   .ripples {
     right: -60px;
@@ -2536,7 +2692,7 @@ select[aria-invalid='true'] {
   }
   .nearme__map {
     position: sticky;
-    top: 110px;
+    top: calc(var(--header-h, 128px) + 16px);
   }
   .map__canvas {
     height: min(640px, calc(100vh - 220px));

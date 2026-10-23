@@ -73,6 +73,8 @@ export function CitywidePage() {
             </h1>
             <p className="hero__lede">Recent decisions and public meetings of the {sources}, in plain language, with a link to every official record.</p>
           </div>
+          {/* Before the search panel in the DOM, so tab order matches what is drawn first. */}
+          {ready && <Docket meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
           <div className="searchpanel">
             <p className="searchpanel__prompt" aria-hidden="true">
               What can we help you find?
@@ -94,7 +96,7 @@ export function CitywidePage() {
                 id="hero-q"
                 type="search"
                 value={query}
-                placeholder="Search issues, e.g. property tax"
+                placeholder="e.g. property tax"
                 onChange={(e) => onQuery(e.target.value)}
               />
               <button type="submit" className="hero-search__button">
@@ -110,7 +112,6 @@ export function CitywidePage() {
               </p>
             )}
           </div>
-          {ready && <Docket meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
         </div>
       </section>
 

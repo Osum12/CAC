@@ -34,6 +34,23 @@ export function Layout() {
   // users start at the new page content; scroll back to the top. Comparing with the
   // previous pathname (not a "first run" flag) keeps this from firing on the initial
   // load, even when React StrictMode runs effects twice in development.
+  // The sticky header's real height, shared with CSS (--header-h) so in-page jumps and
+  // focused elements land below it at every width.
+  const headerRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const root = document.documentElement;
+    const sync = () => root.style.setProperty('--header-h', `${Math.ceil(el.getBoundingClientRect().height)}px`);
+    sync();
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Detail pages belong to a section: issues to Countywide, meetings and documents to Archive.
+  const section = /\/issues\//.test(pathname) ? '/' : /\/(meetings|documents)\//.test(pathname) ? '/archive' : null;
+
   const prevPath = useRef(pathname);
   useEffect(() => {
     if (prevPath.current === pathname) return;
@@ -47,7 +64,7 @@ export function Layout() {
       <a className="skip-link" href="#main">
         Skip to content
       </a>
-      <header className="masthead">
+      <header className="masthead" ref={headerRef}>
         <div className="masthead__inner">
           <NavLink to="/" className="brand" aria-label="Georgia Civic, choose a location" end>
             <svg className="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
@@ -75,11 +92,17 @@ export function Layout() {
           )}
           {covered && (
             <nav aria-label={`${covered.name} pages`} className="primary-nav">
-              {COUNTY_NAV.map((n) => (
-                <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className="primary-nav__link">
-                  {n.label}
-                </NavLink>
-              ))}
+              {COUNTY_NAV.map((n) =>
+                section === n.path ? (
+                  <Link key={n.path} to={countyPath(covered, n.path)} className="primary-nav__link" aria-current="page">
+                    {n.label}
+                  </Link>
+                ) : (
+                  <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className="primary-nav__link">
+                    {n.label}
+                  </NavLink>
+                ),
+              )}
             </nav>
           )}
         </div>

@@ -121,7 +121,7 @@ export function NearMePage() {
               </h2>
               <IssueMap points={points} origin={origin} selectedId={selectedId} onSelect={(id) => updateParam('issue', id)} />
               <p className="fine-print">
-                Numbered pins match the list. Dashed pins are approximate: they are placed from a street address, not an exact site boundary. Pins that would overlap are drawn slightly apart so each one can be selected.{' '}
+                The green dot is the starting point, {origin.label}. Numbered pins match the list. Dashed pins are approximate: they are placed from a street address, not an exact site boundary. Pins that would overlap are drawn slightly apart so each one can be selected.{' '}
                 {ranked.length - points.length > 0 &&
                   `${ranked.length - points.length} issue${ranked.length - points.length > 1 ? 's have' : ' has'} no map location and appear${ranked.length - points.length > 1 ? '' : 's'} in the list only.`}
               </p>

@@ -50,7 +50,7 @@ export function IssueDetailPage() {
       <MockNotice record={issue} kind="issue" />
 
       <div className="detail__grid">
-        <div className="detail__main">
+        <div className="detail__main detail__main--lead">
           <section aria-labelledby="summary-h">
             <h2 id="summary-h">In plain language</h2>
             <p className="prose">{issue.summary || 'No summary has been written for this issue yet.'}</p>
@@ -58,7 +58,27 @@ export function IssueDetailPage() {
               <p className="fine-print">This summary is a plain-language rewrite of the official documents listed below. Check them for the exact wording.</p>
             )}
           </section>
+        </div>
 
+        <aside className="detail__side">
+          <section className="panel" aria-labelledby="sources-h">
+            <h2 id="sources-h">Official sources</h2>
+            {issue.sourceUrls.length ? (
+              <ul className="plain-list">
+                {issue.sourceUrls.map((url, i) => (
+                  <li key={i}>
+                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
+            )}
+          </section>
+          <LocationPanel issue={issue} />
+        </aside>
+
+        <div className="detail__main detail__main--rest">
           <section aria-labelledby="why-h" className="callout">
             <h2 id="why-h">Why it may matter</h2>
             <p className="prose">{issue.whyItMayMatter || 'No explanation has been recorded for this issue.'}</p>
@@ -91,23 +111,6 @@ export function IssueDetailPage() {
           </section>
         </div>
 
-        <aside className="detail__side">
-          <section className="panel" aria-labelledby="sources-h">
-            <h2 id="sources-h">Official sources</h2>
-            {issue.sourceUrls.length ? (
-              <ul className="plain-list">
-                {issue.sourceUrls.map((url, i) => (
-                  <li key={i}>
-                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
-            )}
-          </section>
-          <LocationPanel issue={issue} />
-        </aside>
       </div>
     </article>
   );
