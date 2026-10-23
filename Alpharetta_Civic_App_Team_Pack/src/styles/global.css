@@ -2797,3 +2797,22 @@ h2 {
   display: inline-block;
   padding-block: 2px;
 }
+
+/* Near Me category filter: one dropdown with the result count beside it. */
+.nearme__filters {
+  grid-template-columns: minmax(0, 18rem) 1fr;
+  margin: 0 0 var(--space-4);
+}
+.nearme__count {
+  margin: 0;
+  padding-bottom: 10px;
+  color: var(--muted);
+}
+@media (max-width: 600px) {
+  .nearme__filters {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .nearme__count {
+    padding-bottom: 0;
+  }
+}

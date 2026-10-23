@@ -205,6 +205,18 @@ describe('With the real curated records in /data', () => {
     expect(within(markers).getAllByRole('listitem')).toHaveLength(6);
     expect(within(markers).getByRole('button', { name: /Modernizing the jail’s elevators/ })).toBeInTheDocument();
   });
+
+  it('filters Near Me by category, narrowing both the list and the pins', async () => {
+    renderAt('/near-me');
+    const select = await screen.findByLabelText('Category');
+    expect(screen.getByRole('status')).toHaveTextContent('24 issues, 6 on the map');
+    await userEvent.selectOptions(select, 'housing_and_neighborhoods');
+    expect(screen.getByRole('status')).toHaveTextContent('5 issues in Housing and neighborhoods, 5 on the map');
+    expect(within(screen.getByRole('list', { name: 'map markers' })).getAllByRole('listitem')).toHaveLength(5);
+    expect(screen.queryByRole('link', { name: 'Modernizing the jail’s elevators' })).toBeNull();
+    await userEvent.selectOptions(select, '');
+    expect(screen.getByRole('status')).toHaveTextContent('24 issues, 6 on the map');
+  });
 });
 
 describe('Citywide search, filters, and map links', () => {

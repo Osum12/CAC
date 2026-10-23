@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { useUrlParams } from '../services/useUrlParams';
 import { getIssues } from '../services/civicData';
 import { humanize } from '../services/format';
+import { topicsIn } from '../services/filters';
 import { DEMO_LOCATIONS, pointKind, rankIssuesForLocation, type RankedIssue } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
@@ -26,7 +27,19 @@ export function NearMePage() {
   };
 
   const issues = state.status === 'ready' ? state.data : null;
-  const ranked = useMemo(() => (issues ? rankIssuesForLocation(issues, origin) : []), [issues, origin]);
+  const topics = useMemo(() => (issues ? topicsIn(issues) : []), [issues]);
+  const rawTopic = params.get('topic') ?? '';
+  const topic = topics.includes(rawTopic) ? rawTopic : '';
+  const ranked = useMemo(
+    () => (issues ? rankIssuesForLocation(topic ? issues.filter((i) => i.category === topic) : issues, origin) : []),
+    [issues, origin, topic],
+  );
+  const setTopic = (next: string) => {
+    // A highlighted issue outside the new category would have no pin or card, so drop it.
+    const selected = issues?.find((i) => i.id === selectedId);
+    if (next && selected && selected.category !== next) updateParam('issue', null);
+    updateParam('topic', next || null);
+  };
   // Pin numbers count only issues that have coordinates, so pins read 1, 2, 3… with no gaps.
   const points: MapPoint[] = useMemo(
     () =>
@@ -78,6 +91,25 @@ export function NearMePage() {
 
       {state.status === 'loading' && <LoadingState rows={4} />}
       {state.status === 'error' && <ErrorState onRetry={state.retry} />}
+      {state.status === 'ready' && topics.length > 0 && (
+        <form className="filters nearme__filters" role="search" aria-label="Filter issues by category" onSubmit={(e) => e.preventDefault()}>
+          <div className="filters__field">
+            <label htmlFor="nearme-topic">Category</label>
+            <select id="nearme-topic" value={topic} onChange={(e) => setTopic(e.target.value)}>
+              <option value="">All categories</option>
+              {topics.map((t) => (
+                <option key={t} value={t}>
+                  {humanize(t)}
+                </option>
+              ))}
+            </select>
+          </div>
+          <p className="results-count nearme__count" role="status" aria-live="polite">
+            {ranked.length} {ranked.length === 1 ? 'issue' : 'issues'}
+            {topic ? ` in ${humanize(topic)}` : ''}, {points.length} on the map
+          </p>
+        </form>
+      )}
       {state.status === 'ready' &&
         (ranked.length === 0 ? (
           <EmptyState title="No issues are in the dataset yet." />
