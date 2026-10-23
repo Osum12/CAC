@@ -54,6 +54,8 @@ export function buildArchiveEntries(meetings: Meeting[], documents: CivicDocumen
   return entries.sort((a, b) => (b.date ?? '').localeCompare(a.date ?? '') || b.kind.localeCompare(a.kind)); // same date: meeting before its documents
 }
 
+const EXAMPLE_TERMS = ['property tax', 'housing', 'September'];
+
 const EMPTY_COPY: Record<ArchiveFilter, string> = {
   all: 'No meetings or documents are in the archive yet.',
   videos: 'No meeting recordings are linked in this dataset yet.',
@@ -79,6 +81,9 @@ export function ArchivePage() {
   const entries = state.status === 'ready' ? buildArchiveEntries(state.data[0], state.data[1]).filter((e) => entryMatches(e, q)) : [];
   const visible = entries.filter((e) => e.groups.includes(filter));
   const count = (f: ArchiveFilter) => entries.filter((e) => e.groups.includes(f)).length;
+  // Example searches are offered only when they find something in the loaded records.
+  const allEntries = state.status === 'ready' ? buildArchiveEntries(state.data[0], state.data[1]) : [];
+  const examples = EXAMPLE_TERMS.filter((t) => allEntries.some((e) => entryMatches(e, t)));
 
   return (
     <div className="page">
@@ -89,37 +94,59 @@ export function ArchivePage() {
         </p>
       </header>
 
-      <form className="filters filters--compact" role="search" aria-label="Search the archive" onSubmit={(e) => e.preventDefault()}>
-        <div className="filters__field filters__field--grow">
-          <label htmlFor="archive-q">Search meetings and documents</label>
-          <input id="archive-q" type="search" value={query} placeholder="e.g. property tax, housing, September" onChange={(e) => setQuery(e.target.value)} />
-        </div>
-      </form>
+      <div className="filter-panel">
+        <form className="filters filters--compact" role="search" aria-label="Search the archive" onSubmit={(e) => e.preventDefault()}>
+          <div className="filters__field filters__field--grow">
+            <label htmlFor="archive-q">Search meetings and documents</label>
+            <input id="archive-q" type="search" value={query} placeholder="e.g. property tax, housing, September" onChange={(e) => setQuery(e.target.value)} />
+          </div>
+        </form>
+        {examples.length > 0 && (
+          <p className="examples">
+            <span className="examples__label">For example:</span>
+            {examples.map((t) => (
+              <button key={t} type="button" className="examples__term" onClick={() => setQuery(t)}>
+                {t}
+              </button>
+            ))}
+          </p>
+        )}
 
-      <div className="filter-bar" role="group" aria-label="Filter by record type">
-        {FILTERS.map((f) => (
-          <button
-            key={f.id}
-            type="button"
-            className="chip"
-            aria-pressed={filter === f.id}
-            onClick={() => setFilter(f.id)}
-            disabled={state.status !== 'ready'}
-          >
-            {f.label}
-            {state.status === 'ready' && <span className="chip__count">{count(f.id)}</span>}
-          </button>
-        ))}
+        <p className="filter-bar__label" aria-hidden="true">
+          Record type
+        </p>
+        <div className="filter-bar" role="group" aria-label="Filter by record type">
+          {FILTERS.map((f) => (
+            <button
+              key={f.id}
+              type="button"
+              className="chip"
+              aria-pressed={filter === f.id}
+              onClick={() => setFilter(f.id)}
+              disabled={state.status !== 'ready'}
+            >
+              {f.label}
+              {state.status === 'ready' && <span className="chip__count">{count(f.id)}</span>}
+            </button>
+          ))}
+        </div>
       </div>
 
       {state.status === 'loading' && <LoadingState rows={5} />}
       {state.status === 'error' && <ErrorState onRetry={state.retry} />}
       {state.status === 'ready' && (
         <>
-          <p className="results-count" role="status" aria-live="polite">
-            {visible.length} {visible.length === 1 ? 'record' : 'records'}
-            {q ? ` matching “${q}”` : ''}
-          </p>
+          <div className="results-row">
+            <p className="results-count" role="status" aria-live="polite">
+              {visible.length} {visible.length === 1 ? 'record' : 'records'}
+              {q ? ` matching “${q}”` : ''}
+            </p>
+            {(q || filter !== 'all') && visible.length > 0 && (
+              <button type="button" className="button button--ghost results-row__clear" onClick={clearParams}>
+                Clear filters
+              </button>
+            )}
+          </div>
           {visible.length ? (
             <ol className="archive-list">
               {visible.map((e) => (

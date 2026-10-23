@@ -5,6 +5,7 @@ import { getValidCoordinates } from '../services/nearMe';
 import { MockBadge, isMock } from './MockBadge';
 import { IssueStatusBadge, MeetingStatusBadge } from './StatusBadge';
 import { usePlaceHref } from '../services/placeContext';
+import { PinIcon } from './PinIcon';
 
 // Cards use a "stretched link": the title link's click area covers the whole card,
 // so screen readers hear one clear link per card. Secondary actions (map, source,
@@ -33,7 +34,7 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
   const source = isMock(issue) ? null : primarySource(issue.sourceUrls);
   const mappable = getValidCoordinates(issue) !== null;
   return (
-    <article className="card card--issue">
+    <article className={`card card--issue card--${issue.status}`}>
       <div className="card__top">
         <span className="tag">{humanize(issue.category)}</span>
         {isMock(issue) && <MockBadge record={issue} />}
@@ -60,7 +61,8 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
       <div className="card__actions">
         {mappable && (
           <Link className="card__action" to={href(`/near-me?issue=${encodeURIComponent(issue.id)}`)}>
-            <span aria-hidden="true" className="icon-lead">⌖</span>View on map<span className="visually-hidden">: {issue.title}</span>
+            <PinIcon className="icon-lead" />
+            View on map<span className="visually-hidden">: {issue.title}</span>
           </Link>
         )}
         {source ? (

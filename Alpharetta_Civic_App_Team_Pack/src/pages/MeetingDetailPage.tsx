@@ -40,15 +40,20 @@ export function MeetingDetailPage() {
           {isMock(meeting) && <MockBadge record={meeting} size="lg" />}
         </div>
         <h1 className="detail__title">{meeting.title}</h1>
-        <div className="detail__status">
-          <MeetingStatusBadge status={meeting.status} />
-          <span className="muted">
-            {formatDate(meeting.date)}
-            {time ? ` at ${time}` : meeting.date ? ' (time not listed)' : ''}
-          </span>
-        </div>
       </header>
       <MockNotice record={meeting} kind="meeting" />
+      <div className="statusband statusband--slim">
+        <div className="statusband__inner">
+          <div className="detail__status statusband__now">
+            <span className="statusband__label">Meeting status:</span>
+            <MeetingStatusBadge status={meeting.status} />
+            <span className="statusband__asof">
+              {formatDate(meeting.date)}
+              {time ? ` at ${time}` : meeting.date ? ' (time not listed)' : ''}
+            </span>
+          </div>
+        </div>
+      </div>
 
       <div className="detail__grid">
         <div className="detail__main">

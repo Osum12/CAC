@@ -8,9 +8,10 @@ import { BackLink } from '../components/BackLink';
 import { DocumentCard } from '../components/Cards';
 import { MockBadge, MockNotice, isMock } from '../components/MockBadge';
 import { SourceAction } from '../components/SourceAction';
-import { IssueStatusBadge } from '../components/StatusBadge';
+import { IssueStatusBadge, StatusIcon, issueIconKind } from '../components/StatusBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
+import { PinIcon } from '../components/PinIcon';
 import type { Issue, Meeting } from '../types/civic';
 import { usePlaceHref } from '../services/placeContext';
 
@@ -42,12 +43,31 @@ export function IssueDetailPage() {
           {isMock(issue) && <MockBadge record={issue} size="lg" />}
         </div>
         <h1 className="detail__title">{issue.title}</h1>
-        <div className="detail__status">
-          <IssueStatusBadge status={issue.status} />
-          <span className="muted">{issue.statusAsOf ? `Status as of ${formatDate(issue.statusAsOf)}` : 'No status date recorded'}</span>
-        </div>
       </header>
       <MockNotice record={issue} kind="issue" />
+
+      <section className="statusband" aria-labelledby="timeline-h">
+        <div className="statusband__inner">
+          <div className="detail__status statusband__now">
+            <span className="statusband__label">Current status:</span>
+            <IssueStatusBadge status={issue.status} />
+            <span className="statusband__asof">{issue.statusAsOf ? `Status as of ${formatDate(issue.statusAsOf)}` : 'No status date recorded'}</span>
+          </div>
+          <h2 id="timeline-h" className="statusband__title">
+            Timeline
+          </h2>
+          {meetings.length ? (
+            <StatusStepper issue={issue} meetings={meetings} />
+          ) : (
+            <EmptyState title="No related meetings are linked to this issue." />
+          )}
+          {missingMeetings > 0 && <MissingNote count={missingMeetings} noun="meeting" />}
+          <p className="statusband__note">
+            Being on an agenda does not mean an item was approved.
+            {!isMock(issue) && ' The status above comes from the recorded vote or official recommendation.'}
+          </p>
+        </div>
+      </section>
 
       <div className="detail__grid">
         <div className="detail__main">
@@ -62,16 +82,6 @@ export function IssueDetailPage() {
           <section aria-labelledby="why-h" className="callout">
             <h2 id="why-h">Why it may matter</h2>
             <p className="prose">{issue.whyItMayMatter || 'No explanation has been recorded for this issue.'}</p>
-          </section>
-
-          <section aria-labelledby="timeline-h">
-            <h2 id="timeline-h">Timeline</h2>
-            {meetings.length ? <MeetingTimeline meetings={meetings} /> : <EmptyState title="No related meetings are linked to this issue." />}
-            {missingMeetings > 0 && <MissingNote count={missingMeetings} noun="meeting" />}
-            <p className="fine-print">
-              Being on an agenda does not mean an item was approved.
-              {!isMock(issue) && ' The status above comes from the recorded vote or official recommendation.'}
-            </p>
           </section>
 
           <section aria-labelledby="docs-h">
@@ -113,25 +123,63 @@ export function IssueDetailPage() {
   );
 }
 
-/** Related meetings in date order, so readers can follow the issue's path through city hall. */
-function MeetingTimeline({ meetings }: { meetings: Meeting[] }) {
+/** What the last step says: the recorded status in one sentence, with its date when there is one. */
+function outcomeText(issue: Issue): string {
+  const on = issue.statusAsOf ? formatDate(issue.statusAsOf) : null;
+  switch (issue.status) {
+    case 'approved':
+      return on ? `Approved on ${on}` : 'Approved (no date recorded)';
+    case 'completed':
+      return on ? `Completed on ${on}` : 'Completed (no date recorded)';
+    case 'denied':
+      return on ? `Denied on ${on}` : 'Denied (no date recorded)';
+    case 'withdrawn':
+      return on ? `Withdrawn on ${on}` : 'Withdrawn (no date recorded)';
+    case 'under_consideration':
+      return on ? `Still under consideration as of ${on}` : 'Still under consideration';
+    case 'proposed':
+      return on ? `Proposed, as of ${on}` : 'Proposed, no date recorded';
+    default:
+      return 'No verified outcome yet';
+  }
+}
+
+const OUTCOME_TONE: Record<string, string> = {
+  approved: 'approved',
+  completed: 'approved',
+  denied: 'stopped',
+  withdrawn: 'stopped',
+  under_consideration: 'current',
+  proposed: 'current',
+};
+
+/**
+ * The issue's path, built only from what the record holds: each linked meeting, in date
+ * order, then the recorded status. No stages are assumed beyond those.
+ */
+function StatusStepper({ issue, meetings }: { issue: Issue; meetings: Meeting[] }) {
   const href = usePlaceHref();
   const sorted = [...meetings].sort((a, b) => (a.date ?? '9999').localeCompare(b.date ?? '9999'));
+  const tone = OUTCOME_TONE[issue.status] ?? 'unknown';
   return (
-    <ol className="timeline">
+    <ol className={`stepper stepper--${sorted.length + 1}`}>
       {sorted.map((m) => {
         const time = formatTime(m.startTime);
+        const state = m.status === 'completed' ? 'done' : m.status === 'canceled' ? 'canceled' : 'upcoming';
         return (
-          <li key={m.id} className={`timeline__item timeline__item--${m.status === 'scheduled' ? 'upcoming' : 'past'}`}>
-            <p className="timeline__date">
+          <li key={m.id} className={`stepper__step stepper__step--${state}`}>
+            <span className="stepper__node" aria-hidden="true">
+              <StatusIcon kind={state === 'done' ? 'check' : state === 'canceled' ? 'cross' : 'calendar'} className="stepper__icon" />
+            </span>
+            <p className="stepper__kicker">
               <time dateTime={m.date ?? undefined}>{formatDate(m.date)}</time>
               {time ? ` at ${time}` : ''}
             </p>
-            <p className="timeline__title">
+            <p className="stepper__title">
               <Link to={href(`/meetings/${encodeURIComponent(m.id)}`)}>{m.title}</Link>
             </p>
-            <p className="timeline__meta">
-              {meetingTypeLabel(m.meetingType)} meeting, {meetingStatusLabel(m.status).toLowerCase()}
+            <p className="stepper__meta">
+              On the agenda. {meetingTypeLabel(m.meetingType)} meeting, {meetingStatusLabel(m.status).toLowerCase()}.
               {isMock(m) && (
                 <>
                   {' '}
@@ -142,6 +190,13 @@ function MeetingTimeline({ meetings }: { meetings: Meeting[] }) {
           </li>
         );
       })}
+      <li className={`stepper__step stepper__step--outcome stepper__step--${tone}`} aria-current={tone === 'current' ? 'step' : undefined}>
+        <span className="stepper__node" aria-hidden="true">
+          <StatusIcon kind={issueIconKind(issue.status)} className="stepper__icon" />
+        </span>
+        <p className="stepper__kicker">Recorded status</p>
+        <p className="stepper__title">{outcomeText(issue)}</p>
+      </li>
     </ol>
   );
 }
@@ -170,7 +225,8 @@ function LocationPanel({ issue }: { issue: Issue }) {
           </p>
           {coords ? (
             <Link to={href(`/near-me?issue=${encodeURIComponent(issue.id)}`)} className="button button--small">
-              <span aria-hidden="true" className="icon-lead">⌖</span>View on map
+              <PinIcon className="icon-lead" />
+              View on map
             </Link>
           ) : (
             <p className="muted">This issue isn’t shown on the map because the source gives no exact address.</p>

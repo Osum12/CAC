@@ -79,7 +79,7 @@ export function CitywidePage() {
                 jumpTo(issuesHeading.current);
               }}
             >
-              <label htmlFor="hero-q" className="visually-hidden">
+              <label htmlFor="hero-q" className="hero-search__label">
                 Search issues
               </label>
               <input
@@ -90,9 +90,22 @@ export function CitywidePage() {
                 onChange={(e) => onQuery(e.target.value)}
               />
               <button type="submit" className="hero-search__button">
+                <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+                  <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" strokeWidth="2.4" />
+                  <path d="m15.5 15.5 5 5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+                </svg>
                 Search
               </button>
             </form>
+            {ready && (
+              <ExampleSearches
+                issues={ready[1]}
+                onPick={(term) => {
+                  onQuery(term);
+                  jumpTo(issuesHeading.current);
+                }}
+              />
+            )}
             {ready && (
               <p className="hero__note">
                 {anyMock
@@ -174,10 +187,19 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
           </Link>
         </div>
 
-        <IssueFilters issues={issues} filters={filters} onChange={setFilter} onClear={clearFilters} />
-        <p className="results-count" role="status" aria-live="polite">
-          {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
-        </p>
+        <div className="filter-panel">
+          <IssueFilters issues={issues} filters={filters} onChange={setFilter} />
+          <div className="results-row">
+            <p className="results-count" role="status" aria-live="polite">
+              {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
+            </p>
+            {filtering && matches.length > 0 && (
+              <button type="button" className="button button--ghost results-row__clear" onClick={clearFilters}>
+                Clear filters
+              </button>
+            )}
+          </div>
+        </div>
 
         {filtering ? (
           matches.length ? (
@@ -217,13 +239,10 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
 function IssueFilters({
   issues,
   filters,
-  onChange,
-  onClear,
-}: {
+  onChange,}: {
   issues: Issue[];
   filters: IssueFilterState;
   onChange: (key: keyof IssueFilterState, value: string) => void;
-  onClear: () => void;
 }) {
   return (
     <form className="filters" role="search" aria-label="Search and filter issues" onSubmit={(e) => e.preventDefault()}>
@@ -249,12 +268,25 @@ function IssueFilters({
           ))}
         </select>
       </div>
-      {isFiltering(filters) && (
-        <button type="button" className="button button--ghost filters__clear" onClick={onClear}>
-          Clear
-        </button>
-      )}
     </form>
+  );
+}
+
+/** Everyday search words, shown only when they find at least one issue in the loaded records. */
+const EXAMPLE_TERMS = ['property tax', 'housing', 'budget', 'jail'];
+
+function ExampleSearches({ issues, onPick }: { issues: Issue[]; onPick: (term: string) => void }) {
+  const terms = EXAMPLE_TERMS.filter((t) => filterIssues(issues, { q: t, topic: '', status: '', when: '' }).length > 0);
+  if (!terms.length) return null;
+  return (
+    <p className="examples">
+      <span className="examples__label">For example:</span>
+      {terms.map((t) => (
+        <button key={t} type="button" className="examples__term" onClick={() => onPick(t)}>
+          {t}
+        </button>
+      ))}
+    </p>
   );
 }
 
