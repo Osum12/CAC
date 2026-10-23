@@ -2031,3 +2031,13 @@ select:hover:not(:disabled),
     width: 100%;
   }
 }
+
+/* Home headline: always two set lines ("Know what’s happening / in your community.").
+   Each line is sized from the headline's own width, so the longer line always fits. */
+.hero--state .hero__title {
+  container-type: inline-size;
+}
+.hero--state .hero__title .hero__line {
+  display: block;
+  font-size: clamp(1.5rem, 8.83cqi, 5.2rem);
+}
