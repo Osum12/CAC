@@ -2573,7 +2573,21 @@ select[aria-invalid='true'] {
   }
 }
 
-@media (min-width: 760px) {
+/* Two fields side by side on tablets; the button gets its own row so the menus keep room for their text. */
+@media (min-width: 600px) and (max-width: 959px) {
+  .chooser {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      'title title'
+      'county city'
+      'status status'
+      'go go';
+    column-gap: 16px;
+  }
+}
+
+/* One row once there is room for both menus at full text. */
+@media (min-width: 960px) {
   .chooser {
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
     grid-template-areas:
@@ -2598,6 +2612,13 @@ select[aria-invalid='true'] {
     grid-area: go;
     align-self: end;
   }
+}
+@media (min-width: 600px) and (max-width: 959px) {
+  .chooser__title { grid-area: title; }
+  .chooser__field:nth-of-type(1) { grid-area: county; }
+  .chooser__field:nth-of-type(2) { grid-area: city; }
+  .chooser__status { grid-area: status; }
+  .chooser__go { grid-area: go; }
 }
 
 @media (min-width: 900px) {
@@ -2649,8 +2670,7 @@ select[aria-invalid='true'] {
     position: sticky;
     top: calc(var(--header-h, 128px) + 16px);
     max-height: calc(100vh - var(--header-h, 128px) - 32px);
-    overflow-y: auto;
-    overscroll-behavior: contain;
+    overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--line-strong) transparent;
     scroll-padding-block: 16px;
@@ -2747,4 +2767,13 @@ select[aria-invalid='true'] {
 .hero--state .hero__title .hero__line {
   display: block;
   font-size: clamp(1.5rem, 9.92cqi, 5.5rem);
+}
+
+/* Summaries are never cut short: a cut summary can contradict its status (for example
+   "failed on September 16" next to an Approved badge, when the item passed on October 7). */
+.citywide-grid .card__summary {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: none;
+  overflow: visible;
 }
