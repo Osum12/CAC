@@ -95,7 +95,7 @@ export function ArchivePage() {
           <form className="filters filters--compact" role="search" aria-label="Search the archive" onSubmit={(e) => e.preventDefault()}>
             <div className="filters__field filters__field--grow">
               <label htmlFor="archive-q">Search meetings and documents</label>
-              <input id="archive-q" type="search" value={query} placeholder="e.g. property tax, housing, September" onChange={(e) => setQuery(e.target.value)} />
+              <input id="archive-q" type="search" value={query} placeholder="e.g. property tax, housing" onChange={(e) => setQuery(e.target.value)} />
             </div>
           </form>
 
@@ -128,7 +128,7 @@ export function ArchivePage() {
             <>
               {visible.length ? (
                 <>
-                <RegisterHead className="register-head--archive" columns={['Type', 'Record', 'Date', 'Status']} />
+                <RegisterHead className="register-head--archive" columns={['Type', 'Record', 'Date and status']} />
                 <ol className="archive-list register">
                   {visible.map((e) => (
                     <li key={`${e.kind}-${e.id}`}>
@@ -225,12 +225,12 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
         {isMeeting ? (
           <>
             <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time>
-            {time ? ` at ${time}` : ''}
+            {time && <span className="archive-row__time">{` at ${time}`}</span>}
           </>
         ) : entry.record.meetingId && entry.date !== entry.record.publishedDate ? (
           <>
             For the <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time> meeting.
-            {entry.record.publishedDate ? ` Published ${formatDate(entry.record.publishedDate)}.` : ''}
+            {entry.record.publishedDate && <span className="archive-row__published">{` Published ${formatDate(entry.record.publishedDate)}.`}</span>}
           </>
         ) : (
           <>

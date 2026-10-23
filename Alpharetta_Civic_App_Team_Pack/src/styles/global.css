@@ -124,10 +124,11 @@ h4 {
   font-weight: 700;
   line-height: 1.15;
   letter-spacing: -0.015em;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 p {
   margin: 0;
+  text-wrap: pretty;
 }
 ul,
 ol {
@@ -994,7 +995,9 @@ input[type='search']::-webkit-search-cancel-button {
   display: inline-block;
   width: 0.8em;
   height: 0.8em;
+  /* Zero net advance: the hidden arrow never pushes a full-width title onto an extra line. */
   margin-left: 0.35em;
+  margin-right: -1.15em;
   vertical-align: -0.04em;
   background: currentColor;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 8h12M8.5 3l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") center / contain no-repeat;
@@ -1154,13 +1157,24 @@ input[type='search']::-webkit-search-cancel-button {
   flex-wrap: nowrap;
 }
 .archive-row .tag {
-  border-radius: 16px;
+  white-space: nowrap;
 }
 .archive-row.row {
   grid-template-areas:
-    'topic status'
+    'topic topic'
     'main main'
-    'date date';
+    'date date'
+    'status status';
+}
+.archive-row .row__status {
+  justify-self: start;
+  margin-top: var(--s1);
+}
+.archive-row__time {
+  white-space: nowrap;
+}
+.archive-row__published {
+  display: block;
 }
 .archive-row .row__date {
   text-align: left;
@@ -1192,15 +1206,20 @@ input[type='search']::-webkit-search-cancel-button {
     grid-template-columns: 3.75rem minmax(0, 1fr);
   }
 }
+/* Wide registers sit on the page grid: a register column is eight page columns wide, so eight
+   equal tracks with the page gutter land on the same lines as the page (cols 5, 9 and 11). The
+   record takes the first four tracks, the date the next two, the status the last two. */
 @container (min-width: 640px) {
   .row,
-  .archive-row.row {
-    grid-template-columns: minmax(0, 1fr) 8.5rem 11rem;
-    grid-template-areas:
-      'topic topic topic'
-      'main date status';
-    column-gap: var(--s3);
+  .register-head {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    column-gap: var(--gap);
     row-gap: var(--s1);
+  }
+  .row {
+    grid-template-areas:
+      'topic topic topic topic topic topic topic topic'
+      'main main main main date date status status';
   }
   .row__main,
   .archive-row .row__date {
@@ -1215,46 +1234,48 @@ input[type='search']::-webkit-search-cancel-button {
     justify-self: start;
     padding-top: 0.1em;
   }
-  .row--meeting {
-    grid-template-columns: 5.5rem minmax(0, 1fr) 11rem;
-    grid-template-areas: 'date main status';
-  }
-  .row--meeting .row__status {
-    margin-top: 0;
-  }
-  .row--document {
-    grid-template-columns: minmax(0, 1fr) auto;
-    grid-template-areas:
-      'topic topic'
-      'main aside';
-  }
-  .row--document .row__aside {
-    padding-top: 0.15em;
-    margin-top: 0;
-  }
-  .archive-row.row {
-    grid-template-columns: minmax(0, 1fr) 12rem 9rem;
-  }
   .card--issue.row {
     grid-template-areas:
-      'topic topic topic'
-      'title date status'
-      'sum sum .'
-      'where where .'
-      'act act .';
+      'topic topic topic topic . . . .'
+      'title title title title date date status status'
+      'sum sum sum sum . . . .'
+      'where where where where . . . .'
+      'act act act act . . . .';
   }
   .card--issue .card__title,
   .card--issue .row__date,
   .card--issue .row__status {
     margin-top: var(--s1);
   }
-}
-@container (min-width: 760px) {
+  /* Meetings: the date block on the first track, the meeting across five, status on the last two. */
+  .row--meeting {
+    grid-template-areas: 'date main main main main main status status';
+  }
+  .row--meeting .row__status {
+    margin-top: 0;
+  }
+  .row--document {
+    grid-template-areas:
+      'topic topic topic topic topic topic topic topic'
+      'main main main main main main aside aside';
+  }
+  .row--document .row__aside {
+    padding-top: 0.15em;
+    margin-top: 0;
+  }
+  /* Archive: date and status share the right half (cols 9-12), so long dates never wrap word by word. */
+  .archive-row.row {
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      'topic topic topic topic topic topic topic topic'
+      'main main main main date date date date'
+      'main main main main status status status status';
+  }
+  .archive-row .row__status {
+    padding-top: 0;
+  }
   .register-head {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 8.5rem 11rem;
-    grid-template-areas: 'main date status';
-    column-gap: var(--s3);
     padding: 0 0 var(--s1);
     font-size: 0.9375rem;
     font-weight: 600;
@@ -1263,8 +1284,17 @@ input[type='search']::-webkit-search-cancel-button {
   .register-head span:first-child {
     display: none;
   }
-  .register-head--archive {
-    grid-template-columns: minmax(0, 1fr) 12rem 9rem;
+  .register-head span:nth-child(2) {
+    grid-column: 1 / span 4;
+  }
+  .register-head span:nth-child(3) {
+    grid-column: 5 / span 2;
+  }
+  .register-head span:nth-child(4) {
+    grid-column: 7 / span 2;
+  }
+  .register-head--archive span:nth-child(3) {
+    grid-column: 5 / -1;
   }
 }
 
@@ -1406,13 +1436,9 @@ input[type='search']::-webkit-search-cancel-button {
 }
 .nowband__beacon {
   flex: none;
-  /* The 5px ring is drawn outside the dot; this lines the ring up with the grid edge. */
-  margin-left: 5px;
   width: 12px;
   height: 12px;
-  border-radius: 50%;
-  background: var(--on-signal);
-  box-shadow: 0 0 0 4px var(--signal), 0 0 0 5px var(--on-signal);
+  background: var(--ink);
 }
 .docket__block {
   display: grid;
@@ -1442,7 +1468,7 @@ input[type='search']::-webkit-search-cancel-button {
   font-weight: 700;
   letter-spacing: -0.025em;
   line-height: 1.1;
-  text-wrap: balance;
+  text-wrap: pretty;
 }
 .docket__title a {
   text-decoration: underline;
@@ -1462,7 +1488,22 @@ input[type='search']::-webkit-search-cancel-button {
 .docket__meta .status {
   padding: 4px 12px;
   border-radius: 999px;
-  border: 1px solid var(--on-signal);
+  border: 1px solid #1e1e1c;
+}
+/* Dark mode: the band keeps its peach as rules and the marker, on a dark ground. */
+@media (prefers-color-scheme: dark) {
+  .nowband {
+    background: var(--paper-2);
+    color: #f3f3ed;
+    --ink: #f3f3ed;
+    --ink-2: #f3f3ed;
+    --rule: #f6a23c;
+    --focus: #f6a23c;
+    border-block: var(--heavy) solid #f6a23c;
+  }
+  .nowband__beacon {
+    background: #f6a23c;
+  }
 }
 .nowband .status {
   background: #f3f3ed;
@@ -1482,10 +1523,10 @@ input[type='search']::-webkit-search-cancel-button {
 }
 .docket__list {
   list-style: none;
-  border-top: 1px solid var(--on-signal);
+  border-top: 1px solid var(--rule);
 }
 .docket__list li {
-  border-bottom: 1px solid var(--on-signal);
+  border-bottom: 1px solid var(--rule);
   padding: var(--s1) 0;
 }
 .docket__source {
@@ -1554,14 +1595,92 @@ input[type='search']::-webkit-search-cancel-button {
 @media (min-width: 1024px) {
   .board__label {
     grid-column: 1 / span 4;
+    grid-row: 1;
     align-self: start;
-    position: sticky;
-    top: calc(var(--head-h) + var(--s3));
     padding-right: var(--s4);
   }
   .board__rows {
     grid-column: 5 / -1;
+    grid-row: 1 / span 3;
     margin-top: 0;
+  }
+  .board--archive .board__label {
+    position: sticky;
+    top: calc(var(--head-h) + var(--s3));
+  }
+}
+
+/* Issue groups: one heading per status, in a fixed order. */
+.issue-group + .issue-group {
+  margin-top: var(--s5);
+}
+.issue-group__title {
+  font-size: 1.375rem;
+  letter-spacing: -0.02em;
+  padding-bottom: var(--s2);
+}
+.issue-group__count {
+  margin-left: 4px;
+  font-weight: 500;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Meetings: after the issues on phones (with a jump link at the top); in the left rail on
+   wide screens, where they stay in view beside the issue list when the screen is tall enough. */
+.board__jump {
+  margin-left: var(--s3);
+}
+.board__meetings {
+  margin-top: var(--section);
+  border-top: var(--heavy) solid var(--rule);
+  padding-top: var(--s3);
+}
+.board__meetings h2 {
+  font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+.board__meetings .section__source {
+  margin-top: var(--s1);
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+.board__meetings .text-link {
+  margin-top: 4px;
+}
+.board__meetings .subhead:first-of-type {
+  margin-top: var(--s3);
+}
+@media (min-width: 1024px) {
+  .board__jump {
+    display: none;
+  }
+  .board__meetings {
+    grid-column: 1 / span 4;
+    grid-row: 2;
+    align-self: start;
+    margin-top: var(--s5);
+    margin-right: var(--s4);
+  }
+  .board__meetings h2 {
+    font-size: 1.5rem;
+  }
+  /* Compact meeting rows in the rail: the body names the board, so the type pill is dropped. */
+  .board__meetings .row--meeting .tag {
+    display: none;
+  }
+  .board__meetings .row {
+    padding: var(--s2) 0;
+  }
+  .board__meetings .card__title {
+    font-size: 1.125rem;
+  }
+}
+@media (min-width: 1024px) and (min-height: 820px) {
+  .board__meetings {
+    position: sticky;
+    top: calc(var(--head-h) + var(--s3));
   }
 }
 
@@ -1751,7 +1870,7 @@ input[type='search']::-webkit-search-cancel-button {
 /* Dark mode: dim the map tiles, not the pins. */
 @media (prefers-color-scheme: dark) {
   .leaflet-tile-pane {
-    filter: brightness(0.8) contrast(1.05);
+    filter: brightness(0.7) contrast(1.1);
   }
 }
 
@@ -1762,6 +1881,21 @@ input[type='search']::-webkit-search-cancel-button {
 }
 .feed {
   list-style: none;
+}
+.feed-group {
+  margin-top: var(--s5);
+}
+.feed-group__title {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+.feed-group__intro {
+  margin: var(--s1) 0 var(--s2);
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+.nearme__feed-title + .feed-group {
+  margin-top: 0;
 }
 .feed-item {
   display: grid;
@@ -1826,9 +1960,18 @@ input[type='search']::-webkit-search-cancel-button {
 }
 .board--archive .filters {
   margin-top: 0;
+  grid-template-columns: minmax(0, 1fr);
 }
 .board--archive .filter-bar {
   margin-top: var(--s2);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--gap);
+}
+.board--archive .chip {
+  justify-content: space-between;
+  padding: 0 14px;
+  font-size: 1rem;
 }
 .board--archive .board__rows > .state:first-child {
   margin-top: 0;
@@ -1977,9 +2120,19 @@ input[type='search']::-webkit-search-cancel-button {
   text-decoration: none;
   color: var(--ink-2);
 }
+.detail__grid--aside-first > .detail__side {
+  border-bottom: 1px solid var(--rule);
+}
 @media (min-width: 1024px) {
   .detail__main {
     grid-column: 1 / span 8;
+  }
+  .detail__grid--aside-first > .detail__main {
+    grid-row: 1;
+  }
+  .detail__grid--aside-first > .detail__side {
+    grid-row: 1;
+    border-bottom: 0;
   }
   .detail__side {
     grid-column: 9 / -1;
@@ -2284,6 +2437,7 @@ input[type='search']::-webkit-search-cancel-button {
   border: 0;
   padding: 0;
   margin-top: 0;
+  column-gap: var(--gap);
   row-gap: 0;
   justify-items: stretch;
 }
@@ -2303,6 +2457,7 @@ input[type='search']::-webkit-search-cancel-button {
 }
 .state--page .button-row {
   align-content: start;
+  margin-top: var(--s4);
 }
 @media (min-width: 1024px) {
   .state--page .state__body {
@@ -2310,7 +2465,7 @@ input[type='search']::-webkit-search-cancel-button {
   }
   .state--page .button-row {
     grid-column: 5 / -1;
-    margin-top: 0;
+    margin-top: 4px;
   }
 }
 .skeleton {

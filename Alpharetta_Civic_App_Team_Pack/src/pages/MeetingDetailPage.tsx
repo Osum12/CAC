@@ -50,7 +50,23 @@ export function MeetingDetailPage() {
       </header>
       <MockNotice record={meeting} kind="meeting" />
 
-      <div className="detail__grid">
+      <div className="detail__grid detail__grid--aside-first">
+        <aside className="detail__side">
+          <section className="panel" aria-labelledby="m-watch-h">
+            <h2 id="m-watch-h">Watch and verify</h2>
+            <ul className="plain-list">
+              <li>
+                <SourceAction url={meeting.recordingUrl} label="Watch the recording" unavailableText={meeting.status === 'scheduled' ? 'No recording yet: this meeting hasn’t happened' : 'Recording not available'} />
+              </li>
+              <li>
+                <SourceAction url={meeting.officialPageUrl} label="Official meeting page" unavailableText="Official page not linked yet" />
+              </li>
+            </ul>
+            <p className="muted">
+              {meeting.lastVerifiedAt ? `Last checked ${formatDate(meeting.lastVerifiedAt.slice(0, 10))}.` : 'Not yet checked against an official source.'}
+            </p>
+          </section>
+        </aside>
         <div className="detail__main">
           <section aria-labelledby="m-summary-h">
             <h2 id="m-summary-h">About this meeting</h2>
@@ -90,22 +106,6 @@ export function MeetingDetailPage() {
           </section>
         </div>
 
-        <aside className="detail__side">
-          <section className="panel" aria-labelledby="m-watch-h">
-            <h2 id="m-watch-h">Watch and verify</h2>
-            <ul className="plain-list">
-              <li>
-                <SourceAction url={meeting.recordingUrl} label="Watch the recording" unavailableText={meeting.status === 'scheduled' ? 'No recording yet: this meeting hasn’t happened' : 'Recording not available'} />
-              </li>
-              <li>
-                <SourceAction url={meeting.officialPageUrl} label="Official meeting page" unavailableText="Official page not linked yet" />
-              </li>
-            </ul>
-            <p className="muted">
-              {meeting.lastVerifiedAt ? `Last checked ${formatDate(meeting.lastVerifiedAt.slice(0, 10))}.` : 'Not yet checked against an official source.'}
-            </p>
-          </section>
-        </aside>
       </div>
     </article>
   );

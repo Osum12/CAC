@@ -165,7 +165,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
 
   return (
     <div className="citywide-grid">
-      <section className="section board" aria-labelledby="issues-heading">
+      <section className="section board board--issues" aria-labelledby="issues-heading">
         <div className="board__label">
           <div className="section__head">
             <h2 id="issues-heading" ref={issuesHeading} tabIndex={-1}>
@@ -175,6 +175,9 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
             <Link to={href('/near-me')} className="text-link">
               See them on the map
             </Link>
+            <a href="#meetings-heading" className="text-link board__jump">
+              Jump to meetings
+            </a>
           </div>
           <IssueFilters issues={issues} filters={filters} onChange={setFilter} onClear={clearFilters} />
           <p className="results-count" role="status" aria-live="polite">
@@ -186,7 +189,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
           <RegisterHead columns={['Topic', 'Issue', 'Status date', 'Status']} />
           {filtering ? (
             matches.length ? (
-              <IssueList issues={matches} headingLevel={3} />
+              <GroupedIssues issues={matches} />
             ) : (
               <EmptyState
                 title="No issues match these filters."
@@ -200,13 +203,12 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
               </EmptyState>
             )
           ) : (
-            <IssueList issues={byImportance(issues)} headingLevel={3} />
+            <GroupedIssues issues={issues} />
           )}
         </div>
-      </section>
 
-      <aside className="section board section--meetings" aria-labelledby="meetings-heading">
-        <div className="board__label">
+        {/* On wide screens the meetings sit in the left rail beside the issues; on phones they follow the list. */}
+        <aside className="board__meetings" aria-labelledby="meetings-heading">
           <h2 id="meetings-heading" ref={meetingsHeading} tabIndex={-1}>
             Meetings
           </h2>
@@ -214,12 +216,10 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
           <Link to={href('/archive')} className="text-link">
             Browse all meetings and documents
           </Link>
-        </div>
-        <div className="board__rows">
           {upcoming.length > 0 && <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="" />}
           <MeetingGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} empty="No past meetings in this dataset." />
-        </div>
-      </aside>
+        </aside>
+      </section>
     </div>
   );
 }
@@ -281,6 +281,39 @@ function IssueList({ issues, headingLevel }: { issues: Issue[]; headingLevel: 3 
         </li>
       ))}
     </ul>
+  );
+}
+
+/** Display groups for the issue register, in reading order. Statuses are shown as recorded; empty groups are left out. */
+const STATUS_GROUPS: { title: string; statuses: Issue['status'][] }[] = [
+  { title: 'Still being decided', statuses: ['proposed', 'under_consideration'] },
+  { title: 'Denied', statuses: ['denied'] },
+  { title: 'Withdrawn', statuses: ['withdrawn'] },
+  { title: 'Approved', statuses: ['approved', 'completed'] },
+];
+
+function GroupedIssues({ issues }: { issues: Issue[] }) {
+  const sorted = byImportance(issues);
+  const known = STATUS_GROUPS.flatMap((g) => g.statuses);
+  const groups = [
+    ...STATUS_GROUPS.map((g) => ({ title: g.title, items: sorted.filter((i) => g.statuses.includes(i.status)) })),
+    { title: 'Status not verified', items: sorted.filter((i) => !known.includes(i.status)) },
+  ].filter((g) => g.items.length > 0);
+  return (
+    <>
+      {groups.map((g) => (
+        <div key={g.title} className="issue-group">
+          <h3 className="issue-group__title">
+            {g.title}{' '}
+            <span className="issue-group__count">
+              {g.items.length}
+              <span className="visually-hidden"> {g.items.length === 1 ? 'issue' : 'issues'}</span>
+            </span>
+          </h3>
+          <IssueList issues={g.items} headingLevel={4} />
+        </div>
+      ))}
+    </>
   );
 }
 

@@ -44,7 +44,14 @@ export function DocumentDetailPage() {
       </header>
       <MockNotice record={doc} kind="document" />
 
-      <div className="detail__grid">
+      <div className="detail__grid detail__grid--aside-first">
+        <aside className="detail__side">
+          <section className="panel" aria-labelledby="d-file-h">
+            <h2 id="d-file-h">Original file</h2>
+            <SourceAction url={doc.url} label="Open the original document" unavailableText="No file is linked for this record" />
+            <p className="muted">Source: {doc.sourceName ?? 'not recorded'}</p>
+          </section>
+        </aside>
         <div className="detail__main">
           <section aria-labelledby="d-about-h">
             <h2 id="d-about-h">About this document</h2>
@@ -76,13 +83,6 @@ export function DocumentDetailPage() {
           </section>
         </div>
 
-        <aside className="detail__side">
-          <section className="panel" aria-labelledby="d-file-h">
-            <h2 id="d-file-h">Original file</h2>
-            <SourceAction url={doc.url} label="Open the original document" unavailableText="No file is linked for this record" />
-            <p className="muted">Source: {doc.sourceName ?? 'not recorded'}</p>
-          </section>
-        </aside>
       </div>
     </article>
   );
