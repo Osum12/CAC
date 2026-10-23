@@ -19,19 +19,18 @@
   --ink-3: #5f6977; /* axis labels, 5.4:1 on paper */
   --rule: #d9dde3; /* hairlines */
   --rule-strong: #7a8494; /* form borders and axes: 3:1+ on paper and plate */
-  --accent: #0b6b72; /* pine teal: links, current tab, motif */
+  --accent: #0b6b72; /* pine teal: links, current tab */
   --accent-strong: #08545a;
   --accent-wash: #e3f1f1;
   --on-accent: #ffffff;
   --focus: #0b6b72;
-  --motif: #c3cad3;
 
   /* Status (validated all-pairs with the dataviz checker on #ffffff) */
   --st-approved: #2563b0;
   --st-under_consideration: #a86f00;
   --st-denied: #a3195b;
   --st-proposed: #5d6b82;
-  --st-completed: #1b7a74;
+  --st-completed: #3d7a1f;
   --st-withdrawn: #7a6f66;
   --st-unknown: #6b7280;
 
@@ -64,12 +63,11 @@
     --accent-wash: #15343a;
     --on-accent: #0f141b;
     --focus: #8fd8dc;
-    --motif: #3a4553;
     --st-approved: #4d8fe0;
     --st-under_consideration: #c08519;
     --st-denied: #dd5a8a;
     --st-proposed: #8d9bb5;
-    --st-completed: #3fb0a6;
+    --st-completed: #74b84f;
     --st-withdrawn: #a89c92;
     --st-unknown: #9aa3b2;
     --warn-bg: #3a2c08;
@@ -93,12 +91,11 @@
   --accent-wash: #15343a;
   --on-accent: #0f141b;
   --focus: #8fd8dc;
-  --motif: #3a4553;
   --st-approved: #4d8fe0;
   --st-under_consideration: #c08519;
   --st-denied: #dd5a8a;
   --st-proposed: #8d9bb5;
-  --st-completed: #3fb0a6;
+  --st-completed: #74b84f;
   --st-withdrawn: #a89c92;
   --st-unknown: #9aa3b2;
   --warn-bg: #3a2c08;
@@ -462,7 +459,7 @@ html {
 .page > .hero,
 .page > .cover,
 .page > .desk,
-.page > .motif,
+.page > .atlas,
 .page > .steps,
 .page > .soon {
   width: 100%;
@@ -470,7 +467,7 @@ html {
 .hero__inner,
 .cover__inner,
 .desk__inner,
-.motif__inner,
+.atlas__inner,
 .steps__inner,
 .soon__inner {
   width: min(100% - 2 * var(--gutter), var(--wrap));
@@ -868,90 +865,6 @@ select:disabled {
   }
 }
 
-/* Georgia, county by county */
-.motif {
-  padding-block: clamp(40px, 6vw, 72px);
-  border-top: 1px solid var(--rule);
-}
-.motif__title {
-  font-weight: 800;
-  font-size: clamp(1.375rem, 3.2vw, 2.25rem);
-  letter-spacing: -0.025em;
-  line-height: 1.1;
-}
-.motif__num {
-  color: var(--accent);
-}
-.motif__figure {
-  margin: 0;
-}
-.motif__plot {
-  position: relative;
-  padding-top: 76px;
-  margin-top: 8px;
-}
-.motif__bars {
-  display: grid;
-  grid-template-columns: repeat(159, minmax(0, 1fr));
-  gap: 2px;
-  align-items: end;
-  height: clamp(110px, 16vw, 200px);
-}
-.motif__bar {
-  height: max(3px, calc(var(--h) * 100%));
-  background: var(--motif);
-  border-radius: 1px 1px 0 0;
-}
-.motif__bar.is-focus {
-  background: var(--accent);
-}
-.motif__note {
-  position: absolute;
-  bottom: calc(30px + var(--h) * clamp(110px, 16vw, 200px) + 10px);
-  display: grid;
-  gap: 0;
-  padding-left: 10px;
-  border-left: 2px solid var(--ink);
-  width: max-content;
-  max-width: min(26ch, 60%);
-  font-size: 0.9375rem;
-  line-height: 1.3;
-  color: var(--ink-2);
-}
-.motif__note strong {
-  color: var(--ink);
-  font-weight: 700;
-}
-.motif__note--left {
-  transform: translateX(-100%);
-  padding-left: 0;
-  padding-right: 10px;
-  border-left: 0;
-  border-right: 2px solid var(--ink);
-  text-align: right;
-}
-.motif__axis {
-  display: flex;
-  justify-content: space-between;
-  height: 30px;
-  padding-top: 6px;
-  border-top: 1px solid var(--rule-strong);
-  font-size: 0.875rem;
-  color: var(--ink-3);
-}
-.motif__caption {
-  margin-top: 14px;
-  max-width: 78ch;
-  font-size: 1rem;
-  line-height: 1.55;
-  color: var(--ink-2);
-}
-@media (max-width: 639px) {
-  .motif__bars {
-    gap: 1px;
-  }
-}
-
 .steps {
   background: var(--plate);
   padding-block: clamp(40px, 6vw, 72px);
@@ -1210,7 +1123,7 @@ select:disabled {
   top: 28px;
   width: 14px;
   height: 14px;
-  margin-left: calc(-7px + var(--k) * 5px);
+  margin-left: -7px;
   border-radius: 50%;
   border: 2px solid var(--ink-2);
   background: var(--paper);
@@ -1218,7 +1131,7 @@ select:disabled {
 }
 .track__label {
   position: absolute;
-  top: 18px;
+  top: calc(100% + 6px);
   left: 50%;
   transform: translateX(-50%);
   font-size: 0.8125rem;
@@ -1253,12 +1166,28 @@ select:disabled {
   font-weight: 700;
   line-height: 1;
 }
-.track__axis {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 2px;
+.track__stop--multi {
+  width: 22px;
+  height: 22px;
+  top: 24px;
+  margin-left: -11px;
+  display: grid;
+  place-items: center;
+}
+.track__n {
   font-size: 0.8125rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink);
+}
+.track__key {
+  margin-top: 4px;
+  font-size: 0.875rem;
   color: var(--ink-3);
+}
+.track--text {
+  background: none;
+  padding: 0;
 }
 
 /* ---------- Countywide: the record in numbers ---------- */
@@ -2120,14 +2049,16 @@ select:disabled {
     column-gap: 28px;
     align-items: start;
   }
-  .issue-list .card--issue > .card__top {
-    grid-column: 1;
-    grid-row: 1;
+  .issue-list .card--issue {
+    grid-template-rows: auto auto 1fr;
   }
-  .issue-list .card--issue > .facts {
+  .issue-list .card--issue > .card__meta {
     grid-column: 1;
-    grid-row: 2 / span 3;
-    margin-top: 6px;
+    grid-row: 1 / span 3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 3px;
   }
   .issue-list .card--issue > .card__title,
   .issue-list .card--issue > .card__summary,
@@ -3151,15 +3082,6 @@ section > .fine-print {
     animation: dd-grow-y 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
     animation-delay: calc(var(--i, 0) * 50ms + 150ms);
   }
-  .motif__bar {
-    transform-origin: center bottom;
-    animation: dd-grow-y 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
-    animation-delay: calc(var(--i, 0) * 4ms);
-  }
-  .motif__bar.is-focus,
-  .motif__note {
-    transition: background-color 0.2s ease, left 0.3s ease, bottom 0.3s ease;
-  }
   .skeleton {
     animation: dd-pulse 1.4s ease-in-out infinite;
   }
@@ -3196,7 +3118,6 @@ section > .fine-print {
   .track__status,
   .bartable__bar,
   .feed-item__distance-bar,
-  .motif__bar,
   .coverage__cell.is-covered {
     background: CanvasText;
     forced-color-adjust: none;
@@ -3256,4 +3177,203 @@ section > .fine-print {
 }
 .lead__why-text {
   max-width: 60ch;
+}
+
+/* ==========================================================================
+   Round 3 audit fixes
+   ========================================================================== */
+
+/* Issue cards: topic and status live in .card__meta. On narrow screens the wrapper dissolves
+   and its parts take their place in reading order: topic, headline, summary, status, links. */
+.card__meta {
+  display: contents;
+}
+.card--issue > .card__meta > .card__top {
+  order: 0;
+}
+.card--issue > .card__title {
+  order: 1;
+}
+.card--issue > .card__summary {
+  order: 2;
+}
+.card--issue > .card__meta > .facts {
+  order: 3;
+}
+.card--issue > .card__actions {
+  order: 4;
+}
+@media (min-width: 720px) {
+  .issue-list .card--issue > * {
+    order: 0;
+  }
+}
+
+/* Home: the directory, said in type */
+.atlas {
+  padding-block: clamp(40px, 6vw, 80px);
+  border-top: 1px solid var(--rule);
+}
+.atlas__inner {
+  display: grid;
+  gap: 20px 64px;
+}
+@media (min-width: 960px) {
+  .atlas__inner {
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
+    align-items: end;
+  }
+}
+.atlas__title {
+  font-weight: 800;
+  font-size: clamp(1.375rem, 4vw, 3rem);
+  line-height: 1.06;
+  letter-spacing: -0.03em;
+  max-width: 22ch;
+}
+.atlas__num {
+  font-variant-numeric: lining-nums;
+  text-decoration: underline;
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.12em;
+  text-decoration-color: var(--rule-strong);
+}
+.atlas__note {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  max-width: 52ch;
+}
+
+/* Show the numbers: wide tables scroll inside their own region */
+.numbers__scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  margin-top: 8px;
+}
+.numbers__scroll:focus-visible {
+  outline-offset: 0;
+}
+.numbers__table {
+  margin-top: 0;
+}
+.numbers__table th,
+.numbers__table td {
+  white-space: nowrap;
+}
+.numbers__table .numbers__text {
+  white-space: normal;
+  min-width: 18ch;
+  max-width: 48ch;
+}
+
+/* On this page */
+.jumps {
+  margin-bottom: 8px;
+}
+.jumps__list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+.jumps__link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1.5px solid var(--rule-strong);
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+.jumps__link:hover {
+  color: var(--ink);
+  border-color: var(--ink);
+}
+@media (min-width: 960px) {
+  .jumps {
+    display: none;
+  }
+}
+.desk__title,
+.lead {
+  scroll-margin-top: calc(var(--sticky-h) + 12px);
+}
+
+/* Timeline annotation: the leader line runs down to the top dot of its stack. */
+.tl__note {
+  bottom: calc(var(--base) + 4px + var(--k) * var(--row) - 2px);
+  padding-bottom: 12px;
+}
+/* Meeting columns: the readout sits under the column, clear of the key, and the end
+   columns anchor to their own side so it never leaves the chart. */
+.cols__link[data-tip]:hover::after,
+.cols__link:focus-visible::after {
+  top: calc(100% + 4px);
+  bottom: auto;
+}
+.cols__item:first-child .cols__link::after {
+  left: 0;
+  transform: none;
+}
+.cols__item:last-child .cols__link::after {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+/* Near Me: one explanation for the countywide group */
+.feed__group {
+  margin-top: 28px;
+  font-weight: 800;
+  font-size: 1.1875rem;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--ink);
+}
+.feed__intro {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+
+/* Phones: tighter figures so the list is not pushed far down the page. */
+@media (max-width: 639px) {
+  .desk {
+    padding-block: 36px;
+  }
+  .desk__grid {
+    gap: 36px;
+    margin-top: 28px;
+  }
+  .unit {
+    width: 18px;
+    height: 18px;
+  }
+  .unit--lg {
+    width: 28px;
+    height: 28px;
+  }
+  .units__count {
+    font-size: 1.75rem;
+  }
+  .tl__plot {
+    --row: 13px;
+  }
+  .cols__plot {
+    --plot: 140px;
+  }
+  .topics__row {
+    min-height: 40px;
+  }
+}
+.track.track--text {
+  background: none;
+  padding: 0;
+  margin-bottom: 12px;
+}
+.track__stop--multi .track__label {
+  top: calc(100% + 2px);
 }

@@ -69,18 +69,12 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
   const mappable = getValidCoordinates(issue) !== null;
   return (
     <article className="card card--issue">
+      {/* Topic and status share one column on wide screens (see .card__meta in global.css). */}
+      <div className="card__meta">
       <div className="card__top">
         <span className="tag">{humanize(issue.category)}</span>
         {isMock(issue) && <MockBadge record={issue} />}
       </div>
-      <H className="card__title">
-        <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)} className="card__link">
-          {issue.title}
-        </Link>
-      </H>
-      <p className="card__summary">
-        <KeepTallies text={issue.summary} />
-      </p>
       <dl className="facts">
         <div className="facts__row facts__row--status">
           <dt>Status</dt>
@@ -94,6 +88,15 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
           <dd>{issue.location?.label ?? 'No specific address in the record'}</dd>
         </div>
       </dl>
+      </div>
+      <H className="card__title">
+        <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)} className="card__link">
+          {issue.title}
+        </Link>
+      </H>
+      <p className="card__summary">
+        <KeepTallies text={issue.summary} />
+      </p>
       <div className="card__actions">
         {mappable && (
           <Link className="card__action" to={href(`/near-me?issue=${encodeURIComponent(issue.id)}`)}>

@@ -1,5 +1,6 @@
 import { LocationSelector } from '../components/LocationSelector';
-import { StateMotif } from '../components/StateMotif';
+import { WithArrow } from '../components/Cards';
+import { COUNTIES, DIRECTORY_SOURCE, MUNICIPALITIES } from '../services/jurisdictions';
 import { STATUS_GLYPHS } from '../components/StatusBadge';
 import { ISSUE_STATUS_LABELS } from '../services/format';
 import { usePageTitle } from '../services/usePageTitle';
@@ -40,7 +41,22 @@ export function GeorgiaHomePage() {
         </div>
       </section>
 
-      <StateMotif />
+      <section className="atlas" aria-labelledby="atlas-title">
+        <div className="atlas__inner">
+          <h2 id="atlas-title" className="atlas__title">
+            Start with any of Georgia’s <span className="atlas__num">{COUNTIES.length}</span> counties and{' '}
+            <span className="atlas__num">{MUNICIPALITIES.length}</span> cities and towns.
+          </h2>
+          <p className="atlas__note">
+            The location list covers every Georgia county and every incorporated city, town, and consolidated government in the{' '}
+            <a href={DIRECTORY_SOURCE.urls[1]} target="_blank" rel="noreferrer">
+              <WithArrow text="U.S. Census Bureau’s 2020 place list" />
+              <span className="visually-hidden"> (opens in a new tab)</span>
+            </a>
+            . Places incorporated since 2020 aren’t listed yet.
+          </p>
+        </div>
+      </section>
 
       <section className="steps" aria-labelledby="steps-title">
         <div className="steps__inner">

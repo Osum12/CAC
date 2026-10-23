@@ -171,8 +171,9 @@ function ArchiveByMonth({ meetings, documents }: { meetings: Meeting[]; document
     value: entries.filter((e) => e.date!.startsWith(m)).length,
   }));
   return (
-    <Figure id="fig-archive" title={`${entries.length} dated records, by month`} className="figure--header" source={<SourceLine source={sources} checked={checked} sample={sample} />}>
-      <BarTable rows={rows} caption="Archive records by month" unit="Records" />
+    <Figure id="fig-archive" title={`${entries.length} dated records, by meeting month`}
+      subtitle="Meetings and their documents count in the month the meeting was held; a document with no meeting counts in the month it was published." className="figure--header" source={<SourceLine source={sources} checked={checked} sample={sample} />}>
+      <BarTable rows={rows} caption="Archive records by meeting month" unit="Records" />
     </Figure>
   );
 }

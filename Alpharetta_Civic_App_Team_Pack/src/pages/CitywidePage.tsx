@@ -17,7 +17,6 @@ import {
   countStatuses,
   DECIDED,
   Figure,
-  listSentence,
   MeetingColumns,
   plural,
   RecordTimeline,
@@ -99,7 +98,7 @@ export function CitywidePage() {
               <label htmlFor="hero-q" className="visually-hidden">
                 Search issues
               </label>
-              <input id="hero-q" type="search" value={query} placeholder="Search issues, e.g. property tax" onChange={(e) => onQuery(e.target.value)} />
+              <input id="hero-q" type="search" value={query} placeholder="e.g. property tax" onChange={(e) => onQuery(e.target.value)} />
               <button type="submit" className="hero-search__button">
                 Search
               </button>
@@ -117,6 +116,7 @@ export function CitywidePage() {
 
       {state.status === 'loading' && <LoadingState rows={4} />}
       {state.status === 'error' && <ErrorState onRetry={state.retry} />}
+      {ready && (ready[0].length > 0 || ready[1].length > 0) && <PageJumps issues={ready[1]} meetings={ready[0]} />}
       {ready && <Lead meetings={ready[0]} issues={ready[1]} documents={ready[2]} />}
       {ready && (
         <CitywideContent
@@ -168,7 +168,6 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
     );
   }
 
-  const { upcoming, recent } = splitMeetings(meetings);
   const filtering = isFiltering(filters);
   const matches = filterIssues(issues, filters);
 
@@ -208,17 +207,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
           )}
         </section>
 
-        <aside className="section section--meetings" aria-labelledby="meetings-heading">
-          <h2 id="meetings-heading" ref={meetingsHeading} tabIndex={-1}>
-            Meetings
-          </h2>
-          <p className="section__source">From the {sources}</p>
-          {upcoming.length > 0 && <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="" />}
-          <MeetingGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} empty="No past meetings in this dataset." />
-          <Link to={href('/archive')} className="text-link">
-            Browse all meetings and documents
-          </Link>
-        </aside>
+        <MeetingsAside meetings={meetings} documents={documents} headingRef={meetingsHeading} />
       </div>
     </>
   );
@@ -285,7 +274,7 @@ function DeskFigures({
             id="fig-status"
             className="figure--wide"
             title={`${top.count} of ${issues.length} items are ${ISSUE_STATUS_LABELS[top.status].toLowerCase()}`}
-            subtitle="Each square is one item, grouped by its current status. Point at a square to see which item it is."
+            subtitle="Each square is one item collected in this app, grouped by its current status. The table lists the items in each group."
           >
             <StatusUnits issues={issues} label="Items by current status" />
           </Figure>
@@ -295,10 +284,10 @@ function DeskFigures({
             className="figure--wide"
             title={
               busiest && busiest.count > 1
-                ? `${formatDate(busiest.key).replace(/, \d{4}$/, '')} was the busiest day: ${busiest.count} items reached their current status`
-                : 'When each item reached its current status'
+                ? `${formatDate(busiest.key).replace(/, \d{4}$/, '')} is the latest status date for ${busiest.count} items`
+                : 'When each item’s status was last recorded'
             }
-            subtitle="Each dot is one item, placed on the date its current status was recorded and colored by that status. Rings under the line are board meetings."
+            subtitle="Each dot is one item, placed on the date its status was last recorded and colored by that status. That is an “as of” date, not always the day of a vote: an item can be held over several meetings. Rings under the line are board meetings."
           >
             <RecordTimeline issues={issues} meetings={meetings} />
           </Figure>
@@ -308,9 +297,9 @@ function DeskFigures({
             title={
               leaders.length === 1
                 ? `${humanize(leaders[0].key)} leads with ${plural(leaders[0].count, 'item')}`
-                : `${listSentence(leaders.map((l) => humanize(l.key)))} lead with ${leaders[0].count} items each`
+                : `${countWord(leaders.length)} topics tie at ${leaders[0].count} items: ${leaders.map((l) => humanize(l.key)).join(leaders.length === 2 ? ', and ' : ', ')}`
             }
-            subtitle="Items by topic, split by current status. Choose a topic to filter the list below."
+            subtitle="Items in this app by topic, split by current status. Choose a topic to filter the list below."
           >
             <TopicBars
               caption="Items by topic and status"
@@ -326,8 +315,8 @@ function DeskFigures({
 
           <Figure
             id="fig-meetings"
-            title={most && most.n ? `The ${shortDate(most.m.date!)} meeting took up the most: ${plural(most.n, 'item')}` : 'Items per meeting'}
-            subtitle="Items on each meeting’s agenda, split by their current status. Choose a column to open that meeting."
+            title={most && most.n ? `Of the items here, the ${shortDate(most.m.date!)} meeting had the most (${most.n})` : 'Items in this app linked to each meeting'}
+            subtitle="Items in this app linked to each meeting, split by their current status. The meetings’ full agendas were longer. Choose a column to open that meeting."
           >
             <MeetingColumns meetings={meetings} issues={issues} href={href} />
           </Figure>
@@ -383,6 +372,32 @@ function IssueFilters({
   );
 }
 
+const countWord = (n: number) => ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six'][n] ?? String(n);
+
+/** In-page jumps, so phone readers can skip the figures and go straight to the list. */
+function PageJumps({ issues, meetings }: { issues: Issue[]; meetings: Meeting[] }) {
+  const hasLead = splitMeetings(meetings).upcoming.length > 0 || issues.some((i) => DECIDED.includes(statusOf(i)) && i.statusAsOf);
+  const links = [
+    ...(hasLead ? [{ href: '#lead', label: 'Latest' }] : []),
+    ...(issues.length ? [{ href: '#desk-title', label: 'The record in numbers' }] : []),
+    { href: '#issues-heading', label: 'Issues' },
+    { href: '#meetings-heading', label: 'Meetings' },
+  ];
+  return (
+    <nav className="jumps" aria-label="On this page">
+      <ul className="jumps__list">
+        {links.map((l) => (
+          <li key={l.href}>
+            <a href={l.href} className="jumps__link">
+              {l.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
 /** The list, grouped by where each item stands: open items first, then outcomes. */
 const GROUPS: { key: string; title: string; statuses: IssueStatus[] }[] = [
   { key: 'open', title: 'Still open', statuses: ['under_consideration', 'proposed'] },
@@ -393,7 +408,38 @@ const GROUPS: { key: string; title: string; statuses: IssueStatus[] }[] = [
 
 const latestFirst = (a: Issue, b: Issue) => (b.statusAsOf ?? '').localeCompare(a.statusAsOf ?? '') || Number(b.featured) - Number(a.featured);
 
-function IssueGroups({ issues }: { issues: Issue[] }) {
+/** The meetings column. Memoized: typing in the search box never changes it. */
+const MeetingsAside = memo(function MeetingsAside({
+  meetings,
+  documents,
+  headingRef,
+}: {
+  meetings: Meeting[];
+  documents: CivicDocument[];
+  headingRef: RefObject<HTMLHeadingElement | null>;
+}) {
+  const sources = useRecordSources();
+  const href = usePlaceHref();
+  const { upcoming, recent } = splitMeetings(meetings);
+  return (
+    <aside className="section section--meetings" aria-labelledby="meetings-heading">
+      <h2 id="meetings-heading" ref={headingRef} tabIndex={-1}>
+        Meetings
+      </h2>
+      <p className="section__source">From the {sources}</p>
+      {upcoming.length > 0 && <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="" />}
+      <MeetingGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} empty="No past meetings in this dataset." />
+      <Link to={href('/archive')} className="text-link">
+        Browse all meetings and documents
+      </Link>
+    </aside>
+  );
+});
+
+/** Re-renders only when the set of listed items actually changes. */
+const IssueGroups = memo(IssueGroupsList, (a, b) => a.issues.length === b.issues.length && a.issues.every((x, i) => x === b.issues[i]));
+
+function IssueGroupsList({ issues }: { issues: Issue[] }) {
   const groups = GROUPS.map((g) => ({ ...g, items: issues.filter((i) => g.statuses.includes(statusOf(i))).sort(latestFirst) })).filter((g) => g.items.length);
   return (
     <div className="issue-groups">
@@ -454,7 +500,7 @@ function LeadStory({ meetings, issues, documents }: { meetings: Meeting[]; issue
   if (!next && !decided) return null;
   const path = decided ? meetings.filter((m) => decided.meetingIds.includes(m.id)) : [];
   return (
-    <aside className={`lead${next ? ' lead--with-next' : ''}`} aria-label={next ? `Next at ${meetingPlace}` : 'Latest decision'}>
+    <aside id="lead" className={`lead${next ? ' lead--with-next' : ''}`} aria-label={next ? `Next at ${meetingPlace}` : 'Latest decision'}>
       {decided && (
         <article className="lead__story">
           <p className="lead__kicker">

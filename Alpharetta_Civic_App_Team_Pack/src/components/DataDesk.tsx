@@ -115,12 +115,14 @@ export function NumbersTable({ caption, head, rows }: { caption: string; head: s
       <summary className="numbers__toggle">
         Show the numbers<span className="visually-hidden">: {caption}</span>
       </summary>
+      {/* Wide tables scroll inside their own focusable region, never the page. */}
+      <div className="numbers__scroll" role="region" tabIndex={0} aria-label={caption}>
       <table className="numbers__table">
         <caption className="visually-hidden">{caption}</caption>
         <thead>
           <tr>
             {head.map((h, i) => (
-              <th key={h} scope="col" className={i ? 'num' : undefined}>
+              <th key={h} scope="col" className={i && typeof rows[0]?.[i] === 'number' ? 'num' : undefined}>
                 {h}
               </th>
             ))}
@@ -131,7 +133,7 @@ export function NumbersTable({ caption, head, rows }: { caption: string; head: s
             <tr key={String(r[0])}>
               {r.map((c, i) =>
                 i ? (
-                  <td key={i} className="num">
+                  <td key={i} className={typeof c === 'number' ? 'num' : 'numbers__text'}>
                     {c}
                   </td>
                 ) : (
@@ -144,6 +146,7 @@ export function NumbersTable({ caption, head, rows }: { caption: string; head: s
           ))}
         </tbody>
       </table>
+      </div>
     </details>
   );
 }
@@ -178,7 +181,7 @@ export function StatusDot({ status }: { status: IssueStatus }) {
 
 /**
  * Unit chart: one square per item, grouped by status. With a few dozen records, counting
- * squares is more honest than a percentage, and every square is a real item (hover shows it).
+ * squares is more honest than a percentage. The table names every item in each group.
  */
 export function StatusUnits({ issues, label }: { issues: Issue[]; label: string }) {
   const total = issues.length;
@@ -208,8 +211,8 @@ export function StatusUnits({ issues, label }: { issues: Issue[]; label: string 
       </div>
       <NumbersTable
         caption={label}
-        head={['Status', 'Items', 'Share']}
-        rows={groups.map((g) => [ISSUE_STATUS_LABELS[g.status], g.items.length, `${Math.round((g.items.length / total) * 100)}%`])}
+        head={['Status', 'Items', 'Share', 'Which items']}
+        rows={groups.map((g) => [ISSUE_STATUS_LABELS[g.status], g.items.length, `${Math.round((g.items.length / total) * 100)}%`, g.items.map((i) => i.title).join('; ')])}
       />
     </div>
   );
@@ -273,9 +276,9 @@ export function TopicBars({ rows, caption }: { rows: TopicRow[]; caption: string
 // ---------- 3. Timeline: status dates above the axis, meetings below ----------
 
 /**
- * Every item placed on the date its current status was recorded (stacked dots, colored by
- * status), with the board's meetings marked under the same date axis. The busiest date is
- * annotated in words.
+ * Every item placed on the date its status was last recorded (its "as of" date, not necessarily
+ * the day it was decided; stacked dots, colored by status), with the board's meetings under the
+ * same date axis. The date shared by the most items is annotated in words.
  */
 export function RecordTimeline({ issues, meetings }: { issues: Issue[]; meetings: Meeting[] }) {
   const dated = issues.filter((i): i is Issue & { statusAsOf: string } => Boolean(i.statusAsOf));
@@ -294,11 +297,20 @@ export function RecordTimeline({ issues, meetings }: { issues: Issue[]; meetings
   const meetingDays = countBy(met, (m) => m.date).sort((a, b) => a.key.localeCompare(b.key));
   const tableDates = [...new Set(all)].sort();
 
+  // Dates a few days apart would overlap on a phone, so each mark sits at its date or just
+  // clear of its left neighbor, whichever is further right (CSS max(), resolved at any width).
+  const dodge = (x: number, prev: { x: number; w: number } | null) =>
+    prev ? `max(${x.toFixed(3)}%, calc(${prev.x.toFixed(3)}% + ${prev.w}px))` : `${x.toFixed(3)}%`;
+  const colLeft = new Map<string, string>();
+  columns.forEach(([date], k) => colLeft.set(date, dodge(axis.at(date), k ? { x: axis.at(columns[k - 1][0]), w: 15 } : null)));
+  const ringLeft = new Map<string, string>();
+  meetingDays.forEach((d, k) => ringLeft.set(d.key, dodge(axis.at(d.key), k ? { x: axis.at(meetingDays[k - 1].key), w: meetingDays[k - 1].count * 14 + 4 } : null)));
+
   return (
     <div className="tl">
       <ul className="tl__legend" aria-hidden="true">
         <li>
-          <span className="tl__legend-dot" /> One item, on the date its current status was recorded
+          <span className="tl__legend-dot" /> One item, on the date its status was last recorded
         </li>
         <li>
           <span className="tl__legend-meeting" /> A board meeting
@@ -311,7 +323,7 @@ export function RecordTimeline({ issues, meetings }: { issues: Issue[]; meetings
           </span>
         ))}
         {columns.map(([date, list]) => (
-          <span key={date} className="tl__col" style={{ left: `${axis.at(date)}%` }}>
+          <span key={date} className="tl__col" style={{ left: colLeft.get(date) }}>
             {list.map((i, k) => (
               <span key={i.id} className={`tl__dot seg--${statusOf(i)}`} style={{ '--k': k } as CSSProperties} data-tip={`${shortDate(date)}: ${i.title}`} />
             ))}
@@ -320,14 +332,14 @@ export function RecordTimeline({ issues, meetings }: { issues: Issue[]; meetings
         {busiest && busiest[1].length > 1 && (
           <span
             className={`tl__note${axis.at(busiest[0]) > 55 ? ' tl__note--left' : ''}`}
-            style={{ left: `${axis.at(busiest[0])}%`, '--k': busiest[1].length } as CSSProperties}
+            style={{ left: colLeft.get(busiest[0]), '--k': busiest[1].length } as CSSProperties}
           >
-            <strong>{shortDate(busiest[0])}</strong>: {plural(busiest[1].length, 'item')} reached their current status
+            <strong>{shortDate(busiest[0])}</strong> is the latest status date for {plural(busiest[1].length, 'item')}
           </span>
         )}
         <span className="tl__axis" />
         {meetingDays.map((d) => (
-          <span key={d.key} className="tl__meeting" style={{ left: `${axis.at(d.key)}%` }} data-tip={`${shortDate(d.key)}: ${plural(d.count, 'meeting')}`}>
+          <span key={d.key} className="tl__meeting" style={{ left: ringLeft.get(d.key) }} data-tip={`${shortDate(d.key)}: ${plural(d.count, 'meeting')}`}>
             {Array.from({ length: d.count }, (_, k) => (
               <span key={k} className="tl__ring" />
             ))}
@@ -335,8 +347,8 @@ export function RecordTimeline({ issues, meetings }: { issues: Issue[]; meetings
         ))}
       </div>
       <NumbersTable
-        caption="Status dates and meetings by date"
-        head={['Date', 'Meetings', 'Items reaching current status']}
+        caption="Status last recorded, and board meetings, by date"
+        head={['Date', 'Meetings', 'Items with status last recorded']}
         rows={tableDates.map((d) => {
           const list = byDate.get(d) ?? [];
           return [formatDate(d), met.filter((m) => m.date === d).length, list.length ? `${list.length} (${statusSentence(countStatuses(list))})` : 0];
@@ -349,8 +361,8 @@ export function RecordTimeline({ issues, meetings }: { issues: Issue[]; meetings
 // ---------- 4. Items per meeting ----------
 
 /**
- * One column per meeting, as tall as the number of items on its agenda, split by those items'
- * current status. Each column links to its meeting.
+ * One column per meeting, as tall as the number of items in this app linked to it (real agendas
+ * were much longer), split by those items' current status. Each column links to its meeting.
  */
 export function MeetingColumns({ meetings, issues, href }: { meetings: Meeting[]; issues: Issue[]; href: (path: string) => string }) {
   const rows = meetings
@@ -383,7 +395,7 @@ export function MeetingColumns({ meetings, issues, href }: { meetings: Meeting[]
                   to={href(`/meetings/${encodeURIComponent(r.m.id)}`)}
                   className="cols__link"
                   data-tip={`${shortDate(r.m.date!)}${evening ? ' evening' : ''}: ${plural(r.items.length, 'item')}`}
-                  aria-label={`${formatDate(r.m.date)}${evening ? ' (evening)' : ''} meeting: ${plural(r.items.length, 'item')}${r.items.length ? `, ${statusSentence(parts)}` : ''}`}
+                  aria-label={`${formatDate(r.m.date)}${evening ? ' (evening)' : ''} meeting: ${plural(r.items.length, 'item')} in this app${r.items.length ? `, ${statusSentence(parts)}` : ''}`}
                 >
                   <span className="cols__bar" style={{ '--share': r.items.length / ticks.at(-1)!, '--i': k } as CSSProperties} aria-hidden="true">
                     <span className="cols__value">{r.items.length}</span>
@@ -403,8 +415,8 @@ export function MeetingColumns({ meetings, issues, href }: { meetings: Meeting[]
         </ol>
       </div>
       <NumbersTable
-        caption="Items on each meeting's agenda, by current status"
-        head={['Meeting', 'Items', ...used.map((s) => ISSUE_STATUS_LABELS[s])]}
+        caption="Items in this app linked to each meeting, by current status"
+        head={['Meeting', 'Items here', ...used.map((s) => ISSUE_STATUS_LABELS[s])]}
         rows={rows.map((r) => [
           `${formatDate(r.m.date)}${sameDay(r) ? ((r.m.startTime ?? '') >= '12:00' ? ', evening' : ', daytime') : ''}`,
           r.items.length,
@@ -433,49 +445,44 @@ function niceTicks(max: number): number[] {
 export function StatusTrack({ issue, meetings }: { issue: Issue; meetings: Meeting[] }) {
   const dated = meetings.filter((m): m is Meeting & { date: string } => Boolean(m.date)).sort((a, b) => a.date.localeCompare(b.date));
   const status = statusOf(issue);
-  const dates = [...dated.map((m) => m.date), ...(issue.statusAsOf ? [issue.statusAsOf] : [])];
-  if (dates.length < 1) return null;
-  const first = dates.sort()[0];
-  const last = dates.at(-1)!;
-  // Pad a week either side so the end stops never sit on the frame.
+  const meetingDates = [...new Set(dated.map((m) => m.date))];
+  const dates = [...meetingDates, ...(issue.statusAsOf ? [issue.statusAsOf] : [])].sort();
+  const first = dates[0];
+  const last = dates.at(-1);
+  const days = first && last ? dayNumber(last) - dayNumber(first) : 0;
+  const lead = (
+    <p className="track__lead">
+      {dated.length ? `Taken up at ${plural(dated.length, 'meeting')}` : 'No dated meetings'}
+      {dated.length > 1 && days > 0 ? ` over ${plural(days, 'day')}` : ''}
+      {issue.statusAsOf ? `; status as of ${shortDate(issue.statusAsOf)}: ${ISSUE_STATUS_LABELS[status].toLowerCase()}.` : '; no status date recorded.'}
+    </p>
+  );
+  // A single meeting needs no chart: the sentence says it all.
+  if (dated.length < 2 || !first || !last) return <div className="track track--text">{lead}</div>;
+  // Pad either side so the end stops never sit on the frame.
   const s = dayNumber(first) - 4;
   const span = Math.max(8, dayNumber(last) + 4 - s);
   const at = (iso: string) => ((dayNumber(iso) - s) / span) * 100;
-  const days = dayNumber(last) - dayNumber(first);
-  const sameDayCount = (d: string) => dated.filter((m) => m.date === d).length;
-  const seen = new Map<string, number>();
+  const countOn = (d: string) => dated.filter((m) => m.date === d).length;
   return (
     <div className="track">
-      <p className="track__lead">
-        {dated.length ? `Taken up at ${plural(dated.length, 'meeting')}` : 'No dated meetings'}
-        {dated.length > 1 && days > 0 ? ` over ${plural(days, 'day')}` : ''}
-        {issue.statusAsOf ? `; recorded as ${ISSUE_STATUS_LABELS[status].toLowerCase()} on ${shortDate(issue.statusAsOf)}.` : '; no status date recorded.'}
-      </p>
+      {lead}
       <div className="track__plot" aria-hidden="true">
         <span className="track__line" style={{ left: `${at(first)}%`, width: `${at(last) - at(first)}%` }} />
-        {dated.map((m) => {
-          const k = seen.get(m.date) ?? 0;
-          seen.set(m.date, k + 1);
-          return (
-            <span key={m.id} className="track__stop" style={{ left: `${at(m.date)}%`, '--k': k } as CSSProperties} data-tip={`${shortDate(m.date)}: ${m.title}`}>
-              {k === 0 && (
-                <span className="track__label">
-                  {shortDate(m.date)}
-                  {sameDayCount(m.date) > 1 ? ` (${sameDayCount(m.date)})` : ''}
-                </span>
-              )}
-            </span>
-          );
-        })}
+        {meetingDates.map((d) => (
+          <span key={d} className={`track__stop${countOn(d) > 1 ? ' track__stop--multi' : ''}`} style={{ left: `${at(d)}%` }}>
+            {countOn(d) > 1 && <span className="track__n">{countOn(d)}</span>}
+            <span className="track__label">{shortDate(d)}</span>
+          </span>
+        ))}
         {issue.statusAsOf && (
           <span className={`track__status seg--${status}`} style={{ left: `${at(issue.statusAsOf)}%` }}>
             <span className="track__glyph">{STATUS_GLYPHS[status]}</span>
           </span>
         )}
       </div>
-      <p className="track__axis" aria-hidden="true">
-        <span>{monthLabel(first, 'long')}</span>
-        {monthLabel(first, 'long') !== monthLabel(last, 'long') && <span>{monthLabel(last, 'long')}</span>}
+      <p className="track__key" aria-hidden="true">
+        Rings are meetings{meetingDates.some((d) => countOn(d) > 1) ? '; a number counts meetings held that day' : ''}. The colored mark is the status date.
       </p>
     </div>
   );
@@ -484,26 +491,28 @@ export function StatusTrack({ issue, meetings }: { issue: Issue; meetings: Meeti
 // ---------- Meeting page: what became of the items ----------
 
 /**
- * The meeting's items as squares in three groups: status recorded on this meeting's date,
- * decided at a later date, or still open. Counts are printed beside each group.
+ * The meeting's items as squares in three groups: a final status dated this meeting's day, a
+ * final status dated another day, or still open. Squares are sorted by status in each group. Counts are printed beside each group.
  */
 export function MeetingOutcome({ meeting, issues }: { meeting: Meeting; issues: Issue[] }) {
   const open = (i: Issue) => !DECIDED.includes(statusOf(i));
   const groups = [
     {
       key: 'here',
-      title: 'Decided on this date',
-      note: 'Latest status recorded on the day of this meeting',
+      title: 'Final status dated this day',
+      note: 'Approved, denied, withdrawn or completed, with the status dated the day of this meeting',
       items: issues.filter((i) => !open(i) && meeting.date && i.statusAsOf === meeting.date),
     },
     {
       key: 'later',
-      title: 'Decided at another date',
-      note: 'Latest status recorded on a different day',
+      title: 'Final status dated another day',
+      note: 'A final status dated on a different day',
       items: issues.filter((i) => !open(i) && !(meeting.date && i.statusAsOf === meeting.date)),
     },
     { key: 'open', title: 'Still open', note: 'No final decision recorded yet', items: issues.filter(open) },
-  ].filter((g) => g.items.length);
+  ]
+    .map((g) => ({ ...g, items: [...g.items].sort((a, b) => STATUS_ORDER.indexOf(statusOf(a)) - STATUS_ORDER.indexOf(statusOf(b))) }))
+    .filter((g) => g.items.length);
   const used = STATUS_ORDER.filter((s) => issues.some((i) => statusOf(i) === s));
   return (
     <div className="outcome">
