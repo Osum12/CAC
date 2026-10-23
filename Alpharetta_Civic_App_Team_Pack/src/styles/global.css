@@ -33,8 +33,8 @@
   --band-ink: #161b3d;
   --band-soft: #545a72;
   --ring: rgb(47 58 143 / 0.16);
-  --ring-dot: #f2b33d;
-  --glow: rgb(242 179 61 / 0.32);
+  --ring-dot: #2f3a8f;
+  --glow: rgb(47 58 143 / 0.2);
 
   /* Actions */
   --primary: #2f3a8f; /* Dusk indigo */
@@ -104,8 +104,8 @@
     --band-ink: #f6f6fb;
     --band-soft: #aaaec8;
     --ring: rgb(180 187 255 / 0.16);
-    --ring-dot: #f2b33d;
-    --glow: rgb(242 179 61 / 0.22);
+    --ring-dot: #b4bbff;
+    --glow: rgb(180 187 255 / 0.2);
 
     --primary: #b4bbff;
     --primary-ink: #0f1124;
@@ -435,8 +435,7 @@ ol {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 1.5px var(--link);
+  background: var(--link);
   margin-right: 8px;
 }
 
@@ -561,8 +560,8 @@ ol {
   height: 30px;
   background: var(--ring-dot);
   box-shadow:
-    0 0 0 6px rgb(242 179 61 / 0.3),
-    0 0 0 13px rgb(242 179 61 / 0.12);
+    0 0 0 6px var(--glow),
+    0 0 0 13px rgb(47 58 143 / 0.08);
 }
 @media (prefers-color-scheme: dark) {
   .ripples__ring:nth-child(1) {
@@ -928,7 +927,7 @@ select[aria-invalid='true'] {
   height: 10px;
   margin-right: 8px;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--primary);
   vertical-align: 0.05em;
 }
 .docket__kicker {
@@ -2230,7 +2229,7 @@ select[aria-invalid='true'] {
   height: 220px;
   border-radius: 50%;
   border: 1.5px solid var(--ring);
-  background: radial-gradient(circle, var(--accent) 0 12px, rgb(242 179 61 / 0.3) 12.5px 19px, transparent 19.5px 33%, var(--ring) 33.3% 33.9%, transparent 34.3%);
+  background: radial-gradient(circle, var(--ring-dot) 0 12px, var(--glow) 12.5px 19px, transparent 19.5px 33%, var(--ring) 33.3% 33.9%, transparent 34.3%);
 }
 .state--page .state__title {
   font-size: clamp(2.25rem, 1.6rem + 3vw, 3.5rem);
@@ -3214,15 +3213,14 @@ time {
   margin-top: 32px;
 }
 
-/* Dark mode: alpha marigold over navy turns olive, so the porch light gets solid,
-   crisp rings instead of a translucent halo. */
+/* Dark mode: the porch light gets solid, crisp rings instead of a translucent halo. */
 @media (prefers-color-scheme: dark) {
   .ripples__dot {
     box-shadow:
       0 0 0 5px var(--band),
-      0 0 0 7px #f2b33d,
+      0 0 0 7px var(--ring-dot),
       0 0 0 13px var(--band),
-      0 0 0 14.5px rgb(242 179 61 / 0.45);
+      0 0 0 14.5px rgb(180 187 255 / 0.45);
   }
   .hero__place::before {
     box-shadow:
@@ -3230,6 +3228,6 @@ time {
       0 0 0 4.5px var(--primary);
   }
   .state--page::after {
-    background: radial-gradient(circle, #f2b33d 0 12px, var(--band) 12.5px 17px, #f2b33d 17.5px 19px, transparent 19.5px 33%, var(--ring) 33.3% 33.9%, transparent 34.3%);
+    background: radial-gradient(circle, var(--ring-dot) 0 12px, var(--band) 12.5px 17px, var(--ring-dot) 17.5px 19px, transparent 19.5px 33%, var(--ring) 33.3% 33.9%, transparent 34.3%);
   }
 }
