@@ -1234,13 +1234,24 @@ input[type='search']::-webkit-search-cancel-button {
     justify-self: start;
     padding-top: 0.1em;
   }
+  /* Narrow registers: the status sits over the date in the right half (cols 9-12), so a long
+     status never runs past the edge. */
   .card--issue.row {
     grid-template-areas:
       'topic topic topic topic . . . .'
-      'title title title title date date status status'
-      'sum sum sum sum . . . .'
+      'title title title title meta meta meta meta'
+      'sum sum sum sum meta meta meta meta'
       'where where where where . . . .'
       'act act act act . . . .';
+  }
+  /* Status and date share one cell, stacked, so the date sits right under the status. */
+  .card--issue .row__status,
+  .card--issue .row__date {
+    grid-area: meta;
+    align-self: start;
+  }
+  .card--issue.row .row__date {
+    margin-top: calc(var(--s1) + 1.9rem);
   }
   .card--issue .card__title,
   .card--issue .row__date,
@@ -1288,6 +1299,38 @@ input[type='search']::-webkit-search-cancel-button {
     grid-column: 1 / span 4;
   }
   .register-head span:nth-child(3) {
+    display: none;
+  }
+  .register-head span:nth-child(4) {
+    grid-column: 5 / -1;
+  }
+  .register-head--archive span:nth-child(3) {
+    display: block;
+    grid-column: 5 / -1;
+  }
+}
+/* Wide registers (800px and up, room for the longest status): date and status get their own columns (cols 9-10 and 11-12). */
+@container (min-width: 800px) {
+  .card--issue.row {
+    grid-template-areas:
+      'topic topic topic topic . . . .'
+      'title title title title date date status status'
+      'sum sum sum sum . . . .'
+      'where where where where . . . .'
+      'act act act act . . . .';
+  }
+  .card--issue .row__status {
+    grid-area: status;
+  }
+  .card--issue.row .row__date {
+    grid-area: date;
+    margin-top: var(--s1);
+  }
+  .row__date {
+    padding-top: 0.2em;
+  }
+  .register-head span:nth-child(3) {
+    display: block;
     grid-column: 5 / span 2;
   }
   .register-head span:nth-child(4) {
@@ -1626,36 +1669,84 @@ input[type='search']::-webkit-search-cancel-button {
   font-variant-numeric: tabular-nums;
 }
 
-/* Meetings: after the issues on phones (with a jump link at the top); in the left rail on
-   wide screens, where they stay in view beside the issue list when the screen is tall enough. */
-.board__jump {
-  margin-left: var(--s3);
-}
+/* Meetings: a compact index. After the filters on phones; in the left rail on wide screens,
+   where it stays in view beside the issue list. */
 .board__meetings {
-  margin-top: var(--section);
+  margin-top: var(--block);
   border-top: var(--heavy) solid var(--rule);
   padding-top: var(--s3);
 }
 .board__meetings h2 {
-  font-size: clamp(1.5rem, 2.6vw, 2.5rem);
-  letter-spacing: -0.03em;
-  line-height: 1.05;
+  font-size: 1.5rem;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
 }
 .board__meetings .section__source {
-  margin-top: var(--s1);
-  color: var(--ink-2);
-  font-size: 1rem;
-}
-.board__meetings .text-link {
   margin-top: 4px;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
 }
-.board__meetings .subhead:first-of-type {
+.board__meetings > .text-link {
+  margin-top: var(--s2);
+}
+.meeting-index__title {
   margin-top: var(--s3);
+  padding-bottom: var(--s1);
+  font-size: 1rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--rule);
+}
+.meeting-index {
+  list-style: none;
+}
+.meeting-index__item {
+  padding: 8px 0 10px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.meeting-index__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 12px;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.meeting-index__meta time {
+  font-weight: 600;
+  color: var(--ink);
+}
+.meeting-index__meta .status {
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+.meeting-index__name {
+  margin-top: 2px;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+}
+.meeting-index__name a {
+  text-decoration: none;
+}
+.meeting-index__name a:hover {
+  text-decoration: underline;
+}
+.meeting-index__meta .card__action {
+  min-height: 24px;
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+.meeting-index__empty {
+  margin-top: var(--s2);
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+.board__meetings + .board__rows {
+  margin-top: var(--section);
 }
 @media (min-width: 1024px) {
-  .board__jump {
-    display: none;
-  }
   .board__meetings {
     grid-column: 1 / span 4;
     grid-row: 2;
@@ -1663,24 +1754,26 @@ input[type='search']::-webkit-search-cancel-button {
     margin-top: var(--s5);
     margin-right: var(--s4);
   }
-  .board__meetings h2 {
-    font-size: 1.5rem;
-  }
-  /* Compact meeting rows in the rail: the body names the board, so the type pill is dropped. */
-  .board__meetings .row--meeting .tag {
-    display: none;
-  }
-  .board__meetings .row {
-    padding: var(--s2) 0;
-  }
-  .board__meetings .card__title {
-    font-size: 1.125rem;
+  .board__meetings + .board__rows {
+    margin-top: 0;
   }
 }
-@media (min-width: 1024px) and (min-height: 820px) {
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .board__meetings {
+    margin-right: 0;
+  }
+}
+/* Sticky at every desktop height; the index is short, and scrolls inside itself if a screen is very short. */
+@media (min-width: 1024px) and (min-height: 700px) {
   .board__meetings {
     position: sticky;
     top: calc(var(--head-h) + var(--s3));
+    max-height: calc(100dvh - var(--head-h) - 32px);
+    overflow: auto;
+  }
+  /* Focus rings drawn inside, so the scroll box never clips them. */
+  .board__meetings :focus-visible {
+    outline-offset: -3px;
   }
 }
 
@@ -2139,23 +2232,6 @@ input[type='search']::-webkit-search-cancel-button {
     position: sticky;
     top: calc(var(--head-h) + var(--s3));
   }
-  /* Issue page: the side rail follows the summary on phones and moves right on wide screens. */
-  .detail--issue .detail__main {
-    display: contents;
-  }
-  .detail--issue .detail__main > section {
-    grid-column: 1 / span 8;
-  }
-  .detail--issue .detail__side {
-    grid-column: 9 / -1;
-    grid-row: 1 / span 4;
-    align-self: start;
-  }
-}
-@media (max-width: 1023px) {
-  .detail--issue .detail__side {
-    border-bottom: 1px solid var(--rule);
-  }
 }
 
 /* Timeline: a dated register with a rail. */
@@ -2597,5 +2673,13 @@ input[type='search']::-webkit-search-cancel-button {
 @media (max-width: 359px) {
   .primary-nav__link {
     padding: 0 9px;
+  }
+  /* Too narrow for a pill: the topic is set as plain bold text, which can wrap cleanly. */
+  .tag {
+    border: 0;
+    padding: 0;
+    min-height: 24px;
+    font-weight: 600;
+    white-space: normal;
   }
 }

@@ -150,6 +150,9 @@ export function NearMePage() {
                 {points.length ? `Sorted by distance from ${origin.label}` : 'Countywide items, without a map location'}
               </h2>
               {located.length > 0 && (
+                <p className="feed-group__intro">Distances are straight lines to each map point. They show how far away an item is, not whether it affects a particular spot.</p>
+              )}
+              {located.length > 0 && (
                 <ol className="feed">
                   {located.map((r) => (
                     <li key={r.issue.id}>{feedItem(r)}</li>
@@ -178,6 +181,8 @@ export function NearMePage() {
     </div>
   );
 }
+
+const DISTANCE_CAVEAT = / This is distance only, not a claim that the issue affects this spot\.$/;
 
 function FeedItem({
   ranked,
@@ -220,7 +225,8 @@ function FeedItem({
         {showReason && (
           <p className="feed-item__reason">
             <span className="visually-hidden">Why it’s listed: </span>
-            {reason}
+            {/* The "distance only" caveat is said once above the list, not on every item. */}
+            {reason.replace(DISTANCE_CAVEAT, '')}
           </p>
         )}
         <div className="card__foot">

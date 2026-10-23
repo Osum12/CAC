@@ -1,15 +1,15 @@
-import { useRef, type ReactNode, type RefObject } from 'react';
+import { useRef, type RefObject } from 'react';
 import { Link } from 'react-router-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
 import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState } from '../services/filters';
-import { formatDate, formatTime, formatWeekdayDate, humanize, ISSUE_STATUS_LABELS, safeUrl, todayIso } from '../services/format';
+import { formatCompactDate, formatDate, formatTime, formatWeekdayDate, humanize, ISSUE_STATUS_LABELS, safeUrl, todayIso } from '../services/format';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
-import { IssueCard, MeetingCard } from '../components/Cards';
+import { ExternalAction, IssueCard } from '../components/Cards';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
-import { isMock } from '../components/MockBadge';
-import { IssueStatusBadge } from '../components/StatusBadge';
+import { MockBadge, isMock } from '../components/MockBadge';
+import { IssueStatusBadge, MeetingStatusBadge } from '../components/StatusBadge';
 import { RegisterHead } from '../components/Register';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 import { usePlace, usePlaceHref, useRecordSources } from '../services/placeContext';
@@ -175,15 +175,29 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
             <Link to={href('/near-me')} className="text-link">
               See them on the map
             </Link>
-            <a href="#meetings-heading" className="text-link board__jump">
-              Jump to meetings
-            </a>
           </div>
           <IssueFilters issues={issues} filters={filters} onChange={setFilter} onClear={clearFilters} />
           <p className="results-count" role="status" aria-live="polite">
             {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
           </p>
         </div>
+
+        {/* A compact index of meetings: after the filters in reading order, in the left rail on wide screens. */}
+        <aside className="board__meetings" aria-labelledby="meetings-heading">
+          <h2 id="meetings-heading" ref={meetingsHeading} tabIndex={-1}>
+            Meetings
+          </h2>
+          <p className="section__source">From the {sources}</p>
+          {upcoming.length > 0 && <MeetingIndex title="Coming up" meetings={upcoming} documents={documents} showTime />}
+          {recent.length > 0 ? (
+            <MeetingIndex title="Recent" meetings={recent.slice(0, 4)} documents={documents} />
+          ) : (
+            <p className="meeting-index__empty">No past meetings in this dataset.</p>
+          )}
+          <Link to={href('/archive')} className="text-link">
+            Browse all meetings and documents
+          </Link>
+        </aside>
 
         <div className="board__rows">
           <RegisterHead columns={['Topic', 'Issue', 'Status date', 'Status']} />
@@ -207,18 +221,6 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
           )}
         </div>
 
-        {/* On wide screens the meetings sit in the left rail beside the issues; on phones they follow the list. */}
-        <aside className="board__meetings" aria-labelledby="meetings-heading">
-          <h2 id="meetings-heading" ref={meetingsHeading} tabIndex={-1}>
-            Meetings
-          </h2>
-          <p className="section__source">From the {sources}</p>
-          <Link to={href('/archive')} className="text-link">
-            Browse all meetings and documents
-          </Link>
-          {upcoming.length > 0 && <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="" />}
-          <MeetingGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} empty="No past meetings in this dataset." />
-        </aside>
       </section>
     </div>
   );
@@ -317,21 +319,49 @@ function GroupedIssues({ issues }: { issues: Issue[] }) {
   );
 }
 
-function MeetingGroup({ title, meetings, documents, empty }: { title: string; meetings: Meeting[]; documents: CivicDocument[]; empty: ReactNode }) {
+/**
+ * A meeting title shortened for the index: the board's name (given once above the list) and the
+ * trailing date (shown on the row) are kept for screen readers but not repeated on screen.
+ */
+function splitTitle(title: string): [string, string, string] {
+  const m = title.match(/^(Board of Commissioners )?(.*?)(, [A-Z][a-z]+ \d{1,2}, \d{4})?$/);
+  return m && m[2] ? [m[1] ?? '', m[2], m[3] ?? ''] : ['', title, ''];
+}
+
+function MeetingIndex({ title, meetings, documents, showTime = false }: { title: string; meetings: Meeting[]; documents: CivicDocument[]; showTime?: boolean }) {
+  const href = usePlaceHref();
   return (
     <>
-      <h3 className="subhead">{title}</h3>
-      {meetings.length ? (
-        <ul className="stack register">
-          {meetings.map((m) => (
-            <li key={m.id}>
-              <MeetingCard meeting={m} agenda={agendaFor(m, documents)} headingLevel={4} />
+      <h3 className="meeting-index__title">{title}</h3>
+      <ul className="meeting-index">
+        {meetings.map((m) => {
+          const agenda = agendaFor(m, documents);
+          const agendaUrl = agenda && !isMock(agenda) ? safeUrl(agenda.url) : null;
+          const [board, name, datePart] = splitTitle(m.title);
+          return (
+            <li key={m.id} className="meeting-index__item">
+              <p className="meeting-index__meta">
+                <time dateTime={m.date ?? undefined}>{m.date ? formatCompactDate(m.date) : 'Date to be announced'}</time>
+                {showTime && m.startTime && <span>{formatTime(m.startTime)}</span>}
+                <MeetingStatusBadge status={m.status} />
+                {agendaUrl && (
+                  <ExternalAction href={agendaUrl} context={m.title}>
+                    Agenda (PDF)
+                  </ExternalAction>
+                )}
+                {isMock(m) && <MockBadge record={m} />}
+              </p>
+              <h4 className="meeting-index__name">
+                <Link to={href(`/meetings/${encodeURIComponent(m.id)}`)}>
+                  {board && <span className="visually-hidden">{board}</span>}
+                  {name}
+                  {datePart && <span className="visually-hidden">{datePart}</span>}
+                </Link>
+              </h4>
             </li>
-          ))}
-        </ul>
-      ) : (
-        <EmptyState title={String(empty)} />
-      )}
+          );
+        })}
+      </ul>
     </>
   );
 }

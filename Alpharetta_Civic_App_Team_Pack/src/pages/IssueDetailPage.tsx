@@ -49,7 +49,25 @@ export function IssueDetailPage() {
       </header>
       <MockNotice record={issue} kind="issue" />
 
-      <div className="detail__grid">
+      <div className="detail__grid detail__grid--aside-first">
+        {/* Sources and location first: right after the title on phones, the right rail on wide screens. */}
+        <aside className="detail__side">
+          <section className="panel" aria-labelledby="sources-h">
+            <h2 id="sources-h">Official sources</h2>
+            {issue.sourceUrls.length ? (
+              <ul className="plain-list">
+                {issue.sourceUrls.map((url, i) => (
+                  <li key={i}>
+                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
+            )}
+          </section>
+          <LocationPanel issue={issue} />
+        </aside>
         <div className="detail__main">
           <section aria-labelledby="summary-h">
             <h2 id="summary-h">In plain language</h2>
@@ -58,25 +76,6 @@ export function IssueDetailPage() {
               <p className="fine-print">This summary is a plain-language rewrite of the official documents listed below. Check them for the exact wording.</p>
             )}
           </section>
-
-          {/* Sources and location come right after the summary on phones; on wide screens they form the right rail. */}
-          <aside className="detail__side">
-            <section className="panel" aria-labelledby="sources-h">
-              <h2 id="sources-h">Official sources</h2>
-              {issue.sourceUrls.length ? (
-                <ul className="plain-list">
-                  {issue.sourceUrls.map((url, i) => (
-                    <li key={i}>
-                      <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <SourceAction url={null} label="" unavailableText="No official source has been added for this record yet." />
-              )}
-            </section>
-            <LocationPanel issue={issue} />
-          </aside>
 
           <section aria-labelledby="why-h" className="callout">
             <h2 id="why-h">Why it may matter</h2>
