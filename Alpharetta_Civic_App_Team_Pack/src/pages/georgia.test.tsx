@@ -100,7 +100,7 @@ describe('Location chooser', () => {
     await explore();
     expect(screen.getByRole('heading', { level: 1, name: 'Roswell is coming soon.' })).toBeInTheDocument();
     expect(screen.getByText('City in Cobb and Fulton counties, Georgia')).toBeInTheDocument();
-    expect(screen.getByText('Roswell is in Fulton County, which has its own page.')).toBeInTheDocument();
+    expect(screen.getByText('Part of Roswell is in Fulton County, which has its own page.')).toBeInTheDocument();
     for (const link of screen.getAllByRole('link', { name: 'Change location' })) expect(link).toHaveAttribute('href', '/?county=fulton&city=roswell');
     expect(loads).toBe(0);
   });

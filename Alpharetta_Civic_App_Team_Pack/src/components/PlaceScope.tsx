@@ -31,15 +31,15 @@ export function CityScope() {
   return city ? <ComingSoon place={city} /> : <NotFound kind="location" />;
 }
 
-/** Shown unless the dataset is confirmed to contain no mock records (fails safe on load errors). */
+/** Shown only when the loaded dataset contains mock records (the test fixtures). Real records never show it, even while loading. */
 function SampleDataBanner() {
   const info = useAsync(getDatasetInfo, []);
-  if (info.status === 'ready' && !info.data.containsMock) return null;
+  if (info.status !== 'ready' || !info.data.containsMock) return null;
   return (
     <div className="data-banner" role="note">
       <strong>Sample data.</strong>{' '}
       <span>
-        {info.status === 'ready' && info.data.mockRecords < info.data.totalRecords
+        {info.data.mockRecords < info.data.totalRecords
           ? `${info.data.mockRecords} of ${info.data.totalRecords} records shown are fictional test content`
           : 'Records shown are fictional test content'}
         , not official government records.

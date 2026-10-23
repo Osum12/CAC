@@ -50,7 +50,7 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
               <p className="soon__detail">
                 {ownRecords
                   ? `Records from the ${ownRecords.name} are on the ${home.name} page for now.`
-                  : `${place.name} is in ${home.name}, which has its own page.`}
+                  : `${place.level === 'municipality' && place.countyIds.length > 1 ? 'Part of ' : ''}${place.name} is in ${home.name}, which has its own page.`}
               </p>
             )}
             <div className="soon__actions">
