@@ -10,12 +10,13 @@ export function GeorgiaHomePage() {
       <section className="hero hero--cover hero--state" aria-labelledby="home-title">
         <div className="hero__inner">
           <div className="hero__main">
-            <p className="hero__place">Georgia</p>
+            <p className="hero__place">Georgia Civic</p>
             <h1 id="home-title" className="hero__title">
-              <span className="hero__line">Local government,</span> <span className="hero__line">in plain language</span>
+              <span className="hero__line">Know what’s happening</span> <span className="hero__line">in your community.</span>
             </h1>
             <p className="hero__lede">
-              Choose your county to follow proposals, decisions, and public meetings, with a link to every official source.
+              Explore local proposals, county commission decisions, and public meetings. Starting with Fulton County, with more Georgia
+              communities to come.
             </p>
           </div>
           <LocationSelector />

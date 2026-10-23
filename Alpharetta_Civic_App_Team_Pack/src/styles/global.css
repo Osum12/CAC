@@ -3060,3 +3060,31 @@ h2 {
 .button {
   border-radius: 4px;
 }
+
+/* Home hero: a measured opening line rather than a poster headline. Sized so it sets
+   as two lines ("Know what’s happening / in your community.") that stay clear of the
+   chooser, with even steps between label, headline, intro and form. */
+.hero--state .hero__inner {
+  align-items: center;
+  gap: clamp(32px, 6vw, 96px);
+}
+.hero--state .hero__place {
+  margin-bottom: var(--space-3);
+}
+/* The headline scales with its own column, so the longer line always fits it. */
+.hero--state .hero__main {
+  container-type: inline-size;
+}
+.hero--state .hero__title {
+  font-size: clamp(1.5rem, 8.2cqi, 3.3rem);
+  line-height: 1.08;
+  letter-spacing: -0.028em;
+  max-width: none; /* the two set lines are the measure */
+  margin-bottom: var(--space-4);
+}
+.hero--state .hero__lede {
+  font-size: clamp(1.08rem, 1rem + 0.35vw, 1.25rem);
+  line-height: 1.6;
+  max-width: 46ch;
+  margin: 0;
+}
