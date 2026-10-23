@@ -81,54 +81,6 @@
   --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-
-    --bg: #0f1124; /* Night */
-    --surface: #171a33;
-    --surface-2: #1f2340;
-    --ink: #e6e7f2;
-    --heading: #f6f6fb;
-    --ink-soft: #aaaec8;
-    --line: #2a2e50;
-    --line-strong: #7d82a6;
-    --link: #b4bbff;
-    --link-hover: #f6f6fb;
-    --focus: #f2b33d;
-    --focus-ring: #0f1124;
-    --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 16px 36px -16px rgb(0 0 0 / 0.6);
-    --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 20px 44px -16px rgb(0 0 0 / 0.75);
-
-    --band: #191d3b;
-    --band-ink: #f6f6fb;
-    --band-soft: #aaaec8;
-    --ring: rgb(180 187 255 / 0.16);
-    --ring-dot: #b4bbff;
-    --glow: rgb(180 187 255 / 0.2);
-
-    --primary: #b4bbff;
-    --primary-ink: #0f1124;
-    --primary-hover: #cdd2ff;
-    --accent: #f2b33d;
-    --accent-ink: #161b3d;
-    --accent-hover: #f5c463;
-    --accent-soft: #262338;
-    --tonal: #262b52;
-    --tonal-hover: #303668;
-
-    --ok-bg: #14352a;
-    --ok-ink: #8edcb2;
-    --no-bg: #3c1c24;
-    --no-ink: #ffadb0;
-    --wait-bg: #372c12;
-    --wait-ink: #f4cd78;
-    --new-bg: #242a5c;
-    --new-ink: #c6cbff;
-    --neutral-bg: #262941;
-    --neutral-ink: #d1d3e2;
-  }
-}
 
 /* Topic glyphs: one neutral pill system. Each topic has a small line icon drawn
    with a CSS mask in the text color; the written topic name always travels
@@ -563,14 +515,6 @@ ol {
     0 0 0 6px var(--glow),
     0 0 0 13px rgb(47 58 143 / 0.08);
 }
-@media (prefers-color-scheme: dark) {
-  .ripples__ring:nth-child(1) {
-    background: radial-gradient(circle, transparent 62%, rgb(180 187 255 / 0.05) 100%);
-  }
-  .ripples__ring:nth-child(3) {
-    border-color: rgb(180 187 255 / 0.3);
-  }
-}
 
 /* Panels that overlap the band: the one bold move in the system */
 .chooser,
@@ -584,15 +528,6 @@ ol {
   min-width: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  .chooser,
-  .searchpanel,
-  .state--page {
-    box-shadow:
-      0 0 0 1px var(--line),
-      var(--shadow-lift);
-  }
-}
 
 /* Home chooser */
 .chooser {
@@ -1664,11 +1599,6 @@ select[aria-invalid='true'] {
   z-index: 0;
   isolation: isolate;
 }
-@media (prefers-color-scheme: dark) {
-  .leaflet-tile-pane {
-    filter: brightness(0.7) contrast(1.1);
-  }
-}
 .map__notices {
   position: absolute;
   left: 12px;
@@ -2115,12 +2045,6 @@ select[aria-invalid='true'] {
   background: var(--surface);
   color: var(--link);
   border: 2px solid var(--surface);
-}
-@media (prefers-color-scheme: dark) {
-  .soon__secondary {
-    background: var(--tonal);
-    border-color: var(--tonal);
-  }
 }
 .soon__primary:hover,
 .soon__secondary:hover {
@@ -2759,19 +2683,6 @@ select[aria-invalid='true'] {
   }
 }
 
-/* Dark: the meetings column steps one tone up so its cards still read as cards. */
-@media (prefers-color-scheme: dark) {
-  .section--meetings {
-    background: var(--surface);
-  }
-  .section--meetings .card {
-    background: var(--surface-2);
-  }
-  .section--meetings .tag,
-  .section--meetings .datechip {
-    background: var(--tonal);
-  }
-}
 
 /* ==========================================================================
    Round 3, audit pass
@@ -3129,11 +3040,6 @@ dd {
 .state--page .state__body {
   max-width: 34rem;
 }
-@media (prefers-color-scheme: dark) {
-  .state--page {
-    box-shadow: none;
-  }
-}
 @media (max-width: 599px) {
   .state--page {
     padding-top: 200px;
@@ -3214,21 +3120,3 @@ time {
   margin-top: 32px;
 }
 
-/* Dark mode: the porch light gets solid, crisp rings instead of a translucent halo. */
-@media (prefers-color-scheme: dark) {
-  .ripples__dot {
-    box-shadow:
-      0 0 0 5px var(--band),
-      0 0 0 7px var(--ring-dot),
-      0 0 0 13px var(--band),
-      0 0 0 14.5px rgb(180 187 255 / 0.45);
-  }
-  .hero__place::before {
-    box-shadow:
-      0 0 0 3px var(--band),
-      0 0 0 4.5px var(--primary);
-  }
-  .state--page::after {
-    background: radial-gradient(circle, var(--ring-dot) 0 12px, var(--band) 12.5px 17px, var(--ring-dot) 17.5px 19px, transparent 19.5px 33%, var(--ring) 33.3% 33.9%, transparent 34.3%);
-  }
-}
