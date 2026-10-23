@@ -79,7 +79,7 @@ export function NearMePage() {
       <header className="page-header">
         <h1>Near Me</h1>
         <p className="page-header__lede">
-          Issues with a map location, nearest first. Distance helps you find nearby items, but it doesn’t tell you whether an issue
+          Issues with a map location come first, nearest at the top, followed by countywide items. Distance helps you find nearby items, but it doesn’t tell you whether an issue
           affects a particular home.
         </p>
       </header>
@@ -123,14 +123,14 @@ export function NearMePage() {
               </h2>
               <IssueMap points={points} origin={origin} selectedId={selectedId} onSelect={(id) => updateParam('issue', id)} />
               <p className="fine-print">
-                Numbered pins match the list. Dashed pins are approximate: they are placed from a street address, not an exact site boundary.{' '}
+                Numbered pins match the list. Dashed pins are approximate: they are placed from a street address, not an exact site boundary. Pins that would overlap are drawn slightly apart so each one can be selected.{' '}
                 {ranked.length - points.length > 0 &&
                   `${ranked.length - points.length} issue${ranked.length - points.length > 1 ? 's have' : ' has'} no map location and appear${ranked.length - points.length > 1 ? '' : 's'} in the list only.`}
               </p>
             </section>
             <section className="nearme__feed" aria-labelledby="feed-h">
               <h2 id="feed-h" className="nearme__feed-title">
-                Sorted by distance from {origin.label}
+                {points.length ? `Sorted by distance from ${origin.label}` : 'Countywide items, without a map location'}
               </h2>
               <ol className="feed" ref={listRef}>
                 {ranked.map((r) => (
