@@ -220,7 +220,7 @@ function LocationPanel({ issue }: { issue: Issue }) {
               : loc.locationType === 'mock_marker'
                 ? 'Sample map point for testing. It is not a real project site.'
                 : loc.locationType === 'approximate'
-                  ? 'The street address comes from the city document. The map point is approximate: it was looked up from that address, not taken from an exact site boundary.'
+                  ? 'The street address comes from the official record. The map point is approximate: it was looked up from that address, not taken from an exact site boundary.'
                   : 'The exact location has not been mapped.'}
           </p>
           {coords ? (
