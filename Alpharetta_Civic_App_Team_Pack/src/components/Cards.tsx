@@ -59,10 +59,12 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
             <span className="facts__note">{issue.statusAsOf ? ` as of ${formatDate(issue.statusAsOf)}` : ' (no date recorded)'}</span>
           </dd>
         </div>
-        <div className={`facts__row${issue.location?.label ? '' : ' facts__row--no-place'}`}>
-          <dt>Where</dt>
-          <dd>{issue.location?.label ?? 'No specific address in the record'}</dd>
-        </div>
+        {issue.location?.label && (
+          <div className="facts__row">
+            <dt>Where</dt>
+            <dd>{issue.location.label}</dd>
+          </div>
+        )}
       </dl>
       <div className="card__actions">
         {mappable && (

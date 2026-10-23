@@ -54,8 +54,9 @@ export function GeorgiaHomePage() {
       <p className="statewide__note">
         The location list covers all {COUNTIES.length} Georgia counties and {MUNICIPALITIES.length} incorporated cities, towns, and consolidated
         governments, from the{' '}
-        <a href={DIRECTORY_SOURCE.urls[1]} rel="noreferrer">
-          U.S. Census Bureau’s 2020 place list
+        <a href={DIRECTORY_SOURCE.urls[1]} target="_blank" rel="noreferrer">
+          U.S. Census Bureau’s 2020 place <span className="nowrap">list<span aria-hidden="true"> ↗</span></span>
+          <span className="visually-hidden"> (opens in a new tab)</span>
         </a>
         . Places incorporated since 2020 aren’t listed yet.
       </p>

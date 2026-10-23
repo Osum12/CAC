@@ -69,7 +69,6 @@ export function LocationSelector() {
       <h2 id="chooser-title" className="chooser__title">
         Choose your location
       </h2>
-      <CountyTicks selected={county?.id ?? null} />
       <div className="chooser__fields">
       <div className="chooser__field">
         <label htmlFor="county-select">County</label>
@@ -118,19 +117,3 @@ export function LocationSelector() {
   );
 }
 
-/**
- * One tick per Georgia county, in alphabetical order, drawn from the directory. Decorative: the
- * chosen county's tick lifts and turns gold. It says nothing about which places have records.
- */
-function CountyTicks({ selected }: { selected: string | null }) {
-  return (
-    <div className="ticks" aria-hidden="true">
-      <div className="ticks__row">
-        {COUNTIES.map((c) => (
-          <span key={c.id} className={`ticks__tick${c.id === selected ? ' ticks__tick--on' : ''}`} />
-        ))}
-      </div>
-      <p className="ticks__caption">One mark for each of Georgia’s {COUNTIES.length} counties, A to Z.</p>
-    </div>
-  );
-}

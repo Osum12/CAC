@@ -351,6 +351,7 @@ a:hover {
 }
 .primary-nav__link {
   position: relative;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -575,36 +576,6 @@ a:hover {
   letter-spacing: -0.02em;
   margin: 0 0 var(--s5);
 }
-.ticks {
-  margin: 0 0 var(--s6);
-}
-.ticks__row {
-  display: grid;
-  grid-template-columns: repeat(53, minmax(0, 1fr));
-  align-items: end;
-  justify-items: center;
-  row-gap: 8px;
-}
-.ticks__tick {
-  width: 3px;
-  height: 14px;
-  border-radius: 2px;
-  background: color-mix(in srgb, var(--on-navy) 30%, transparent);
-  transition:
-    height 0.35s var(--ease),
-    background-color 0.35s var(--ease);
-}
-.ticks__tick--on {
-  height: 26px;
-  margin-top: -12px;
-  background: var(--gold);
-  box-shadow: 0 0 0 2px color-mix(in srgb, var(--gold) 30%, transparent);
-}
-.ticks__caption {
-  margin: 10px 0 0;
-  font-size: 0.875rem;
-  color: var(--on-navy-2);
-}
 .chooser__fields {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -752,7 +723,7 @@ a:hover {
 }
 .statewide__note {
   margin: var(--s5) 0 0;
-  max-width: 46rem;
+  max-width: 68ch;
   font-size: 0.9375rem;
   color: var(--muted);
 }
@@ -934,8 +905,8 @@ a:hover {
 /* Body: the record of sessions, with the meetings rail beside it. */
 .county-body {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 17rem;
-  gap: clamp(32px, 5vw, 72px);
+  grid-template-columns: minmax(0, 1fr) 19rem;
+  gap: clamp(32px, 4vw, 64px);
   align-items: start;
 }
 .record__head {
@@ -1021,7 +992,6 @@ a:hover {
   font-weight: 700;
   font-size: 1rem;
   color: var(--ink);
-  font-variant-numeric: tabular-nums;
 }
 
 /* One chapter per meeting: a big sticky date on the left, the meeting and what was decided on the right. */
@@ -1053,7 +1023,6 @@ a:hover {
   line-height: 0.85;
   letter-spacing: -0.05em;
   color: var(--ink);
-  font-variant-numeric: tabular-nums;
 }
 .datemark__day::after {
   content: '';
@@ -1277,10 +1246,13 @@ a:hover {
   margin: 0 0 var(--s2);
 }
 
-/* Meetings rail */
+/* Meetings rail: a compact index that jumps to each chapter. */
 .rail {
   position: sticky;
-  top: calc(var(--head-h) + 24px);
+  top: calc(var(--head-h) + 16px);
+  max-height: calc(100vh - var(--head-h) - 32px);
+  overflow: auto;
+  overscroll-behavior: contain;
   padding-left: var(--s5);
   border-left: 1px solid var(--rule);
 }
@@ -1293,51 +1265,63 @@ a:hover {
   font-size: 0.9375rem;
   color: var(--muted);
 }
-.rail__group {
-  font-size: 1rem;
-  color: var(--ink-2);
-  margin: var(--s5) 0 var(--s2);
-}
 .rail__list {
   list-style: none;
 }
-.rail__item {
-  padding: var(--s3) 0;
+.rail__list > li + li {
   border-top: 1px solid var(--rule);
 }
+.rail__jump {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: var(--s3);
+  row-gap: 1px;
+  padding: 8px 8px 8px 0;
+  text-decoration: none;
+  color: var(--ink);
+}
 .rail__date {
-  margin: 0 0 2px;
   font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--muted);
+  font-weight: 700;
+  color: var(--gold-ink);
 }
 .rail__name {
-  margin: 0 0 4px;
-  font-size: 1rem;
+  grid-column: 1 / -1;
+  grid-row: 2;
+  font-size: 0.9375rem;
   font-weight: 600;
   line-height: 1.3;
-  letter-spacing: 0;
 }
-.rail__name a {
-  color: var(--ink);
-  text-decoration: none;
+.rail__count {
+  grid-column: 2;
+  grid-row: 1;
+  font-size: 0.875rem;
+  color: var(--muted);
+  white-space: nowrap;
 }
-.rail__name a:hover {
+.rail__jump:hover .rail__name {
   color: var(--blue);
   text-decoration: underline;
-}
-.rail__actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 12px;
-  align-items: center;
 }
 .rail__more {
   display: inline-flex;
   align-items: center;
   min-height: 44px;
-  margin-top: var(--s3);
+  margin-top: var(--s2);
   font-weight: 700;
+}
+.session:target .datemark__day {
+  color: var(--blue);
+}
+.session__older {
+  margin: var(--s3) 0 0;
+  font-weight: 700;
+  font-size: 0.9375rem;
+}
+.session__older a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
 }
 
 /* ---------- States ---------- */
@@ -1650,7 +1634,6 @@ a:hover {
   font-size: 0.875rem;
   color: var(--muted);
   font-weight: 600;
-  font-variant-numeric: tabular-nums;
 }
 .archive-list {
   list-style: none;
@@ -1696,7 +1679,7 @@ a:hover {
   font-size: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
   letter-spacing: -0.02em;
 }
-.archive-row--document {
+.archive-row--nested {
   margin-left: 14px;
   padding-left: var(--s4);
   border-left: 2px solid var(--rule);
@@ -1800,7 +1783,6 @@ a:hover {
   font-weight: 400;
 }
 .record-meta__mono {
-  font-variant-numeric: tabular-nums;
 }
 .panel {
   padding: var(--s5);
@@ -2121,21 +2103,57 @@ a:hover {
 }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 1080px) {
+/* Below 1024px the index moves above the chapters as a short row of dates. */
+@media (max-width: 1023px) {
   .county-body {
     grid-template-columns: minmax(0, 1fr);
   }
   .rail {
+    order: -1;
     position: static;
-    padding-left: 0;
+    max-height: none;
+    overflow: visible;
+    padding: 0 0 var(--s5);
     border-left: 0;
-    padding-top: var(--s5);
-    border-top: 2px solid var(--ink);
+  }
+  .rail__title {
+    font-size: 1.125rem;
+    display: inline;
+  }
+  .rail__source {
+    display: none;
+  }
+  .rail__nav {
+    margin-top: var(--s2);
   }
   .rail__list {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
-    column-gap: var(--s6);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .rail__list > li + li {
+    border-top: 0;
+  }
+  .rail__jump {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+  }
+  .rail__jump:hover {
+    background: var(--tint);
+  }
+  .rail__date {
+    color: var(--ink);
+  }
+  .rail__name,
+  .rail__count {
+    display: none;
+  }
+  .rail__more {
+    font-size: 0.9375rem;
   }
 }
 @media (max-width: 1023px) {
@@ -2170,7 +2188,7 @@ a:hover {
     position: static;
   }
 }
-@media (max-width: 760px) {
+@media (max-width: 960px) {
   :root {
     --head-h: 101px;
   }
@@ -2190,6 +2208,9 @@ a:hover {
   }
   .brand__tag {
     display: none;
+  }
+  .placebar__name {
+    white-space: nowrap;
   }
   .placebar {
     grid-area: place;
@@ -2218,6 +2239,8 @@ a:hover {
     left: var(--s3);
     right: var(--s3);
   }
+}
+@media (max-width: 760px) {
   .session {
     grid-template-columns: minmax(0, 1fr);
     gap: var(--s4);
@@ -2258,6 +2281,9 @@ a:hover {
   }
 }
 @media (max-width: 520px) {
+  .placebar__name {
+    white-space: normal;
+  }
   .page {
     padding-top: var(--s6);
   }
@@ -2290,7 +2316,7 @@ a:hover {
   .datechip__day {
     font-size: 2.25rem;
   }
-  .archive-row--document {
+  .archive-row--nested {
     margin-left: 6px;
     padding-left: var(--s3);
   }

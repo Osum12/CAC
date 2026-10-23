@@ -30,11 +30,13 @@ const AGENDA_TYPES = new Set(['agenda', 'agenda_packet']);
 
 /**
  * Builds one date-sorted list of meetings and documents, tagged with the filter groups each belongs to.
- * A document is dated by its meeting (so minutes sit next to the meeting they record); documents
+ * Newest first; two meetings on one day are ordered by start time, latest first (as on Countywide).
+ * Each document sits directly under its own meeting (document.meetingId), agendas first; documents
  * without a meeting fall back to their publish date.
  */
 export function buildArchiveEntries(meetings: Meeting[], documents: CivicDocument[]): ArchiveEntry[] {
-  const meetingDate = (d: CivicDocument) => meetings.find((m) => m.id === d.meetingId)?.date ?? null;
+  const meetingOf = (d: CivicDocument) => meetings.find((m) => m.id === d.meetingId) ?? null;
+  const meetingDate = (d: CivicDocument) => meetingOf(d)?.date ?? null;
   const entries: ArchiveEntry[] = [
     ...meetings.map((m) => ({
       kind: 'meeting' as const,
@@ -51,7 +53,18 @@ export function buildArchiveEntries(meetings: Meeting[], documents: CivicDocumen
       groups: ['all', AGENDA_TYPES.has(d.documentType) ? 'agendas' : 'documents'] as ArchiveFilter[],
     })),
   ];
-  return entries.sort((a, b) => (b.date ?? '').localeCompare(a.date ?? '') || b.kind.localeCompare(a.kind)); // same date: meeting before its documents
+  // Sort key: date, then the owning meeting's start time and id (so a meeting and its documents stay
+  // together), then the meeting before its documents, agendas before other documents.
+  const owner = (e: ArchiveEntry) => (e.kind === 'meeting' ? e.record : meetingOf(e.record));
+  const rank = (e: ArchiveEntry) => (e.kind === 'meeting' ? 0 : AGENDA_TYPES.has(e.record.documentType) ? 1 : 2);
+  return entries.sort(
+    (a, b) =>
+      (b.date ?? '').localeCompare(a.date ?? '') ||
+      (owner(b)?.startTime ?? '').localeCompare(owner(a)?.startTime ?? '') ||
+      (owner(b)?.id ?? '').localeCompare(owner(a)?.id ?? '') ||
+      rank(a) - rank(b) ||
+      a.record.title.localeCompare(b.record.title),
+  );
 }
 
 const EMPTY_COPY: Record<ArchiveFilter, string> = {
@@ -124,7 +137,7 @@ export function ArchivePage() {
             <ol className="archive-list">
               {visible.map((e) => (
                 <li key={`${e.kind}-${e.id}`}>
-                  <ArchiveRow entry={e} />
+                  <ArchiveRow entry={e} nested={e.kind === 'document' && visible.some((v) => v.kind === 'meeting' && v.id === e.record.meetingId)} />
                 </li>
               ))}
             </ol>
@@ -165,7 +178,8 @@ function emptyTitle(filter: ArchiveFilter, q: string, matchesInAll: number): str
 
 const entryMatches = (e: ArchiveEntry, q: string) => (e.kind === 'meeting' ? meetingMatches(e.record, q) : documentMatches(e.record, q));
 
-function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
+/** `nested`: a document shown directly under its own meeting, drawn indented on the meeting's thread. */
+function ArchiveRow({ entry, nested }: { entry: ArchiveEntry; nested: boolean }) {
   const href = usePlaceHref();
   const isMeeting = entry.kind === 'meeting';
   const to = href(isMeeting ? `/meetings/${encodeURIComponent(entry.id)}` : `/documents/${encodeURIComponent(entry.id)}`);
@@ -176,7 +190,7 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
   const time = isMeeting ? formatTime(entry.record.startTime) : null;
 
   return (
-    <article className={`archive-row archive-row--${entry.kind}`}>
+    <article className={`archive-row archive-row--${entry.kind}${nested ? ' archive-row--nested' : ''}`}>
       <span className="archive-row__icon" aria-hidden="true">
         <RowIcon kind={isMeeting ? 'meeting' : 'document'} />
       </span>

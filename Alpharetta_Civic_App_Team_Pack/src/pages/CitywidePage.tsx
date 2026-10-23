@@ -198,6 +198,8 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
   }
 
   const { upcoming, recent } = splitMeetings(meetings);
+  // The newest meetings carry their official links in full; older chapters point to their meeting page.
+  const current = new Set([...upcoming, ...recent.slice(0, 4)].map((m) => m.id));
   const filtering = isFiltering(filters);
   const matches = filterIssues(issues, filters);
   const sessions = groupBySession(meetings, matches, filtering);
@@ -211,7 +213,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
           </h2>
           <p className="record__source">From the {sources}</p>
           <p className="record__intro">
-            Filed by the meeting where each item was last decided or discussed, newest first.{' '}
+            Grouped by the meeting where each item was last decided or discussed, newest first.{' '}
             <Link to={href('/near-me')}>See them on the map</Link>
           </p>
         </header>
@@ -237,7 +239,7 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
         ) : (
           <div className="sessions">
             {sessions.map((s) => (
-              <SessionChapter key={s.key} session={s} documents={documents} />
+              <SessionChapter key={s.key} session={s} documents={documents} full={s.meeting ? current.has(s.meeting.id) : false} />
             ))}
           </div>
         )}
@@ -248,11 +250,27 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
           Meetings
         </h2>
         <p className="rail__source">From the {sources}</p>
-        {upcoming.length > 0 && <RailGroup title="Coming up" meetings={upcoming} documents={documents} />}
-        {recent.length > 0 ? (
-          <RailGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} />
-        ) : (
-          <p className="muted">No past meetings in this dataset.</p>
+        {sessions.some((x) => x.meeting) && (
+          <nav aria-label="Jump to a meeting" className="rail__nav">
+            <ul className="rail__list">
+              {sessions
+                .filter((x) => x.meeting)
+                .map((x) => (
+                  <li key={x.key}>
+                    <a href={`#session-${x.key}`} className="rail__jump">
+                      <span className="rail__date">
+                        {formatCompactDate(x.meeting!.date, 'Date to be announced')}
+                        {sessions.some((o) => o !== x && o.meeting?.date && o.meeting.date === x.meeting!.date) && formatTime(x.meeting!.startTime)
+                          ? `, ${formatTime(x.meeting!.startTime)}`
+                          : ''}
+                      </span>{' '}
+                      <span className="rail__name">{shortTitle(x.meeting!)}</span>{' '}
+                      <span className="rail__count">{x.upcoming ? 'Coming up' : itemCount(x.issues.length + x.also.length)}</span>
+                    </a>
+                  </li>
+                ))}
+            </ul>
+          </nav>
         )}
         <Link to={href('/archive')} className="rail__more">
           Browse all meetings and documents
@@ -266,6 +284,19 @@ function CitywideContent({ meetings, issues, documents, issuesHeading }: Content
 function withoutDate(m: Meeting): string {
   const tail = `, ${formatDate(m.date, '')}`;
   return m.date && m.title.endsWith(tail) ? m.title.slice(0, -tail.length) : m.title;
+}
+
+const itemCount = (n: number) => (n === 1 ? '1 item' : `${n} items`);
+
+/** "First Regular Meeting": the meeting's title without the body's name or the date shown beside it. */
+function shortTitle(m: Meeting): string {
+  return withoutDate(m).replace(/^Board of Commissioners /, '');
+}
+
+/** "the October 7, 2026 meeting" or, when the time is known, "the September 30, 2026 meeting at 6:00 PM". */
+function meetingWhen(m: Meeting): string {
+  const time = formatTime(m.startTime);
+  return `the ${formatDate(m.date, 'undated')} meeting${time ? ` at ${time}` : ''}`;
 }
 
 /** Big chapter date: day numeral, month and year, weekday. Decorative copy of the heading's date. */
@@ -288,15 +319,16 @@ function DateMark({ iso, upcoming }: { iso: string | null; upcoming: boolean }) 
   );
 }
 
-function SessionChapter({ session, documents }: { session: Session; documents: CivicDocument[] }) {
+function SessionChapter({ session, documents, full }: { session: Session; documents: CivicDocument[]; full: boolean }) {
   const href = usePlaceHref();
   const { meeting, issues, also, upcoming } = session;
-  const headingId = `session-${session.key}`;
-  const decided = issues.length === 1 ? '1 item' : `${issues.length} items`;
+  const anchor = `session-${session.key}`;
+  const headingId = `${anchor}-title`;
+  const decided = itemCount(issues.length);
 
   if (!meeting) {
     return (
-      <section className="session session--none" aria-labelledby={headingId}>
+      <section id={anchor} className="session session--none" aria-labelledby={headingId}>
         <DateMark iso={null} upcoming={false} />
         <div className="session__body">
           <header className="session__head">
@@ -319,7 +351,7 @@ function SessionChapter({ session, documents }: { session: Session; documents: C
   const time = formatTime(meeting.startTime);
 
   return (
-    <section className={`session${upcoming ? ' session--upcoming' : ''}`} aria-labelledby={headingId}>
+    <section id={anchor} className={`session${upcoming ? ' session--upcoming' : ''}`} aria-labelledby={headingId}>
       <DateMark iso={meeting.date} upcoming={upcoming} />
       <div className="session__body">
         <header className="session__head">
@@ -332,14 +364,16 @@ function SessionChapter({ session, documents }: { session: Session; documents: C
               <time dateTime={meeting.date ?? undefined}>{formatDate(meeting.date, 'Date to be announced')}</time>
               {time ? `, ${time}` : ''}
             </span>
-            {issues.length > 0 && <span className="session__count">{upcoming ? `${decided} on the agenda` : `${decided} filed here`}</span>}
+            {issues.length + also.length > 0 && (
+              <span className="session__count">{upcoming ? `${itemCount(issues.length + also.length)} on the agenda` : `${itemCount(issues.length + also.length)} decided or discussed here`}</span>
+            )}
             {mock && <MockBadge record={meeting} />}
           </p>
-          {(agendaUrl || video || official) && (
+          {full && (agendaUrl || video || official) && (
             <div className="session__links">
               {agendaUrl && (
                 <ExternalAction href={agendaUrl} context={meeting.title}>
-                  Official agenda
+                  Agenda (PDF)
                 </ExternalAction>
               )}
               {video && (
@@ -354,6 +388,13 @@ function SessionChapter({ session, documents }: { session: Session; documents: C
               )}
             </div>
           )}
+          {!full && !mock && (
+            <p className="session__older">
+              <Link to={href(`/meetings/${encodeURIComponent(meeting.id)}`)}>
+                Agenda, recording and documents<span className="visually-hidden"> for {meeting.title}</span>
+              </Link>
+            </p>
+          )}
         </header>
         {issues.length > 0 && <IssueEntries issues={issues} />}
         {also.length > 0 && (
@@ -363,7 +404,7 @@ function SessionChapter({ session, documents }: { session: Session; documents: C
               {also.map(({ issue, filedUnder }) => (
                 <li key={issue.id}>
                   <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)}>{issue.title}</Link>
-                  {filedUnder?.date && <span className="session__also-note"> Filed under {formatDate(filedUnder.date)}.</span>}
+                  {filedUnder && <span className="session__also-note"> Listed under {meetingWhen(filedUnder)}.</span>}
                 </li>
               ))}
             </ul>
@@ -427,43 +468,6 @@ function IssueFilters({
         </button>
       )}
     </form>
-  );
-}
-
-function RailGroup({ title, meetings, documents }: { title: string; meetings: Meeting[]; documents: CivicDocument[] }) {
-  const href = usePlaceHref();
-  return (
-    <>
-      <h3 className="rail__group">{title}</h3>
-      <ul className="rail__list">
-        {meetings.map((m) => {
-          const agenda = agendaFor(m, documents);
-          const agendaUrl = agenda && !isMock(agenda) ? safeUrl(agenda.url) : null;
-          const time = formatTime(m.startTime);
-          return (
-            <li key={m.id} className="rail__item">
-              <p className="rail__date">
-                <time dateTime={m.date ?? undefined}>{formatCompactDate(m.date, 'Date to be announced')}</time>
-                {time ? `, ${time}` : ''}
-              </p>
-              <h4 className="rail__name">
-                <Link to={href(`/meetings/${encodeURIComponent(m.id)}`)}>{m.title}</Link>
-              </h4>
-              {(agendaUrl || isMock(m)) && (
-                <div className="rail__actions">
-                  {agendaUrl && (
-                    <ExternalAction href={agendaUrl} context={m.title}>
-                      Agenda (PDF)
-                    </ExternalAction>
-                  )}
-                  {isMock(m) && <MockBadge record={m} />}
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
-    </>
   );
 }
 
