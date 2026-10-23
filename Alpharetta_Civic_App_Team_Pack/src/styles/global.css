@@ -2593,10 +2593,15 @@ section > .fine-print {
 .section--meetings .card--meeting .card__actions {
   padding-top: 0;
 }
-@media (min-width: 1040px) and (min-height: 860px) {
+/* Pinned beside the issues on laptop and desktop windows; if it is taller than the window it
+   scrolls on its own, so every meeting stays reachable. */
+@media (min-width: 1040px) and (min-height: 600px) {
   .section--meetings {
     position: sticky;
     top: calc(var(--sticky-h) + 16px);
+    max-height: calc(100vh - var(--sticky-h) - 32px);
+    overflow-y: auto;
+    scrollbar-width: thin;
   }
 }
 .section--meetings .card--meeting {
@@ -2635,4 +2640,14 @@ section > .fine-print {
   padding-bottom: 12px;
   box-sizing: content-box;
   border-bottom: 2px solid var(--ink);
+}
+
+/* Summaries are never cut short: a cut summary can contradict its status (for example
+   "failed on September 16" next to an Approved badge, when the item passed on October 7). */
+.citywide-grid .card__summary,
+.agenda-item__line {
+  display: block;
+  -webkit-line-clamp: unset;
+  line-clamp: none;
+  overflow: visible;
 }
