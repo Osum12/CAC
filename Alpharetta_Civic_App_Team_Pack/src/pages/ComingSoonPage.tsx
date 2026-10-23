@@ -66,7 +66,7 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
           </div>
           <div className="soon__figure">
             <p className="soon__figure-title">
-              {covered.length} of {COUNTIES.length} Georgia counties have records so far
+              {covered.length} of {COUNTIES.length} Georgia counties {covered.length === 1 ? 'has' : 'have'} civic records
             </p>
             <CoverageGrid counties={COUNTIES} highlightId={place.level === 'county' ? place.id : undefined} />
           </div>
@@ -76,6 +76,9 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
       {place.level === 'county' ? (
         <CountyPlaces county={place} cities={municipalitiesInCounty(place.id)} />
       ) : (
+        // A city in a covered county already says so above, next to its "Explore" button;
+        // the county list is only needed when none of its counties has records yet.
+        !home && (
         <section className="soon-more" aria-labelledby="soon-counties-h">
           <h2 id="soon-counties-h" className="soon-more__title">
             {place.countyIds.length > 1 ? `${place.name} spans ${place.countyIds.length} counties` : `${place.name} is in ${countyNames(countiesOf(place))}`}
@@ -91,6 +94,7 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
             ))}
           </ul>
         </section>
+        )
       )}
 
       {!ownRecords && (

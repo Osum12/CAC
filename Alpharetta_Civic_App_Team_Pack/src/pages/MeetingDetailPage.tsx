@@ -1,12 +1,12 @@
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { getDocumentsForMeeting, getIssuesForMeeting, getMeetingById } from '../services/civicData';
-import { formatDate, formatTime, meetingTypeLabel } from '../services/format';
+import { formatDate, formatTime, humanize, meetingTypeLabel } from '../services/format';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
-import { DocumentCard, IssueCard } from '../components/Cards';
+import { DocumentCard, KeepTallies } from '../components/Cards';
 import { MockBadge, MockNotice, isMock } from '../components/MockBadge';
 import { SourceAction } from '../components/SourceAction';
-import { MeetingStatusBadge } from '../components/StatusBadge';
+import { IssueStatusBadge, MeetingStatusBadge } from '../components/StatusBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import { BackLink } from '../components/BackLink';
@@ -85,13 +85,27 @@ export function MeetingDetailPage() {
               </div>
             )}
             {issues.length ? (
-              <ul className="issue-list">
+              <ol className="agenda-items">
                 {issues.map((i) => (
-                  <li key={i.id}>
-                    <IssueCard issue={i} />
+                  <li key={i.id} className="agenda-item">
+                    <h3 className="agenda-item__title">
+                      <Link to={href(`/issues/${encodeURIComponent(i.id)}`)} className="card__link">
+                        {i.title}
+                      </Link>
+                    </h3>
+                    <p className="agenda-item__meta">
+                      <IssueStatusBadge status={i.status} />
+                      <span className="agenda-item__topic">{humanize(i.category)}</span>
+                      {isMock(i) && <MockBadge record={i} />}
+                    </p>
+                    {i.summary && (
+                      <p className="agenda-item__line">
+                        <KeepTallies text={i.summary} />
+                      </p>
+                    )}
                   </li>
                 ))}
-              </ul>
+              </ol>
             ) : (
               <EmptyState title="No issues are linked to this meeting." />
             )}

@@ -44,8 +44,8 @@ export function SourceLine({ source, checked, sample }: { source: string; checke
   );
 }
 
-/** A figure: serif title, the chart, then the source line. */
-export function Figure({ id, title, children, source, className = '' }: { id: string; title: string; children: ReactNode; source: ReactNode; className?: string }) {
+/** A figure: title, the chart, then (when it stands alone) the source line. */
+export function Figure({ id, title, children, source, className = '' }: { id: string; title: string; children: ReactNode; source?: ReactNode; className?: string }) {
   return (
     <figure className={`figure ${className}`} aria-labelledby={id}>
       <figcaption id={id} className="figure__title">
@@ -216,10 +216,9 @@ export function MeetingStrip({ meetings }: { meetings: Meeting[] }) {
 export function CoverageGrid({ counties, highlightId }: { counties: { id: string; name: string; civicDataAvailable: boolean }[]; highlightId?: string }) {
   const covered = counties.filter((c) => c.civicDataAvailable);
   const highlight = counties.find((c) => c.id === highlightId);
-  const label = `${covered.length} of ${counties.length} Georgia counties have civic records in this app${covered.length ? `: ${covered.map((c) => c.name).join(', ')}` : ''}.${highlight && !highlight.civicDataAvailable ? ` ${highlight.name} is marked with a ring.` : ''}`;
   return (
     <div className="coverage">
-      <div className="coverage__grid" role="img" aria-label={label}>
+      <div className="coverage__grid" aria-hidden="true">
         {counties.map((c) => (
           <span
             key={c.id}
@@ -240,6 +239,10 @@ export function CoverageGrid({ counties, highlightId }: { counties: { id: string
           <span className="coverage__cell" /> Coming soon
         </span>
       </div>
+      <p className="coverage__text">
+        One square per county, in alphabetical order. Records available: {covered.length ? covered.map((c) => c.name).join(', ') : 'none yet'}. The other {counties.length - covered.length}: coming soon.
+        {highlight && !highlight.civicDataAvailable ? ` ${highlight.name} is the square with a ring.` : ''}
+      </p>
     </div>
   );
 }

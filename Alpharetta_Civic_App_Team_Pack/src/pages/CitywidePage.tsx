@@ -253,10 +253,10 @@ function Glance({
         </p>
         <p className="glance__note">Counts cover the items collected in this app, not every decision the county made.</p>
         <div className="glance__grid">
-          <Figure id="fig-status" title="Where each item stands" source={source} className="figure--wide">
+          <Figure id="fig-status" title="Where each item stands" className="figure--wide">
             <StatusBar counts={statuses} label="Items by current status" />
           </Figure>
-          <Figure id="fig-topics" title="Items by topic" source={source}>
+          <Figure id="fig-topics" title="Items by topic">
             <p className="figure__hint">Choose a topic to filter the list below.</p>
             <BarTable
               caption="Items by topic"
@@ -271,10 +271,11 @@ function Glance({
               }))}
             />
           </Figure>
-          <Figure id="fig-meetings" title="When the board met" source={source}>
+          <Figure id="fig-meetings" title="When the board met">
             <MeetingStrip meetings={meetings} />
           </Figure>
         </div>
+        <div className="glance__source">{source}</div>
       </div>
     </section>
   );

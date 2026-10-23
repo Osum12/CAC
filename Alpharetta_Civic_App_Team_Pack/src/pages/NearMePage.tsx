@@ -12,7 +12,6 @@ import { MockBadge, isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { usePlaceHref } from '../services/placeContext';
-import { PinIcon } from '../components/PinIcon';
 
 export function NearMePage() {
   usePageTitle('Near Me');
@@ -85,7 +84,7 @@ export function NearMePage() {
       </header>
 
       <p className="nearme__start">
-        <PinIcon className="nearme__start-icon" />
+        <span className="origin-dot origin-dot--key nearme__start-icon" aria-hidden="true" />
         <span>
           Distances are measured from <strong>{origin.label}</strong>, {origin.description}.
         </span>
@@ -123,6 +122,7 @@ export function NearMePage() {
               </h2>
               <IssueMap points={points} origin={origin} selectedId={selectedId} onSelect={(id) => updateParam('issue', id)} />
               <p className="fine-print">
+                <span className="origin-dot origin-dot--key origin-dot--inline" aria-hidden="true" /> The ringed target is the {origin.label}, where distances are measured from.{' '}
                 Numbered pins match the list. Dashed pins are approximate: they are placed from a street address, not an exact site boundary. Pins that would overlap are drawn slightly apart so each one can be selected.{' '}
                 {ranked.length - points.length > 0 &&
                   `${ranked.length - points.length} issue${ranked.length - points.length > 1 ? 's have' : ' has'} no map location and appear${ranked.length - points.length > 1 ? '' : 's'} in the list only.`}

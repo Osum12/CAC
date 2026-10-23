@@ -1,3 +1,4 @@
+import { Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 import { formatCompactDate, formatDate, formatShortDate, formatTime, formatWeekday, humanize, meetingTypeLabel, primarySource, safeUrl } from '../services/format';
@@ -19,11 +20,45 @@ type HeadingLevel = 2 | 3 | 4;
 export function ExternalAction({ href, children, context }: { href: string; children: string; context: string }) {
   return (
     <a className="card__action" href={href} target="_blank" rel="noopener noreferrer">
-      {children}
+      <WithArrow text={children} />
       <span className="visually-hidden">: {context}</span>
-      <span aria-hidden="true"> ↗</span>
       <span className="visually-hidden"> (opens in a new tab)</span>
     </a>
+  );
+}
+
+/** Link text whose last word and the outbound "↗" never part across a line break. */
+export function WithArrow({ text }: { text: string }) {
+  const cut = text.lastIndexOf(' ');
+  return (
+    <span>
+      {cut >= 0 ? text.slice(0, cut + 1) : ''}
+      <span className="nowrap">
+        {text.slice(cut + 1)}
+        <span aria-hidden="true">{' '}↗</span>
+      </span>
+    </span>
+  );
+}
+
+/**
+ * Keeps vote tallies and ranges such as "5-0" or "4-1" on one line. The text itself is
+ * unchanged; each tally is only wrapped in a no-break span.
+ */
+export function KeepTallies({ text }: { text: string }) {
+  const parts = text.split(/(\d+-\d+)/);
+  return (
+    <>
+      {parts.map((part, i) =>
+        i % 2 ? (
+          <span key={i} className="nowrap">
+            {part}
+          </span>
+        ) : (
+          <Fragment key={i}>{part}</Fragment>
+        ),
+      )}
+    </>
   );
 }
 
@@ -43,16 +78,18 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
           {issue.title}
         </Link>
       </H>
-      <p className="card__summary">{issue.summary}</p>
+      <p className="card__summary">
+        <KeepTallies text={issue.summary} />
+      </p>
       <dl className="facts">
-        <div className="facts__row">
+        <div className="facts__row facts__row--status">
           <dt>Status</dt>
           <dd>
             <IssueStatusBadge status={issue.status} />
             <span className="facts__note">{issue.statusAsOf ? ` as of ${formatDate(issue.statusAsOf)}` : ' (no date recorded)'}</span>
           </dd>
         </div>
-        <div className="facts__row">
+        <div className={`facts__row${issue.location ? '' : ' facts__row--no-place'}`}>
           <dt>Where</dt>
           <dd>{issue.location?.label ?? 'No specific address in the record'}</dd>
         </div>
@@ -105,7 +142,7 @@ export function MeetingCard({
         )}
       </div>
       <div className="card__body">
-        <span className="tag">{meetingTypeLabel(meeting.meetingType)}</span>
+        <span className="tag card__eyebrow">{meetingTypeLabel(meeting.meetingType)}</span>
         <H className="card__title">
           <Link to={href(`/meetings/${encodeURIComponent(meeting.id)}`)} className="card__link">
             {meeting.title}
@@ -115,8 +152,13 @@ export function MeetingCard({
           <div className="facts__row">
             <dt>When</dt>
             <dd>
-              <time dateTime={meeting.date ?? undefined}>{formatCompactDate(meeting.date)}</time>
-              {time ? `, ${time}` : ''}
+              {/* The date chip and the title already show the date, so with a start time the
+                  row shows only the time; the date stays available to screen readers. */}
+              <time dateTime={meeting.date ?? undefined} className={time && meeting.date ? 'visually-hidden' : undefined}>
+                {formatCompactDate(meeting.date)}
+                {time && meeting.date ? ', ' : ''}
+              </time>
+              {time ? `${meeting.date ? '' : ', '}${time}` : ''}
             </dd>
           </div>
           <div className="facts__row">

@@ -24,11 +24,22 @@ function placeFromPath(pathname: string) {
   return first === 'county' ? getCounty(second) : getMunicipality(first);
 }
 
+/**
+ * Detail pages have no tab of their own, so they borrow the section they belong to:
+ * an issue lives under Countywide, a meeting or document under Archive.
+ */
+function sectionForDetail(pathname: string): string | null {
+  if (/\/issues\/[^/]+\/?$/.test(pathname)) return '/';
+  if (/\/(meetings|documents)\/[^/]+\/?$/.test(pathname)) return '/archive';
+  return null;
+}
+
 export function Layout() {
   const { pathname } = useLocation();
   const mainRef = useRef<HTMLElement>(null);
   const place = placeFromPath(pathname);
   const covered = place?.level === 'county' && place.civicDataAvailable ? place : null;
+  const detailSection = covered ? sectionForDetail(pathname) : null;
 
   // On route change, move focus to the main region so keyboard and screen-reader
   // users start at the new page content; scroll back to the top. Comparing with the
@@ -73,11 +84,17 @@ export function Layout() {
           )}
           {covered && (
             <nav aria-label={`${covered.name} pages`} className="primary-nav">
-              {COUNTY_NAV.map((n) => (
-                <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className="primary-nav__link">
-                  {n.label}
-                </NavLink>
-              ))}
+              {COUNTY_NAV.map((n) =>
+                detailSection === n.path ? (
+                  <Link key={n.path} to={countyPath(covered, n.path)} className="primary-nav__link active" aria-current="page">
+                    {n.label}
+                  </Link>
+                ) : (
+                  <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className="primary-nav__link">
+                    {n.label}
+                  </NavLink>
+                ),
+              )}
             </nav>
           )}
         </div>

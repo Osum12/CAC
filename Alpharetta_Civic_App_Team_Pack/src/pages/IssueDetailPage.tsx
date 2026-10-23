@@ -5,7 +5,7 @@ import { getValidCoordinates } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
 import { BackLink } from '../components/BackLink';
-import { DocumentCard } from '../components/Cards';
+import { DocumentCard, KeepTallies } from '../components/Cards';
 import { MockBadge, MockNotice, isMock } from '../components/MockBadge';
 import { SourceAction } from '../components/SourceAction';
 import { IssueStatusBadge } from '../components/StatusBadge';
@@ -67,7 +67,7 @@ export function IssueDetailPage() {
         <div className="detail__main">
           <section aria-labelledby="summary-h">
             <h2 id="summary-h">In plain language</h2>
-            <p className="prose">{issue.summary || 'No summary has been written for this issue yet.'}</p>
+            <p className="prose">{issue.summary ? <KeepTallies text={issue.summary} /> : 'No summary has been written for this issue yet.'}</p>
             {!isMock(issue) && (
               <p className="fine-print">This summary is a plain-language rewrite of the official documents listed below. Check them for the exact wording.</p>
             )}

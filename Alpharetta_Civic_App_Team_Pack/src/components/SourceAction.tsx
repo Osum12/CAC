@@ -1,3 +1,4 @@
+import { WithArrow } from './Cards';
 import { safeUrl } from '../services/format';
 
 type Props = {
@@ -22,8 +23,7 @@ export function SourceAction({ url, label, unavailableText }: Props) {
   }
   return (
     <a className="source-action" href={href} target="_blank" rel="noopener noreferrer">
-      {label}
-      <span aria-hidden="true"> ↗</span>
+      <WithArrow text={label} />
       <span className="visually-hidden"> (opens in a new tab)</span>
     </a>
   );
