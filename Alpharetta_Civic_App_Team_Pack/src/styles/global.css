@@ -3243,3 +3243,17 @@ section > .fine-print {
   display: inline-block;
   padding-block: 2px;
 }
+
+/* Tablets: the lead's side notes sit side by side under the story, at a readable measure. */
+@media (min-width: 640px) and (max-width: 959px) {
+  .lead__side {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 32px;
+  }
+  .lead__side > :only-child {
+    grid-column: 1 / -1;
+  }
+}
+.lead__why-text {
+  max-width: 60ch;
+}
