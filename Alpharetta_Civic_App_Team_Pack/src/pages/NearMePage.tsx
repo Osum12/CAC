@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { useUrlParams } from '../services/useUrlParams';
 import { getIssues } from '../services/civicData';
@@ -49,6 +49,8 @@ export function NearMePage() {
     [ranked],
   );
   const pinNumber = (id: string) => points.find((p) => p.id === id)?.number ?? null;
+  // The farthest mapped item sets the scale for the small distance bars in the list.
+  const maxDistance = Math.max(0, ...ranked.map((r) => r.distance ?? 0));
 
   // When a marker is chosen, bring its card into view. When the choice came from a card's
   // "Show on map" button on the stacked layout, bring the map into view instead.
@@ -136,6 +138,7 @@ export function NearMePage() {
                     <FeedItem
                       ranked={r}
                       number={pinNumber(r.issue.id)}
+                      maxDistance={maxDistance}
                       selected={r.issue.id === selectedId}
                       onShowOnMap={() => {
                         fromFeed.current = r.issue.id !== selectedId;
@@ -152,9 +155,21 @@ export function NearMePage() {
   );
 }
 
-function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIssue; number: number | null; selected: boolean; onShowOnMap: () => void }) {
+function FeedItem({
+  ranked,
+  number,
+  maxDistance,
+  selected,
+  onShowOnMap,
+}: {
+  ranked: RankedIssue;
+  number: number | null;
+  maxDistance: number;
+  selected: boolean;
+  onShowOnMap: () => void;
+}) {
   const href = usePlaceHref();
-  const { issue, coords, reason } = ranked;
+  const { issue, coords, reason, distance } = ranked;
   return (
     <article className={`feed-item${selected ? ' feed-item--selected' : ''}`} data-issue-id={issue.id}>
       {number !== null ? (
@@ -175,6 +190,11 @@ function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIss
         <h3 className="feed-item__title">
           <Link to={href(`/issues/${encodeURIComponent(issue.id)}`)}>{issue.title}</Link>
         </h3>
+        {distance !== null && maxDistance > 0 && (
+          <span className="feed-item__distance" aria-hidden="true" style={{ '--share': Math.max(0.02, distance / maxDistance) } as CSSProperties}>
+            <span className="feed-item__distance-bar" />
+          </span>
+        )}
         <p className="feed-item__reason">
           <span className="visually-hidden">Why it’s listed: </span>
           {reason}

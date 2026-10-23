@@ -46,6 +46,20 @@ export function IssueDetailPage() {
           <IssueStatusBadge status={issue.status} />
           <span className="muted">{issue.statusAsOf ? `Status as of ${formatDate(issue.statusAsOf)}` : 'No status date recorded'}</span>
         </div>
+        <dl className="ledger" aria-label="Linked records">
+          <div className="ledger__item">
+            <dt>Meetings</dt>
+            <dd className="num">{meetings.length}</dd>
+          </div>
+          <div className="ledger__item">
+            <dt>Documents</dt>
+            <dd className="num">{documents.length}</dd>
+          </div>
+          <div className="ledger__item">
+            <dt>Official sources</dt>
+            <dd className="num">{issue.sourceUrls.length}</dd>
+          </div>
+        </dl>
       </header>
       <MockNotice record={issue} kind="issue" />
 

@@ -12,6 +12,7 @@ import { isMock } from '../components/MockBadge';
 import { IssueStatusBadge } from '../components/StatusBadge';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 import { usePlace, usePlaceHref, useRecordSources } from '../services/placeContext';
+import { BarTable, countBy, countStatuses, Figure, MeetingStrip, SourceLine, StatusBar, statusSentence } from '../components/DataDesk';
 
 /**
  * Upcoming = not held or canceled, and dated today or later. A "scheduled" meeting with no
@@ -162,55 +163,120 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
   const matches = filterIssues(issues, filters);
 
   return (
-    <div className="citywide-grid">
-      <section className="section" aria-labelledby="issues-heading">
-        <div className="section__head">
-          <h2 id="issues-heading" ref={issuesHeading} tabIndex={-1}>
-            Issues
+    <>
+      <Glance meetings={meetings} issues={issues} documents={documents} topic={filters.topic} onTopic={(t) => setFilter('topic', t === filters.topic ? '' : t)} />
+      <div className="citywide-grid">
+        <section className="section" aria-labelledby="issues-heading">
+          <div className="section__head">
+            <h2 id="issues-heading" ref={issuesHeading} tabIndex={-1}>
+              Issues
+            </h2>
+            <p className="section__source">From the {sources}</p>
+            <Link to={href('/near-me')} className="text-link">
+              See them on the map
+            </Link>
+          </div>
+
+          <IssueFilters issues={issues} filters={filters} onChange={setFilter} onClear={clearFilters} />
+          <p className="results-count" role="status" aria-live="polite">
+            {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
+          </p>
+
+          {filtering ? (
+            matches.length ? (
+              <IssueList issues={matches} headingLevel={3} />
+            ) : (
+              <EmptyState
+                title="No issues match these filters."
+                action={
+                  <button type="button" className="button button--ghost" onClick={clearFilters}>
+                    Clear filters
+                  </button>
+                }
+              >
+                <p>Try a different word, or choose “All topics”, “Any status”, and “Any time”.</p>
+              </EmptyState>
+            )
+          ) : (
+            <IssueList issues={byImportance(issues)} headingLevel={3} />
+          )}
+        </section>
+
+        <aside className="section section--meetings" aria-labelledby="meetings-heading">
+          <h2 id="meetings-heading" ref={meetingsHeading} tabIndex={-1}>
+            Meetings
           </h2>
           <p className="section__source">From the {sources}</p>
-          <Link to={href('/near-me')} className="text-link">
-            See them on the map
+          {upcoming.length > 0 && <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="" />}
+          <MeetingGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} empty="No past meetings in this dataset." />
+          <Link to={href('/archive')} className="text-link">
+            Browse all meetings and documents
           </Link>
-        </div>
+        </aside>
+      </div>
+    </>
+  );
+}
 
-        <IssueFilters issues={issues} filters={filters} onChange={setFilter} onClear={clearFilters} />
-        <p className="results-count" role="status" aria-live="polite">
-          {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
-        </p>
-
-        {filtering ? (
-          matches.length ? (
-            <IssueList issues={matches} headingLevel={3} />
-          ) : (
-            <EmptyState
-              title="No issues match these filters."
-              action={
-                <button type="button" className="button button--ghost" onClick={clearFilters}>
-                  Clear filters
-                </button>
-              }
-            >
-              <p>Try a different word, or choose “All topics”, “Any status”, and “Any time”.</p>
-            </EmptyState>
-          )
-        ) : (
-          <IssueList issues={byImportance(issues)} headingLevel={3} />
-        )}
-      </section>
-
-      <aside className="section section--meetings" aria-labelledby="meetings-heading">
-        <h2 id="meetings-heading" ref={meetingsHeading} tabIndex={-1}>
-          Meetings
+/**
+ * "The record in numbers": status, topic, and meeting figures counted from the records this page
+ * loaded. Choosing a topic bar filters the issue list below (the results count announces it).
+ */
+function Glance({
+  meetings,
+  issues,
+  documents,
+  topic,
+  onTopic,
+}: {
+  meetings: Meeting[];
+  issues: Issue[];
+  documents: CivicDocument[];
+  topic: string;
+  onTopic: (topic: string) => void;
+}) {
+  const sources = useRecordSources();
+  const sample = [...meetings, ...issues, ...documents].some(isMock);
+  const checked = sample ? null : lastChecked(meetings);
+  const statuses = countStatuses(issues);
+  const topics = countBy(issues, (i) => i.category);
+  const source = <SourceLine source={sources} checked={checked} sample={sample} />;
+  if (!issues.length) return null;
+  return (
+    <section className="glance" aria-labelledby="glance-title">
+      <div className="glance__inner">
+        <h2 id="glance-title" className="glance__title">
+          The record in numbers
         </h2>
-        <p className="section__source">From the {sources}</p>
-        {upcoming.length > 0 && <MeetingGroup title="Coming up" meetings={upcoming} documents={documents} empty="" />}
-        <MeetingGroup title="Recent" meetings={recent.slice(0, 4)} documents={documents} empty="No past meetings in this dataset." />
-        <Link to={href('/archive')} className="text-link">
-          Browse all meetings and documents
-        </Link>
-      </aside>
-    </div>
+        <p className="glance__lead">
+          {issues.length} {issues.length === 1 ? 'item' : 'items'} on record: {statusSentence(statuses)}.
+        </p>
+        <p className="glance__note">Counts cover the items collected in this app, not every decision the county made.</p>
+        <div className="glance__grid">
+          <Figure id="fig-status" title="Where each item stands" source={source} className="figure--wide">
+            <StatusBar counts={statuses} label="Items by current status" />
+          </Figure>
+          <Figure id="fig-topics" title="Items by topic" source={source}>
+            <p className="figure__hint">Choose a topic to filter the list below.</p>
+            <BarTable
+              caption="Items by topic"
+              unit="Items"
+              rows={topics.map((t) => ({
+                key: t.key,
+                label: humanize(t.key),
+                value: t.count,
+                pressed: topic === t.key,
+                onSelect: () => onTopic(t.key),
+                actionLabel: `: ${t.count} ${t.count === 1 ? 'item' : 'items'}`,
+              }))}
+            />
+          </Figure>
+          <Figure id="fig-meetings" title="When the board met" source={source}>
+            <MeetingStrip meetings={meetings} />
+          </Figure>
+        </div>
+      </div>
+    </section>
   );
 }
 

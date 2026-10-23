@@ -51,8 +51,8 @@ export function Layout() {
         <div className="masthead__inner">
           <NavLink to="/" className="brand" aria-label="Georgia Civic, choose a location" end>
             <svg className="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
-              <rect width="32" height="32" rx="7" />
-              <path d="M8 24V14l8-6 8 6v10h-5v-6h-6v6z" />
+              <rect className="brand__tile" width="32" height="32" rx="3" />
+              <path className="brand__bars" d="M7 25V17h4v8zm7 0V11h4v14zm7 0V7h4v18z" />
             </svg>
             <span className="brand__text">
               <span className="brand__name">Georgia Civic</span>

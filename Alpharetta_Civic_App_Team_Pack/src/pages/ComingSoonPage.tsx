@@ -5,12 +5,14 @@ import {
   countiesOf,
   countyNames,
   countyPath,
+  COUNTIES,
   municipalitiesInCounty,
   type County,
   type Jurisdiction,
   type Municipality,
 } from '../services/jurisdictions';
 import { usePageTitle } from '../services/usePageTitle';
+import { CoverageGrid } from '../components/DataDesk';
 
 const joinNames = (names: string[]) =>
   names.length < 3 ? names.join(' and ') : `${names.slice(0, -1).join(', ')}, and ${names[names.length - 1]}`;
@@ -61,6 +63,12 @@ export function ComingSoon({ place }: { place: Jurisdiction }) {
                 Change location
               </Link>
             </div>
+          </div>
+          <div className="soon__figure">
+            <p className="soon__figure-title">
+              {covered.length} of {COUNTIES.length} Georgia counties have records so far
+            </p>
+            <CoverageGrid counties={COUNTIES} highlightId={place.level === 'county' ? place.id : undefined} />
           </div>
         </div>
       </section>

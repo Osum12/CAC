@@ -10,7 +10,8 @@ import { usePageTitle } from '../services/usePageTitle';
 import { MockBadge, isMock } from '../components/MockBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import type { CivicDocument, Meeting } from '../types/civic';
-import { usePlaceHref } from '../services/placeContext';
+import { usePlaceHref, useRecordSources } from '../services/placeContext';
+import { BarTable, Figure, SourceLine } from '../components/DataDesk';
 
 export type ArchiveFilter = 'all' | 'videos' | 'agendas' | 'documents';
 
@@ -82,11 +83,14 @@ export function ArchivePage() {
 
   return (
     <div className="page">
-      <header className="page-header">
-        <h1>Archive</h1>
-        <p className="page-header__lede">
-          Meetings, recordings, agendas, and supporting documents, each linked to the original file. This is a selected set, not the county’s complete archive.
-        </p>
+      <header className="page-header page-header--with-figure">
+        <div className="page-header__text">
+          <h1>Archive</h1>
+          <p className="page-header__lede">
+            Meetings, recordings, agendas, and supporting documents, each linked to the original file. This is a selected set, not the county’s complete archive.
+          </p>
+        </div>
+        {state.status === 'ready' && <ArchiveByMonth meetings={state.data[0]} documents={state.data[1]} />}
       </header>
 
       <form className="filters filters--compact" role="search" aria-label="Search the archive" onSubmit={(e) => e.preventDefault()}>
@@ -150,6 +154,26 @@ export function ArchivePage() {
         </>
       )}
     </div>
+  );
+}
+
+/** Records per month across the whole archive (by meeting date), with the counts as text. */
+function ArchiveByMonth({ meetings, documents }: { meetings: Meeting[]; documents: CivicDocument[] }) {
+  const sources = useRecordSources();
+  const entries = buildArchiveEntries(meetings, documents).filter((e) => e.date);
+  if (!entries.length) return null;
+  const sample = [...meetings, ...documents].some(isMock);
+  const checked = sample ? null : (meetings.map((m) => m.lastVerifiedAt?.slice(0, 10) ?? '').sort().at(-1) || null);
+  const months = [...new Set(entries.map((e) => e.date!.slice(0, 7)))].sort();
+  const rows = months.map((m) => ({
+    key: m,
+    label: new Date(`${m}-01T12:00:00`).toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+    value: entries.filter((e) => e.date!.startsWith(m)).length,
+  }));
+  return (
+    <Figure id="fig-archive" title={`${entries.length} dated records, by month`} className="figure--header" source={<SourceLine source={sources} checked={checked} sample={sample} />}>
+      <BarTable rows={rows} caption="Archive records by month" unit="Records" />
+    </Figure>
   );
 }
 

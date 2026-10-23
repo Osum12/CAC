@@ -11,6 +11,7 @@ import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import { BackLink } from '../components/BackLink';
 import { usePlaceHref } from '../services/placeContext';
+import { countStatuses, StatusBar, statusSentence } from '../components/DataDesk';
 
 export function MeetingDetailPage() {
   const href = usePlaceHref();
@@ -75,6 +76,14 @@ export function MeetingDetailPage() {
 
           <section aria-labelledby="m-issues-h">
             <h2 id="m-issues-h">Issues on the agenda</h2>
+            {issues.length > 0 && (
+              <div className="agenda-figure">
+                <p className="agenda-figure__lead">
+                  {issues.length} {issues.length === 1 ? 'item' : 'items'} in this app are linked to this meeting. Their current status: {statusSentence(countStatuses(issues))}.
+                </p>
+                <StatusBar counts={countStatuses(issues)} label="Items from this meeting by current status" />
+              </div>
+            )}
             {issues.length ? (
               <ul className="issue-list">
                 {issues.map((i) => (

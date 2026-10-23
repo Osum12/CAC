@@ -1,5 +1,6 @@
 import { LocationSelector } from '../components/LocationSelector';
-import { COUNTIES, DIRECTORY_SOURCE, MUNICIPALITIES } from '../services/jurisdictions';
+import { COUNTIES, DIRECTORY_SOURCE, MUNICIPALITIES, availableCounties } from '../services/jurisdictions';
+import { CoverageGrid } from '../components/DataDesk';
 import { usePageTitle } from '../services/usePageTitle';
 
 // What a visitor does here, in order. Describes the app, not any place's records.
@@ -38,6 +39,8 @@ export function GeorgiaHomePage() {
         </div>
       </section>
 
+      <Coverage />
+
       <section className="steps" aria-labelledby="steps-title">
         <div className="steps__inner">
           <h2 id="steps-title" className="steps__title">
@@ -63,5 +66,33 @@ export function GeorgiaHomePage() {
         . Places incorporated since 2020 aren’t listed yet.
       </p>
     </div>
+  );
+}
+
+/** How much of Georgia has records, counted from the location directory and coverage settings. */
+function Coverage() {
+  const covered = availableCounties();
+  const names = covered.map((c) => c.name);
+  return (
+    <section className="coverage-band" aria-labelledby="coverage-title">
+      <div className="coverage-band__inner">
+        <div className="coverage-band__text">
+          <h2 id="coverage-title" className="coverage-band__title">
+            Records by county
+          </h2>
+          <p className="coverage-band__lead">
+            <span className="coverage-band__figure">
+              {covered.length} of {COUNTIES.length}
+            </span>{' '}
+            Georgia counties have civic records here so far{names.length ? ` (${names.join(', ')})` : ''}.
+          </p>
+          <p className="coverage-band__note">
+            Every other county, and each of the {MUNICIPALITIES.length} cities and towns, has a Coming soon page until its records are checked against
+            official sources. Each square is one county, in alphabetical order.
+          </p>
+        </div>
+        <CoverageGrid counties={COUNTIES} />
+      </div>
+    </section>
   );
 }
