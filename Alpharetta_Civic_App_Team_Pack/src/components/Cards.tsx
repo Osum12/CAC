@@ -6,6 +6,7 @@ import { MockBadge, isMock } from './MockBadge';
 import { ArrowLabel } from './SourceAction';
 import { IssueStatusBadge, MeetingStatusBadge } from './StatusBadge';
 import { usePlaceHref } from '../services/placeContext';
+import { nb } from './nb';
 
 // Cards use a "stretched link": the title link's click area covers the whole card,
 // so screen readers hear one clear link per card. Secondary actions (map, source,
@@ -48,7 +49,7 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
           <dt>Status</dt>
           <dd>
             <IssueStatusBadge status={issue.status} />
-            <span className="facts__note">{issue.statusAsOf ? ` as of ${formatDate(issue.statusAsOf)}` : ' (no date recorded)'}</span>
+            <span className="facts__note">{issue.statusAsOf ? ` as of ${nb(formatDate(issue.statusAsOf))}` : ' (no date recorded)'}</span>
           </dd>
         </div>
         <div className={`facts__row${issue.location?.label ? '' : ' facts__row--no-place'}`}>
@@ -114,7 +115,7 @@ export function MeetingCard({
           <div className="facts__row">
             <dt>When</dt>
             <dd>
-              <time dateTime={meeting.date ?? undefined}>{formatCompactDate(meeting.date)}</time>
+              <time dateTime={meeting.date ?? undefined}>{nb(formatCompactDate(meeting.date))}</time>
               {time ? `, ${time}` : ''}
             </dd>
           </div>
@@ -155,7 +156,7 @@ export function DocumentCard({ document, headingLevel = 3 }: { document: CivicDo
           {document.title}
         </Link>
       </H>
-      {document.publishedDate && <p className="card__when">Published {formatDate(document.publishedDate)}</p>}
+      {document.publishedDate && <p className="card__when">Published {nb(formatDate(document.publishedDate))}</p>}
       <div className="card__actions">
         {url ? (
           <ExternalAction href={url} context={document.title}>

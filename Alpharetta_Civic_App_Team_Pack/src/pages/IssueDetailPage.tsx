@@ -13,6 +13,7 @@ import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import type { Issue, Meeting } from '../types/civic';
 import { usePlaceHref } from '../services/placeContext';
+import { nb } from '../components/nb';
 
 export function IssueDetailPage() {
   const href = usePlaceHref();
@@ -44,7 +45,7 @@ export function IssueDetailPage() {
         <h1 className="detail__title">{issue.title}</h1>
         <div className="detail__status">
           <IssueStatusBadge status={issue.status} />
-          <span className="muted">{issue.statusAsOf ? `Status as of ${formatDate(issue.statusAsOf)}` : 'No status date recorded'}</span>
+          <span className="muted">{issue.statusAsOf ? `Status as of ${nb(formatDate(issue.statusAsOf))}` : 'No status date recorded'}</span>
         </div>
       </header>
       <MockNotice record={issue} kind="issue" />
@@ -127,7 +128,7 @@ function MeetingTimeline({ meetings }: { meetings: Meeting[] }) {
         return (
           <li key={m.id} className={`timeline__item timeline__item--${m.status === 'scheduled' ? 'upcoming' : 'past'}`}>
             <p className="timeline__date">
-              <time dateTime={m.date ?? undefined}>{formatDate(m.date)}</time>
+              <time dateTime={m.date ?? undefined}>{nb(formatDate(m.date))}</time>
               {time ? ` at ${time}` : ''}
             </p>
             <p className="timeline__title">

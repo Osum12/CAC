@@ -13,6 +13,7 @@ import { IssueStatusBadge } from '../components/StatusBadge';
 import { Ripples } from '../components/Ripples';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 import { usePlace, usePlaceHref, useRecordSources } from '../services/placeContext';
+import { nb } from '../components/nb';
 
 /**
  * Upcoming = not held or canceled, and dated today or later. A "scheduled" meeting with no
@@ -108,7 +109,7 @@ export function CitywidePage() {
               <p className="hero__note">
                 {anyMock
                   ? 'These records include sample data and are not city totals.'
-                  : `A selection of recent items, not every decision.${checked ? ` Last checked against official county records on ${formatDate(checked)}.` : ''}`}
+                  : `A selection of recent items, not every decision.${checked ? ` Last checked against official county records on ${nb(formatDate(checked))}.` : ''}`}
               </p>
             )}
           </div>
@@ -320,11 +321,16 @@ function PageJumps({ issues, meetingCount }: { issues: Issue[]; meetingCount: nu
     const el = document.getElementById(id);
     if (!el) return;
     e.preventDefault();
+    // Keep the address in step (so the section can be linked), without dropping the search
+    // and filter params or adding a history entry for every jump.
+    window.history.replaceState(window.history.state, '', `${window.location.pathname}${window.location.search}#${id}`);
     const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     el.scrollIntoView?.({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
     el.focus({ preventScroll: true });
   };
   const present = GROUPS.map((g) => ({ g, n: issues.filter((i) => groupOf(i) === g).length })).filter((x) => x.n > 0);
+  // With one group (or none) visible, the row would only repeat the group heading.
+  if (present.length < 2) return null;
   return (
     <nav className="jumps" aria-label="On this page">
       <ul className="jumps__list">
@@ -413,7 +419,7 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
         <div className="docket__block">
           <p className="docket__kicker">Next at {meetingPlace}</p>
           <p className="docket__date">
-            <time dateTime={next.date ?? undefined}>{formatWeekdayDate(next.date)}</time>
+            <time dateTime={next.date ?? undefined}>{nb(formatWeekdayDate(next.date))}</time>
             {next.startTime && <span className="docket__time">{formatTime(next.startTime)}</span>}
           </p>
           <p className="docket__title">
@@ -445,7 +451,7 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
             <Link to={href(`/issues/${encodeURIComponent(decided.id)}`)}>{decided.title}</Link>
           </p>
           <p className="docket__meta">
-            <IssueStatusBadge status={decided.status} /> on {formatDate(decided.statusAsOf)}
+            <IssueStatusBadge status={decided.status} /> on {nb(formatDate(decided.statusAsOf))}
           </p>
         </div>
       )}

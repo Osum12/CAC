@@ -10,6 +10,7 @@ import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { NotFound } from './NotFoundPage';
 import { BackLink } from '../components/BackLink';
 import { usePlaceHref } from '../services/placeContext';
+import { nb } from '../components/nb';
 
 export function DocumentDetailPage() {
   const href = usePlaceHref();
@@ -40,7 +41,7 @@ export function DocumentDetailPage() {
           {isMock(doc) && <MockBadge record={doc} size="lg" />}
         </div>
         <h1 className="detail__title">{doc.title}</h1>
-        {doc.publishedDate && <p className="muted">Published {formatDate(doc.publishedDate)}</p>}
+        {doc.publishedDate && <p className="muted">Published {nb(formatDate(doc.publishedDate))}</p>}
       </header>
       <MockNotice record={doc} kind="document" />
 

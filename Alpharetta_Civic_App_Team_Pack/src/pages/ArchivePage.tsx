@@ -206,7 +206,11 @@ function ArchiveRow({ entry }: { entry: ArchiveEntry }) {
           ) : entry.record.meetingId && entry.date !== entry.record.publishedDate ? (
             <>
               For the <time dateTime={entry.date ?? undefined}>{formatDate(entry.date)}</time> meeting.
-              {entry.record.publishedDate ? ` Published ${formatDate(entry.record.publishedDate)}.` : ''}
+              {entry.record.publishedDate && (
+                <>
+                  {' '}Published <span className="nowrap">{formatDate(entry.record.publishedDate)}</span>.
+                </>
+              )}
             </>
           ) : (
             <>

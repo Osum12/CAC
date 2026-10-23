@@ -3191,21 +3191,59 @@ dd {
 }
 
 /* ---------- Home at tablet widths ---------- */
-@media (min-width: 768px) {
+@media (min-width: 600px) {
   .steps__list {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
+@media (min-width: 600px) and (max-width: 767px) {
+  .steps__name {
+    font-size: 1.25rem;
+  }
+}
+/* Tablets: a small porch light tucked into the top-right corner, clear of the headline. */
 @media (min-width: 600px) and (max-width: 899px) {
-  .hero--state .ripples,
-  .soon .ripples {
-    width: 320px;
-    height: 320px;
-    right: -110px;
-    top: -215px;
+  .hero--state .ripples {
+    width: 170px;
+    height: 170px;
+    right: -16px;
+    top: -132px;
   }
 }
 
 .page:has(> .state--page) {
   padding-bottom: 0;
+}
+
+/* Dates never split across lines. */
+time {
+  white-space: nowrap;
+}
+
+/* Countywide: the count line sits on the same rhythm as the groups below it. */
+.citywide-grid .results-count {
+  margin-bottom: 0;
+}
+.issue-groups {
+  margin-top: 32px;
+}
+
+/* Dark mode: alpha marigold over navy turns olive, so the porch light gets solid,
+   crisp rings instead of a translucent halo. */
+@media (prefers-color-scheme: dark) {
+  .ripples__dot {
+    box-shadow:
+      0 0 0 5px var(--band),
+      0 0 0 7px #f2b33d,
+      0 0 0 13px var(--band),
+      0 0 0 14.5px rgb(242 179 61 / 0.45);
+  }
+  .hero__place::before {
+    box-shadow:
+      0 0 0 3px var(--band),
+      0 0 0 4.5px #f2b33d;
+  }
+  .state--page::after {
+    background: radial-gradient(circle, #f2b33d 0 12px, var(--band) 12.5px 17px, #f2b33d 17.5px 19px, transparent 19.5px 33%, var(--ring) 33.3% 33.9%, transparent 34.3%);
+  }
 }

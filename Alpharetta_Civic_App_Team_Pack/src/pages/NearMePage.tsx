@@ -147,7 +147,12 @@ export function NearMePage() {
                 {points.length ? `Sorted by distance from ${origin.label}` : 'Countywide items, without a map location'}
               </h2>
               <div className="feed-groups" ref={listRef}>
-                {located.length > 0 && <ol className="feed">{located.map(item)}</ol>}
+                {located.length > 0 && (
+                  <>
+                    <p className="feed__intro">Distances are straight lines to each item’s map point. They are not a claim that an issue affects that spot.</p>
+                    <ol className="feed">{located.map(item)}</ol>
+                  </>
+                )}
                 {unlocated.length > 0 && (
                   <>
                     {located.length > 0 && <h3 className="feed__group">Countywide items</h3>}
@@ -194,7 +199,8 @@ function FeedItem({ ranked, number, selected, onShowOnMap }: { ranked: RankedIss
         {coords && (
           <p className="feed-item__reason">
             <span className="visually-hidden">Why it’s listed: </span>
-            {reason}
+            {/* The "distance only" caveat is said once above the list. */}
+            {reason.replace(/\s*This is distance only, not a claim that the issue affects this spot\.$/, '')}
           </p>
         )}
         <div className="card__foot">
