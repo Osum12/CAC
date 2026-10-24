@@ -304,8 +304,8 @@ ol {
   width: 48px;
   height: 48px;
   padding: 6px 2.5px 2.5px 6px;
-  border: 1px solid var(--frame-hair, rgb(22 27 61 / 0.16));
-  border-radius: 3px;
+  border: 1.5px solid var(--heading);
+  border-radius: 4px;
   flex: none;
   position: relative;
 }
@@ -3766,11 +3766,6 @@ time {
   background: var(--surface);
   border-bottom-color: var(--line);
 }
-:root[data-theme='dark'] .brand__mark {
-  --frame-hair: rgb(157 184 255 / 0.22);
-  --frame-ink: var(--link);
-  --frame-hover: var(--heading);
-}
 /* Rings and the compass in the hero */
 :root[data-theme='dark'] .ripples__ring,
 :root[data-theme='dark'] .ripples__ring:nth-child(1),
@@ -3897,91 +3892,32 @@ time {
   }
 }
 
-/* ---------- Logo frame: a viewfinder ----------
-   Four corner brackets sit just outside a faint hairline, with small reticle ticks at the
-   middle of each side, like the focus marks in a camera lens. On load the brackets close in
-   from wide and lock with a slight overshoot; pointing at the logo opens them and draws the
-   ticks in, as if the lens were finding focus. */
-.brand__mark::before,
-.brand__mark::after {
-  --c: var(--frame-ink, var(--heading));
-  content: '';
-  position: absolute;
-  pointer-events: none;
-  background-repeat: no-repeat;
-}
-.brand__mark::before {
-  --t: 2px; /* bracket weight */
-  --l: 11px; /* bracket length */
-  inset: -4px;
-  background-image:
-    linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c)),
-    linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c)),
-    linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c)),
-    linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c));
-  background-position: top left, top left, top right, top right, bottom left, bottom left, bottom right, bottom right;
-  background-size:
-    var(--l) var(--t), var(--t) var(--l), var(--l) var(--t), var(--t) var(--l),
-    var(--l) var(--t), var(--t) var(--l), var(--l) var(--t), var(--t) var(--l);
-  animation: focus-lock 0.7s var(--ease-out) 0.15s backwards;
+/* ---------- Logo frame: an offset print block ----------
+   A tile with a deep-navy outline and a solid block offset behind it, like an overprinted
+   stamp. Pointing at the logo presses the tile into its block. */
+.brand__mark {
+  background: var(--surface);
+  border-color: var(--heading);
+  border-width: 1.5px;
+  border-radius: 4px;
+  box-shadow: 4px 4px 0 var(--primary);
   transition:
-    inset 0.25s var(--ease-out),
-    --c 0.25s;
+    transform 0.16s var(--ease),
+    box-shadow 0.16s var(--ease);
 }
-/* Reticle ticks at the middle of each side, sitting on the hairline. */
-.brand__mark::after {
-  --k: 4px; /* tick length */
-  inset: -3px;
-  background-image:
-    linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c)),
-    linear-gradient(var(--c), var(--c)), linear-gradient(var(--c), var(--c));
-  background-position: top center, bottom center, left center, right center;
-  background-size: 1.5px var(--k), 1.5px var(--k), var(--k) 1.5px, var(--k) 1.5px;
-  opacity: 0.55;
-  transition:
-    --k 0.25s var(--ease-out),
-    opacity 0.25s;
+.brand:hover .brand__mark {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--primary);
 }
-.brand:hover .brand__mark::before,
-.brand:focus-visible .brand__mark::before {
-  inset: -6px;
-  --c: var(--frame-hover, var(--primary));
+.brand:active .brand__mark {
+  transform: translate(4px, 4px);
+  box-shadow: 0 0 0 var(--primary);
 }
-.brand:hover .brand__mark::after,
-.brand:focus-visible .brand__mark::after {
-  --k: 7px;
-  opacity: 1;
-  --c: var(--frame-hover, var(--primary));
-}
-@property --k {
-  syntax: '<length>';
-  inherits: false;
-  initial-value: 4px;
-}
-@keyframes focus-lock {
-  0% {
-    inset: -12px;
-    opacity: 0;
-  }
-  60% {
-    inset: -2.5px;
-    opacity: 1;
-  }
-  100% {
-    inset: -4px;
-    opacity: 1;
-  }
-}
-@media (max-width: 599px) {
-  .brand__mark::before {
-    --l: 9px;
-    inset: -3px;
-  }
+:root[data-theme='dark'] .brand__mark {
+  background: var(--bg);
 }
 @media (prefers-reduced-motion: reduce) {
-  .brand__mark::before,
-  .brand__mark::after {
-    animation: none;
+  .brand__mark {
     transition: none;
   }
 }
