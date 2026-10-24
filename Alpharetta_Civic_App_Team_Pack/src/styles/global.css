@@ -297,23 +297,36 @@ ol {
   color: var(--heading);
 }
 .brand__mark {
+  display: block;
   width: 40px;
   height: 40px;
   flex: none;
+}
+.brand__mark img {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 .brand__text {
   display: grid;
   /* One line of type, centred on the logo: no extra leading above or below. */
   line-height: 1;
 }
+/* The wordmark: Newsreader, an editorial serif. "Council" in navy, "Lens" in deep champagne
+   (4.8:1 on white). The capitals centre on the lens, not on the whole mark with its handle. */
 .brand__name {
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.375rem;
-  letter-spacing: -0.015em;
-  /* Optical centring: the capitals sit on the logo's centre line. */
-  position: relative;
-  top: 0.07em;
+  font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  font-variation-settings: 'opsz' 36;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.brand__council {
+  color: #0b1e4d;
+}
+.brand__lens {
+  color: #8c6d33;
 }
 
 .placebar {
@@ -3680,4 +3693,11 @@ time {
 /* The page-margin linework would double up with the moving layer. */
 .main:has(.atlas-backdrop)::before {
   display: none;
+}
+
+/* Wider screens: the wordmark steps up to sit with the 40px mark. */
+@media (min-width: 900px) {
+  .brand__name {
+    font-size: 1.625rem;
+  }
 }

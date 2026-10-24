@@ -67,17 +67,15 @@ export function Layout() {
       <header className="masthead" ref={headerRef}>
         <div className="masthead__inner">
           <NavLink to="/" className="brand" aria-label="Council Lens, choose a location" end>
-            <svg className="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
-              <rect width="32" height="32" rx="3" fill="#2f3a8f"/>
-              <circle cx="13.5" cy="13.5" r="8.6" fill="#4655c4"/>
-              <path d="M13.5 8.2 18.6 11H8.4z" fill="#fbf1dc"/>
-              <path d="M9.6 12h1.6v5H9.6zM12.7 12h1.6v5h-1.6zM15.8 12h1.6v5h-1.6z" fill="#fbf1dc"/>
-              <path d="M8.4 17.6h10.2v1.4H8.4z" fill="#fbf1dc"/>
-              <circle cx="13.5" cy="13.5" r="8.6" fill="none" stroke="#fbf1dc" strokeWidth="2.2"/>
-              <path d="M19.8 19.8 26.5 26.5" stroke="#fbf1dc" strokeWidth="3.4"/>
-            </svg>
+            {/* Logo files are generated from one geometry (public/brand). Phones get the small-size cut. */}
+            <picture className="brand__mark">
+              <source media="(max-width: 599px)" srcSet="/brand/council-lens-symbol-small.svg" />
+              <img src="/brand/council-lens-symbol.svg" alt="" width="40" height="40" />
+            </picture>
             <span className="brand__text">
-              <span className="brand__name">Council Lens</span>
+              <span className="brand__name">
+                <span className="brand__council">Council</span> <span className="brand__lens">Lens</span>
+              </span>
             </span>
           </NavLink>
           {place && (
