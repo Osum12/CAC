@@ -3922,46 +3922,76 @@ time {
   }
 }
 
-/* ---------- Header buttons: a dock-style hover ----------
-   Pointing at a section link (or the theme switch beside them) grows it a little and eases
-   the others back, like a dock; moving off returns them all to normal. Change, on its own,
-   simply grows. Transforms only, so nothing else on the page shifts. */
-.primary-nav > .primary-nav__link,
-.primary-nav > .theme-toggle,
-.placebar__change {
+/* ---------- Header buttons: grow on hover ----------
+   The button under the cursor really grows (wider padding, larger label), so the buttons
+   beside it slide over to make room; moving off returns everything. Heights stay fixed so
+   the header never jumps. */
+.primary-nav__link,
+.placebar__change,
+.theme-toggle {
   transition:
-    transform 0.22s cubic-bezier(0.34, 1.4, 0.64, 1),
+    padding 0.24s cubic-bezier(0.34, 1.3, 0.64, 1),
+    font-size 0.24s cubic-bezier(0.34, 1.3, 0.64, 1),
+    width 0.24s cubic-bezier(0.34, 1.3, 0.64, 1),
     background-color 0.18s var(--ease),
     color 0.18s var(--ease),
     border-color 0.18s var(--ease);
 }
-.primary-nav:has(> :hover) > :not(:hover) {
-  transform: scale(0.92);
-}
-.primary-nav > .primary-nav__link:hover,
-.primary-nav > .theme-toggle:hover {
-  transform: scale(1.1);
+.primary-nav__link:hover {
+  padding-left: 26px;
+  padding-right: 26px;
+  font-size: 1.1875rem;
 }
 .placebar__change:hover {
   text-decoration: none;
-  transform: scale(1.08);
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 1.0625rem;
 }
-.masthead__inner > .theme-toggle:hover {
-  transform: scale(1.1);
-  transition: transform 0.22s cubic-bezier(0.34, 1.4, 0.64, 1);
+.theme-toggle:hover {
+  width: 56px;
+}
+.theme-toggle svg {
+  transition: transform 0.3s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.theme-toggle:hover svg {
+  transform: scale(1.2);
+}
+@media (max-width: 599px) {
+  /* Phones: the row is full, so the growth is gentler. */
+  .primary-nav__link:hover {
+    padding-left: 12px;
+    padding-right: 12px;
+    font-size: 1.0625rem;
+  }
+  .theme-toggle:hover {
+    width: 46px;
+  }
+}
+@media (max-width: 399px) {
+  .primary-nav__link:hover {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  .theme-toggle:hover {
+    width: 40px;
+  }
+}
+@media (max-width: 359px) {
+  .primary-nav__link:hover {
+    padding-left: 7px;
+    padding-right: 7px;
+    font-size: 1rem;
+  }
+  .primary-nav > .theme-toggle:hover {
+    width: 36px;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .primary-nav > .primary-nav__link,
-  .primary-nav > .theme-toggle,
+  .primary-nav__link,
   .placebar__change,
-  .masthead__inner > .theme-toggle {
+  .theme-toggle,
+  .theme-toggle svg {
     transition: none;
-  }
-  .primary-nav:has(> :hover) > :not(:hover),
-  .primary-nav > .primary-nav__link:hover,
-  .primary-nav > .theme-toggle:hover,
-  .placebar__change:hover,
-  .masthead__inner > .theme-toggle:hover {
-    transform: none;
   }
 }
