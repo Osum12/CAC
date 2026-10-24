@@ -286,7 +286,8 @@ ol {
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  /* Matches the lockup: the name starts just past the handle, ~10px clear of the lens rim. */
+  gap: 2px;
   color: var(--heading);
   text-decoration: none;
   border-radius: var(--r-small);
@@ -298,8 +299,8 @@ ol {
 }
 .brand__mark {
   display: block;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   flex: none;
 }
 .brand__mark img {
@@ -312,21 +313,25 @@ ol {
   /* One line of type, centred on the logo: no extra leading above or below. */
   line-height: 1;
 }
-/* The wordmark: Newsreader, an editorial serif, in the site palette: "Council" in the heading
-   navy, "Lens" in the primary indigo. The capitals centre on the lens, not on the whole mark. */
+/* The wordmark: Fraunces (SIL OFL), a modern editorial serif with sharp terminals, set in the
+   heading navy. Its capitals are 55% of the lens diameter and centre on the lens, not on the
+   whole mark with its handle. */
 .brand__name {
-  font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
+  font-family: 'Fraunces', Georgia, serif;
   font-weight: 600;
-  font-size: 1.5rem;
-  font-variation-settings: 'opsz' 36;
+  font-size: 1.4375rem;
+  font-variation-settings: 'opsz' 72, 'SOFT' 0, 'WONK' 0;
   letter-spacing: -0.01em;
   white-space: nowrap;
+  /* Optical alignment: lift the capitals onto the lens centre (the handle sits below it). */
+  position: relative;
+  top: -0.135em;
 }
 .brand__council {
   color: var(--heading);
 }
 .brand__lens {
-  color: var(--primary);
+  color: var(--heading);
 }
 
 .placebar {
@@ -2283,6 +2288,9 @@ select[aria-invalid='true'] {
     width: 36px;
     height: 36px;
   }
+  .brand__name {
+    font-size: 1.1875rem;
+  }
   /* Phones: two compact rows. Brand and place on the first, the three sections on the second. */
   .masthead__inner:has(.placebar) .brand {
     margin-right: 0;
@@ -3695,9 +3703,3 @@ time {
   display: none;
 }
 
-/* Wider screens: the wordmark steps up to sit with the 40px mark. */
-@media (min-width: 900px) {
-  .brand__name {
-    font-size: 1.625rem;
-  }
-}

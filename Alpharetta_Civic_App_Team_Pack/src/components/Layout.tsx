@@ -70,7 +70,7 @@ export function Layout() {
             {/* Logo files are generated from one geometry (public/brand). Phones get the small-size cut. */}
             <picture className="brand__mark">
               <source media="(max-width: 599px)" srcSet="/brand/council-lens-symbol-small.svg" />
-              <img src="/brand/council-lens-symbol.svg" alt="" width="40" height="40" />
+              <img src="/brand/council-lens-symbol.svg" alt="" width="44" height="44" />
             </picture>
             <span className="brand__text">
               <span className="brand__name">
