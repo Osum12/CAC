@@ -229,20 +229,21 @@ describe('With the real curated records in /data', () => {
   it('puts approximate pins only on items with a street address from the county documents', async () => {
     renderAt('/near-me');
     const markers = await screen.findByRole('list', { name: 'map markers' });
-    expect(within(markers).getAllByRole('listitem')).toHaveLength(125);
-    expect(within(markers).getByRole('button', { name: /Modernizing the jail’s elevators/ })).toBeInTheDocument();
+    // Near Me shows the 20 nearest of the 125 mapped issues, and links to the full list.
+    expect(within(markers).getAllByRole('listitem')).toHaveLength(20);
+    expect(screen.getByRole('link', { name: 'See all 1,303 issues on the Countywide page' })).toHaveAttribute('href', '/county/fulton');
   });
 
   it('filters Near Me by category, narrowing both the list and the pins', async () => {
     renderAt('/near-me');
     const select = await screen.findByLabelText('Category');
-    expect(screen.getByRole('status')).toHaveTextContent('1,303 issues, 125 on the map');
+    expect(screen.getByRole('status')).toHaveTextContent('Nearest 20 of 1,303 issues, 20 on the map');
     await userEvent.selectOptions(select, 'housing_and_neighborhoods');
-    expect(screen.getByRole('status')).toHaveTextContent('37 issues in Housing and neighborhoods, 5 on the map');
+    expect(screen.getByRole('status')).toHaveTextContent('Nearest 20 of 37 issues in Housing and neighborhoods, 5 on the map');
     expect(within(screen.getByRole('list', { name: 'map markers' })).getAllByRole('listitem')).toHaveLength(5);
     expect(screen.queryByRole('link', { name: 'Modernizing the jail’s elevators' })).toBeNull();
     await userEvent.selectOptions(select, '');
-    expect(screen.getByRole('status')).toHaveTextContent('1,303 issues, 125 on the map');
+    expect(screen.getByRole('status')).toHaveTextContent('Nearest 20 of 1,303 issues, 20 on the map');
   });
 });
 

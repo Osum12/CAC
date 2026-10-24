@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, type RefObject } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useUrlParams } from '../services/useUrlParams';
 import { getIssues } from '../services/civicData';
@@ -14,10 +14,10 @@ import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { usePlaceHref } from '../services/placeContext';
 import { PinIcon } from '../components/PinIcon';
 import { CompassMark } from '../components/CompassMark';
-import { ShowMoreButton, useStepped } from '../components/ShowMore';
 
-// Countywide items (no map point) can run to a thousand; they come in steps after the mapped ones.
-const COUNTYWIDE_STEP = 30;
+// Only the nearest few are shown: mapped items by distance, then countywide items if a category has
+// fewer than this many on the map. The full list lives on the Countywide page.
+const NEAREST = 20;
 export function NearMePage() {
   usePageTitle('Near Me');
   const { params, setParam } = useUrlParams();
@@ -44,13 +44,21 @@ export function NearMePage() {
     if (next && selected && selected.category !== next) updateParam('issue', null);
     updateParam('topic', next || null);
   };
+  // The nearest 20, plus the mapped issue a "View on map" link asked for if it ranks further down,
+  // so the link always lands on its pin.
+  const nearest = Math.min(NEAREST, ranked.length);
+  const shown = useMemo(() => {
+    const top = ranked.slice(0, NEAREST);
+    const asked = selectedId && !top.some((r) => r.issue.id === selectedId) ? ranked.find((r) => r.issue.id === selectedId && r.coords) : undefined;
+    return asked ? [...top, asked] : top;
+  }, [ranked, selectedId]);
   // Pin numbers count only issues that have coordinates, so pins read 1, 2, 3… with no gaps.
   const points: MapPoint[] = useMemo(
     () =>
-      ranked
+      shown
         .filter((r) => r.coords)
         .map((r, i) => ({ id: r.issue.id, title: r.issue.title, number: i + 1, coords: r.coords!, note: r.issue.location?.verified ? null : isMock(r.issue) ? 'sample map point' : pointKind(r.issue) })),
-    [ranked],
+    [shown],
   );
   const pinNumber = (id: string) => points.find((p) => p.id === id)?.number ?? null;
 
@@ -76,9 +84,9 @@ export function NearMePage() {
       ?.scrollIntoView?.({ block: 'nearest', behavior: reduceMotion ? 'auto' : 'smooth' });
   }, [selectedId, ranked]);
 
-  const located = ranked.filter((r) => r.coords);
-  const unlocated = ranked.filter((r) => !r.coords);
-  const { visible: countywideShown, remaining: countywideLeft, more: moreCountywide, listRef: countywideRef } = useStepped(unlocated, COUNTYWIDE_STEP, COUNTYWIDE_STEP, `${topic}|${unlocated.length}`);
+  const located = shown.filter((r) => r.coords);
+  const unlocated = shown.filter((r) => !r.coords);
+  const placeHref = usePlaceHref();
   const item = (r: RankedIssue) => (
     <li key={r.issue.id}>
       <FeedItem
@@ -101,8 +109,8 @@ export function NearMePage() {
           Near Me
         </h1>
         <p className="page-header__lede">
-          Issues with a map location come first, nearest at the top, followed by countywide items. Distance helps you find nearby items, but it doesn’t tell you whether an issue
-          affects a particular home.
+          The {NEAREST} issues nearest the starting point, closest at the top. Distance helps you find nearby items, but it doesn’t tell you whether an issue affects a particular
+          home.
         </p>
       </header>
 
@@ -129,6 +137,7 @@ export function NearMePage() {
             </select>
           </div>
           <p className="results-count nearme__count" role="status" aria-live="polite">
+            {nearest < ranked.length && `Nearest ${nearest} of `}
             {ranked.length.toLocaleString('en-US')} {ranked.length === 1 ? 'issue' : 'issues'}
             {topic ? ` in ${humanize(topic)}` : ''}, {points.length} on the map
           </p>
@@ -145,9 +154,9 @@ export function NearMePage() {
               </h2>
               <IssueMap points={points} origin={origin} selectedId={selectedId} onSelect={(id) => updateParam('issue', id)} />
               <p className="fine-print">
-                The dark dot with a gold ring is the starting point, {origin.label}. Numbered pins match the list. Dashed pins are approximate: they are placed from a street address, not an exact site boundary. Pins that would overlap are drawn slightly apart so each one can be selected.{' '}
-                {ranked.length - points.length > 0 &&
-                  `${ranked.length - points.length} issue${ranked.length - points.length > 1 ? 's have' : ' has'} no map location and appear${ranked.length - points.length > 1 ? '' : 's'} in the list only.`}
+                The gold-ringed dot marked “Start here” is the starting point, {origin.label}. Numbered pins match the list. Dashed pins are approximate: they are placed from a street address, not an exact site boundary. Pins that would overlap are drawn slightly apart so each one can be selected.{' '}
+                {unlocated.length > 0 &&
+                  `${unlocated.length} issue${unlocated.length > 1 ? 's have' : ' has'} no map location and appear${unlocated.length > 1 ? '' : 's'} in the list only.`}
               </p>
             </section>
             <section className="nearme__feed" aria-labelledby="feed-h">
@@ -170,11 +179,15 @@ export function NearMePage() {
                         ? unlocated[0].reason
                         : `These ${unlocated.length.toLocaleString('en-US')} records have no map location, so each is listed as a countywide item instead of being ranked by distance.`}
                     </p>
-                    <ol className="feed feed--countywide" ref={countywideRef as RefObject<HTMLOListElement | null>}>
-                      {countywideShown.map(item)}
-                    </ol>
-                    <ShowMoreButton remaining={countywideLeft} step={COUNTYWIDE_STEP} noun="countywide items" onClick={moreCountywide} />
+                    <ol className="feed feed--countywide">{unlocated.map(item)}</ol>
                   </>
+                )}
+                {nearest < ranked.length && (
+                  <p className="feed__intro nearme__all">
+                    <Link to={`${placeHref('/')}${topic ? `?topic=${encodeURIComponent(topic)}` : ''}`}>
+                      See all {ranked.length.toLocaleString('en-US')} issues{topic ? ` in ${humanize(topic)}` : ''} on the Countywide page
+                    </Link>
+                  </p>
                 )}
               </div>
             </section>

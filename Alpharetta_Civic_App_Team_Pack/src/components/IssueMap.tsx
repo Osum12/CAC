@@ -153,7 +153,15 @@ export function IssueMap({ points, origin, selectedId, onSelect }: Props) {
         title: `${origin.label} (starting location)`,
         keyboard: false,
         interactive: false,
-        icon: L.divIcon({ className: '', html: '<span class="origin-dot"></span>', iconSize: [22, 22], iconAnchor: [11, 11] }),
+        // Drawn above the issue pins (a selected pin still rises above it), with a pulsing ring and a
+        // "Start here" flag, so it is found first.
+        zIndexOffset: 500,
+        icon: L.divIcon({
+          className: 'origin',
+          html: '<span class="origin__pulse"></span><span class="origin-dot"></span><span class="origin__flag">Start here</span>',
+          iconSize: [30, 30],
+          iconAnchor: [15, 15],
+        }),
       });
       layer.addLayer(o);
     }
