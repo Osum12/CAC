@@ -304,9 +304,10 @@ ol {
   width: 48px;
   height: 48px;
   padding: 6px 2.5px 2.5px 6px;
-  border: 1.5px solid var(--heading);
-  border-radius: 8px;
+  border: 1px solid var(--frame-hair, rgb(22 27 61 / 0.16));
+  border-radius: 3px;
   flex: none;
+  position: relative;
 }
 .brand__mark img {
   display: block;
@@ -2291,7 +2292,6 @@ select[aria-invalid='true'] {
     width: 40px;
     height: 40px;
     padding: 5px 2px 2px 5px;
-    border-radius: 7px;
   }
   .brand__name {
     font-size: 1.25rem;
@@ -3767,7 +3767,8 @@ time {
   border-bottom-color: var(--line);
 }
 :root[data-theme='dark'] .brand__mark {
-  border-color: var(--line-strong);
+  --frame-hair: rgb(157 184 255 / 0.22);
+  --frame-ink: var(--link);
 }
 /* Rings and the compass in the hero */
 :root[data-theme='dark'] .ripples__ring,
@@ -3892,5 +3893,44 @@ time {
 @media (min-width: 360px) and (max-width: 374px) {
   .primary-nav__link {
     padding: 0 7px;
+  }
+}
+
+/* ---------- Logo frame: a viewfinder ----------
+   Four corner brackets sit just outside a faint hairline, like the focus marks in a camera
+   lens. Pointing at the logo opens them a little, as if the lens were finding focus. */
+.brand__mark::before {
+  --c: var(--frame-ink, var(--heading));
+  --t: 2px; /* bracket weight */
+  --l: 11px; /* bracket length */
+  content: '';
+  position: absolute;
+  inset: -4px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--c), var(--c)) top left / var(--l) var(--t),
+    linear-gradient(var(--c), var(--c)) top left / var(--t) var(--l),
+    linear-gradient(var(--c), var(--c)) top right / var(--l) var(--t),
+    linear-gradient(var(--c), var(--c)) top right / var(--t) var(--l),
+    linear-gradient(var(--c), var(--c)) bottom left / var(--l) var(--t),
+    linear-gradient(var(--c), var(--c)) bottom left / var(--t) var(--l),
+    linear-gradient(var(--c), var(--c)) bottom right / var(--l) var(--t),
+    linear-gradient(var(--c), var(--c)) bottom right / var(--t) var(--l);
+  background-repeat: no-repeat;
+  transition: inset 0.22s var(--ease-out);
+}
+.brand:hover .brand__mark::before,
+.brand:focus-visible .brand__mark::before {
+  inset: -6px;
+}
+@media (max-width: 599px) {
+  .brand__mark::before {
+    --l: 9px;
+    inset: -3px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brand__mark::before {
+    transition: none;
   }
 }
