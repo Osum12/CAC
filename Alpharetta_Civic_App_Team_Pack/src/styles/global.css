@@ -312,8 +312,8 @@ ol {
   /* One line of type, centred on the logo: no extra leading above or below. */
   line-height: 1;
 }
-/* The wordmark: Newsreader, an editorial serif. "Council" in navy, "Lens" in deep champagne
-   (4.8:1 on white). The capitals centre on the lens, not on the whole mark with its handle. */
+/* The wordmark: Newsreader, an editorial serif, in the site palette: "Council" in the heading
+   navy, "Lens" in the primary indigo. The capitals centre on the lens, not on the whole mark. */
 .brand__name {
   font-family: 'Newsreader', Georgia, 'Times New Roman', serif;
   font-weight: 600;
@@ -323,10 +323,10 @@ ol {
   white-space: nowrap;
 }
 .brand__council {
-  color: #0b1e4d;
+  color: var(--heading);
 }
 .brand__lens {
-  color: #8c6d33;
+  color: var(--primary);
 }
 
 .placebar {
