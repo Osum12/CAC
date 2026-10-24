@@ -313,19 +313,18 @@ ol {
   /* One line of type, centred on the logo: no extra leading above or below. */
   line-height: 1;
 }
-/* The wordmark: Fraunces (SIL OFL), a modern editorial serif with sharp terminals, set in the
-   heading navy. Its capitals are 55% of the lens diameter and centre on the lens, not on the
-   whole mark with its handle. */
+/* The wordmark: the site's display sans (Bricolage Grotesque Bold) in the heading navy. Its
+   capitals are 55% of the lens diameter and centre on the lens, not on the whole mark with
+   its handle. */
 .brand__name {
-  font-family: 'Fraunces', Georgia, serif;
-  font-weight: 600;
-  font-size: 1.4375rem;
-  font-variation-settings: 'opsz' 72, 'SOFT' 0, 'WONK' 0;
-  letter-spacing: -0.01em;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.015em;
   white-space: nowrap;
   /* Optical alignment: lift the capitals onto the lens centre (the handle sits below it). */
   position: relative;
-  top: -0.135em;
+  top: -0.155em;
 }
 .brand__council {
   color: var(--heading);
@@ -2289,7 +2288,7 @@ select[aria-invalid='true'] {
     height: 36px;
   }
   .brand__name {
-    font-size: 1.1875rem;
+    font-size: 1.25rem;
   }
   /* Phones: two compact rows. Brand and place on the first, the three sections on the second. */
   .masthead__inner:has(.placebar) .brand {
