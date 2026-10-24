@@ -4354,7 +4354,7 @@ time {
 }
 
 /* ==========================================================================
-   Wordmark "Field": outlined lowercase, "lens" in indigo
+   Wordmark "Field · Point": outlined lowercase, a raised indigo dot between the words
    The SVG's viewBox is the wordmark's optical box (between x-height and the
    shortened ascenders), so centring it centres the word on the framed mark.
    ========================================================================== */
@@ -4365,13 +4365,13 @@ time {
   display: block;
   height: 16.6px;
   width: auto;
-  aspect-ratio: 483.3 / 56.12;
+  aspect-ratio: 490.29 / 56.12;
   overflow: visible;
 }
-.brand__wordmark-council {
+.brand__wordmark-words {
   fill: var(--heading);
 }
-.brand__wordmark-lens {
+.brand__wordmark-dot {
   fill: var(--link);
 }
 @media (max-width: 599px) {
@@ -4383,8 +4383,8 @@ time {
   }
 }
 @media (forced-colors: active) {
-  .brand__wordmark-council,
-  .brand__wordmark-lens {
+  .brand__wordmark-words,
+  .brand__wordmark-dot {
     fill: CanvasText;
   }
 }
