@@ -347,7 +347,7 @@
   {
     "id": "document-att-24969",
     "title": "Exhibit 3 Contractor's Performance Report - Mallory Safety",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-01-08-boc",
     "issueIds": [
       "issue-25-0030"
@@ -752,7 +752,7 @@
   {
     "id": "document-att-24807",
     "title": "Exhibit 2 Contractor's Performance Report - CGL",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-01-29-boc",
     "issueIds": [
       "issue-25-0072"
@@ -767,7 +767,7 @@
   {
     "id": "document-att-24980",
     "title": "Exhibit 2: Contractor Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-01-29-boc",
     "issueIds": [
       "issue-24-0891"
@@ -1682,7 +1682,7 @@
   {
     "id": "document-att-25237",
     "title": "CONTRACTOR PERFORMANCE MEMO (No History) EnvisionWare - LibTech Grant 2024-2025",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-02-19-boc",
     "issueIds": [
       "issue-25-0126"
@@ -3137,7 +3137,7 @@
   {
     "id": "document-att-25350",
     "title": "2024 Aging Services Contractor Performance Reports",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-03-19-boc",
     "issueIds": [
       "issue-25-0189"
@@ -3407,7 +3407,7 @@
   {
     "id": "document-att-25317",
     "title": "Exhibit 2 Contractor's Performance Letter - J2 Connects",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-03-19-boc",
     "issueIds": [
       "issue-25-0203"
@@ -3422,7 +3422,7 @@
   {
     "id": "document-att-25318",
     "title": "Exhibit 2 Contractor's Performance Letter - B & W Mechanical",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-03-19-boc",
     "issueIds": [
       "issue-25-0203"
@@ -3467,7 +3467,7 @@
   {
     "id": "document-att-25342",
     "title": "Exhibit 2 Contractor's Performance Report- Carter 1 Enterprises, LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-03-19-boc",
     "issueIds": [
       "issue-25-0204"
@@ -3497,7 +3497,7 @@
   {
     "id": "document-att-25427",
     "title": "Exhibit 2 Contractor's Performance Report - Georgia Waste",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-03-19-boc",
     "issueIds": [
       "issue-25-0204"
@@ -3512,7 +3512,7 @@
   {
     "id": "document-att-25428",
     "title": "Exhibit 2 Contractor's Performance Report -Latham",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-03-19-boc",
     "issueIds": [
       "issue-25-0204"
@@ -3527,7 +3527,7 @@
   {
     "id": "document-att-25429",
     "title": "Exhibit 2 Contractor's Performance Report- Arrow Waste",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-03-19-boc",
     "issueIds": [
       "issue-25-0204"
@@ -4742,7 +4742,7 @@
   {
     "id": "document-att-25687",
     "title": "Exhibit 2: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-02-boc",
     "issueIds": [
       "issue-25-0248"
@@ -4862,7 +4862,7 @@
   {
     "id": "document-att-25641",
     "title": "Exhibit #1: Request Letter from Contractor",
-    "documentType": "agreement",
+    "documentType": "letter",
     "meetingId": "meeting-2025-04-02-boc",
     "issueIds": [
       "issue-25-0251"
@@ -4952,7 +4952,7 @@
   {
     "id": "document-att-25515",
     "title": "Exhibit 2 - Contractor's Performance Report - Sovereign Cooper Inc",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-02-boc",
     "issueIds": [
       "issue-25-0261"
@@ -5042,7 +5042,7 @@
   {
     "id": "document-att-25543",
     "title": "Exhibit 2 Contractor's Performance Report - QCS (2) (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-02-boc",
     "issueIds": [
       "issue-25-0262"
@@ -5057,7 +5057,7 @@
   {
     "id": "document-att-25544",
     "title": "Exhibit 2 Contractor's Performance Report - AFS Group C G (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-02-boc",
     "issueIds": [
       "issue-25-0262"
@@ -5222,7 +5222,7 @@
   {
     "id": "document-att-25634",
     "title": "Exhibit 2 Contractor's Performance Report - MTI Limo",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-02-boc",
     "issueIds": [
       "issue-25-0263"
@@ -5252,7 +5252,7 @@
   {
     "id": "document-att-25648",
     "title": "Exhibit 2:Contract Renewal Evaluation form for 2025",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-02-boc",
     "issueIds": [
       "issue-25-0258"
@@ -5387,7 +5387,7 @@
   {
     "id": "document-att-25426",
     "title": "Exhibit 2: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-02-boc",
     "issueIds": [
       "issue-25-0265"
@@ -5807,7 +5807,7 @@
   {
     "id": "document-att-25807",
     "title": "Exhibit 1: Precinct Location Changes and Maps",
-    "documentType": "map",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-04-16-boc",
     "issueIds": [
       "issue-25-0283"
@@ -5882,7 +5882,7 @@
   {
     "id": "document-att-25746",
     "title": "Exhibit 2. Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-16-boc",
     "issueIds": [
       "issue-25-0291"
@@ -5927,7 +5927,7 @@
   {
     "id": "document-att-25750",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-16-boc",
     "issueIds": [
       "issue-25-0292"
@@ -5987,7 +5987,7 @@
   {
     "id": "document-att-25742",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-16-boc",
     "issueIds": [
       "issue-25-0293"
@@ -6062,7 +6062,7 @@
   {
     "id": "document-att-25811",
     "title": "Exhibit 3 -CONTRACTOR PERFORMANCE MEMO",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-16-boc",
     "issueIds": [
       "issue-25-0301"
@@ -6227,7 +6227,7 @@
   {
     "id": "document-att-25782",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-16-boc",
     "issueIds": [
       "issue-25-0302"
@@ -6257,7 +6257,7 @@
   {
     "id": "document-att-25660",
     "title": "Exhibit 2 Contractor's Performance Report- Overhead Doors (2)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-16-boc",
     "issueIds": [
       "issue-25-0303"
@@ -6272,7 +6272,7 @@
   {
     "id": "document-att-25661",
     "title": "Exhibit 2 Contractor's Performance Report- Piedmont Doors (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-04-16-boc",
     "issueIds": [
       "issue-25-0303"
@@ -6332,7 +6332,7 @@
   {
     "id": "document-att-25681",
     "title": "Chattahoochee Nature Center 2025 Contract_3.18.25",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-04-16-boc",
     "issueIds": [
       "issue-25-0304"
@@ -6362,7 +6362,7 @@
   {
     "id": "document-att-25682",
     "title": "Bear Creek Nature Center - 2025 Contract_3.18.25",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-04-16-boc",
     "issueIds": [
       "issue-25-0305"
@@ -6377,7 +6377,7 @@
   {
     "id": "document-att-25683",
     "title": "Hammonds House 2025 Contract_3.18.25",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-04-16-boc",
     "issueIds": [
       "issue-25-0306"
@@ -6407,7 +6407,7 @@
   {
     "id": "document-att-25680",
     "title": "TAC 2025 Contract_3.20.25",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-04-16-boc",
     "issueIds": [
       "issue-25-0307"
@@ -6437,7 +6437,7 @@
   {
     "id": "document-att-25679",
     "title": "NBAF 2025 Contract_3.20.25",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-05-07-boc",
     "issueIds": [
       "issue-25-0308"
@@ -6902,7 +6902,7 @@
   {
     "id": "document-att-25875",
     "title": "Exhibit 1: Precinct Location Changes and Maps",
-    "documentType": "map",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-05-07-boc",
     "issueIds": [
       "issue-25-0335"
@@ -7322,7 +7322,7 @@
   {
     "id": "document-att-25729",
     "title": "Exhibit 2 Contractor's Performance Report - MSI Daikin Mallory",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-05-07-boc",
     "issueIds": [
       "issue-25-0350"
@@ -7397,7 +7397,7 @@
   {
     "id": "document-att-25733",
     "title": "Exhibit 2 Contractor's Performance Report - ReImage General (2)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-05-07-boc",
     "issueIds": [
       "issue-25-0351"
@@ -7412,7 +7412,7 @@
   {
     "id": "document-att-25734",
     "title": "Exhibit 2 Contractor's Performance Report - Georgia Green (3)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-05-07-boc",
     "issueIds": [
       "issue-25-0351"
@@ -7487,7 +7487,7 @@
   {
     "id": "document-att-25797",
     "title": "Exhibit 2 Contractor's Performance Report - Atlantic Coast (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-05-07-boc",
     "issueIds": [
       "issue-25-0352"
@@ -8567,7 +8567,7 @@
   {
     "id": "document-att-25997",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-05-21-boc",
     "issueIds": [
       "issue-25-0396"
@@ -8687,7 +8687,7 @@
   {
     "id": "document-att-26004",
     "title": "Exhibit 3: Contractor Performance Memos",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-05-21-boc",
     "issueIds": [
       "issue-25-0397"
@@ -11162,7 +11162,7 @@
   {
     "id": "document-att-26115",
     "title": "Exhibit 2 - Contractor’s Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-06-04-boc",
     "issueIds": [
       "issue-25-0430"
@@ -12317,7 +12317,7 @@
   {
     "id": "document-att-26030",
     "title": "Exhibit 4 Contractor's Performance Report - ODP",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-06-18-boc",
     "issueIds": [
       "issue-25-0470"
@@ -12362,7 +12362,7 @@
   {
     "id": "document-att-26028",
     "title": "CONTRACTS FOR SERVICES PROGRAM FY25 ARTS FUNDING RECOMMENDATIONS FINAL",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-06-18-boc",
     "issueIds": [
       "issue-25-0476"
@@ -14342,7 +14342,7 @@
   {
     "id": "document-att-26063",
     "title": "Contract Renewal Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-06-18-boc",
     "issueIds": [
       "issue-25-0472"
@@ -14387,7 +14387,7 @@
   {
     "id": "document-att-25960",
     "title": "Exhibit 2 Contractor's Performance Report - Sizemore Group",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-06-18-boc",
     "issueIds": [
       "issue-25-0469"
@@ -15152,7 +15152,7 @@
   {
     "id": "document-att-26119",
     "title": "Exhibit 2 Contractor's Performance Report -Osborne & Witt dba Allied",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-07-09-boc",
     "issueIds": [
       "issue-25-0517"
@@ -15212,7 +15212,7 @@
   {
     "id": "document-att-26053",
     "title": "Exhibit 3 Contractor's Performance Report - Orkin (3)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-07-09-boc",
     "issueIds": [
       "issue-25-0516"
@@ -15452,7 +15452,7 @@
   {
     "id": "document-att-26139",
     "title": "Exhibit 3 Contractor's Performance Report (10)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-07-09-boc",
     "issueIds": [
       "issue-25-0518"
@@ -15527,7 +15527,7 @@
   {
     "id": "document-att-26156",
     "title": "Exhibit 5 Contractor's Performance Report -CGL",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-07-09-boc",
     "issueIds": [
       "issue-25-0525"
@@ -15617,7 +15617,7 @@
   {
     "id": "document-att-26164",
     "title": "Exhibit 6 Contractor's Performance Report -CGL (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-07-09-boc",
     "issueIds": [
       "issue-25-0526"
@@ -15797,7 +15797,7 @@
   {
     "id": "document-att-26202",
     "title": "Exhibit 4 Contractor's Performance Report-Power & Energy",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-07-09-boc",
     "issueIds": [
       "issue-25-0519"
@@ -15872,7 +15872,7 @@
   {
     "id": "document-att-26213",
     "title": "Exhibit 2 - Contractor's Performance Report- Levonne Industries, LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-07-09-boc",
     "issueIds": [
       "issue-25-0522"
@@ -15947,7 +15947,7 @@
   {
     "id": "document-att-26342",
     "title": "Exhibit 3 Contractor's Performance Report -Office Design",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-07-09-boc",
     "issueIds": [
       "issue-25-0523"
@@ -15962,7 +15962,7 @@
   {
     "id": "document-att-26343",
     "title": "Exhibit 3 Contractor's Performance Report - Corporate Enviornments",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-07-09-boc",
     "issueIds": [
       "issue-25-0523"
@@ -15977,7 +15977,7 @@
   {
     "id": "document-att-26344",
     "title": "Exhibit 3 Contractor's Performance Report - Bright Interiors",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-07-09-boc",
     "issueIds": [
       "issue-25-0523"
@@ -16082,7 +16082,7 @@
   {
     "id": "document-att-26394",
     "title": "Exhibit 5 Contractor's Performance Report -CGL",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-07-09-boc",
     "issueIds": [
       "issue-25-0527"
@@ -17702,7 +17702,7 @@
   {
     "id": "document-att-26413",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-08-06-boc",
     "issueIds": [
       "issue-25-0570"
@@ -18077,7 +18077,7 @@
   {
     "id": "document-att-26601",
     "title": "Gateway Contract Performance 09.01.2024 through 06.30.2025",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-08-20-boc",
     "issueIds": [
       "issue-25-0591"
@@ -18197,7 +18197,7 @@
   {
     "id": "document-att-26565",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-08-20-boc",
     "issueIds": [
       "issue-25-0593"
@@ -18602,7 +18602,7 @@
   {
     "id": "document-att-26588",
     "title": "Exhibit 2: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-08-20-boc",
     "issueIds": [
       "issue-25-0609"
@@ -18632,7 +18632,7 @@
   {
     "id": "document-att-26427",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-08-20-boc",
     "issueIds": [
       "issue-25-0610"
@@ -18647,7 +18647,7 @@
   {
     "id": "document-att-26428",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-08-20-boc",
     "issueIds": [
       "issue-25-0610"
@@ -18677,7 +18677,7 @@
   {
     "id": "document-att-26500",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-08-20-boc",
     "issueIds": [
       "issue-25-0611"
@@ -18782,7 +18782,7 @@
   {
     "id": "document-att-26997",
     "title": "Exhibit 2: Contractor’s Performance Reports",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-08-20-boc",
     "issueIds": [
       "issue-25-0613"
@@ -18812,7 +18812,7 @@
   {
     "id": "document-att-25984",
     "title": "Exhibit 2 Contractor's Performance Report - Johnson Jail",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-08-20-boc",
     "issueIds": [
       "issue-25-0614"
@@ -19292,7 +19292,7 @@
   {
     "id": "document-att-26568",
     "title": "Exhibit 2 Contractor's Performance Report - Complete Demolition",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-03-boc",
     "issueIds": [
       "issue-25-0639"
@@ -19397,7 +19397,7 @@
   {
     "id": "document-att-26622",
     "title": "Exhibit 2 Contractor's Performance Report -Fuel - James River (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-03-boc",
     "issueIds": [
       "issue-25-0640"
@@ -19412,7 +19412,7 @@
   {
     "id": "document-att-26623",
     "title": "Exhibit 2 Contractor's Performance Report -Fuel - Boswell (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-03-boc",
     "issueIds": [
       "issue-25-0640"
@@ -19427,7 +19427,7 @@
   {
     "id": "document-att-26624",
     "title": "Exhibit 2 Contractor's Performance Report -Fuel - Sunoco (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-03-boc",
     "issueIds": [
       "issue-25-0640"
@@ -19457,7 +19457,7 @@
   {
     "id": "document-att-26364",
     "title": "Contract Performance Report - Wade Coots",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-03-boc",
     "issueIds": [
       "issue-25-0642"
@@ -19487,7 +19487,7 @@
   {
     "id": "document-att-26363",
     "title": "Contractor Performance Report - Site Engineering",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-03-boc",
     "issueIds": [
       "issue-25-0643"
@@ -19517,7 +19517,7 @@
   {
     "id": "document-att-26583",
     "title": "Exhibit 2 Contractor's Performance Report - Hogan",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-03-boc",
     "issueIds": [
       "issue-25-0641"
@@ -19712,7 +19712,7 @@
   {
     "id": "document-att-26729",
     "title": "Exhibit 2 Contractor's Performance Report- Plumbing Dist Inc (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0665"
@@ -19727,7 +19727,7 @@
   {
     "id": "document-att-26730",
     "title": "Exhibit 2 Contractor's Performance Report - Levonne Industries (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0665"
@@ -19742,7 +19742,7 @@
   {
     "id": "document-att-26731",
     "title": "Exhibit 2 Contractor's Performance Report - Equiparts (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0665"
@@ -19757,7 +19757,7 @@
   {
     "id": "document-att-26732",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Plumbing Supplies and Related Items 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0665"
@@ -19862,7 +19862,7 @@
   {
     "id": "document-att-26999",
     "title": "Exhibit 2 Contractor's Performance Report- Clean Harbors",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0656"
@@ -19877,7 +19877,7 @@
   {
     "id": "document-att-27000",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Hazardous Waste Disposal- FY2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0656"
@@ -19937,7 +19937,7 @@
   {
     "id": "document-att-27003",
     "title": "Exhibit 2 Contractor's Performance Report- Spot Coolers (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0657"
@@ -19952,7 +19952,7 @@
   {
     "id": "document-att-27004",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Countywide Spot Cooler and Heat Pump 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0657"
@@ -19997,7 +19997,7 @@
   {
     "id": "document-att-27006",
     "title": "Exhibit 2 Contractor's Performance Report - Scrap Metal - M&M",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0658"
@@ -20012,7 +20012,7 @@
   {
     "id": "document-att-27007",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Scrap Metal Removal FY2026 (003)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0658"
@@ -20042,7 +20042,7 @@
   {
     "id": "document-att-27020",
     "title": "Exhibit 2 Contractor's Performance Report- Atlantic Tape",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0666"
@@ -20057,7 +20057,7 @@
   {
     "id": "document-att-27021",
     "title": "Exhibit 2 Contractor's Performance Report- Agni",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0666"
@@ -20072,7 +20072,7 @@
   {
     "id": "document-att-27022",
     "title": "Exhibit 2 Contractor's Performance Report- Southeastern Paper",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0666"
@@ -20087,7 +20087,7 @@
   {
     "id": "document-att-27023",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Janitorial Supplies and Equipment 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0666"
@@ -20222,7 +20222,7 @@
   {
     "id": "document-att-27054",
     "title": "Exhibit 2 Contractor's Performance Report - EET - Atlas",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0667"
@@ -20237,7 +20237,7 @@
   {
     "id": "document-att-27055",
     "title": "Exhibit 2 Contractor's Performance Report - EET - NOVA",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0667"
@@ -20252,7 +20252,7 @@
   {
     "id": "document-att-27056",
     "title": "Exhibit 2 Contractor's Performance Report - EET - Oassis",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0667"
@@ -20267,7 +20267,7 @@
   {
     "id": "document-att-27057",
     "title": "Exhibit 3 Contract Renewal Evaluation Form -Standby Professional Services for EET- FY2026 7-28-25",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0667"
@@ -20312,7 +20312,7 @@
   {
     "id": "document-att-27068",
     "title": "Exhibit 2 Contractor's Performance Report - Locks - DH Pace",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0668"
@@ -20327,7 +20327,7 @@
   {
     "id": "document-att-27069",
     "title": "Exhibit 2 Contractor's Performance Report - Locks -ACME",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0668"
@@ -20342,7 +20342,7 @@
   {
     "id": "document-att-27070",
     "title": "Exhibit 3 Contract Renewal Evaluation Form-Locks Doors Hardware FY2026 Rev 1",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0668"
@@ -20402,7 +20402,7 @@
   {
     "id": "document-att-27106",
     "title": "Exhibit 2 Contractor's Performance Report - Septic Tank & Grease Trap - Darling",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0660"
@@ -20417,7 +20417,7 @@
   {
     "id": "document-att-27107",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Septic Tank Grease Trap 2026 1",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0660"
@@ -20552,7 +20552,7 @@
   {
     "id": "document-att-27164",
     "title": "Exhibit 2 Contractor's Perfomance Report - CSS Transporation, LLC 2025 (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0659"
@@ -20567,7 +20567,7 @@
   {
     "id": "document-att-27165",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Towing and Wrecker Services 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0659"
@@ -20597,7 +20597,7 @@
   {
     "id": "document-att-27169",
     "title": "Exhibit 2 Contractor's Performance Report- Safeguard (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0661"
@@ -20612,7 +20612,7 @@
   {
     "id": "document-att-27170",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Uniforms and Related Accessories 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0661"
@@ -20672,7 +20672,7 @@
   {
     "id": "document-att-27193",
     "title": "Exhibit 2 Contractor's Performance Report - HVAC Equipment - FM Shelton (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0664"
@@ -20687,7 +20687,7 @@
   {
     "id": "document-att-27194",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- HVAC Parts and Equipment 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0664"
@@ -20837,7 +20837,7 @@
   {
     "id": "document-att-27262",
     "title": "Exhibit 2 Contractor's Performance Report- BenCon Enterprises, Inc. dba Superior Water Services",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0662"
@@ -20852,7 +20852,7 @@
   {
     "id": "document-att-27263",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - HVAC Water Treatment 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0662"
@@ -20897,7 +20897,7 @@
   {
     "id": "document-att-27269",
     "title": "Exhibit 2 Contractor's Performance Report- Novus Solutions, LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0663"
@@ -20912,7 +20912,7 @@
   {
     "id": "document-att-27270",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Electronic Equipment Recycling- FY2026 (003)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0663"
@@ -20942,7 +20942,7 @@
   {
     "id": "document-att-26457",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0677"
@@ -20972,7 +20972,7 @@
   {
     "id": "document-att-27104",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0677"
@@ -21002,7 +21002,7 @@
   {
     "id": "document-att-26458",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0678"
@@ -21032,7 +21032,7 @@
   {
     "id": "document-att-27157",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0678"
@@ -21062,7 +21062,7 @@
   {
     "id": "document-att-26602",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0679"
@@ -21092,7 +21092,7 @@
   {
     "id": "document-att-26627",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0679"
@@ -21122,7 +21122,7 @@
   {
     "id": "document-att-26451",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0676"
@@ -21152,7 +21152,7 @@
   {
     "id": "document-att-26453",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0676"
@@ -21197,7 +21197,7 @@
   {
     "id": "document-att-26498",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0680"
@@ -21212,7 +21212,7 @@
   {
     "id": "document-att-26499",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0680"
@@ -21242,7 +21242,7 @@
   {
     "id": "document-att-26628",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0681"
@@ -21257,7 +21257,7 @@
   {
     "id": "document-att-26629",
     "title": "Exhibit 2: Contract Renewal Evaluation Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0681"
@@ -21482,7 +21482,7 @@
   {
     "id": "document-att-26490",
     "title": "Exhibit 2:Contract Performance Evaluation Metlife",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0710"
@@ -21497,7 +21497,7 @@
   {
     "id": "document-att-27161",
     "title": "Exhibit 2:Contract Performance Evaluation Anthem",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0710"
@@ -21512,7 +21512,7 @@
   {
     "id": "document-att-27162",
     "title": "Exhibit 2:Contract Performance Evaluation KP",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0710"
@@ -21632,7 +21632,7 @@
   {
     "id": "document-att-26597",
     "title": "Exhibit 2 Contractor's Performance Report - Acom Integrated",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0717"
@@ -21647,7 +21647,7 @@
   {
     "id": "document-att-26598",
     "title": "Exhibit 2 Contractor's Performance Report - Twelve & Associates, Inc",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0717"
@@ -21737,7 +21737,7 @@
   {
     "id": "document-att-26614",
     "title": "Exhibit 2 Cost Proposal- ReIMAGE General Contractors 2025 (1)",
-    "documentType": "agreement",
+    "documentType": "financial_document",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0715"
@@ -21767,7 +21767,7 @@
   {
     "id": "document-att-26616",
     "title": "Exhibit 3 Contractor's Performance Report- ReIMAGE",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0715"
@@ -21782,7 +21782,7 @@
   {
     "id": "document-att-28328",
     "title": "2025-0715 REIMAGE GENERAL CONTRACTORS, LLC",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0715"
@@ -21812,7 +21812,7 @@
   {
     "id": "document-att-26653",
     "title": "Exhibit 2 Contractor's Performance Report- More Business Solutions (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0686"
@@ -21827,7 +21827,7 @@
   {
     "id": "document-att-26654",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Mail Services Operation FY2026 (02)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0686"
@@ -21902,7 +21902,7 @@
   {
     "id": "document-att-26668",
     "title": "Exhibit 2 Contractor's Performance Report - Solid Waste - Latham",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0695"
@@ -21917,7 +21917,7 @@
   {
     "id": "document-att-26669",
     "title": "Exhibit 2 Contractor's Performance Report - Solid Waste - Georgia",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0695"
@@ -21932,7 +21932,7 @@
   {
     "id": "document-att-26670",
     "title": "Exhibit 2 Contractor's Performance Report- Arrow Waste (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0695"
@@ -21947,7 +21947,7 @@
   {
     "id": "document-att-26671",
     "title": "Exhibit 2 Contractor's Performance Report- Carter 1 Enterprises, LLC (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0695"
@@ -21962,7 +21962,7 @@
   {
     "id": "document-att-26672",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Countywide Solid Waste Disposal- 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0695"
@@ -22052,7 +22052,7 @@
   {
     "id": "document-att-26694",
     "title": "Exhibit 2 Contractor's Performance Report- Atlantic Coast Consulting, Inc. (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0693"
@@ -22067,7 +22067,7 @@
   {
     "id": "document-att-26695",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Landfill Post Closure Services 2026 2",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0693"
@@ -22157,7 +22157,7 @@
   {
     "id": "document-att-26700",
     "title": "Exhibit 2 Contractor's Performance Report -HVAC on Call - MSI",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0694"
@@ -22172,7 +22172,7 @@
   {
     "id": "document-att-26701",
     "title": "Exhibit 2 Contractor's Performance Report -HVAC on Call - TRANE",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0694"
@@ -22187,7 +22187,7 @@
   {
     "id": "document-att-26702",
     "title": "Exhibit 2 Contractor's Performance Report -HVAC on Call - 5 Seasons (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0694"
@@ -22202,7 +22202,7 @@
   {
     "id": "document-att-26703",
     "title": "Exhibit 2 Contractor's Performance Report -HVAC on Call - JR Hobbs",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0694"
@@ -22217,7 +22217,7 @@
   {
     "id": "document-att-26704",
     "title": "Exhibit 3 Contract Renewal Evaluation Form -HVAC On Call Maintenance 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0694"
@@ -22307,7 +22307,7 @@
   {
     "id": "document-att-26712",
     "title": "Exhibit 2 Contractor's Performance Report - Boiler - Daikin",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0687"
@@ -22322,7 +22322,7 @@
   {
     "id": "document-att-26713",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Boiler Inspection 2026 1",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0687"
@@ -22397,7 +22397,7 @@
   {
     "id": "document-att-26722",
     "title": "Exhibit 2 Contractor's Performance Report -Electrical on Call - Capital City",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0696"
@@ -22412,7 +22412,7 @@
   {
     "id": "document-att-26723",
     "title": "Exhibit 2 Contractor's Performance Report -Electrical on Call - All N One",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0696"
@@ -22427,7 +22427,7 @@
   {
     "id": "document-att-26724",
     "title": "Exhibit 2 Contractor's Performance Report -Electrical on Call - Electrify",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0696"
@@ -22442,7 +22442,7 @@
   {
     "id": "document-att-26725",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Electrical On Call Maintenance Services- FY2026 1",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0696"
@@ -22562,7 +22562,7 @@
   {
     "id": "document-att-27034",
     "title": "Exhibit 2 Contractor's Performance Report - A&E - Sizemore",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0697"
@@ -22577,7 +22577,7 @@
   {
     "id": "document-att-27035",
     "title": "Exhibit 2 Contractor's Performance Report - A&E - KHAFRA",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0697"
@@ -22592,7 +22592,7 @@
   {
     "id": "document-att-27036",
     "title": "Exhibit 2 Contractor's Performance Report - A&E - Turner Townswend HEERY",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0697"
@@ -22607,7 +22607,7 @@
   {
     "id": "document-att-27037",
     "title": "Exhibit 2 Contractor's Performance Report - A&E - WSP",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0697"
@@ -22622,7 +22622,7 @@
   {
     "id": "document-att-27038",
     "title": "Exhibit 3 Contract Renewal Evaluation Form -Standby Professional Services for A & E 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0697"
@@ -22712,7 +22712,7 @@
   {
     "id": "document-att-27045",
     "title": "Exhibit 2 Contractor's Performance Report - MEPFP - WSP",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0698"
@@ -22727,7 +22727,7 @@
   {
     "id": "document-att-27046",
     "title": "Exhibit 2 Contractor's Performance Report - MEPFP - Axis",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0698"
@@ -22742,7 +22742,7 @@
   {
     "id": "document-att-27047",
     "title": "Exhibit 2 Contractor's Performance Report - MEPFP - Johnson Spellman",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0698"
@@ -22757,7 +22757,7 @@
   {
     "id": "document-att-27048",
     "title": "Exhibit 2 Contractor's Performance Report - MEPFP - Wiley Wilson",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0698"
@@ -22772,7 +22772,7 @@
   {
     "id": "document-att-27049",
     "title": "Exhibit 2 Contractor's Performance Report - MEPFP - Foresite",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0698"
@@ -22787,7 +22787,7 @@
   {
     "id": "document-att-27050",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Standby Mechanical Electrical Plumbing Fire Protection- 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0698"
@@ -22877,7 +22877,7 @@
   {
     "id": "document-att-27062",
     "title": "Exhibit 2 Contractor's Performance Report - On-Site Door - DH Pace",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0699"
@@ -22892,7 +22892,7 @@
   {
     "id": "document-att-27063",
     "title": "Exhibit 2 Contractor's Performance Report - On-Site Door - Piedmont",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0699"
@@ -22907,7 +22907,7 @@
   {
     "id": "document-att-27064",
     "title": "Exhibit 3 Contract Renewal Evaluation Form-On-Site Door Repair 2026 2",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0699"
@@ -23087,7 +23087,7 @@
   {
     "id": "document-att-27076",
     "title": "Exhibit 2 Contractor's Performance Report - Restoration - CCP",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0700"
@@ -23102,7 +23102,7 @@
   {
     "id": "document-att-27077",
     "title": "Exhibit 2 Contractor's Performance Report - Restoration - Cotton dba Full Circle",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0700"
@@ -23117,7 +23117,7 @@
   {
     "id": "document-att-27078",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Standby Emergency Repair 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0700"
@@ -23132,7 +23132,7 @@
   {
     "id": "document-att-28311",
     "title": "2025-0700 Complete Contracting Partners LLC",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0700"
@@ -23192,7 +23192,7 @@
   {
     "id": "document-att-27081",
     "title": "Exhibit 2 Contractor's Performance Report - Plumbing - J2",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0701"
@@ -23207,7 +23207,7 @@
   {
     "id": "document-att-27082",
     "title": "Exhibit 2 Contractor's Performance Report - Plumbing - BW",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0701"
@@ -23222,7 +23222,7 @@
   {
     "id": "document-att-27083",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Standby Plumbing Repair-2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0701"
@@ -23252,7 +23252,7 @@
   {
     "id": "document-att-28314",
     "title": "2025-0701B & W MECHANICAL CONTRACTORS, INC",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0701"
@@ -23282,7 +23282,7 @@
   {
     "id": "document-att-27110",
     "title": "Exhibit 3: Contractor's Performance Report - Asphalt - CCP (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0688"
@@ -23297,7 +23297,7 @@
   {
     "id": "document-att-27111",
     "title": "Exhibit 2: Contract Renewal Evaluation Form -Asphalt Concrete Pavement FY2026 1",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0688"
@@ -23312,7 +23312,7 @@
   {
     "id": "document-att-29211",
     "title": "2025-0688 Complete Contracting Partners LLC",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0688"
@@ -23342,7 +23342,7 @@
   {
     "id": "document-att-27113",
     "title": "Exhibit 2 Contractor's Performance Report - Fencing - Osborne & Witt dba Allied",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0690"
@@ -23357,7 +23357,7 @@
   {
     "id": "document-att-27114",
     "title": "Exhibit 3 Contract Renewal Evaluation Form -Standby Fencing Installation 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0690"
@@ -23402,7 +23402,7 @@
   {
     "id": "document-att-27117",
     "title": "Exhibit 2 Contractor's Performance Report - Lanscape - Ed Castro",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0689"
@@ -23417,7 +23417,7 @@
   {
     "id": "document-att-27118",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Standby Landscape Design- 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0689"
@@ -23477,7 +23477,7 @@
   {
     "id": "document-att-27122",
     "title": "Exhibit 2 Contractor's Performance Report - Chillers - Daikin",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0702"
@@ -23492,7 +23492,7 @@
   {
     "id": "document-att-27123",
     "title": "Exhibit 2 Contractor's Performance Report - Chillers - MSI",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0702"
@@ -23507,7 +23507,7 @@
   {
     "id": "document-att-27124",
     "title": "Exhibit 2 Contractor's Performance Report - Mallory and Evans (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0702"
@@ -23522,7 +23522,7 @@
   {
     "id": "document-att-27125",
     "title": "Exhibit 3 Contract Renewal Evaluation Form -Chillers Maintenance FY2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0702"
@@ -23597,7 +23597,7 @@
   {
     "id": "document-att-27131",
     "title": "Exhibit 2 Contractor's Performance Report - Bus - MTI (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0716"
@@ -23702,7 +23702,7 @@
   {
     "id": "document-att-27150",
     "title": "Exhibit 2 Contractor's Performance Report - Task Order - Brad",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0704"
@@ -23717,7 +23717,7 @@
   {
     "id": "document-att-27151",
     "title": "Exhibit 2 Contractor's Performance Report - Task Order - Hawk 2 (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0704"
@@ -23732,7 +23732,7 @@
   {
     "id": "document-att-27152",
     "title": "Exhibit 2 Contractor's Performance Report - Task Order - CCP",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0704"
@@ -23747,7 +23747,7 @@
   {
     "id": "document-att-27153",
     "title": "Exhibit 2 Contractor's Performance Report - Task Order - Rubio",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0704"
@@ -23762,7 +23762,7 @@
   {
     "id": "document-att-27154",
     "title": "Exhibit 2 Contractor's Performance Report - Task Order - Osprey",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0704"
@@ -23777,7 +23777,7 @@
   {
     "id": "document-att-27155",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Task Order Contract for Minor Construction Projects- 2026 2",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0704"
@@ -23837,7 +23837,7 @@
   {
     "id": "document-att-28790",
     "title": "2025-0704 Complete Contracting Partners, LLC",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0704"
@@ -23867,7 +23867,7 @@
   {
     "id": "document-att-27181",
     "title": "Contract Performance Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0708"
@@ -23957,7 +23957,7 @@
   {
     "id": "document-att-27208",
     "title": "Exhibit 2 Contractor's Performance Report - Carpet GSAT",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0703"
@@ -23972,7 +23972,7 @@
   {
     "id": "document-att-27209",
     "title": "Exhibit 2 Contractor's Performance Report - Carpet - HPI",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0703"
@@ -23987,7 +23987,7 @@
   {
     "id": "document-att-27210",
     "title": "Exhibit 2 Contractor's Performance Report - Carpet - Brad",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0703"
@@ -24002,7 +24002,7 @@
   {
     "id": "document-att-27211",
     "title": "Exhibit 3 Contract Renewal Evaluation Form -Carpet Tile Installation FY2026 2",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0703"
@@ -24077,7 +24077,7 @@
   {
     "id": "document-att-27231",
     "title": "Exhibit 2 Contractor's Performance Report - Bus - MTI (3)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0692"
@@ -24092,7 +24092,7 @@
   {
     "id": "document-att-27232",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Bus & Shuttle -FY2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0692"
@@ -24137,7 +24137,7 @@
   {
     "id": "document-att-27265",
     "title": "Exhibit 2 Contractor's Performance Report - Elevator - Mowrey",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0691"
@@ -24152,7 +24152,7 @@
   {
     "id": "document-att-27266",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Elevator and Escalator Maintenance Services-FY2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0691"
@@ -24332,7 +24332,7 @@
   {
     "id": "document-att-27243",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0705"
@@ -24362,7 +24362,7 @@
   {
     "id": "document-att-27246",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0705"
@@ -24407,7 +24407,7 @@
   {
     "id": "document-att-27459",
     "title": "Exhibit 1: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-09-17-boc",
     "issueIds": [
       "issue-25-0706"
@@ -24722,7 +24722,7 @@
   {
     "id": "document-att-27533",
     "title": "Archer-Western CPR",
-    "documentType": "supporting_document",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0731"
@@ -25442,7 +25442,7 @@
   {
     "id": "document-att-27247",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0738"
@@ -25457,7 +25457,7 @@
   {
     "id": "document-att-27248",
     "title": "Exhibit 3: Contractor Performance memo",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0738"
@@ -25547,7 +25547,7 @@
   {
     "id": "document-att-27271",
     "title": "Exhibit 1: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0739"
@@ -25577,7 +25577,7 @@
   {
     "id": "document-att-27391",
     "title": "Exhibit 2: Contractor Renewal Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0739"
@@ -25622,7 +25622,7 @@
   {
     "id": "document-att-27272",
     "title": "Exhibit 1: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0741"
@@ -25652,7 +25652,7 @@
   {
     "id": "document-att-27380",
     "title": "Exhibit 2: Contractor Renewal Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0741"
@@ -25682,7 +25682,7 @@
   {
     "id": "document-att-27273",
     "title": "Exhibit 1: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0740"
@@ -25712,7 +25712,7 @@
   {
     "id": "document-att-27379",
     "title": "Exhibit 2: Contractor Renewal Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0740"
@@ -25787,7 +25787,7 @@
   {
     "id": "document-att-27351",
     "title": "Contract Renewal Evaluation Form 8-13-25",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0742"
@@ -25847,7 +25847,7 @@
   {
     "id": "document-att-27290",
     "title": "Exhibit 1: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0743"
@@ -25862,7 +25862,7 @@
   {
     "id": "document-att-27291",
     "title": "Exhibit 2: Contract Performance Evaluation Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0743"
@@ -25907,7 +25907,7 @@
   {
     "id": "document-att-27321",
     "title": "Exhibit 2: Contract Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0744"
@@ -25937,7 +25937,7 @@
   {
     "id": "document-att-27385",
     "title": "Exhibit 3: Contract Performance Evaluation Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-01-boc",
     "issueIds": [
       "issue-25-0744"
@@ -26177,7 +26177,7 @@
   {
     "id": "document-att-27254",
     "title": "Exhibit 2 Contractor's Performance Report - Glass -Brad",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0761"
@@ -26192,7 +26192,7 @@
   {
     "id": "document-att-27255",
     "title": "Exhibit 2 Contractor's Performance Report - Glass -P&E",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0761"
@@ -26207,7 +26207,7 @@
   {
     "id": "document-att-27256",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Glass and Plexiglas Repair and Replacement- FY2026 2_",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0761"
@@ -26372,7 +26372,7 @@
   {
     "id": "document-att-27369",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0766"
@@ -26477,7 +26477,7 @@
   {
     "id": "document-att-27137",
     "title": "Exhibit 2 Contractor's Performance Report - Ballasts E Sam Jones (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0782"
@@ -26492,7 +26492,7 @@
   {
     "id": "document-att-27139",
     "title": "Exhibit 2 Contractor's Performance Report - Ballast, Lamps, Light Fixtures - Summitt",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0782"
@@ -26522,7 +26522,7 @@
   {
     "id": "document-att-27288",
     "title": "Exhibit 2 Contractor's Performance Report - Mega Wholesale",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0782"
@@ -26642,7 +26642,7 @@
   {
     "id": "document-att-27309",
     "title": "Exhibit 3 Contractor's Performance Report- Orkin",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0784"
@@ -26657,7 +26657,7 @@
   {
     "id": "document-att-27398",
     "title": "Exhibit 2 Contractor's Performance Report - Landscaping and Lawncare - ReImage (1) (2)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0785"
@@ -26687,7 +26687,7 @@
   {
     "id": "document-att-27400",
     "title": "Exhibit 4 Contractor's Performance Report - Landscaping and Lawncare - Georgia Green (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0785"
@@ -26717,7 +26717,7 @@
   {
     "id": "document-att-28342",
     "title": "2025-0785A REIMAGE GENERAL CONTRACTORS, LLC",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0785"
@@ -26747,7 +26747,7 @@
   {
     "id": "document-att-27349",
     "title": "Exhibit 2 Contractor's Performance Report - Landscaping and Lawncare - ReImage (2)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0772"
@@ -26762,7 +26762,7 @@
   {
     "id": "document-att-27350",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- General Landscaping & Lawn Care Services for Countywide-2",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0772"
@@ -26777,7 +26777,7 @@
   {
     "id": "document-att-28337",
     "title": "2025-0772 REIMAGE GENERAL CONTRACTORS, LLC",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0772"
@@ -26807,7 +26807,7 @@
   {
     "id": "document-att-27372",
     "title": "Exhibit 2 Contractor's Performance Report - Arborserv",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0781"
@@ -26867,7 +26867,7 @@
   {
     "id": "document-att-27403",
     "title": "Exhibit 2 Contractor's Performance Report - Janitorial CDG - AFS",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0773"
@@ -26882,7 +26882,7 @@
   {
     "id": "document-att-27404",
     "title": "Exhibit 3 Contract Renewal Evaluation Form -Janitorial Groups C, D, & G- FY2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0773"
@@ -26912,7 +26912,7 @@
   {
     "id": "document-att-27579",
     "title": "CONTRACTS FOR SERVICES PROPOSED AWARDS RECOMMENDATIONS - $1.7 MILLION BOC SUMMARY",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0786"
@@ -30992,7 +30992,7 @@
   {
     "id": "document-att-27320",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0774"
@@ -31007,7 +31007,7 @@
   {
     "id": "document-att-26592",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0775"
@@ -31022,7 +31022,7 @@
   {
     "id": "document-att-26594",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0775"
@@ -31112,7 +31112,7 @@
   {
     "id": "document-att-27827",
     "title": "Exhibit 2: Contractor Performance Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0787"
@@ -31172,7 +31172,7 @@
   {
     "id": "document-att-27370",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0776"
@@ -31262,7 +31262,7 @@
   {
     "id": "document-att-27491",
     "title": "Exhibit 3: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-10-15-boc",
     "issueIds": [
       "issue-25-0777"
@@ -31307,7 +31307,7 @@
   {
     "id": "document-att-27527",
     "title": "Exhibit 2 Contractor's Performance Report- Levonne Industries, LLC 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0805"
@@ -31322,7 +31322,7 @@
   {
     "id": "document-att-27528",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Uninterrupted Power Supply- FY2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0805"
@@ -31637,7 +31637,7 @@
   {
     "id": "document-att-27171",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0807"
@@ -31667,7 +31667,7 @@
   {
     "id": "document-att-28073",
     "title": "Exhibit 3: Contractor Performance Memo",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0807"
@@ -31727,7 +31727,7 @@
   {
     "id": "document-att-27732",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0808"
@@ -31757,7 +31757,7 @@
   {
     "id": "document-att-27568",
     "title": "Exhibit 2: Contractor Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0809"
@@ -31772,7 +31772,7 @@
   {
     "id": "document-att-27569",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0809"
@@ -31832,7 +31832,7 @@
   {
     "id": "document-att-27571",
     "title": "Exhibit 3 - Contract Renewal Evaluation Form S & W",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0811"
@@ -31922,7 +31922,7 @@
   {
     "id": "document-att-27495",
     "title": "Exhibit 3 - Contract Renewal Evaluation - SOS",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0817"
@@ -32027,7 +32027,7 @@
   {
     "id": "document-att-27878",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0818"
@@ -32132,7 +32132,7 @@
   {
     "id": "document-att-27406",
     "title": "Exhibit 2 Contractor's Performance Report - A-Action",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0831"
@@ -32177,7 +32177,7 @@
   {
     "id": "document-att-27409",
     "title": "Exhibit 5 Contractor's Performance Report - Good Success Q2 2025 - Q4 2024 (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0831"
@@ -32237,7 +32237,7 @@
   {
     "id": "document-att-27489",
     "title": "Exhibit 2 Contractor's Performance Report - Generator Maintenance of GA (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0832"
@@ -32357,7 +32357,7 @@
   {
     "id": "document-att-27724",
     "title": "Exhibit 3-A Cooperative Purchasing Justification and Approval Form- for Use of Statewide Contracts for New Tires",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0829"
@@ -32432,7 +32432,7 @@
   {
     "id": "document-att-27760",
     "title": "Exhibit 3 Contractor's Performance Report - WEX",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0828"
@@ -32492,7 +32492,7 @@
   {
     "id": "document-att-27764",
     "title": "Exhibit 3 Contractor's Performance Report - ODP",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0834"
@@ -32567,7 +32567,7 @@
   {
     "id": "document-att-27728",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0819"
@@ -32582,7 +32582,7 @@
   {
     "id": "document-att-27729",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0819"
@@ -32612,7 +32612,7 @@
   {
     "id": "document-att-26589",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0820"
@@ -32627,7 +32627,7 @@
   {
     "id": "document-att-26590",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0820"
@@ -32792,7 +32792,7 @@
   {
     "id": "document-att-27523",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0837"
@@ -32852,7 +32852,7 @@
   {
     "id": "document-att-27515",
     "title": "Exhibit 3: Contractor Performance Review",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0821"
@@ -32867,7 +32867,7 @@
   {
     "id": "document-att-27517",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0821"
@@ -32912,7 +32912,7 @@
   {
     "id": "document-att-27597",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0822"
@@ -32927,7 +32927,7 @@
   {
     "id": "document-att-27599",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0822"
@@ -33002,7 +33002,7 @@
   {
     "id": "document-att-27813",
     "title": "Exhibit 3: Contractor Performance Memo",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0838"
@@ -33047,7 +33047,7 @@
   {
     "id": "document-att-27795",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0823"
@@ -33062,7 +33062,7 @@
   {
     "id": "document-att-27962",
     "title": "Exhibit 2: Contractor Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0823"
@@ -33092,7 +33092,7 @@
   {
     "id": "document-att-27745",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0839"
@@ -33212,7 +33212,7 @@
   {
     "id": "document-att-27750",
     "title": "Exhibit 3 - Contract Renewal Evaluation Form - Moons's Service Center",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-05-boc",
     "issueIds": [
       "issue-25-0824"
@@ -33632,7 +33632,7 @@
   {
     "id": "document-att-27970",
     "title": "Exhibit 3: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0852"
@@ -33677,7 +33677,7 @@
   {
     "id": "document-att-27965",
     "title": "Exhibit 2: Contract Renewal Evaluation Form 8-13-25 (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0853"
@@ -33722,7 +33722,7 @@
   {
     "id": "document-att-28037",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0854"
@@ -33812,7 +33812,7 @@
   {
     "id": "document-att-28012",
     "title": "CONTRACT RENEWAL EVALUATION FORM - Ad Astra (2025)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0855"
@@ -33932,7 +33932,7 @@
   {
     "id": "document-att-28179",
     "title": "Contract Renewal Evaluation Form - 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0859"
@@ -34007,7 +34007,7 @@
   {
     "id": "document-att-27492",
     "title": "Exhibit 2: Contract Renewal Evaluation Form - GC&E",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0867"
@@ -34022,7 +34022,7 @@
   {
     "id": "document-att-27493",
     "title": "Exhibit 2: Contract Renewal Evaluation Form - NetPlanner Systems, Inc.",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0867"
@@ -34172,7 +34172,7 @@
   {
     "id": "document-att-27575",
     "title": "Exhibit 2 Contractor's Performance Report - QCS",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0868"
@@ -34187,7 +34187,7 @@
   {
     "id": "document-att-27576",
     "title": "Exhibit 2 Contractor's Performance Report - AFS",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0868"
@@ -34202,7 +34202,7 @@
   {
     "id": "document-att-27577",
     "title": "Exhibit 3 Contract Renewal Evaluation Form -Janitorial Groups E, F, G, H, & I -FY2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0868"
@@ -34322,7 +34322,7 @@
   {
     "id": "document-att-29199",
     "title": "2025-0875C COMPLETE CONTRACTING PARTNERS LLC",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0875"
@@ -34337,7 +34337,7 @@
   {
     "id": "document-att-27621",
     "title": "Exhibit 2 Contractor's Performance Report - Modular - Office Design (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0869"
@@ -34352,7 +34352,7 @@
   {
     "id": "document-att-27622",
     "title": "Exhibit 2 Contractor's Performance Report- (B) Bright Interiors Group, LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0869"
@@ -34367,7 +34367,7 @@
   {
     "id": "document-att-27623",
     "title": "Exhibit 2 Contractor's Performance Report- (C) Corporate Environments of Georgia, LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0869"
@@ -34382,7 +34382,7 @@
   {
     "id": "document-att-27624",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Modular Furniture- 2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0869"
@@ -34487,7 +34487,7 @@
   {
     "id": "document-att-27708",
     "title": "Exhibit 2 Contractor's Performance Report - Boiler - Daikin (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0876"
@@ -34592,7 +34592,7 @@
   {
     "id": "document-att-27712",
     "title": "Exhibit 2 Contractor's Performance Report - Maxair (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0877"
@@ -34652,7 +34652,7 @@
   {
     "id": "document-att-27715",
     "title": "Exhibit 2 Contractor's Performance Report - HVAC on Call - TRANE",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0878"
@@ -34712,7 +34712,7 @@
   {
     "id": "document-att-28151",
     "title": "Exhibit 3 - Contractor Performance Report - ARI",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0879"
@@ -34787,7 +34787,7 @@
   {
     "id": "document-att-28014",
     "title": "EXHIBIT 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0865"
@@ -34862,7 +34862,7 @@
   {
     "id": "document-att-28001",
     "title": "Exhibit 2: CONTRACT RENEWAL EVALUATION FORM - Dove Mailing 2025",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0866"
@@ -34922,7 +34922,7 @@
   {
     "id": "document-att-27798",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0881"
@@ -35027,7 +35027,7 @@
   {
     "id": "document-att-27785",
     "title": "Exhibit 3: Contractor Performance Memo",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0883"
@@ -35087,7 +35087,7 @@
   {
     "id": "document-att-27814",
     "title": "Exhibit 3: Contractor Performance Memo",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0884"
@@ -35117,7 +35117,7 @@
   {
     "id": "document-att-27799",
     "title": "Exhibit 2: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0885"
@@ -35192,7 +35192,7 @@
   {
     "id": "document-att-27847",
     "title": "Exhibit 3: Contractor Performance Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0886"
@@ -35327,7 +35327,7 @@
   {
     "id": "document-att-27593",
     "title": "Exhibit 3 - Contract Renewal Evaluation Form Allied Universal",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-11-19-boc",
     "issueIds": [
       "issue-25-0870"
@@ -35957,7 +35957,7 @@
   {
     "id": "document-att-28421",
     "title": "Think and Ink 2025 Contract Permance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0906"
@@ -35972,7 +35972,7 @@
   {
     "id": "document-att-28422",
     "title": "Think and Ink 2025 Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0906"
@@ -36017,7 +36017,7 @@
   {
     "id": "document-att-28419",
     "title": "McGuire Woods 2025 Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0907"
@@ -36032,7 +36032,7 @@
   {
     "id": "document-att-28420",
     "title": "McGuire Woods 2025 Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0907"
@@ -36272,7 +36272,7 @@
   {
     "id": "document-att-28477",
     "title": "Exhibit 2 Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0914"
@@ -36362,7 +36362,7 @@
   {
     "id": "document-att-28195",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0916"
@@ -36452,7 +36452,7 @@
   {
     "id": "document-att-28158",
     "title": "Exhibit 6 - Contract Renewal Evaluation Form - AVI Systems",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0924"
@@ -36467,7 +36467,7 @@
   {
     "id": "document-att-28159",
     "title": "Exhibit 5 - Contract Renewal Evaluation Form - Summit Solutionz",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0924"
@@ -36557,7 +36557,7 @@
   {
     "id": "document-att-27987",
     "title": "Exhibit 2: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0923"
@@ -36572,7 +36572,7 @@
   {
     "id": "document-att-27988",
     "title": "Exhibit 3: Contract Renewal Evaluation Ballot Printing",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0923"
@@ -36617,7 +36617,7 @@
   {
     "id": "document-att-28416",
     "title": "Top Right 2025 Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0925"
@@ -36632,7 +36632,7 @@
   {
     "id": "document-att-28417",
     "title": "TopRight 2025 Contract Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0925"
@@ -36752,7 +36752,7 @@
   {
     "id": "document-att-28057",
     "title": "Exhibit 3- Contractor's Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0930"
@@ -36782,7 +36782,7 @@
   {
     "id": "document-att-28064",
     "title": "Exhibit 2- Contractor's Performance Report (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0931"
@@ -36872,7 +36872,7 @@
   {
     "id": "document-att-27888",
     "title": "Exhibit 2 - CPR Memo signed",
-    "documentType": "letter",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0933"
@@ -36917,7 +36917,7 @@
   {
     "id": "document-att-28430",
     "title": "Exhibit 2: Southern Home Care Services -Contractor’s Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0934"
@@ -36932,7 +36932,7 @@
   {
     "id": "document-att-28431",
     "title": "Exhibit 3: At Home Atlanta - Contractor’s Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0934"
@@ -36947,7 +36947,7 @@
   {
     "id": "document-att-28432",
     "title": "Exhibit 4: Trusted Hands - Contractor’s Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0934"
@@ -36962,7 +36962,7 @@
   {
     "id": "document-att-28433",
     "title": "Exhibit 5 :Help At Home - Contractor’s Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-03-boc",
     "issueIds": [
       "issue-25-0934"
@@ -37487,7 +37487,7 @@
   {
     "id": "document-att-28049",
     "title": "Exhibit 2: Contract Renewal Evaluation Form 8-13-25 AvenuInsight",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0945"
@@ -37532,7 +37532,7 @@
   {
     "id": "document-att-28438",
     "title": "Exhibit 2: Contractor Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0947"
@@ -37697,7 +37697,7 @@
   {
     "id": "document-att-28555",
     "title": "Exhibit 3: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0954"
@@ -38222,7 +38222,7 @@
   {
     "id": "document-att-28097",
     "title": "Exhibit 4- Contractor's Performance Reports (2)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0967"
@@ -38327,7 +38327,7 @@
   {
     "id": "document-att-28556",
     "title": "CONTRACT RENEWAL EVALUATION FORM",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0969"
@@ -38702,7 +38702,7 @@
   {
     "id": "document-att-28104",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0976"
@@ -38747,7 +38747,7 @@
   {
     "id": "document-att-28564",
     "title": "Exhibit 2: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0977"
@@ -38897,7 +38897,7 @@
   {
     "id": "document-att-28153",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0980"
@@ -38912,7 +38912,7 @@
   {
     "id": "document-att-28511",
     "title": "Exhibit 3: (A) Contractor Performance Report - Jacobs",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0980"
@@ -38927,7 +38927,7 @@
   {
     "id": "document-att-28512",
     "title": "Exhibit 3: (B) Contractor Performance Report - Prime",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0980"
@@ -38942,7 +38942,7 @@
   {
     "id": "document-att-28513",
     "title": "Exhibit 3: (C) Contractor Performance Report - Benchmark Engineering",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0980"
@@ -38957,7 +38957,7 @@
   {
     "id": "document-att-28514",
     "title": "Exhibit 3: (D) Contractor Performance Report - Gresham Smith",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0980"
@@ -39032,7 +39032,7 @@
   {
     "id": "document-att-28066",
     "title": "Exhibit #1: Contractor Performance",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0984"
@@ -39077,7 +39077,7 @@
   {
     "id": "document-att-28549",
     "title": "Exhibit 2: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0981"
@@ -39242,7 +39242,7 @@
   {
     "id": "document-att-27963",
     "title": "Exhibit 2: CONTRACT RENEWAL EVALUATION FORM",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0986"
@@ -39317,7 +39317,7 @@
   {
     "id": "document-att-28506",
     "title": "Contract Renewal Evaluation Form - LIFELINE",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2025-12-17-boc",
     "issueIds": [
       "issue-25-0987"
@@ -39797,7 +39797,7 @@
   {
     "id": "document-att-28993",
     "title": "Exhibit 3 - Contractor Performance Report - Beck (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-01-21-boc",
     "issueIds": [
       "issue-26-0020"
@@ -39842,7 +39842,7 @@
   {
     "id": "document-att-28615",
     "title": "Exhibit 2 - Contractor Performance Report - Beltmann",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-01-21-boc",
     "issueIds": [
       "issue-26-0034"
@@ -39857,7 +39857,7 @@
   {
     "id": "document-att-28616",
     "title": "Exhibit 2 - Contractor Performance Report - ALS (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-01-21-boc",
     "issueIds": [
       "issue-26-0034"
@@ -39872,7 +39872,7 @@
   {
     "id": "document-att-28617",
     "title": "Exhibit 2 - Contractor Performance Report - APMC Moving & Delivery",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-01-21-boc",
     "issueIds": [
       "issue-26-0034"
@@ -39977,7 +39977,7 @@
   {
     "id": "document-att-29009",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Jail Maintenance FY2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-01-21-boc",
     "issueIds": [
       "issue-26-0035"
@@ -40577,7 +40577,7 @@
   {
     "id": "document-att-28572",
     "title": "Exhibit 2 - CPR Memo - Cliff's Fire",
-    "documentType": "letter",
+    "documentType": "report",
     "meetingId": "meeting-2026-02-04-boc",
     "issueIds": [
       "issue-26-0057"
@@ -40592,7 +40592,7 @@
   {
     "id": "document-att-28574",
     "title": "Exhibit 2 - Contractor Performance Report - VSC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-02-04-boc",
     "issueIds": [
       "issue-26-0057"
@@ -40847,7 +40847,7 @@
   {
     "id": "document-att-28987",
     "title": "Exhibit 3 - Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-02-04-boc",
     "issueIds": [
       "issue-26-0062"
@@ -41267,7 +41267,7 @@
   {
     "id": "document-att-29034",
     "title": "2026 Contract Renewal Evaluation Form-MOWA",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-02-18-boc",
     "issueIds": [
       "issue-26-0096"
@@ -42002,7 +42002,7 @@
   {
     "id": "document-att-29052",
     "title": "Exhibit 3 Contractor's Performance Report - EMSI",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-03-04-boc",
     "issueIds": [
       "issue-26-0118"
@@ -42842,7 +42842,7 @@
   {
     "id": "document-att-29283",
     "title": "Bear Creek Nature Center - 2026 Contract_2.9.26",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-03-18-boc",
     "issueIds": [
       "issue-26-0162"
@@ -42887,7 +42887,7 @@
   {
     "id": "document-att-29285",
     "title": "Chattahoochee Nature Center 2026 Contract_2.9.26",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-03-18-boc",
     "issueIds": [
       "issue-26-0163"
@@ -42917,7 +42917,7 @@
   {
     "id": "document-att-29286",
     "title": "Hammonds House 2026 Contract_2.9.26",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-03-18-boc",
     "issueIds": [
       "issue-26-0164"
@@ -42932,7 +42932,7 @@
   {
     "id": "document-att-29287",
     "title": "NBAF 2026 Contract_2.9.26",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-03-18-boc",
     "issueIds": [
       "issue-26-0165"
@@ -42962,7 +42962,7 @@
   {
     "id": "document-att-29288",
     "title": "TAC 2026 Contract_2.9.26",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-03-18-boc",
     "issueIds": [
       "issue-26-0166"
@@ -43127,7 +43127,7 @@
   {
     "id": "document-att-29448",
     "title": "Exhibit 2: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-03-18-boc",
     "issueIds": [
       "issue-26-0169"
@@ -43337,7 +43337,7 @@
   {
     "id": "document-att-29245",
     "title": "Exhibit 2: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-04-01-boc",
     "issueIds": [
       "issue-26-0190"
@@ -44057,7 +44057,7 @@
   {
     "id": "document-att-29406",
     "title": "Exhibit 2: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-04-15-boc",
     "issueIds": [
       "issue-26-0217"
@@ -44552,7 +44552,7 @@
   {
     "id": "document-att-29689",
     "title": "Contractor Performance Memo-TBRA",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-05-06-boc",
     "issueIds": [
       "issue-26-0236"
@@ -44567,7 +44567,7 @@
   {
     "id": "document-att-29547",
     "title": "Contract Performance Report Professional Services Form ADW- Equus",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-05-06-boc",
     "issueIds": [
       "issue-26-0237"
@@ -44612,7 +44612,7 @@
   {
     "id": "document-att-29553",
     "title": "Contract Performance Report Professional Services Form Youth- Equus copy",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-05-06-boc",
     "issueIds": [
       "issue-26-0238"
@@ -44657,7 +44657,7 @@
   {
     "id": "document-att-29557",
     "title": "Contract Performance Report Professional Services Form OSO- Equus copy",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-05-06-boc",
     "issueIds": [
       "issue-26-0239"
@@ -44792,7 +44792,7 @@
   {
     "id": "document-att-29685",
     "title": "Exhibit 2 - Contractor Performance Report - Intercontinental",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-05-06-boc",
     "issueIds": [
       "issue-26-0249"
@@ -45392,7 +45392,7 @@
   {
     "id": "document-att-29869",
     "title": "CM APPROVED CONTRACTS 3 7 2026 - 5 8 2026, 5 20 boc",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-05-20-boc",
     "issueIds": [
       "issue-26-0275"
@@ -48287,7 +48287,7 @@
   {
     "id": "document-att-29786",
     "title": "Exhibit 1: Contract Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-06-03-boc",
     "issueIds": [
       "issue-26-0311"
@@ -48302,7 +48302,7 @@
   {
     "id": "document-att-29787",
     "title": "Exhibit 2 Contract Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-06-03-boc",
     "issueIds": [
       "issue-26-0311"
@@ -48407,7 +48407,7 @@
   {
     "id": "document-att-29744",
     "title": "Exhibit 3 Contractor's Performance Report- ACC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-06-03-boc",
     "issueIds": [
       "issue-26-0320"
@@ -48737,7 +48737,7 @@
   {
     "id": "document-att-29867",
     "title": "Contractor Performance Report - Motorola",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-06-03-boc",
     "issueIds": [
       "issue-26-0326"
@@ -49217,7 +49217,7 @@
   {
     "id": "document-att-30085",
     "title": "CM APPROVED CONTRACTS 5 13 2026 - 6 9 2026",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-06-17-boc",
     "issueIds": [
       "issue-26-0351"
@@ -49232,7 +49232,7 @@
   {
     "id": "document-att-29990",
     "title": "Contract Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-06-17-boc",
     "issueIds": [
       "issue-26-0352"
@@ -49307,7 +49307,7 @@
   {
     "id": "document-att-29987",
     "title": "Contractor Performance Memo",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-06-17-boc",
     "issueIds": [
       "issue-26-0354"
@@ -49352,7 +49352,7 @@
   {
     "id": "document-att-29841",
     "title": "Exhibit 1 Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-06-17-boc",
     "issueIds": [
       "issue-26-0355"
@@ -49427,7 +49427,7 @@
   {
     "id": "document-att-29871",
     "title": "Exhibit 2 Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-06-17-boc",
     "issueIds": [
       "issue-26-0356"
@@ -49487,7 +49487,7 @@
   {
     "id": "document-att-29921",
     "title": "Exhibit 2 Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-06-17-boc",
     "issueIds": [
       "issue-26-0357"
@@ -49502,7 +49502,7 @@
   {
     "id": "document-att-29922",
     "title": "Exhibit 3 Contract Performance Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-06-17-boc",
     "issueIds": [
       "issue-26-0357"
@@ -49562,7 +49562,7 @@
   {
     "id": "document-att-29780",
     "title": "Exhibit 3 Contractor's Performance Report- ReIMAGE 2026 (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-06-17-boc",
     "issueIds": [
       "issue-26-0365"
@@ -49787,7 +49787,7 @@
   {
     "id": "document-att-29937",
     "title": "Exhibit 4 Contractor's Performance Report - ODP",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-06-17-boc",
     "issueIds": [
       "issue-26-0366"
@@ -50417,7 +50417,7 @@
   {
     "id": "document-att-30074",
     "title": "Exhibit 2 - Contractor Performance Report - Allied",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-07-15-boc",
     "issueIds": [
       "issue-26-0399"
@@ -50522,7 +50522,7 @@
   {
     "id": "document-att-30100",
     "title": "Exhibit 3 Contractor's Performance Report - Sitmatic",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-07-15-boc",
     "issueIds": [
       "issue-26-0400"
@@ -50627,7 +50627,7 @@
   {
     "id": "document-att-30146",
     "title": "Exhibit 3 - Contractor Performance Report - TRANE",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-07-15-boc",
     "issueIds": [
       "issue-26-0401"
@@ -50672,7 +50672,7 @@
   {
     "id": "document-att-30155",
     "title": "Exhibit 2 - Contractor Performance Report - FM Shelton",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-07-15-boc",
     "issueIds": [
       "issue-26-0402"
@@ -50717,7 +50717,7 @@
   {
     "id": "document-att-29792",
     "title": "Exhibit 2: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-07-15-boc",
     "issueIds": [
       "issue-26-0406"
@@ -51482,7 +51482,7 @@
   {
     "id": "document-att-30096",
     "title": "Exhibit 2 Contractor's Performance Report- Coca Cola (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-05-boc",
     "issueIds": [
       "issue-26-0437"
@@ -51737,7 +51737,7 @@
   {
     "id": "document-att-30081",
     "title": "Exhibit 2: Contract Performance Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-05-boc",
     "issueIds": [
       "issue-26-0444"
@@ -51827,7 +51827,7 @@
   {
     "id": "document-att-30200",
     "title": "Exhibit 3 CPR Memo - Deerfield Asphalt",
-    "documentType": "letter",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-05-boc",
     "issueIds": [
       "issue-26-0456"
@@ -51842,7 +51842,7 @@
   {
     "id": "document-att-30201",
     "title": "Exhibit 3 CPR Memo - Paramount Cutting",
-    "documentType": "letter",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-05-boc",
     "issueIds": [
       "issue-26-0456"
@@ -51917,7 +51917,7 @@
   {
     "id": "document-att-30340",
     "title": "Exhibit 2 Contractor's Performance Report-Latham Home Sanitation CPR 7-13-26",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-05-boc",
     "issueIds": [
       "issue-26-0457"
@@ -51932,7 +51932,7 @@
   {
     "id": "document-att-30341",
     "title": "Exhibit 2 Contractor's Performance Report- Arrow Waste CPR 7-13-26",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-05-boc",
     "issueIds": [
       "issue-26-0457"
@@ -52637,7 +52637,7 @@
   {
     "id": "document-att-30607",
     "title": "Wellspring - Third Amended and Restated ARPA Contract_8.10.26",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0487"
@@ -52832,7 +52832,7 @@
   {
     "id": "document-att-30218",
     "title": "Exhibit 4 Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0509"
@@ -52877,7 +52877,7 @@
   {
     "id": "document-att-30181",
     "title": "Exhibit 6 Contractor Performance Report - CGL (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0502"
@@ -53027,7 +53027,7 @@
   {
     "id": "document-att-30398",
     "title": "Exhibit 2 Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0504"
@@ -53087,7 +53087,7 @@
   {
     "id": "document-att-30294",
     "title": "Exhibit 6 Contractor Performance Report - CGL (2) (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0503"
@@ -53132,7 +53132,7 @@
   {
     "id": "document-att-30328",
     "title": "Exhibit 3 Contractor Performance Report - United Pool Maintenance",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0507"
@@ -53222,7 +53222,7 @@
   {
     "id": "document-att-30425",
     "title": "Exhibit 2 Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0512"
@@ -53237,7 +53237,7 @@
   {
     "id": "document-att-30426",
     "title": "Exhibit 3 Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0512"
@@ -53327,7 +53327,7 @@
   {
     "id": "document-att-30371",
     "title": "Exhibit 2 Contractor Performance Report - MSI",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0508"
@@ -53342,7 +53342,7 @@
   {
     "id": "document-att-30372",
     "title": "Exhibit 2 Contractor Performance Report - Daikin",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0508"
@@ -53357,7 +53357,7 @@
   {
     "id": "document-att-30374",
     "title": "Exhibit 2 Contractor Performance Report - TRANE",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0508"
@@ -53417,7 +53417,7 @@
   {
     "id": "document-att-30365",
     "title": "Exhibit 2 Contractor's Performance Report- ABM -CPR (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0511"
@@ -53432,7 +53432,7 @@
   {
     "id": "document-att-30366",
     "title": "Exhibit 2 Contractor's Performance Report- AFS- CPR (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0511"
@@ -53492,7 +53492,7 @@
   {
     "id": "document-att-30396",
     "title": "Exhibit 3 Contractor's Performance Report- Orkin, LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0505"
@@ -53522,7 +53522,7 @@
   {
     "id": "document-att-30404",
     "title": "Exhibit 2 Contractor's Performance Report- Reimage (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0513"
@@ -53537,7 +53537,7 @@
   {
     "id": "document-att-30405",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- General Landscaping and Lawn Care Services -FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0513"
@@ -53627,7 +53627,7 @@
   {
     "id": "document-att-30429",
     "title": "Exhibit 2 Contractor's Performance Report- ACC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0514"
@@ -53642,7 +53642,7 @@
   {
     "id": "document-att-30430",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Landfill Post Closure Services 2027 (2)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-08-19-boc",
     "issueIds": [
       "issue-26-0514"
@@ -53867,7 +53867,7 @@
   {
     "id": "document-att-30591",
     "title": "Exhibit 2 Contractor Performance Report - Water Treatment- BenCon (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0528"
@@ -53882,7 +53882,7 @@
   {
     "id": "document-att-30592",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - HVAC Water Treatment 2027 Final",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0528"
@@ -54032,7 +54032,7 @@
   {
     "id": "document-att-30139",
     "title": "Exhibit 3 Lerch Bates Fulton County Jail - Mod Survey Report Assessment",
-    "documentType": "map",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0538-jail-elevators"
@@ -54062,7 +54062,7 @@
   {
     "id": "document-att-30778",
     "title": "Exhibit 2 CPR Memo - TKE",
-    "documentType": "letter",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0538-jail-elevators"
@@ -54167,7 +54167,7 @@
   {
     "id": "document-att-30389",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Standby Roof Maintenance- FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0539"
@@ -54197,7 +54197,7 @@
   {
     "id": "document-att-30436",
     "title": "Exhibit 2 Contractor Performance Report - MTI",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0540"
@@ -54212,7 +54212,7 @@
   {
     "id": "document-att-30437",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Bus Shuttle -FY2027 (003)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0540"
@@ -54287,7 +54287,7 @@
   {
     "id": "document-att-30453",
     "title": "Exhibit 3 Contractor's Performance Report- Reimage (2)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0541"
@@ -54317,7 +54317,7 @@
   {
     "id": "document-att-30572",
     "title": "Exhibit 2 Contractor's Performance Report- AFS",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0542"
@@ -54377,7 +54377,7 @@
   {
     "id": "document-att-30578",
     "title": "Exhibit 2 Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0545"
@@ -54437,7 +54437,7 @@
   {
     "id": "document-att-30664",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0543"
@@ -54452,7 +54452,7 @@
   {
     "id": "document-att-30665",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0543"
@@ -54482,7 +54482,7 @@
   {
     "id": "document-att-30569",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0544"
@@ -54512,7 +54512,7 @@
   {
     "id": "document-att-30612",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0544"
@@ -54572,7 +54572,7 @@
   {
     "id": "document-att-30581",
     "title": "Exhibit 1 Contractor Performance Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-02-boc",
     "issueIds": [
       "issue-26-0548"
@@ -54692,7 +54692,7 @@
   {
     "id": "document-att-30561",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Real Estate Development Consultant FY2026",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0565"
@@ -54977,7 +54977,7 @@
   {
     "id": "document-att-31009",
     "title": "CM APPROVED CONTRACTS 6 10 2026 - 9 1 2026",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0564"
@@ -55022,7 +55022,7 @@
   {
     "id": "document-att-30827",
     "title": "GWC_Contract_2026-2027 v2",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0569"
@@ -55052,7 +55052,7 @@
   {
     "id": "document-att-30697",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0571"
@@ -55067,7 +55067,7 @@
   {
     "id": "document-att-30776",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0571"
@@ -55112,7 +55112,7 @@
   {
     "id": "document-att-30775",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0572"
@@ -55157,7 +55157,7 @@
   {
     "id": "document-att-30773",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0573"
@@ -55232,7 +55232,7 @@
   {
     "id": "document-att-30302",
     "title": "Exhibit 6 Contractor Performance Report - CGL (2) (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0597"
@@ -55292,7 +55292,7 @@
   {
     "id": "document-att-30783",
     "title": "Exhibit 2 Contractor Performance Report - James River",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0598"
@@ -55307,7 +55307,7 @@
   {
     "id": "document-att-30784",
     "title": "Exhibit 2 Contractor Performance Report - Boswell",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0598"
@@ -55322,7 +55322,7 @@
   {
     "id": "document-att-30785",
     "title": "Exhibit 2 Contractor Performance Report - Sunoco",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0598"
@@ -55397,7 +55397,7 @@
   {
     "id": "document-att-30633",
     "title": "Exhibit 3 Contractor Performance Report - Daikin",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0599"
@@ -55457,7 +55457,7 @@
   {
     "id": "document-att-30692",
     "title": "Exhibit 2 Contractor's Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0578"
@@ -55472,7 +55472,7 @@
   {
     "id": "document-att-30693",
     "title": "Exhibit 3 Contract Renewal Evaluation Form -Medical and Clinical General Cleaning Services- FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0578"
@@ -55517,7 +55517,7 @@
   {
     "id": "document-att-30754",
     "title": "Exhibit 2 Contractor's Performance Report- J2",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0579"
@@ -55532,7 +55532,7 @@
   {
     "id": "document-att-30755",
     "title": "Exhibit 2 Contractor Performance - B&W Mechanical Contractors Inc (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0579"
@@ -55547,7 +55547,7 @@
   {
     "id": "document-att-30756",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Standby Plumbing Repair- FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0579"
@@ -55772,7 +55772,7 @@
   {
     "id": "document-att-30940",
     "title": "Exhibit 2: Contract Performance Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0581"
@@ -55937,7 +55937,7 @@
   {
     "id": "document-att-30708",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0583"
@@ -55952,7 +55952,7 @@
   {
     "id": "document-att-30843",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0583"
@@ -55982,7 +55982,7 @@
   {
     "id": "document-att-30800",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0584"
@@ -55997,7 +55997,7 @@
   {
     "id": "document-att-30844",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0584"
@@ -56012,7 +56012,7 @@
   {
     "id": "document-att-30669",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0585"
@@ -56087,7 +56087,7 @@
   {
     "id": "document-att-30757",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0586"
@@ -56117,7 +56117,7 @@
   {
     "id": "document-att-30839",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0587"
@@ -56132,7 +56132,7 @@
   {
     "id": "document-att-30840",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0587"
@@ -56162,7 +56162,7 @@
   {
     "id": "document-att-30726",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0588"
@@ -56177,7 +56177,7 @@
   {
     "id": "document-att-30727",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0588"
@@ -56192,7 +56192,7 @@
   {
     "id": "document-att-30617",
     "title": "Exhibit 3: Contractor Performance Report (B)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0590"
@@ -56237,7 +56237,7 @@
   {
     "id": "document-att-30770",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0590"
@@ -56252,7 +56252,7 @@
   {
     "id": "document-att-30777",
     "title": "Exhibit 3: Contractor Performance Report (A)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0590"
@@ -56282,7 +56282,7 @@
   {
     "id": "document-att-30604",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0589"
@@ -56312,7 +56312,7 @@
   {
     "id": "document-att-30788",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0591"
@@ -56327,7 +56327,7 @@
   {
     "id": "document-att-30789",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0591"
@@ -56402,7 +56402,7 @@
   {
     "id": "document-att-31048",
     "title": "PRESS RELEASE TAX INCREASE 2026",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-09-16-boc",
     "issueIds": [
       "issue-26-0594"
@@ -56702,7 +56702,7 @@
   {
     "id": "document-att-30623",
     "title": "Exhibit 2 Contractor Performance Report - Overhead dba DH Pace (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0624"
@@ -56717,7 +56717,7 @@
   {
     "id": "document-att-30624",
     "title": "Exhibit 2 Contractor Performance Report - ACME (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0624"
@@ -56732,7 +56732,7 @@
   {
     "id": "document-att-30625",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Locks Doors and Hardware FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0624"
@@ -56777,7 +56777,7 @@
   {
     "id": "document-att-30750",
     "title": "CONTRACT RENEWAL EVALUATION FORM - Ad Astra (2026) (003)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0622"
@@ -56822,7 +56822,7 @@
   {
     "id": "document-att-30765",
     "title": "CONTRACT RENEWAL EVALUATION FORM - NCI (2026)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0623"
@@ -56882,7 +56882,7 @@
   {
     "id": "document-att-30812",
     "title": "Exhibit 2 Contractor's Performance Report- (A) Latham Home Sanitation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0630"
@@ -56897,7 +56897,7 @@
   {
     "id": "document-att-30813",
     "title": "Exhibit 3 Contractor's Performance Report - Carter I Enterprise - CPR",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0630"
@@ -56957,7 +56957,7 @@
   {
     "id": "document-att-30837",
     "title": "Exhibit 2 Contractor's Performance Report - Generator Maintenance of Georgia",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0627"
@@ -56972,7 +56972,7 @@
   {
     "id": "document-att-30838",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Generator System Maintenance - FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0627"
@@ -57107,7 +57107,7 @@
   {
     "id": "document-att-31073",
     "title": "Exhibit 2 Contractor's Performance Report- (A) Cliffs Fire Extinguisher Co. Inc",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0625"
@@ -57122,7 +57122,7 @@
   {
     "id": "document-att-31074",
     "title": "Exhibit 2 Contractor's Performance Report- (B) Pye Barker Company - CPR",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0625"
@@ -57137,7 +57137,7 @@
   {
     "id": "document-att-31075",
     "title": "Exhibit 2 Contractor's Performance Report- (C) Jones Welding Industrial Supply Inc",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0625"
@@ -57152,7 +57152,7 @@
   {
     "id": "document-att-31076",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Fire Extinguisher Testing and Maintenance Services- FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0625"
@@ -57257,7 +57257,7 @@
   {
     "id": "document-att-31143",
     "title": "Exhibit 2 Contractor's Performance Report- Clean Harbors Environmental",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0628"
@@ -57272,7 +57272,7 @@
   {
     "id": "document-att-31144",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Hazardous Waste Disposal- FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0628"
@@ -57302,7 +57302,7 @@
   {
     "id": "document-att-31224",
     "title": "Exhibit 2 Contractor's Performance Report - Levonne Industries, LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0629"
@@ -57317,7 +57317,7 @@
   {
     "id": "document-att-31225",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Uninterrupted Power Supply- FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0629"
@@ -57377,7 +57377,7 @@
   {
     "id": "document-att-31263",
     "title": "Exhibit 2 Contractor's Performance Report - (A) Plumbing Distibutors, Inc",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0626"
@@ -57392,7 +57392,7 @@
   {
     "id": "document-att-31264",
     "title": "Exhibit 2 Contractor's Performance Report - (B) Levonne Industries LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0626"
@@ -57407,7 +57407,7 @@
   {
     "id": "document-att-31265",
     "title": "Exhibit 2 Contractor's Performance Report - (C) Equiparts Corp",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0626"
@@ -57422,7 +57422,7 @@
   {
     "id": "document-att-31266",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Plumbing Supplies and Related Items 2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0626"
@@ -57512,7 +57512,7 @@
   {
     "id": "document-att-31112",
     "title": "Exhibit 3 - Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0639"
@@ -57527,7 +57527,7 @@
   {
     "id": "document-att-30391",
     "title": "Exhibit 1 - Nasuni File Data Platform Quote 2001725068931-02",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0664"
@@ -57677,7 +57677,7 @@
   {
     "id": "document-att-30574",
     "title": "Exhibit 2 Contractor's Performance Report- J2",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0667"
@@ -57722,7 +57722,7 @@
   {
     "id": "document-att-30576",
     "title": "Exhibit 2 Contractor's Performance Report- HPI Floors LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0668"
@@ -57752,7 +57752,7 @@
   {
     "id": "document-att-30599",
     "title": "Exhibit 2 Contractor's Performance Report-Daikin Applied",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0645"
@@ -57767,7 +57767,7 @@
   {
     "id": "document-att-30600",
     "title": "Exhibit 2 Contractor's Performance Report- Mechanical Services Inc.",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0645"
@@ -57782,7 +57782,7 @@
   {
     "id": "document-att-30601",
     "title": "Exhibit 2 Contractor's Performance Report-Mallory Evans",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0645"
@@ -57797,7 +57797,7 @@
   {
     "id": "document-att-30602",
     "title": "Exhibit 3 Contract Renewal Evaluation Form -Preventive & Predictive Maintenance for Chillers- FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0645"
@@ -57857,7 +57857,7 @@
   {
     "id": "document-att-30713",
     "title": "Exhibit 2 Contractor's Performance Report - (A) Office Design Concept GA LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0646"
@@ -57872,7 +57872,7 @@
   {
     "id": "document-att-30714",
     "title": "Exhibit 2 Contractor's Performance Report - (B) Bright Interiors Group",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0646"
@@ -57887,7 +57887,7 @@
   {
     "id": "document-att-30715",
     "title": "Exhibit 2 Contractor's Performance Report - (C) Corporate Environments",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0646"
@@ -57902,7 +57902,7 @@
   {
     "id": "document-att-30716",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Modular Furniture- FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0646"
@@ -57992,7 +57992,7 @@
   {
     "id": "document-att-30731",
     "title": "Exhibit 2 Contractor's Performance Report- VSC Fire and Security (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0647"
@@ -58007,7 +58007,7 @@
   {
     "id": "document-att-30732",
     "title": "Exhibit 2 Contractor's Performance Report- Cliff Fire Extinguisher Co Inc (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0647"
@@ -58022,7 +58022,7 @@
   {
     "id": "document-att-30733",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Fire Sprinkler Protection -FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0647"
@@ -58082,7 +58082,7 @@
   {
     "id": "document-att-30822",
     "title": "Exhibit 2 Contractor's Performance Report- (A) Latham Home Sanitation (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0648"
@@ -58097,7 +58097,7 @@
   {
     "id": "document-att-30823",
     "title": "Exhibit 2 Contractor's Performance Report- (B) Georgia Waste Systems LLC dba Waste Management",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0648"
@@ -58112,7 +58112,7 @@
   {
     "id": "document-att-30824",
     "title": "Exhibit 2 Contractor's Performance Report - (C) Arrow Waste",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0648"
@@ -58127,7 +58127,7 @@
   {
     "id": "document-att-30825",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Countywide Solid Waste Disposal- 2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0648"
@@ -58172,7 +58172,7 @@
   {
     "id": "document-att-30855",
     "title": "Exhibit 3 Contractor Performance Report - Orkin LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0669"
@@ -58277,7 +58277,7 @@
   {
     "id": "document-att-30865",
     "title": "Exhibit 2 Contractor's Performance Report- Beltman Relocation Group",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0649"
@@ -58292,7 +58292,7 @@
   {
     "id": "document-att-30866",
     "title": "Exhibit 2 Contractor's Performance Report- ALS Van Line Services, Inc",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0649"
@@ -58307,7 +58307,7 @@
   {
     "id": "document-att-30867",
     "title": "Exhibit 2 Contractor's Performance Report Memo - APMC Moving & Delivery, LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0649"
@@ -58322,7 +58322,7 @@
   {
     "id": "document-att-30868",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Moving Services FY2027 (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0649"
@@ -58367,7 +58367,7 @@
   {
     "id": "document-att-31024",
     "title": "Exhibit 2 Contract Renewal Evaluation Form DH pace",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0650"
@@ -58382,7 +58382,7 @@
   {
     "id": "document-att-31025",
     "title": "Exhibit 3 Contractors Performance Report(A)DH Pace",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0650"
@@ -58397,7 +58397,7 @@
   {
     "id": "document-att-31026",
     "title": "Exhibit 3 Contractors Performance Reports(B)PIEDMO",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0650"
@@ -58427,7 +58427,7 @@
   {
     "id": "document-att-30878",
     "title": "Exhibit 2 Contractor's Performance Report - Arborserv",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0653"
@@ -58442,7 +58442,7 @@
   {
     "id": "document-att-30879",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Tree Removal Services Countywide-FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0653"
@@ -58532,7 +58532,7 @@
   {
     "id": "document-att-31302",
     "title": "Exhibit 2 Contractor's Performance Report- (A) Brad Construction Company II (2)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0651"
@@ -58547,7 +58547,7 @@
   {
     "id": "document-att-31303",
     "title": "Exhibit 2 Contractor's Performance Report- (B) Hawks Construction Company (2)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0651"
@@ -58562,7 +58562,7 @@
   {
     "id": "document-att-31304",
     "title": "Exhibit 2 Contractor's Performance Report- (C) Complete Contracting Partners LLC (2)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0651"
@@ -58577,7 +58577,7 @@
   {
     "id": "document-att-31305",
     "title": "Exhibit 2 Contractor's Performance Report- (D) Rubio and Son Interiors, Inc (2)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0651"
@@ -58592,7 +58592,7 @@
   {
     "id": "document-att-31306",
     "title": "Exhibit 2 Contractor's Performance Report- (E) Osprey Management (2)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0651"
@@ -58607,7 +58607,7 @@
   {
     "id": "document-att-31307",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Task Order Contract for Minor Construction Projects- 2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0651"
@@ -58622,7 +58622,7 @@
   {
     "id": "document-att-30990",
     "title": "Exhibit 2 Contractor's Performance Report - Acom Integrated Solutions (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0652"
@@ -58637,7 +58637,7 @@
   {
     "id": "document-att-30991",
     "title": "Exhibit 2 Contractor's Performance Report- Twelve Associates",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0652"
@@ -58652,7 +58652,7 @@
   {
     "id": "document-att-30992",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Fire Intrusion Alarm Systems- FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0652"
@@ -58697,7 +58697,7 @@
   {
     "id": "document-att-31034",
     "title": "Exhibit 2 Contractor's Performance Report- Maxair",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0654"
@@ -58712,7 +58712,7 @@
   {
     "id": "document-att-31035",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Testing and Repair of Backflow Devices- FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0654"
@@ -58757,7 +58757,7 @@
   {
     "id": "document-att-31252",
     "title": "Exhibit 2 Contractor's Performance Report - Novus Solutions LLC (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0655"
@@ -58772,7 +58772,7 @@
   {
     "id": "document-att-31253",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Electronic Equipment Recycling- FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0655"
@@ -58832,7 +58832,7 @@
   {
     "id": "document-att-30861",
     "title": "Exhibit 3: Contractor Performance Review",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0657"
@@ -58862,7 +58862,7 @@
   {
     "id": "document-att-31329",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0657"
@@ -58892,7 +58892,7 @@
   {
     "id": "document-att-30871",
     "title": "Exhibit 3: Contractor Performance Memo",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0671"
@@ -58922,7 +58922,7 @@
   {
     "id": "document-att-30791",
     "title": "Exhibit 3: Contractor Performance Report - Wade Coots",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0656"
@@ -58937,7 +58937,7 @@
   {
     "id": "document-att-30792",
     "title": "Exhibit 3: Contractor Performance Report - Kemi Construction",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0656"
@@ -58952,7 +58952,7 @@
   {
     "id": "document-att-30793",
     "title": "Exhibit 3: Contractor Performance Report - Site Engineering",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0656"
@@ -58967,7 +58967,7 @@
   {
     "id": "document-att-30794",
     "title": "Exhibit 3: Contractor Performance Report - Sol Construction",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0656"
@@ -59042,7 +59042,7 @@
   {
     "id": "document-att-30799",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0656"
@@ -59057,7 +59057,7 @@
   {
     "id": "document-att-30816",
     "title": "Exhibit 3: Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0658"
@@ -59087,7 +59087,7 @@
   {
     "id": "document-att-30818",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0658"
@@ -59222,7 +59222,7 @@
   {
     "id": "document-att-31276",
     "title": "Exhibit 2: Contractor Renewal Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0659"
@@ -59252,7 +59252,7 @@
   {
     "id": "document-att-31131",
     "title": "Exhibit 2 Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0660"
@@ -59267,7 +59267,7 @@
   {
     "id": "document-att-31132",
     "title": "Exhibit 3 Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0660"
@@ -59297,7 +59297,7 @@
   {
     "id": "document-att-31067",
     "title": "Exhibit 2 Contract Renewal Evaluation",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0661"
@@ -59312,7 +59312,7 @@
   {
     "id": "document-att-31068",
     "title": "Exhibit 3 Contractor Performance Report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-07-boc",
     "issueIds": [
       "issue-26-0661"
@@ -59582,7 +59582,7 @@
   {
     "id": "document-att-31247",
     "title": "Exhibit 2 Contractor's Performance Report- (A) Atlantic Tape CPR",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0688"
@@ -59597,7 +59597,7 @@
   {
     "id": "document-att-31248",
     "title": "Exhibit 2 Contractor's Performance Report- (B) Southeastern Paper Group LLC",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0688"
@@ -59612,7 +59612,7 @@
   {
     "id": "document-att-31249",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Janitorial Supplies and Equipment- FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0688"
@@ -59657,7 +59657,7 @@
   {
     "id": "document-att-31271",
     "title": "Exhibit 2 Contractor's Performance Report- Shelton Supply dba F.M. Shelton",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0689"
@@ -59672,7 +59672,7 @@
   {
     "id": "document-att-31272",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- HVAC Parts and Equipment 2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0689"
@@ -59702,7 +59702,7 @@
   {
     "id": "document-att-31274",
     "title": "Exhibit 2 Contractor's Performance Report - Spot Coolers a division of Carrier Rental Systems, Inc",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0690"
@@ -59717,7 +59717,7 @@
   {
     "id": "document-att-31275",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Countywide Spot Cooler and Heat Pump 2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0690"
@@ -59747,7 +59747,7 @@
   {
     "id": "document-att-31279",
     "title": "Exhibit 2 Contractor's Performance Report -Safeguard Printing & Promotional Products, Inc",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0691"
@@ -59762,7 +59762,7 @@
   {
     "id": "document-att-31280",
     "title": "Exhibit 3 Contract Renewal Evaluation Form- Uniforms and Related Accessories -2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0691"
@@ -60062,7 +60062,7 @@
   {
     "id": "document-att-31268",
     "title": "Exhibit 2: Contractor Performance report",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0716"
@@ -60077,7 +60077,7 @@
   {
     "id": "document-att-31269",
     "title": "Exhibit 3: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0716"
@@ -60137,7 +60137,7 @@
   {
     "id": "document-att-31350",
     "title": "Exhibit 2 Contractors Performance Report - (A) E Sam Jones",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0718"
@@ -60152,7 +60152,7 @@
   {
     "id": "document-att-31351",
     "title": "Exhibit 2 Contractor's Performance Report- (B) Summit Lighting Solutions",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0718"
@@ -60167,7 +60167,7 @@
   {
     "id": "document-att-31352",
     "title": "Exhibit 2 Contractor's Performance Report - (C) Mega Wholesale",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0718"
@@ -60182,7 +60182,7 @@
   {
     "id": "document-att-31353",
     "title": "Exhibit 3 Contract Renewal Evaluation Form - Ballasts, Lamps, Light Fixtures and Related Supplies",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0718"
@@ -60212,7 +60212,7 @@
   {
     "id": "document-att-31230",
     "title": "Exhibit 2 Contractor Performance Memo - Levonne Industries",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0723"
@@ -60242,7 +60242,7 @@
   {
     "id": "document-att-31232",
     "title": "Exhibit 2 Contractor Performance Report - PP&E (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0723"
@@ -60272,7 +60272,7 @@
   {
     "id": "document-att-31238",
     "title": "Exhibit 2 Contractor Performance Memo - BB&D Services",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0723"
@@ -60302,7 +60302,7 @@
   {
     "id": "document-att-31256",
     "title": "Exhibit 2 Contractor Performance Report - Metropower",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0724"
@@ -60317,7 +60317,7 @@
   {
     "id": "document-att-31257",
     "title": "Exhibit 2 Contractor Performance Report - Capital City",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0724"
@@ -60332,7 +60332,7 @@
   {
     "id": "document-att-31258",
     "title": "Exhibit 2 Contractor's Performance Report - All N 1",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0724"
@@ -60392,7 +60392,7 @@
   {
     "id": "document-att-31294",
     "title": "Exhibit 2 Contractor's Performance Report- QCS Cleaning Inc DBA Quality Cleaning Service (1)",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0717"
@@ -60407,7 +60407,7 @@
   {
     "id": "document-att-31295",
     "title": "Exhibit 2 Contractor's Performance Reoprt- American Facility Services",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0717"
@@ -60422,7 +60422,7 @@
   {
     "id": "document-att-31296",
     "title": "Exhibit 3 Contract Renewal Evaluation Form -Janitorial Groups E, F, G, H, & I FY2027",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0717"
@@ -60497,7 +60497,7 @@
   {
     "id": "document-att-30748",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0719"
@@ -60557,7 +60557,7 @@
   {
     "id": "document-att-31325",
     "title": "Exhibit 2: Contract Renewal Evaluation Form",
-    "documentType": "agreement",
+    "documentType": "report",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0720"
@@ -60587,7 +60587,7 @@
   {
     "id": "document-att-31567",
     "title": "CM APPROVED CONTRACTS 9 2 2026 - 10 13 2026",
-    "documentType": "agreement",
+    "documentType": "supporting_document",
     "meetingId": "meeting-2026-10-21-boc",
     "issueIds": [
       "issue-26-0700"

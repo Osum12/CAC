@@ -74,10 +74,14 @@ export function IssueDetailPage() {
         </aside>
 
         <div className="detail__main detail__main--rest">
-          <section aria-labelledby="why-h" className="callout">
-            <h2 id="why-h">Why it may matter</h2>
-            <p className="prose">{issue.whyItMayMatter || 'No explanation has been recorded for this issue.'}</p>
-          </section>
+          {/* Shown only when an explanation was written from the documents; an empty callout on
+              most items would be noise. */}
+          {issue.whyItMayMatter && (
+            <section aria-labelledby="why-h" className="callout">
+              <h2 id="why-h">Why it may matter</h2>
+              <p className="prose">{issue.whyItMayMatter}</p>
+            </section>
+          )}
 
           <section aria-labelledby="timeline-h">
             <h2 id="timeline-h">Timeline</h2>

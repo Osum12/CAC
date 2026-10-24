@@ -14,5 +14,5 @@ They were run from a working folder with this layout, and expect it: the scripts
 | 6 | `checksum.cjs` | Independent re-check of the summaries: quotes exist in their sources, numbers occur in the sources (rounded amounts were checked by hand), no summary states an outcome. |
 | 7 | `itemlinks.cjs` | Reads each meeting's official page on fulton.legistar.com and records the public link for every item. The public site's item IDs differ from the API's, so links built from API IDs open an "Invalid parameters!" page. |
 | 8 | `geocode.cjs` | Looks up street addresses quoted in item text with the U.S. Census Bureau geocoder (approximate pins). |
-| 9 | `build.cjs` | Writes the three data files; keeps the hand-written records already in the app (IDs unchanged) and reports any it could not rebuild. |
+| 9 | `build.cjs base` | Writes the three data files. `base/` (kept in `reviewed/base`) holds the 24 hand-written records the app had before this import; they are kept with IDs unchanged, and any that cannot be rebuilt are reported. |
 | 10 | `urlcheck.cjs`, `pagecheck.cjs` | Opens every link: files must return 2xx; item pages must show their own file number, meeting pages their date, recordings must not be an error page. |

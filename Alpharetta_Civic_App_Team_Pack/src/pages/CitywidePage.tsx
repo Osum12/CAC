@@ -202,7 +202,9 @@ function CitywideContent({ meetings, issues, documents, issuesHeading, meetingsH
 
         <IssueFilters issues={issues} filters={filters} onChange={setFilter} onClear={clearFilters} />
         <p className="results-count" role="status" aria-live="polite">
-          {filtering ? `${matches.length} of ${issues.length} issues match` : `${issues.length} issues`}
+          {filtering
+            ? `${matches.length.toLocaleString('en-US')} of ${issues.length.toLocaleString('en-US')} issues match`
+            : `${issues.length.toLocaleString('en-US')} issues`}
         </p>
 
         {filtering ? (

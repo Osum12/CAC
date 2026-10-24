@@ -7,6 +7,7 @@ const T = require('./text.cjs');
 const { keep } = require('./filter.cjs');
 const norm = require('./norm.json');
 const RAW = path.join(__dirname, 'raw');
+// argv[2]: the hand-written records the app had before this import (kept, with IDs unchanged).
 const OUT = process.argv[2];
 const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const VERIFIED = '2026-10-24';
@@ -190,14 +191,15 @@ for (const f of fs.readdirSync(path.join(RAW, 'items')))
   for (const it of read(path.join(RAW, 'items', f)))
     if (it.EventItemMatterId && it.EventItemMatterAttachments?.length) attachmentsByMatter.set(it.EventItemMatterId, it.EventItemMatterAttachments.filter((x) => x.MatterAttachmentShowOnInternetPage));
 
+// Order matters: "Contractor's Performance Report" is a report, not an agreement.
 const DOC_TYPES = [
   [/resolution/i, 'resolution'],
   [/ordinance/i, 'ordinance'],
   [/presentation|\bppt\b|slides/i, 'presentation'],
   [/fact sheet|factsheet|summary sheet/i, 'fact_sheet'],
-  [/agreement|contract|amendment|\bMOU\b|\bMOA\b|\bIGA\b|lease|easement|deed|plat/i, 'agreement'],
-  [/map|site plan|exhibit [a-z] - map|survey/i, 'map'],
-  [/report|study|analysis|tabulation|evaluation|scorecard|performance/i, 'report'],
+  [/report|study|analysis|tabulation|evaluation|scorecard|performance|\bCPR\b/i, 'report'],
+  [/agreement|\bcontract\b|amendment|\bMOU\b|\bMOA\b|\bIGA\b|\blease\b|easement|\bdeed\b|\bplat\b/i, 'agreement'],
+  [/\bmap\b|site plan|survey/i, 'map'],
   [/letter|memo|correspondence/i, 'letter'],
   [/budget|financial|fiscal|cost/i, 'financial_document'],
 ];
