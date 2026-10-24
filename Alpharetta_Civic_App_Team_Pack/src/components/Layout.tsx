@@ -78,7 +78,6 @@ export function Layout() {
             </svg>
             <span className="brand__text">
               <span className="brand__name">Council Lens</span>
-              <span className="brand__tag">Local government, explained</span>
             </span>
           </NavLink>
           {place && (
