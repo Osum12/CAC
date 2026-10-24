@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
-import { formatCompactDate, formatDate, formatShortDate, formatTime, formatWeekday, humanize, meetingTypeLabel, primarySource, safeUrl } from '../services/format';
+import { formatCompactDate, formatDate, formatShortDate, formatTime, formatWeekday, humanize, meetingTypeLabel, primarySource, safeUrl, summaryParts } from '../services/format';
 import { getValidCoordinates } from '../services/nearMe';
 import { MockBadge, isMock } from './MockBadge';
 import { ArrowLabel } from './SourceAction';
@@ -43,7 +43,8 @@ export function IssueCard({ issue, headingLevel = 3 }: { issue: Issue; headingLe
           {issue.title}
         </Link>
       </H>
-      <p className="card__summary">{issue.summary}</p>
+      {/* The first paragraph only: the plain-language description, or the recorded result. */}
+      <p className="card__summary">{summaryParts(issue.summary).prose[0] ?? ''}</p>
       <dl className="facts">
         <div className="facts__row">
           <dt>Status</dt>

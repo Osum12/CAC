@@ -1,3 +1,4 @@
+import type { RefObject } from 'react';
 import { useParams } from 'react-router-dom';
 import { getDocumentsForMeeting, getIssuesForMeeting, getMeetingById } from '../services/civicData';
 import { formatDate, formatTime, meetingTypeLabel } from '../services/format';
@@ -12,6 +13,8 @@ import { NotFound } from './NotFoundPage';
 import { BackLink } from '../components/BackLink';
 import { usePlaceHref } from '../services/placeContext';
 import { nb } from '../components/nb';
+import { ShowMoreButton, useStepped } from '../components/ShowMore';
+import type { CivicDocument, Issue } from '../types/civic';
 
 export function MeetingDetailPage() {
   const href = usePlaceHref();
@@ -61,13 +64,7 @@ export function MeetingDetailPage() {
           <section aria-labelledby="m-docs-h">
             <h2 id="m-docs-h">Agenda and documents</h2>
             {documents.length ? (
-              <ul className="card-grid card-grid--tight">
-                {documents.map((d) => (
-                  <li key={d.id}>
-                    <DocumentCard document={d} />
-                  </li>
-                ))}
-              </ul>
+              <MeetingDocuments documents={documents} agendaIds={meeting.agendaDocumentIds} />
             ) : (
               <EmptyState title="No agenda or documents are linked to this meeting yet." />
             )}
@@ -77,13 +74,7 @@ export function MeetingDetailPage() {
           <section aria-labelledby="m-issues-h">
             <h2 id="m-issues-h">Issues on the agenda</h2>
             {issues.length ? (
-              <ul className="issue-list">
-                {issues.map((i) => (
-                  <li key={i.id}>
-                    <IssueCard issue={i} />
-                  </li>
-                ))}
-              </ul>
+              <MeetingIssues issues={issues} />
             ) : (
               <EmptyState title="No issues are linked to this meeting." />
             )}
@@ -109,5 +100,41 @@ export function MeetingDetailPage() {
         </aside>
       </div>
     </article>
+  );
+}
+
+/** The agenda first, then the items' attachments a step at a time (a meeting can have hundreds). */
+function MeetingDocuments({ documents, agendaIds }: { documents: CivicDocument[]; agendaIds: string[] }) {
+  const ordered = [...documents.filter((d) => agendaIds.includes(d.id)), ...documents.filter((d) => !agendaIds.includes(d.id))];
+  const opening = Math.max(agendaIds.length, 1) + 5;
+  const { visible, remaining, more, listRef } = useStepped(ordered, opening, 24, String(ordered.length));
+  return (
+    <>
+      <ul className="card-grid card-grid--tight" ref={listRef as RefObject<HTMLUListElement | null>}>
+        {visible.map((d) => (
+          <li key={d.id}>
+            <DocumentCard document={d} />
+          </li>
+        ))}
+      </ul>
+      <ShowMoreButton remaining={remaining} step={24} noun="documents" onClick={more} />
+      {ordered.length > opening && <p className="fine-print">Each agenda item’s own documents are also listed on its page.</p>}
+    </>
+  );
+}
+
+function MeetingIssues({ issues }: { issues: Issue[] }) {
+  const { visible, remaining, more, listRef } = useStepped(issues, 24, 24, String(issues.length));
+  return (
+    <>
+      <ul className="issue-list" ref={listRef as RefObject<HTMLUListElement | null>}>
+        {visible.map((i) => (
+          <li key={i.id}>
+            <IssueCard issue={i} />
+          </li>
+        ))}
+      </ul>
+      <ShowMoreButton remaining={remaining} step={24} noun="issues" onClick={more} />
+    </>
   );
 }

@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import { getDocumentsForIssue, getIssueById, getMeetingsForIssue } from '../services/civicData';
-import { formatDate, formatTime, humanize, meetingStatusLabel, meetingTypeLabel, sourceLabel } from '../services/format';
+import { formatDate, formatTime, humanize, meetingStatusLabel, meetingTypeLabel, sourceLabel, summaryParts } from '../services/format';
 import { getValidCoordinates } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
@@ -52,13 +52,7 @@ export function IssueDetailPage() {
 
       <div className="detail__grid">
         <div className="detail__main detail__main--lead">
-          <section aria-labelledby="summary-h">
-            <h2 id="summary-h">In plain language</h2>
-            <p className="prose">{issue.summary || 'No summary has been written for this issue yet.'}</p>
-            {!isMock(issue) && (
-              <p className="fine-print">This summary is a plain-language rewrite of the official documents listed below. Check them for the exact wording.</p>
-            )}
-          </section>
+          <IssueSummary issue={issue} />
         </div>
 
         <aside className="detail__side">
@@ -199,4 +193,42 @@ function numberedSourceLabel(urls: string[], i: number): string {
   const labels = urls.map((u, k) => sourceLabel(u, k));
   const same = labels.map((l, k) => (l === labels[i] ? k : -1)).filter((k) => k >= 0);
   return same.length > 1 ? `${labels[i]} (${same.indexOf(i) + 1} of ${same.length})` : labels[i];
+}
+
+/**
+ * The summary: a plain-language rewrite where one was written, or the recorded result followed by
+ * the county's own agenda wording, quoted and labeled as such (never passed off as a rewrite).
+ */
+function IssueSummary({ issue }: { issue: Issue }) {
+  const { prose, agendaQuote } = summaryParts(issue.summary);
+  return (
+    <>
+      <section aria-labelledby="summary-h">
+        <h2 id="summary-h">{agendaQuote ? 'What happened' : 'In plain language'}</h2>
+        {prose.length ? (
+          prose.map((p, i) => (
+            <p key={i} className="prose">
+              {p}
+            </p>
+          ))
+        ) : (
+          <p className="prose">No summary has been written for this issue yet.</p>
+        )}
+        {!isMock(issue) && !agendaQuote && (
+          <p className="fine-print">This summary is a plain-language rewrite of the official documents listed below. Check them for the exact wording.</p>
+        )}
+      </section>
+      {agendaQuote && (
+        <section aria-labelledby="agenda-words-h" className="agenda-words">
+          <h2 id="agenda-words-h">The agenda’s wording</h2>
+          <blockquote className="agenda-words__quote">
+            <p>{agendaQuote}</p>
+          </blockquote>
+          <p className="fine-print">
+            Quoted from the county’s agenda item, without the clerk’s notes on results. A plain-language summary has not been written for this item.
+          </p>
+        </section>
+      )}
+    </>
+  );
 }

@@ -1,6 +1,5 @@
-import { useRef, useState, type MouseEvent, type ReactNode, type RefObject } from 'react';
+import { useRef, type MouseEvent, type ReactNode, type RefObject } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { flushSync } from 'react-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getIssues, getMeetings } from '../services/civicData';
 import { filterIssues, isFiltering, statusesIn, topicsIn, type IssueFilterState } from '../services/filters';
@@ -17,6 +16,7 @@ import { AtlasBackdrop } from '../components/AtlasBackdrop';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 import { usePlace, usePlaceHref, useRecordSources } from '../services/placeContext';
 import { nb } from '../components/nb';
+import { ShowMoreButton, useStepped } from '../components/ShowMore';
 
 /**
  * Upcoming = not held or canceled, and dated today or later. A "scheduled" meeting with no
@@ -34,6 +34,13 @@ export function splitMeetings(meetings: Meeting[], today = todayIso()) {
 export function agendaFor(meeting: Meeting, documents: CivicDocument[]): CivicDocument | null {
   const docs = meeting.agendaDocumentIds.map((id) => documents.find((d) => d.id === id)).filter((d): d is CivicDocument => Boolean(d));
   return docs.find((d) => d.documentType === 'agenda') ?? docs[0] ?? null;
+}
+
+/** What the records cover, from the meetings themselves: "Items from the board’s 51 meetings, January 8, 2025 to October 21, 2026, …". */
+function coverageLine(meetings: Meeting[]): string {
+  const dates = meetings.filter((m) => !isMock(m) && m.date).map((m) => m.date!).sort();
+  if (!dates.length) return '';
+  return `Agenda items from the board’s ${meetings.length} meetings, ${nb(formatDate(dates[0]))} to ${nb(formatDate(dates.at(-1)!))}. Ceremonial items such as proclamations are left out.`;
 }
 
 /** Most recent verification date across curated records, or null when none is recorded. */
@@ -115,7 +122,7 @@ export function CitywidePage() {
               <p className="hero__note">
                 {anyMock
                   ? 'These records include sample data and are not city totals.'
-                  : `A selection of recent items, not every decision.${checked ? ` Last checked against official county records on ${nb(formatDate(checked))}.` : ''}`}
+                  : `${coverageLine(ready[0])}${checked ? ` Last checked against official county records on ${nb(formatDate(checked))}.` : ''}`}
               </p>
             )}
           </div>
@@ -294,54 +301,41 @@ const GROUPS: { id: string; title: string; glyph: string; statuses: string[] }[]
 ];
 const groupOf = (i: Issue) => GROUPS.find((g) => g.statuses.includes(i.status)) ?? GROUPS[GROUPS.length - 1];
 
-/** A long group shows its first few issues, whole, and a button for the rest. */
+/** A long group opens with its first few issues (more when the list is a search result) and grows a step at a time. */
 const SHORT_LENGTH = 6;
+const STEP = 24;
 
 function GroupedIssues({ issues, shorten = false }: { issues: Issue[]; shorten?: boolean }) {
   const sorted = byImportance(issues);
-  const [opened, setOpened] = useState<string[]>([]);
-  const groupRefs = useRef<Record<string, HTMLElement | null>>({});
-  const showAll = (id: string) => {
-    flushSync(() => setOpened((o) => [...o, id]));
-    // Move focus to the first issue that just appeared, so keyboard users carry on reading.
-    groupRefs.current[id]?.querySelector<HTMLElement>(`.issue-list > li:nth-child(${SHORT_LENGTH + 1}) a`)?.focus();
-  };
   return (
     <div className="issue-groups">
       {GROUPS.map((g) => {
         const members = sorted.filter((i) => groupOf(i) === g);
-        if (!members.length) return null;
-        // Only cut when it saves real scrolling: never hide just one or two issues.
-        const short = shorten && !opened.includes(g.id) && members.length > SHORT_LENGTH + 2;
-        return (
-          <section
-            key={g.id}
-            ref={(el) => {
-              groupRefs.current[g.id] = el;
-            }}
-            className={`issue-group issue-group--${g.id.replace('issues-', '')}`}
-            aria-labelledby={g.id}
-          >
-            <h3 id={g.id} className="issue-group__title" tabIndex={-1}>
-              <span className="issue-group__glyph" aria-hidden="true">
-                {g.glyph}
-              </span>
-              {g.title}
-              <span className="issue-group__count">
-                {members.length}
-                <span className="visually-hidden">{members.length === 1 ? ' issue' : ' issues'}</span>
-              </span>
-            </h3>
-            <IssueList issues={short ? members.slice(0, SHORT_LENGTH) : members} headingLevel={4} />
-            {short && (
-              <button type="button" className="button button--ghost issue-group__more" onClick={() => showAll(g.id)}>
-                Show all {members.length} {g.title.toLowerCase()} issues
-              </button>
-            )}
-          </section>
-        );
+        return members.length ? <IssueGroup key={g.id} group={g} members={members} first={shorten ? SHORT_LENGTH : STEP} /> : null;
       })}
     </div>
+  );
+}
+
+function IssueGroup({ group: g, members, first }: { group: (typeof GROUPS)[number]; members: Issue[]; first: number }) {
+  // Only cut when it saves real scrolling: never hide just one or two issues.
+  const opening = members.length > first + 2 ? first : members.length;
+  const { visible, remaining, more, listRef } = useStepped(members, opening, STEP, `${opening}|${members.length}|${members[0].id}`);
+  return (
+    <section className={`issue-group issue-group--${g.id.replace('issues-', '')}`} aria-labelledby={g.id}>
+      <h3 id={g.id} className="issue-group__title" tabIndex={-1}>
+        <span className="issue-group__glyph" aria-hidden="true">
+          {g.glyph}
+        </span>
+        {g.title}
+        <span className="issue-group__count">
+          {members.length.toLocaleString('en-US')}
+          <span className="visually-hidden">{members.length === 1 ? ' issue' : ' issues'}</span>
+        </span>
+      </h3>
+      <IssueList issues={visible} headingLevel={4} listRef={listRef} />
+      <ShowMoreButton remaining={remaining} step={STEP} noun={`${g.title.toLowerCase()} issues`} onClick={more} />
+    </section>
   );
 }
 
@@ -398,9 +392,9 @@ function CalendarIcon() {
   );
 }
 
-function IssueList({ issues, headingLevel }: { issues: Issue[]; headingLevel: 3 | 4 }) {
+function IssueList({ issues, headingLevel, listRef }: { issues: Issue[]; headingLevel: 3 | 4; listRef?: RefObject<HTMLElement | null> }) {
   return (
-    <ul className="issue-list">
+    <ul className="issue-list" ref={listRef as RefObject<HTMLUListElement | null> | undefined}>
       {issues.map((i) => (
         <li key={i.id}>
           <IssueCard issue={i} headingLevel={headingLevel} />
@@ -452,7 +446,11 @@ function Docket({ meetings, issues, documents }: { meetings: Meeting[]; issues: 
   const onAgenda = next ? issues.filter((i) => next.issueIds.includes(i.id)) : [];
   const decided = issues
     .filter((i) => ['approved', 'denied', 'withdrawn', 'completed'].includes(i.status) && i.statusAsOf)
-    .sort((a, b) => b.statusAsOf!.localeCompare(a.statusAsOf!))[0];
+    // Newest first; on the same day, a featured item, then one with a plain-language explanation.
+    .sort(
+      (a, b) =>
+        b.statusAsOf!.localeCompare(a.statusAsOf!) || Number(b.featured) - Number(a.featured) || Number(Boolean(b.whyItMayMatter)) - Number(Boolean(a.whyItMayMatter)),
+    )[0];
   const agenda = next ? agendaFor(next, documents) : null;
   if (!next && !decided) return null;
   return (

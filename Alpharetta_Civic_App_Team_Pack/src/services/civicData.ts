@@ -3,9 +3,6 @@
 // Today the source is the local JSON in /data. A curated or live adapter can
 // replace `loadDataset` later without changing any page.
 
-import meetingsJson from '../../data/meetings.json';
-import issuesJson from '../../data/issues.json';
-import documentsJson from '../../data/documents.json';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
 
 export type Dataset = {
@@ -33,11 +30,20 @@ export type SearchResult =
 
 type Loader = () => Promise<Dataset>;
 
-const jsonLoader: Loader = async () => ({
-  meetings: meetingsJson as Meeting[],
-  issues: issuesJson as Issue[],
-  documents: documentsJson as CivicDocument[],
-});
+// The records (a few MB of JSON) load on first use as their own files, not inside the app
+// bundle, so the home page and Coming Soon pages never download them.
+const jsonLoader: Loader = async () => {
+  const [meetings, issues, documents] = await Promise.all([
+    import('../../data/meetings.json'),
+    import('../../data/issues.json'),
+    import('../../data/documents.json'),
+  ]);
+  return {
+    meetings: meetings.default as Meeting[],
+    issues: issues.default as Issue[],
+    documents: documents.default as CivicDocument[],
+  };
+};
 
 let loader: Loader = jsonLoader;
 let cache: Promise<Dataset> | null = null;

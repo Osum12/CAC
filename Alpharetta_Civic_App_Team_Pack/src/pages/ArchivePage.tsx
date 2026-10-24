@@ -1,3 +1,4 @@
+import { useMemo, type RefObject } from 'react';
 import { Link } from 'react-router-dom';
 import { useUrlParams, useUrlText } from '../services/useUrlParams';
 import { getDocuments, getMeetings } from '../services/civicData';
@@ -11,6 +12,7 @@ import { MockBadge, isMock } from '../components/MockBadge';
 import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import type { CivicDocument, Meeting } from '../types/civic';
 import { usePlaceHref } from '../services/placeContext';
+import { ShowMoreButton, useStepped } from '../components/ShowMore';
 
 export type ArchiveFilter = 'all' | 'videos' | 'agendas' | 'documents';
 
@@ -54,6 +56,8 @@ export function buildArchiveEntries(meetings: Meeting[], documents: CivicDocumen
   return entries.sort((a, b) => (b.date ?? '').localeCompare(a.date ?? '') || b.kind.localeCompare(a.kind)); // same date: meeting before its documents
 }
 
+const PAGE = 40;
+
 const EMPTY_COPY: Record<ArchiveFilter, string> = {
   all: 'No meetings or documents are in the archive yet.',
   videos: 'No meeting recordings are linked in this dataset yet.',
@@ -76,8 +80,11 @@ export function ArchivePage() {
   // The search box keeps its own text so fast typing is never lost; the URL follows it.
   const [query, setQuery] = useUrlText(params, setUrlParam, 'q');
 
-  const entries = state.status === 'ready' ? buildArchiveEntries(state.data[0], state.data[1]).filter((e) => entryMatches(e, q)) : [];
+  const all = useMemo(() => (state.status === 'ready' ? buildArchiveEntries(state.data[0], state.data[1]) : []), [state]);
+  const entries = useMemo(() => all.filter((e) => entryMatches(e, q)), [all, q]);
   const visible = entries.filter((e) => e.groups.includes(filter));
+  // Thousands of records: the list opens with the newest and grows on request.
+  const { visible: shown, remaining, more, listRef } = useStepped(visible, PAGE, PAGE, `${filter}|${q}|${visible.length}`);
   const count = (f: ArchiveFilter) => entries.filter((e) => e.groups.includes(f)).length;
 
   return (
@@ -85,7 +92,7 @@ export function ArchivePage() {
       <header className="page-header">
         <h1>Archive</h1>
         <p className="page-header__lede">
-          Meetings, recordings, agendas, and supporting documents, each linked to the original file. This is a selected set, not the county’s complete archive.
+          Board of Commissioners meetings and recordings, each meeting’s agenda, and the documents attached to its agenda items, each linked to the original file on the county’s Legistar site.
         </p>
       </header>
 
@@ -123,17 +130,20 @@ export function ArchivePage() {
       {state.status === 'ready' && (
         <>
           <p className="results-count" role="status" aria-live="polite">
-            {visible.length} {visible.length === 1 ? 'record' : 'records'}
+            {visible.length.toLocaleString('en-US')} {visible.length === 1 ? 'record' : 'records'}
             {q ? ` matching “${q}”` : ''}
           </p>
           {visible.length ? (
-            <ol className="archive-list">
-              {visible.map((e) => (
+            <>
+            <ol className="archive-list" ref={listRef as RefObject<HTMLOListElement | null>}>
+              {shown.map((e) => (
                 <li key={`${e.kind}-${e.id}`}>
                   <ArchiveRow entry={e} />
                 </li>
               ))}
             </ol>
+            <ShowMoreButton remaining={remaining} step={PAGE} noun="records" onClick={more} />
+            </>
           ) : (
             <EmptyState
               title={emptyTitle(filter, q, count('all'))}

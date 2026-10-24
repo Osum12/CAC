@@ -72,6 +72,21 @@ const MEETING_STATUS_LABELS: Record<string, string> = {
 };
 export const meetingStatusLabel = (s: string) => MEETING_STATUS_LABELS[s] ?? 'Status unknown';
 
+const AGENDA_QUOTE = /^The agenda describes it as: “([\s\S]*)”$/;
+
+/**
+ * An issue summary is one or more paragraphs (blank-line separated). A paragraph written as
+ * `The agenda describes it as: “…”` is the county's own wording, quoted, not a rewrite.
+ */
+export function summaryParts(summary: string | null | undefined): { prose: string[]; agendaQuote: string | null } {
+  const paras = (summary ?? '').split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+  const quoteAt = paras.findIndex((p) => AGENDA_QUOTE.test(p));
+  return {
+    prose: paras.filter((_, i) => i !== quoteAt),
+    agendaQuote: quoteAt >= 0 ? paras[quoteAt].match(AGENDA_QUOTE)![1] : null,
+  };
+}
+
 /** Only http(s) URLs are ever rendered as links; anything else is treated as unavailable. */
 export function safeUrl(url: string | null | undefined): string | null {
   if (!url) return null;

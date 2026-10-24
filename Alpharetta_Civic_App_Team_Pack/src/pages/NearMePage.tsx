@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, type RefObject } from 'react';
 import { Link } from 'react-router-dom';
 import { useUrlParams } from '../services/useUrlParams';
 import { getIssues } from '../services/civicData';
@@ -14,6 +14,10 @@ import { EmptyState, ErrorState, LoadingState } from '../components/States';
 import { usePlaceHref } from '../services/placeContext';
 import { PinIcon } from '../components/PinIcon';
 import { CompassMark } from '../components/CompassMark';
+import { ShowMoreButton, useStepped } from '../components/ShowMore';
+
+// Countywide items (no map point) can run to a thousand; they come in steps after the mapped ones.
+const COUNTYWIDE_STEP = 30;
 export function NearMePage() {
   usePageTitle('Near Me');
   const { params, setParam } = useUrlParams();
@@ -74,6 +78,7 @@ export function NearMePage() {
 
   const located = ranked.filter((r) => r.coords);
   const unlocated = ranked.filter((r) => !r.coords);
+  const { visible: countywideShown, remaining: countywideLeft, more: moreCountywide, listRef: countywideRef } = useStepped(unlocated, COUNTYWIDE_STEP, COUNTYWIDE_STEP, `${topic}|${unlocated.length}`);
   const item = (r: RankedIssue) => (
     <li key={r.issue.id}>
       <FeedItem
@@ -124,7 +129,7 @@ export function NearMePage() {
             </select>
           </div>
           <p className="results-count nearme__count" role="status" aria-live="polite">
-            {ranked.length} {ranked.length === 1 ? 'issue' : 'issues'}
+            {ranked.length.toLocaleString('en-US')} {ranked.length === 1 ? 'issue' : 'issues'}
             {topic ? ` in ${humanize(topic)}` : ''}, {points.length} on the map
           </p>
         </form>
@@ -163,9 +168,12 @@ export function NearMePage() {
                     <p className="feed__intro">
                       {unlocated.length === 1
                         ? unlocated[0].reason
-                        : `These ${unlocated.length} records have no map location, so each is listed as a countywide item instead of being ranked by distance.`}
+                        : `These ${unlocated.length.toLocaleString('en-US')} records have no map location, so each is listed as a countywide item instead of being ranked by distance.`}
                     </p>
-                    <ol className="feed feed--countywide">{unlocated.map(item)}</ol>
+                    <ol className="feed feed--countywide" ref={countywideRef as RefObject<HTMLOListElement | null>}>
+                      {countywideShown.map(item)}
+                    </ol>
+                    <ShowMoreButton remaining={countywideLeft} step={COUNTYWIDE_STEP} noun="countywide items" onClick={moreCountywide} />
                   </>
                 )}
               </div>

@@ -165,15 +165,17 @@ describe('With the real curated records in /data', () => {
     renderAt('/county/fulton');
     expect((await screen.findAllByRole('link', { name: /^Transportation sales tax \(TSPLOST\) referendum$/ })).length).toBeGreaterThan(0);
     expect(screen.queryByText(/Sample data|Alpharetta/)).not.toBeInTheDocument();
-    // The long Approved group starts with its first 6 issues and a button for the rest.
-    expect(screen.getAllByRole('link', { name: /^Official record/ })).toHaveLength(11); // 3 pending + 6 approved + 2 denied
-    await userEvent.click(screen.getByRole('button', { name: 'Show all 19 approved issues' }));
-    expect(screen.queryByRole('button', { name: /^Show all/ })).not.toBeInTheDocument();
-    // Every issue card links to the county's own Legistar record, never a made-up URL.
-    const records = screen.getAllByRole('link', { name: /^Official record/ });
-    expect(records).toHaveLength(24);
-    for (const a of records) expect(a.getAttribute('href')).toMatch(/^https:\/\/fulton\.legistar\.com\/LegislationDetail\.aspx\?ID=\d+&GUID=/);
-    expect(screen.getByText(/A selection of recent items, not every decision\. Last checked against official county records on October 22, 2026\./)).toBeInTheDocument();
+    // Long groups open with their first 6 issues and grow 24 at a time; a short group shows whole.
+    expect(screen.getAllByRole('link', { name: /^Official record/ })).toHaveLength(26); // 8 pending + 6 approved + 6 denied + 6 withdrawn
+    await userEvent.click(screen.getByRole('button', { name: /^Show 24 more approved issues/ }));
+    expect(screen.getAllByRole('link', { name: /^Official record/ })).toHaveLength(50);
+    // Every issue card links to the item's page on the county's own Legistar site (the site's
+    // own link, read from its meeting pages), never a made-up URL.
+    for (const a of screen.getAllByRole('link', { name: /^Official record/ }))
+      expect(a.getAttribute('href')).toMatch(/^https:\/\/fulton\.legistar\.com\/LegislationDetail\.aspx\?ID=\d+&GUID=[\w-]+&G=197058BF-F352-4423-BE44-04DFABBD8188&Options=&Search=$/);
+    expect(
+      screen.getByText(/Agenda items from the board’s 51 meetings, January\s8,\s2025 to October\s21,\s2026\. Ceremonial items such as proclamations are left out\. Last checked against official county records on October\s24,\s2026\./),
+    ).toBeInTheDocument();
     expect(screen.getAllByText('From the Fulton County Board of Commissioners')).toHaveLength(2);
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('What’s on the table in Fulton County');
     // Unfinished and failed items keep their real status.
@@ -186,14 +188,17 @@ describe('With the real curated records in /data', () => {
   it('keeps archive documents next to the meeting they belong to', async () => {
     renderAt('/archive');
     const rows = within(await screen.findByRole('list')).getAllByRole('listitem').map((li) => li.querySelector('h2')?.textContent ?? '');
-    expect(rows).toHaveLength(26); // 8 meetings and 18 documents
-    const meeting = rows.indexOf('Board of Commissioners First Regular Meeting, October 7, 2026');
-    const agenda = rows.indexOf('Board of Commissioners Agenda, October 7, 2026');
+    expect(rows).toHaveLength(40); // the newest 40 of 51 meetings and 4,098 documents; the rest come in steps
+    expect(screen.getByRole('button', { name: /^Show 40 more records/ })).toBeInTheDocument();
+    const meeting = rows.indexOf('Board of Commissioners Second Regular Meeting, October 21, 2026');
+    const agenda = rows.indexOf('Board of Commissioners Agenda, October 21, 2026');
     expect(meeting).toBeGreaterThanOrEqual(0);
     expect(agenda - meeting).toBeGreaterThan(0);
     const dateLines = [...document.querySelectorAll('.archive-row__date')].map((p) => p.textContent);
-    expect(dateLines).toContain('For the October 7, 2026 meeting.');
-    expect(screen.getAllByRole('link', { name: /^Watch recording/ })).toHaveLength(8);
+    expect(dateLines).toContain('For the October 21, 2026 meeting.');
+    await userEvent.click(screen.getByRole('button', { name: /^Videos/ }));
+    expect(screen.getByRole('status')).toHaveTextContent('47 records');
+    expect(screen.getAllByRole('link', { name: /^Watch recording/ })).toHaveLength(40);
   });
 
   it('shows a failed item as denied, with its official item record', async () => {
@@ -203,23 +208,41 @@ describe('With the real curated records in /data', () => {
     expect(screen.getByText(/failed for lack of a second/)).toBeInTheDocument();
   });
 
+  it('quotes the agenda’s own wording as a quote, never as a plain-language rewrite', async () => {
+    renderAt('/issues/issue-26-0646');
+    expect(await screen.findByRole('heading', { name: 'What happened' })).toBeInTheDocument();
+    expect(screen.getByText(/^Approved October 7, 2026, 6–0\.$/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'The agenda’s wording' })).toBeInTheDocument();
+    expect(screen.getByText(/^Request approval to renew existing contracts - Department of Real Estate and Asset Management/)).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'In plain language' })).toBeNull();
+    expect(screen.queryByText(/plain-language rewrite/)).toBeNull();
+  });
+
+  it('shows a plain-language summary, then the recorded result, for items explained from their documents', async () => {
+    renderAt('/issues/issue-26-0214');
+    expect(await screen.findByRole('heading', { name: 'In plain language' })).toBeInTheDocument();
+    expect(screen.getByText(/South Fulton Municipal Regional Jail Authority/)).toBeInTheDocument();
+    expect(screen.getByText(/^Approved April 15, 2026, 6–0\.$/)).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'The agenda’s wording' })).toBeNull();
+  });
+
   it('puts approximate pins only on items with a street address from the county documents', async () => {
     renderAt('/near-me');
     const markers = await screen.findByRole('list', { name: 'map markers' });
-    expect(within(markers).getAllByRole('listitem')).toHaveLength(6);
+    expect(within(markers).getAllByRole('listitem')).toHaveLength(125);
     expect(within(markers).getByRole('button', { name: /Modernizing the jail’s elevators/ })).toBeInTheDocument();
   });
 
   it('filters Near Me by category, narrowing both the list and the pins', async () => {
     renderAt('/near-me');
     const select = await screen.findByLabelText('Category');
-    expect(screen.getByRole('status')).toHaveTextContent('24 issues, 6 on the map');
+    expect(screen.getByRole('status')).toHaveTextContent('1,303 issues, 125 on the map');
     await userEvent.selectOptions(select, 'housing_and_neighborhoods');
-    expect(screen.getByRole('status')).toHaveTextContent('5 issues in Housing and neighborhoods, 5 on the map');
+    expect(screen.getByRole('status')).toHaveTextContent('37 issues in Housing and neighborhoods, 5 on the map');
     expect(within(screen.getByRole('list', { name: 'map markers' })).getAllByRole('listitem')).toHaveLength(5);
     expect(screen.queryByRole('link', { name: 'Modernizing the jail’s elevators' })).toBeNull();
     await userEvent.selectOptions(select, '');
-    expect(screen.getByRole('status')).toHaveTextContent('24 issues, 6 on the map');
+    expect(screen.getByRole('status')).toHaveTextContent('1,303 issues, 125 on the map');
   });
 });
 
@@ -300,8 +323,12 @@ describe('Hero panel', () => {
     renderAt('/county/fulton');
     const panel = await screen.findByRole('complementary', { name: 'Latest decision' });
     expect(within(panel).queryByText(/Next at/)).toBeNull();
-    expect(within(panel).getByRole('link', { name: '2026 county property tax rates' })).toHaveAttribute('href', '/county/fulton/issues/issue-26-0662-2026-property-tax-rates');
-    expect(within(panel).getByText(/October 7, 2026/)).toBeInTheDocument();
+    // The newest decision; on the same day, one with a plain-language explanation.
+    expect(within(panel).getByRole('link', { name: 'Ending the HIV Epidemic spending increase for HIV care subrecipients' })).toHaveAttribute(
+      'href',
+      '/county/fulton/issues/issue-26-0703',
+    );
+    expect(within(panel).getByText(/October\s21,\s2026/)).toBeInTheDocument();
   });
 
   it('shows the next meeting and its agenda items when one is scheduled', async () => {

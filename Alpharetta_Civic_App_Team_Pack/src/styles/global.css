@@ -4388,3 +4388,47 @@ time {
     fill: CanvasText;
   }
 }
+
+/* ==========================================================================
+   Long records lists and quoted agenda wording
+   ========================================================================== */
+/* "Show 24 more …": one step at a time through long lists. */
+.show-more {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-top: 16px;
+  flex-wrap: wrap;
+  gap: 0 6px;
+}
+.show-more__left {
+  color: var(--ink-soft);
+  font-weight: 400;
+}
+.issue-group .show-more,
+.archive-list + .show-more {
+  margin-top: 20px;
+}
+
+/* The county's own agenda wording, quoted: set apart from plain-language text by a rule. */
+.agenda-words {
+  margin-top: 28px;
+}
+.agenda-words__quote {
+  margin: 12px 0 0;
+  padding: 4px 0 4px 18px;
+  border-left: 3px solid var(--line-strong);
+  color: var(--ink);
+  max-width: 68ch;
+}
+.agenda-words__quote p {
+  margin: 0;
+  line-height: 1.6;
+}
+.agenda-words .fine-print {
+  margin-top: 12px;
+}
+/* Several paragraphs in a summary keep a readable gap. */
+.detail__main .prose + .prose {
+  margin-top: 12px;
+}

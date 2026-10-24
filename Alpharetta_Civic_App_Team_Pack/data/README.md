@@ -1,39 +1,60 @@
-# Georgia Civic — Data
+# Council Lens — Data
 
-The records in this folder are what the app shows. As of 2026-10-22 they are **curated real records** (`dataMode: "curated"`, `mockOnly: false`) from the **Fulton County Board of Commissioners**: 8 meetings (August 3 to October 7, 2026), 24 agenda items ("issues"), and 18 documents (8 agendas and 10 supporting PDFs). That is 50 records.
+The records in this folder are what the app shows. As of 2026-10-24 they are **curated real records** (`dataMode: "curated"`, `mockOnly: false`) from the **Fulton County Board of Commissioners**, covering every Board meeting from January 8, 2025 through October 21, 2026:
+
+- **51 meetings** (all 51 Board meetings in that period: regular, second regular and special called), each with its official meeting page, its agenda PDF, and the meeting recording where one is published (47).
+- **1,303 agenda items** ("issues"): every substantive item on those agendas. Left out: adoption of the agenda, ratification of minutes, proclamations and certificates, public comment, closed (executive) sessions, and presentations or discussions where the board decided nothing.
+- **4,098 documents**: the 51 agendas and every published attachment of those items (resolutions, agreements, reports, fact sheets, exhibits).
 
 The earlier City of Alpharetta records were removed from the app on 2026-10-22 at the team's request; they remain in the git history. The fictional fixture pack in `src/test/fixtures/` is used only by the automated tests.
 
 ## Where the facts come from
 
-Everything comes from Fulton County's official agenda system, Legistar (https://fulton.legistar.com/), read through its public web API on 2026-10-22:
+Everything comes from Fulton County's official agenda system, Legistar (https://fulton.legistar.com/), read through its public web API (`https://webapi.legistar.com/v1/fulton`) on 2026-10-24: events, agenda items with attachments, item histories, and roll-call votes. The scripts that built these files, and the reviewed inputs, are in `scripts/fulton-records/` (see its README).
 
-- Meetings: `https://webapi.legistar.com/v1/fulton/events` (Board of Commissioners, August 1 to November 15, 2026). No later meetings were listed.
-- Agenda items, motions and results: `https://webapi.legistar.com/v1/fulton/events/{id}/eventitems`, and roll-call votes from `/eventitems/{id}/votes`.
-- Agendas: the official agenda PDF for each meeting. These are issued before the meeting, so they list items but not results.
-- Supporting documents: the PDFs attached to each item (resolutions, fact sheets, presentations). Amounts, addresses and unit counts in the summaries come from these.
-- Recordings: each meeting's video in the county's Granicus player, linked from Legistar.
+### Results (statuses)
 
-Statuses come from the recorded motions, not from the item titles:
-- "Approved" means a motion to approve passed. Vote counts are from the roll call.
-- "Denied" is used for items whose motion to approve failed (26-0601, 26-0678; 26-0679 is described inside the AI policy issue).
-- "Under consideration" is used for items that were held (26-0604, 26-0674) and for the ethics code, which was introduced but still needs an adopting ordinance.
+A result is never inferred from an item being on an agenda. Each comes from the county's record of the meeting:
 
-Minutes for these meetings were not yet published on 2026-10-22. When they are, check each result against them.
+1. **The motion text.** The clerk records each motion ("A motion was made by … to hold. The motion passed by the following vote"). This wording is used first, because Legistar's separate pass/fail flag contradicts the motion text in 11 places. When several motions were made, a passed approval wins over failed substitute motions or amendments; motions only to add an item to the agenda never decide it.
+2. **The consent agenda.** Consent items are enacted by the single motion adopting the consent agenda; the clerk notes "(APPROVED UPON ADOPTION OF THE CONSENT AGENDA)" on each.
+3. **The clerk's result note** on the item title ("(APPROVED)", "(HELD)", "(FAILED)"), used where no motion was recorded and checked against the motion text everywhere else. The remaining disagreements (5) are public hearings and presentations where both a hearing and a vote happened; the vote is used.
 
-All 62 URLs in the data returned HTTP 200 on 2026-10-22.
+How results map to app statuses: approved → **Approved** (with "Approved with changes" when the passed motion was an amended or substitute version); a failed motion to approve or a vote to deny → **Denied**; held or tabled → **Under consideration**; filed (closed without approval) or removed from the agenda at a sponsor's request → **Withdrawn**, with the reason in the summary; a public hearing held → **Completed**. One item (26-0364, an elections staffing contract on the June 17, 2026 agenda) has no recorded result and is marked "Status not verified"; the same request appears again as item 26-0397.
+
+Vote counts come from the roll call. Results from the **October 21, 2026** meeting come from the clerk's draft record, which the board is scheduled to ratify on November 4, 2026; those items say so.
+
+### Titles and summaries
+
+- **Titles** are short plain-language names written from each item's official wording. Every number in a title was checked against that wording.
+- **169 notable items** (large contracts, budget and tax items, ordinances, and commissioners' resolutions, including every one that failed, was held, filed or withdrawn) have a plain-language summary written from the attached documents. Each fact in those summaries is backed by an exact quote from the county's documents, and every number was re-checked against the sources (amounts like "$2.24 million" are roundings of figures such as $2,239,975.02). Where the documents disagree with each other, the summary leaves the disputed detail out.
+- **All other items** show the recorded result and then the agenda's own wording, quoted and labeled as the county's wording (not presented as a rewrite).
+- The 24 records written by hand earlier keep their text; their links were corrected (see below).
+
+### Links
+
+All 5,499 links in these files were opened on 2026-10-24: every document file returned a success (2xx) response; every item page was opened in a browser and shows its own file number; every meeting page shows its date; every recording loads.
+
+Item links are the public site's own links, read from each meeting's official page. (Links built from the API's item IDs open an "Invalid parameters!" page; the 24 earlier records used those and were corrected.)
 
 ## Map locations
 
-Six items have a street address in their documents: the county jail (901 Rice Street NW), St. Mark AME Church (491 James P. Brawley Dr NW), and four affordable housing sites (834 Thurmond St NW, 280 James P. Brawley Dr NW, 383 Paines Ave NW, 404 Oliver St NW). Their coordinates were looked up with the U.S. Census Bureau geocoder on 2026-10-22, so they are `locationType: "approximate"` and `verified: false`. All other items are countywide or have no single address, so they have no pin.
+162 items quote a street address in their county text (mostly sewer and water easements and private-improvement agreements). Those addresses were looked up with the U.S. Census Bureau geocoder on 2026-10-24; 67 of the 86 distinct addresses matched, which places 120 items. With the 6 earlier hand-placed points (one overlaps), 125 items have a map pin. All pins are `locationType: "approximate"`, `verified: false`. All other items are countywide or have no single address, so they have no pin.
 
 Near Me measures distance from one public place, the Fulton County Government Center (141 Pryor Street SW, Atlanta), also geocoded with the Census geocoder. The app never asks for or stores anyone's own address.
+
+## Known limits
+
+- Ceremonial and procedural items are left out on purpose (see above).
+- Topics (categories) are a reading aid chosen from each item's wording; some items could fit more than one.
+- Some county documents disagree with each other or contain typos (for example different amounts in a resolution and its fact sheet). Summaries leave those details out rather than pick one.
+- Minutes for the October 21, 2026 meeting were not yet ratified when the data was read.
 
 ## Adding or updating a record
 
 1. Find the item on https://fulton.legistar.com/ and open its item record, agenda and attachments.
 2. Write the summary using only what the documents and the recorded motion say. Distinguish what was discussed from what was decided.
-3. Use only URLs you have opened. Set `lastVerifiedAt` (meetings) and `statusAsOf` (issues).
+3. Use only URLs you have opened (item links: copy them from the meeting page). Set `lastVerifiedAt` (meetings) and `statusAsOf` (issues).
 4. Keep IDs stable and update relationships in both directions (issue ↔ meeting, issue ↔ document, meeting → agenda document).
 5. Run `npm run validate:data` and `npm test`.
 
