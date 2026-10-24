@@ -1,4 +1,4 @@
-# Porchlight
+# Council Lens
 
 A student prototype for the Congressional App Challenge. It helps Georgia residents see what their local government is working on: meetings, proposals, and public documents in one place, in plain language, with a path back to the original source.
 

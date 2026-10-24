@@ -66,19 +66,18 @@ export function Layout() {
       </a>
       <header className="masthead" ref={headerRef}>
         <div className="masthead__inner">
-          <NavLink to="/" className="brand" aria-label="Porchlight, choose a location" end>
+          <NavLink to="/" className="brand" aria-label="Council Lens, choose a location" end>
             <svg className="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
               <rect width="32" height="32" rx="3" fill="#2f3a8f"/>
-              <path d="M14.5 22.6h8l6 9.4h-20z" fill="#4655c4"/>
-              <path d="M6 5h2.4v8.6H6z" fill="#fbf1dc"/>
-              <path d="M8.4 7.6h10.1V10" fill="none" stroke="#fbf1dc" strokeWidth="1.6"/>
-              <path d="M13 13.6 18.5 9.6l5.5 4z" fill="#fbf1dc"/>
-              <path d="M14.5 13.6h8v9h-8z" fill="#f2b33d"/>
-              <path d="M18.5 13.6v9M14.5 18.1h8" stroke="#2f3a8f" strokeWidth="0.9"/>
-              <path d="M13.5 22.6h10v2h-10z" fill="#fbf1dc"/>
+              <circle cx="13.5" cy="13.5" r="8.6" fill="#4655c4"/>
+              <path d="M13.5 8.2 18.6 11H8.4z" fill="#fbf1dc"/>
+              <path d="M9.6 12h1.6v5H9.6zM12.7 12h1.6v5h-1.6zM15.8 12h1.6v5h-1.6z" fill="#fbf1dc"/>
+              <path d="M8.4 17.6h10.2v1.4H8.4z" fill="#fbf1dc"/>
+              <circle cx="13.5" cy="13.5" r="8.6" fill="none" stroke="#fbf1dc" strokeWidth="2.2"/>
+              <path d="M19.8 19.8 26.5 26.5" stroke="#fbf1dc" strokeWidth="3.4"/>
             </svg>
             <span className="brand__text">
-              <span className="brand__name">Porchlight</span>
+              <span className="brand__name">Council Lens</span>
               <span className="brand__tag">Local government, explained</span>
             </span>
           </NavLink>

@@ -41,7 +41,7 @@ Checked 2026-10-21 against the official 2026 rulebook: https://www.congressional
 
 ## Honest demo script (about 2½ minutes)
 
-1. **0:00–0:20.** Team names, the app name "Porchlight", the one-sentence purpose (understand what your local government is considering, with a path to the source), and the audience. On the home page choose Fulton County, keep "All of Fulton County", and say plainly that Fulton County is the only place with records today and that other places show "Coming soon".
+1. **0:00–0:20.** Team names, the app name "Council Lens", the one-sentence purpose (understand what your local government is considering, with a path to the source), and the audience. On the home page choose Fulton County, keep "All of Fulton County", and say plainly that Fulton County is the only place with records today and that other places show "Coming soon".
 2. **0:20–0:50 Countywide.** Issues are grouped by where they stand: still being decided, approved, denied. Open "2026 county property tax rates": the proposed rate, the three public hearings, the failed rollback motion, and the adopted rate. Then open "Limiting public comment at board meetings" to show a denied item, and follow a link to the county's official item record.
 3. **0:50–1:30 Near Me.** The list is sorted by distance from the Fulton County Government Center, each item says why it is listed, and selecting a pin highlights the matching card. Point out that pins are approximate, and that countywide items stay in the list without a pin.
 4. **1:30–2:00 Archive.** Switch to Videos and open a Board of Commissioners meeting recording. Search for "housing" and open a fact sheet PDF.

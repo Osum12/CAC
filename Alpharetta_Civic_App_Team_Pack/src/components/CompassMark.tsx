@@ -1,4 +1,4 @@
-/** Porchlight's map-legend mark: a four-point compass star in a fine ring. Decorative only. */
+/** Council Lens's map-legend mark: a four-point compass star in a fine ring. Decorative only. */
 export function CompassMark({ className = '' }: { className?: string }) {
   return (
     <svg className={`compass ${className}`.trim()} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
