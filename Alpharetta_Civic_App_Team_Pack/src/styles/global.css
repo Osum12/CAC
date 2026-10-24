@@ -3922,79 +3922,46 @@ time {
   }
 }
 
-/* ---------- Header buttons: small hover motions ----------
-   Section links: an underline grows from the middle and the label lifts a pixel; the current
-   page's dot pops. Change lifts with an outline. The theme switch turns its icon. */
-.primary-nav__link {
-  position: relative;
-}
-.primary-nav__link > span,
-.primary-nav__link {
-  transition:
-    background-color 0.18s var(--ease),
-    color 0.18s var(--ease),
-    transform 0.2s var(--ease-out);
-}
-.primary-nav__link::after {
-  content: '';
-  position: absolute;
-  left: 18px;
-  right: 18px;
-  bottom: 8px;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--link);
-  transform: scaleX(0);
-  transition: transform 0.24s var(--ease-out);
-}
-.primary-nav__link:hover {
-  transform: translateY(-1px);
-}
-.primary-nav__link:hover::after {
-  transform: scaleX(1);
-}
-.primary-nav__link[aria-current='page']::before {
-  transition: transform 0.24s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.primary-nav__link[aria-current='page']:hover::before {
-  transform: scale(1.45);
-}
+/* ---------- Header buttons: a dock-style hover ----------
+   Pointing at a section link (or the theme switch beside them) grows it a little and eases
+   the others back, like a dock; moving off returns them all to normal. Change, on its own,
+   simply grows. Transforms only, so nothing else on the page shifts. */
+.primary-nav > .primary-nav__link,
+.primary-nav > .theme-toggle,
 .placebar__change {
   transition:
-    transform 0.2s var(--ease-out),
-    box-shadow 0.2s var(--ease-out);
+    transform 0.22s cubic-bezier(0.34, 1.4, 0.64, 1),
+    background-color 0.18s var(--ease),
+    color 0.18s var(--ease),
+    border-color 0.18s var(--ease);
+}
+.primary-nav:has(> :hover) > :not(:hover) {
+  transform: scale(0.92);
+}
+.primary-nav > .primary-nav__link:hover,
+.primary-nav > .theme-toggle:hover {
+  transform: scale(1.1);
 }
 .placebar__change:hover {
   text-decoration: none;
-  transform: translateY(-1px);
-  box-shadow: inset 0 0 0 1.5px var(--link), 0 3px 8px -4px rgb(22 27 61 / 0.35);
+  transform: scale(1.08);
 }
-.theme-toggle svg {
-  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-.theme-toggle[aria-pressed='false']:hover svg {
-  transform: rotate(-24deg) scale(1.08);
-}
-.theme-toggle[aria-pressed='true']:hover svg {
-  transform: rotate(90deg) scale(1.08);
-}
-@media (max-width: 399px) {
-  .primary-nav__link::after {
-    left: 8px;
-    right: 8px;
-  }
+.masthead__inner > .theme-toggle:hover {
+  transform: scale(1.1);
+  transition: transform 0.22s cubic-bezier(0.34, 1.4, 0.64, 1);
 }
 @media (prefers-reduced-motion: reduce) {
-  .primary-nav__link,
-  .primary-nav__link::after,
-  .primary-nav__link::before,
+  .primary-nav > .primary-nav__link,
+  .primary-nav > .theme-toggle,
   .placebar__change,
-  .theme-toggle svg {
+  .masthead__inner > .theme-toggle {
     transition: none;
   }
-  .primary-nav__link:hover,
-  .placebar__change:hover {
+  .primary-nav:has(> :hover) > :not(:hover),
+  .primary-nav > .primary-nav__link:hover,
+  .primary-nav > .theme-toggle:hover,
+  .placebar__change:hover,
+  .masthead__inner > .theme-toggle:hover {
     transform: none;
   }
 }
-
