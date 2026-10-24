@@ -3708,3 +3708,189 @@ time {
   display: none;
 }
 
+/* ==========================================================================
+   Dark mode (switched on with the header button; stored per device)
+   A deep-blue night, not an indigo one. Every text pair is at least 6.6:1.
+   ========================================================================== */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0b1426;
+  --surface: #111d35;
+  --surface-2: #182747;
+  --ink: #e3e9f5;
+  --heading: #f5f8ff;
+  --ink-soft: #a9b6cf;
+  --line: #22335a;
+  --line-strong: #7286ad;
+  --link: #9db8ff;
+  --link-hover: #f5f8ff;
+  --focus: #9db8ff;
+  --focus-ring: #0b1426;
+  --shadow: 0 1px 0 rgb(255 255 255 / 0.04) inset, 0 16px 36px -16px rgb(0 0 0 / 0.6);
+  --shadow-lift: 0 1px 0 rgb(255 255 255 / 0.06) inset, 0 20px 44px -16px rgb(0 0 0 / 0.75);
+
+  --band: #0f1c38;
+  --band-ink: #f5f8ff;
+  --band-soft: #a9b6cf;
+  --ring: rgb(157 184 255 / 0.16);
+  --ring-dot: #9db8ff;
+  --glow: rgb(157 184 255 / 0.2);
+
+  --primary: #9db8ff;
+  --primary-ink: #0b1426;
+  --primary-hover: #bfd0ff;
+  --accent-soft: #1d2a3f;
+  --tonal: #1c2d55;
+  --tonal-hover: #253a6b;
+
+  --ok-bg: #12352b;
+  --ok-ink: #8edcb2;
+  --no-bg: #3a1c26;
+  --no-ink: #ffadb0;
+  --wait-bg: #33291a;
+  --wait-ink: #f4cd78;
+  --new-bg: #1c2d55;
+  --new-ink: #c3d3ff;
+  --neutral-bg: #1c2740;
+  --neutral-ink: #d1d8e6;
+
+  --pin: #9db8ff;
+  --pin-ink: #0b1426;
+  --pin-edge: #0b1426;
+
+  --atlas: url('./atlas-dark.svg');
+}
+/* The header and its frame */
+:root[data-theme='dark'] .masthead {
+  background: var(--surface);
+  border-bottom-color: var(--line);
+}
+:root[data-theme='dark'] .brand__mark {
+  border-color: var(--line-strong);
+}
+/* Rings and the compass in the hero */
+:root[data-theme='dark'] .ripples__ring,
+:root[data-theme='dark'] .ripples__ring:nth-child(1),
+:root[data-theme='dark'] .ripples__ring:nth-child(2) {
+  border-color: rgb(157 184 255 / 0.18);
+}
+:root[data-theme='dark'] .ripples__ring:nth-child(3) {
+  border-color: rgb(157 184 255 / 0.34);
+}
+:root[data-theme='dark'] .ripples__dot {
+  box-shadow: 0 0 0 1px rgb(157 184 255 / 0.3);
+}
+/* Panels lifted off the night by a hairline, not a heavy shadow */
+:root[data-theme='dark'] .chooser,
+:root[data-theme='dark'] .searchpanel,
+:root[data-theme='dark'] .docket__block {
+  box-shadow: 0 0 0 1px var(--line), var(--shadow);
+  border-color: var(--line);
+}
+:root[data-theme='dark'] .state--page {
+  box-shadow: none;
+}
+/* Map: dim the tiles, never the pins */
+:root[data-theme='dark'] .leaflet-tile-pane {
+  filter: brightness(0.62) contrast(1.1) saturate(0.85);
+}
+:root[data-theme='dark'] .soon__secondary {
+  background: var(--tonal);
+  border-color: var(--tonal);
+}
+/* The drifting route and its marker */
+:root[data-theme='dark'] .atlas-route__planned {
+  stroke: rgb(157 184 255 / 0.2);
+}
+:root[data-theme='dark'] .atlas-route__travelled {
+  stroke: rgb(157 184 255 / 0.5);
+}
+:root[data-theme='dark'] .atlas-route__marker {
+  box-shadow: 0 0 0 1px rgb(157 184 255 / 0.35), 0 0 0 7px rgb(157 184 255 / 0.07);
+}
+/* Status group edges: the light-mode inks are too dark on the night */
+:root[data-theme='dark'] .issue-group--pending {
+  --group-edge: #e0b052;
+}
+:root[data-theme='dark'] .issue-group--approved {
+  --group-edge: #5fbf8e;
+}
+:root[data-theme='dark'] .issue-group--denied {
+  --group-edge: #e2777b;
+}
+:root[data-theme='dark'] .calendar .datechip {
+  background: var(--surface-2);
+}
+:root[data-theme='dark'] .card__action {
+  text-decoration-color: rgb(157 184 255 / 0.5);
+}
+:root[data-theme='dark'] .steps__item:first-child::before {
+  background: var(--primary);
+  color: var(--primary-ink);
+}
+
+/* ---------- The theme switch ---------- */
+.theme-toggle {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--heading);
+  cursor: pointer;
+  transition:
+    background-color 0.16s var(--ease),
+    border-color 0.16s var(--ease);
+}
+.theme-toggle:hover {
+  background: var(--tonal);
+  border-color: var(--primary);
+}
+.theme-toggle:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+}
+/* On county pages the switch is the last item of the section nav, so it travels with the
+   links at every width; elsewhere it keeps to the right-hand end of the header. */
+.masthead__inner > .theme-toggle {
+  margin-left: auto;
+}
+.primary-nav {
+  align-items: center;
+}
+.primary-nav > .theme-toggle {
+  margin-left: 8px;
+}
+@media (max-width: 599px) {
+  .theme-toggle {
+    width: 40px;
+    height: 40px;
+  }
+  .primary-nav > .theme-toggle {
+    margin-left: 2px;
+  }
+}
+@media (max-width: 399px) {
+  .primary-nav__link {
+    padding: 0 8px;
+  }
+}
+@media (max-width: 359px) {
+  .primary-nav__link {
+    padding: 0 5px;
+  }
+  .primary-nav > .theme-toggle {
+    width: 36px;
+    height: 36px;
+  }
+}
+@media (min-width: 360px) and (max-width: 374px) {
+  .primary-nav__link {
+    padding: 0 7px;
+  }
+}

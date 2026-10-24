@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { chooserPath, countyPath, getCounty, getMunicipality, placeLabel } from '../services/jurisdictions';
 import { PinIcon } from './PinIcon';
+import { ThemeToggle, useTheme } from './ThemeToggle';
 
 const COUNTY_NAV = [
   { path: '/', label: 'Countywide', end: true },
@@ -29,6 +30,8 @@ export function Layout() {
   const mainRef = useRef<HTMLElement>(null);
   const place = placeFromPath(pathname);
   const covered = place?.level === 'county' && place.civicDataAvailable ? place : null;
+  const [theme, setTheme] = useTheme();
+  const logo = theme === 'dark' ? '-dark' : '';
 
   // On route change, move focus to the main region so keyboard and screen-reader
   // users start at the new page content; scroll back to the top. Comparing with the
@@ -69,8 +72,8 @@ export function Layout() {
           <NavLink to="/" className="brand" aria-label="Council Lens, choose a location" end>
             {/* Logo files are generated from one geometry (public/brand). Phones get the small-size cut. */}
             <picture className="brand__mark">
-              <source media="(max-width: 599px)" srcSet="/brand/council-lens-symbol-small.svg" />
-              <img src="/brand/council-lens-symbol.svg" alt="" width="37" height="37" />
+              <source media="(max-width: 599px)" srcSet={logo ? '/brand/council-lens-symbol-dark.svg' : '/brand/council-lens-symbol-small.svg'} />
+              <img src={`/brand/council-lens-symbol${logo}.svg`} alt="" width="37" height="37" />
             </picture>
             <span className="brand__text">
               <span className="brand__name">
@@ -103,8 +106,10 @@ export function Layout() {
                   </NavLink>
                 ),
               )}
+              <ThemeToggle theme={theme} onChange={setTheme} />
             </nav>
           )}
+          {!covered && <ThemeToggle theme={theme} onChange={setTheme} />}
         </div>
       </header>
       <main id="main" ref={mainRef} tabIndex={-1} className="main">
