@@ -286,8 +286,7 @@ ol {
 .brand {
   display: inline-flex;
   align-items: center;
-  /* Matches the lockup: the name starts just past the handle, ~10px clear of the lens rim. */
-  gap: 2px;
+  gap: 12px;
   color: var(--heading);
   text-decoration: none;
   border-radius: var(--r-small);
@@ -297,10 +296,16 @@ ol {
 .brand:hover {
   color: var(--heading);
 }
+/* The mark sits in a fine square frame with small corners. The symbol's lens and handle are
+   off-centre in its own box, so the padding shifts it until the drawing is optically centred. */
 .brand__mark {
   display: block;
-  width: 44px;
-  height: 44px;
+  box-sizing: border-box;
+  width: 48px;
+  height: 48px;
+  padding: 6px 2.5px 2.5px 6px;
+  border: 1.5px solid var(--heading);
+  border-radius: 8px;
   flex: none;
 }
 .brand__mark img {
@@ -314,17 +319,16 @@ ol {
   line-height: 1;
 }
 /* The wordmark: the site's display sans (Bricolage Grotesque Bold) in the heading navy. Its
-   capitals are 55% of the lens diameter and centre on the lens, not on the whole mark with
-   its handle. */
+   capitals centre on the framed mark. */
 .brand__name {
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 1.5rem;
   letter-spacing: -0.015em;
   white-space: nowrap;
-  /* Optical alignment: lift the capitals onto the lens centre (the handle sits below it). */
+  /* Optical alignment: the capitals centre on the frame around the mark. */
   position: relative;
-  top: -0.155em;
+  top: 0.02em;
 }
 .brand__council {
   color: var(--heading);
@@ -2284,8 +2288,10 @@ select[aria-invalid='true'] {
     gap: 8px;
   }
   .brand__mark {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
+    padding: 5px 2px 2px 5px;
+    border-radius: 7px;
   }
   .brand__name {
     font-size: 1.25rem;
