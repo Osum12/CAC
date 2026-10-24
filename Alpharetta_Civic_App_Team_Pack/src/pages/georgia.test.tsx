@@ -46,7 +46,7 @@ afterEach(() => setDataLoader(null));
 
 const county = () => screen.getByLabelText('County') as HTMLSelectElement;
 const city = () => screen.getByLabelText(/City or town/) as HTMLSelectElement;
-const explore = () => userEvent.click(screen.getByRole('button', { name: /Explore civic information/ }));
+const explore = () => userEvent.click(screen.getByRole('button', { name: /Explore my community/ }));
 const countyHeading = /What’s on the table/;
 
 describe('Location chooser', () => {

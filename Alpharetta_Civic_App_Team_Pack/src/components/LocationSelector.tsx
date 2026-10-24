@@ -64,12 +64,18 @@ export function LocationSelector() {
     }
   };
 
+  // How the status line reads: an error, nothing chosen yet, a place with records, or one coming soon.
+  const tone = error ? 'error' : !county ? 'idle' : county.civicDataAvailable && !city ? 'ready' : 'soon';
+
   return (
     <form className="chooser" aria-labelledby="chooser-title" onSubmit={onSubmit} noValidate>
-      <h2 id="chooser-title" className="chooser__title">
-        Choose your location
-      </h2>
-      <div className="chooser__field">
+      <hgroup className="chooser__head">
+        <h2 id="chooser-title" className="chooser__title">
+          Find your community
+        </h2>
+        <p className="chooser__intro">Select a county and, optionally, a city to explore local government activity.</p>
+      </hgroup>
+      <div className="chooser__field chooser__field--county">
         <label htmlFor="county-select">County</label>
         <div className="chooser__control">
           <PinIcon className="chooser__icon" />
@@ -90,7 +96,7 @@ export function LocationSelector() {
           </select>
         </div>
       </div>
-      <div className="chooser__field">
+      <div className="chooser__field chooser__field--city">
         <label htmlFor="city-select">
           City or town <span className="chooser__optional">(optional)</span>
         </label>
@@ -105,11 +111,14 @@ export function LocationSelector() {
           </select>
         </div>
       </div>
-      <p id="chooser-status" className={`chooser__status${error ? ' chooser__status--error' : ''}`} role="status" aria-live="polite">
+      <p id="chooser-status" className={`chooser__status chooser__status--${tone}`} role="status" aria-live="polite">
         {error ?? describe(county, city)}
       </p>
       <button type="submit" className="chooser__go">
-        Explore civic information
+        Explore my community
+        <span className="chooser__arrow" aria-hidden="true">
+          →
+        </span>
       </button>
     </form>
   );

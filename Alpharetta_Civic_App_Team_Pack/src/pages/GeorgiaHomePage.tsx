@@ -1,23 +1,14 @@
 import { LocationSelector } from '../components/LocationSelector';
-import { Ripples } from '../components/Ripples';
+import { LensArtwork } from '../components/LensArtwork';
 import { COUNTIES, DIRECTORY_SOURCE, MUNICIPALITIES } from '../services/jurisdictions';
 import { usePageTitle } from '../services/usePageTitle';
 import { ArrowLabel } from '../components/SourceAction';
 
-// What a visitor does here, in order. Describes the app, not any place's records.
+// What Council Lens does, in order. Describes the app, not any place's records.
 const STEPS = [
-  {
-    title: 'Choose your place',
-    text: 'Pick your county, and your city or town if you like. You’ll go straight to its page.',
-  },
-  {
-    title: 'See what’s on the table',
-    text: 'Proposals, decisions, and public meetings, each explained in plain language with its current status.',
-  },
-  {
-    title: 'Check the source',
-    text: 'Every item links to the official agenda, record, or meeting video, so you can read the details yourself.',
-  },
+  { title: 'Discover', text: 'Find local proposals, decisions, and public meetings.' },
+  { title: 'Understand', text: 'Read clear summaries of complex civic information.' },
+  { title: 'Verify', text: 'Go directly to the original government records.' },
 ];
 
 /** Statewide front door: choose a county and, optionally, a city. Shows no civic records itself. */
@@ -27,7 +18,7 @@ export function GeorgiaHomePage() {
     <div className="page">
       <section className="hero hero--state" aria-labelledby="home-title">
         <div className="hero__inner">
-          <Ripples />
+          <LensArtwork />
           <div className="hero__main">
             <h1 id="home-title" className="hero__title">
               <span className="hero__line">Know what’s happening</span> <span className="hero__line">in your community.</span>
@@ -40,20 +31,21 @@ export function GeorgiaHomePage() {
         </div>
       </section>
 
-      <section className="steps" aria-labelledby="steps-title">
-        <div className="steps__inner">
-          <h2 id="steps-title" className="steps__title">
-            How it works
-          </h2>
-          <ol className="steps__list">
-            {STEPS.map((s) => (
-              <li key={s.title} className="steps__item">
-                <h3 className="steps__name">{s.title}</h3>
-                <p className="steps__text">{s.text}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
+      <section className="howto" aria-labelledby="howto-title">
+        <h2 id="howto-title" className="howto__title">
+          A clearer view of local government.
+        </h2>
+        <ol className="howto__list">
+          {STEPS.map((s, i) => (
+            <li key={s.title} className="howto__step">
+              <span className="howto__num" aria-hidden="true">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 className="howto__name">{s.title}</h3>
+              <p className="howto__text">{s.text}</p>
+            </li>
+          ))}
+        </ol>
       </section>
 
       <p className="statewide__note fine-print">
@@ -68,4 +60,3 @@ export function GeorgiaHomePage() {
     </div>
   );
 }
-

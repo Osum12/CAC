@@ -665,57 +665,14 @@ select[aria-invalid='true'] {
   transform: translateY(-2px);
 }
 
-/* ---------- Home: how it works ---------- */
-.steps {
-  margin-top: 24px;
-}
-.steps__title {
-  font-size: clamp(2rem, 1.5rem + 2vw, 3rem);
-  font-weight: 800;
-  margin-bottom: 24px;
-}
-.steps__list {
-  list-style: none;
-  padding: 0;
-  display: grid;
-  gap: 16px;
-  counter-reset: step;
-}
-.steps__item {
-  counter-increment: step;
-  position: relative;
-  padding: 24px 0 0;
-  border-top: 1px solid var(--line);
-  display: grid;
-  gap: 8px;
-  align-content: start;
-}
-.steps__item::before {
-  content: counter(step);
-  display: grid;
-  place-items: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  font-family: var(--font-display);
-  font-weight: 800;
-  font-size: 1.375rem;
-  margin-bottom: 8px;
-  background: var(--tonal);
-  color: var(--link);
-}
-/* The first step is filled in dark indigo in both themes; the others stay tonal. */
-.steps__item:first-child::before {
-  background: #2f3a8f;
-  color: #ffffff;
-}
-.steps__name {
-  font-size: 1.5rem;
-  font-weight: 750;
-}
-.steps__text {
-  color: var(--ink);
-}
+
+
+
+
+
+
+
+
 .statewide__note {
   margin-top: 40px;
 }
@@ -2471,9 +2428,7 @@ select[aria-invalid='true'] {
   .searchpanel {
     padding: 28px 32px 30px;
   }
-  .steps__list {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
-  }
+
 }
 
 /* Two fields side by side on tablets; the button gets its own row so the menus keep room for their text. */
@@ -2686,12 +2641,8 @@ select[aria-invalid='true'] {
   .chooser__title {
     font-size: 1.25rem;
   }
-  .steps__title {
-    font-size: 1.375rem;
-  }
-  .steps__name {
-    font-size: 1.125rem;
-  }
+
+
 }
 
 /* ---------- Round 3: wide-screen balance (no dead zones) ---------- */
@@ -3102,27 +3053,6 @@ dd {
     min-width: 26px;
     height: 26px;
     font-size: 0.875rem;
-  }
-}
-
-/* ---------- Home at tablet widths ---------- */
-@media (min-width: 600px) {
-  .steps__list {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
-@media (min-width: 600px) and (max-width: 767px) {
-  .steps__name {
-    font-size: 1.25rem;
-  }
-}
-/* Tablets: a small porch light tucked into the top-right corner, clear of the headline. */
-@media (min-width: 600px) and (max-width: 899px) {
-  .hero--state .ripples {
-    width: 170px;
-    height: 170px;
-    right: -16px;
-    top: -132px;
   }
 }
 
@@ -3822,10 +3752,7 @@ time {
 :root[data-theme='dark'] .card__action {
   text-decoration-color: rgb(157 184 255 / 0.5);
 }
-:root[data-theme='dark'] .steps__item:first-child::before {
-  background: var(--primary);
-  color: var(--primary-ink);
-}
+
 
 /* ---------- The theme switch ---------- */
 .theme-toggle {
@@ -4028,3 +3955,400 @@ time {
   --btn-edge: var(--link);
 }
 
+/* ==========================================================================
+   Landing page: an atlas cover
+   A shorter band, a headline sized for laptops, the lens artwork on the open
+   right, and the chooser close enough to use without scrolling.
+   ========================================================================== */
+.hero--state {
+  --hero-pad: 40px; /* band above the headline */
+  --band-tail: 88px; /* band below the headline, behind the top of the chooser */
+  padding-top: var(--hero-pad);
+  margin-bottom: 48px;
+}
+.hero--state .hero__inner {
+  row-gap: 28px;
+}
+.hero--state .hero__inner::before {
+  margin-top: calc(-1 * var(--hero-pad));
+  margin-bottom: calc(-1 * var(--band-tail));
+}
+/* The lens replaces the atlas linework here, so nothing runs behind the headline. */
+.hero--state .hero__inner::after {
+  content: none;
+}
+@media (min-width: 900px) {
+  .hero--state {
+    --hero-pad: 56px;
+    --band-tail: 104px;
+    padding-top: var(--hero-pad);
+    margin-bottom: 72px;
+  }
+  .hero--state .hero__inner {
+    row-gap: 44px;
+  }
+  .hero--state .hero__inner::before {
+    margin-top: calc(-1 * var(--hero-pad));
+    margin-bottom: calc(-1 * var(--band-tail));
+  }
+}
+
+/* ---------- Headline ---------- */
+.hero--state .hero__main {
+  max-width: 46rem;
+}
+.hero--state .hero__title {
+  font-weight: 760;
+  line-height: 1.02;
+  letter-spacing: -0.028em;
+}
+/* Two set lines, each sized from the headline's width and capped for laptops. */
+.hero--state .hero__title .hero__line {
+  font-size: clamp(1.5rem, 9.6cqi, 4.5rem);
+}
+.hero--state .hero__lede {
+  margin-top: 20px;
+  max-width: 31em;
+  font-size: clamp(1.0625rem, 0.98rem + 0.4vw, 1.25rem);
+  line-height: 1.55;
+  color: var(--band-soft);
+  text-wrap: pretty;
+}
+:root[data-theme='dark'] .hero--state .hero__lede {
+  color: var(--ink);
+}
+
+/* ---------- Lens artwork ---------- */
+/* A window the size of the band, from the content's right half to the screen edge. The
+   drawing is cropped by it on purpose and fades out toward the headline. */
+.lens-art {
+  --lens-ink: #2f3a8f;
+  position: absolute;
+  z-index: -1;
+  grid-area: 1 / 1 / 2 / 2; /* the headline's row only (a lone "1" spans every row here) */
+  top: calc(-1 * var(--hero-pad));
+  bottom: calc(-1 * var(--band-tail));
+  left: 52%;
+  right: calc(50% - 50vw);
+  overflow: hidden;
+  pointer-events: none;
+  color: var(--lens-ink);
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 28%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 28%);
+}
+:root[data-theme='dark'] .lens-art {
+  --lens-ink: #9db8ff;
+}
+.lens-art__svg {
+  position: absolute;
+  width: var(--lens-size, 600px);
+  height: var(--lens-size, 600px);
+  top: calc(50% - 30px);
+  right: var(--lens-right, 40px);
+  translate: 0 -50%;
+  overflow: visible;
+}
+.lens-art__svg * {
+  vector-effect: non-scaling-stroke;
+}
+@media (min-width: 1200px) {
+  .lens-art {
+    --lens-size: 620px;
+    --lens-right: max(-60px, calc(50vw - 50% - 360px));
+  }
+}
+@media (min-width: 900px) and (max-width: 1199px) {
+  .lens-art {
+    left: 58%;
+    --lens-size: 520px;
+    --lens-right: -150px;
+  }
+}
+/* Tablets and phones: the band is narrow, so only the lens's upper-right arc shows, in the corner. */
+@media (max-width: 899px) {
+  .lens-art {
+    left: 50%;
+    --lens-size: 440px;
+    --lens-right: -260px;
+    -webkit-mask-image: linear-gradient(225deg, #000 20%, transparent 62%);
+    mask-image: linear-gradient(225deg, #000 20%, transparent 62%);
+  }
+  .lens-art__svg {
+    top: -190px;
+    translate: none;
+  }
+}
+@media (max-width: 599px) {
+  .lens-art {
+    --lens-size: 320px;
+    --lens-right: -190px;
+  }
+  .lens-art__svg {
+    top: -150px;
+  }
+  .lens-art__grid {
+    display: none;
+  }
+}
+
+/* ---------- The chooser ---------- */
+.hero--state .chooser {
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  box-shadow:
+    0 1px 2px rgb(22 27 61 / 0.05),
+    0 18px 40px -28px rgb(22 27 61 / 0.32);
+  row-gap: 14px;
+  padding: 22px 20px 24px;
+}
+.chooser__head {
+  display: grid;
+  align-content: start;
+  gap: 4px;
+  margin: 0 0 4px;
+}
+.chooser__head .chooser__title {
+  grid-area: auto;
+}
+.hero--state .chooser__title {
+  font-size: clamp(1.25rem, 1.1rem + 0.5vw, 1.5rem);
+  font-weight: 760;
+  letter-spacing: -0.01em;
+}
+.chooser__intro {
+  color: var(--ink-soft);
+  font-size: 1rem;
+}
+.hero--state .chooser__field {
+  gap: 8px;
+}
+.hero--state .chooser__field label {
+  font-size: 0.9375rem;
+}
+.hero--state select {
+  min-height: 52px;
+  border-width: 1px;
+  border-radius: 8px;
+  font-size: 1.0625rem;
+  transition:
+    border-color 0.16s var(--ease),
+    box-shadow 0.16s var(--ease),
+    background-color 0.16s var(--ease);
+}
+.hero--state select:hover:not(:disabled),
+.hero--state select:focus-visible {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+.hero--state select:disabled {
+  border-style: dashed;
+  border-color: var(--line-strong);
+}
+.hero--state select[aria-invalid='true'] {
+  border-width: 1px;
+  border-color: var(--no-ink);
+  box-shadow: inset 0 0 0 1px var(--no-ink);
+}
+.hero--state .chooser__icon {
+  left: 16px;
+  width: 20px;
+  height: 20px;
+}
+.hero--state .chooser__icon + select {
+  padding-left: 46px;
+}
+/* The status line says what the choice leads to; a small mark says which kind of answer it is. */
+.hero--state .chooser__status {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 0.9375rem;
+  min-height: 1.5em;
+}
+.hero--state .chooser__status::before {
+  content: '';
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  translate: 0 -1px;
+  border: 1.5px solid var(--line-strong);
+}
+.hero--state .chooser__status--ready {
+  color: var(--ink);
+}
+.hero--state .chooser__status--ready::before {
+  border-color: var(--primary);
+  background: var(--primary);
+}
+.hero--state .chooser__status--soon::before {
+  border-color: var(--primary);
+}
+.hero--state .chooser__status--error::before {
+  border-color: var(--no-ink);
+  background: var(--no-ink);
+  border-radius: 1px;
+  rotate: 45deg;
+}
+/* The button: square-shouldered like the fields, with an arrow that steps forward on hover. */
+.hero--state .chooser__go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 8px;
+  font-size: 1.0625rem;
+  white-space: nowrap;
+  transition:
+    background-color 0.16s var(--ease),
+    box-shadow 0.16s var(--ease);
+}
+.hero--state .chooser__go:hover {
+  transform: none;
+  background: var(--primary-hover);
+}
+.hero--state .chooser__go:active {
+  box-shadow: inset 0 2px 0 rgb(0 0 0 / 0.18);
+}
+.hero--state .chooser__go:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+.chooser__arrow {
+  display: inline-block;
+  transition: translate 0.18s var(--ease);
+}
+.chooser__go:hover .chooser__arrow,
+.chooser__go:focus-visible .chooser__arrow {
+  translate: 4px 0;
+}
+@media (min-width: 600px) {
+  .hero--state .chooser {
+    padding: 26px 28px 24px;
+    row-gap: 16px;
+  }
+  .chooser .chooser__head {
+    grid-area: head;
+  }
+  .chooser .chooser__field--county {
+    grid-area: county;
+  }
+  .chooser .chooser__field--city {
+    grid-area: city;
+  }
+}
+@media (min-width: 600px) and (max-width: 959px) {
+  .hero--state .chooser {
+    grid-template-areas:
+      'head head'
+      'county city'
+      'status status'
+      'go go';
+  }
+}
+@media (min-width: 960px) {
+  .hero--state .chooser {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto;
+    grid-template-areas:
+      'head head head'
+      'county city go'
+      'status status status';
+    column-gap: 16px;
+    padding: 28px 32px 22px;
+  }
+}
+
+/* ---------- How it works ---------- */
+.howto {
+  display: grid;
+  gap: 24px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+.howto__title {
+  max-width: 14em;
+  font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.125rem);
+  font-weight: 760;
+  line-height: 1.12;
+  letter-spacing: -0.018em;
+  text-wrap: balance;
+}
+.howto__list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+}
+.howto__step {
+  display: grid;
+  grid-template-columns: 2.5rem minmax(0, 1fr);
+  column-gap: 12px;
+  row-gap: 4px;
+  align-content: start;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+}
+.howto__step:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.howto__num {
+  grid-row: 1 / span 2;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  font-variant-numeric: tabular-nums;
+  color: var(--link);
+}
+.howto__name {
+  font-size: 1.125rem;
+  font-weight: 720;
+}
+.howto__text {
+  color: var(--ink-soft);
+  max-width: 30ch;
+}
+@media (min-width: 600px) {
+  .howto__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 28px;
+  }
+  .howto__step,
+  .howto__step:first-child {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 16px 0 0;
+    border-top: 1px solid var(--line-strong);
+  }
+  .howto__num {
+    grid-row: auto;
+    margin-bottom: 6px;
+  }
+}
+@media (min-width: 1100px) {
+  .howto {
+    grid-template-columns: minmax(0, 4fr) minmax(0, 8fr);
+    column-gap: 48px;
+    padding-top: 32px;
+  }
+  .howto__title {
+    padding-top: 12px;
+  }
+}
+.howto + .statewide__note {
+  margin-top: 56px;
+  max-width: 46rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero--state select,
+  .hero--state .chooser__go,
+  .chooser__arrow {
+    transition: none;
+  }
+  .chooser__go:hover .chooser__arrow,
+  .chooser__go:focus-visible .chooser__arrow {
+    translate: none;
+  }
+}
