@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { safeUrl } from '../services/format';
+import { sourceUrl } from '../services/format';
 
 /**
  * The link text with the "↗" glued to its last word, so the arrow never wraps onto a
@@ -31,7 +31,7 @@ type Props = {
  * A null URL becomes plain, non-interactive text, never a dead button.
  */
 export function SourceAction({ url, label, unavailableText }: Props) {
-  const href = safeUrl(url);
+  const href = sourceUrl(url);
   if (!href) {
     return (
       <span className="source-action source-action--unavailable">

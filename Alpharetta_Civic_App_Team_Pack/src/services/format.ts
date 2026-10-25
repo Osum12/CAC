@@ -83,6 +83,32 @@ export function safeUrl(url: string | null | undefined): string | null {
   }
 }
 
+/** Legistar retires detail-record parameters; its records index remains the stable official entry point. */
+export function sourceUrl(url: string | null | undefined): string | null {
+  const href = safeUrl(url);
+  if (!href) return null;
+  try {
+    const u = new URL(href);
+    if (u.hostname === 'fulton.legistar.com' && u.pathname.toLowerCase() === '/legislationdetail.aspx') {
+      return `${u.origin}/Legislation.aspx`;
+    }
+  } catch {
+    return null;
+  }
+  return href;
+}
+
+export function isRetiredLegistarDetail(url: string | null | undefined): boolean {
+  const href = safeUrl(url);
+  if (!href) return false;
+  try {
+    const u = new URL(href);
+    return u.hostname === 'fulton.legistar.com' && u.pathname.toLowerCase() === '/legislationdetail.aspx';
+  } catch {
+    return false;
+  }
+}
+
 export function formatWeekday(iso: string | null): string | null {
   const d = parseIsoDate(iso);
   return d ? d.toLocaleDateString('en-US', { weekday: 'short' }) : null;
@@ -90,7 +116,7 @@ export function formatWeekday(iso: string | null): string | null {
 
 /** Names a source link by where it points, so readers know what they will open. */
 export function sourceLabel(url: string, index = 0): string {
-  if (/legistar\.com\/LegislationDetail\.aspx/.test(url)) return 'Item record on the county’s Legistar site';
+  if (/legistar\.com\/LegislationDetail\.aspx/.test(url)) return 'Official records on the county’s Legistar site';
   if (/legistar\.com\/MeetingDetail\.aspx/.test(url)) return 'Meeting page on the county’s Legistar site';
   if (/legistar1\.com\/.*\.pdf$/i.test(url)) return 'Official document (PDF)';
   if (/portal\.civicclerk\.com\/event\//.test(url)) return 'Meeting page on the city’s portal';

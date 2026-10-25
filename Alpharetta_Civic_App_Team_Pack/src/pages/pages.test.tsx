@@ -199,7 +199,7 @@ describe('With the real curated records in /data', () => {
   it('shows a failed item as denied, with its official item record', async () => {
     renderAt('/issues/issue-26-0601-public-comment-policy');
     expect(await screen.findByText('Denied')).toBeInTheDocument();
-    expect(screen.getByRole('link', { name: /Item record on the county’s Legistar site/ }).getAttribute('href')).toMatch(/^https:\/\/fulton\.legistar\.com\/LegislationDetail\.aspx\?ID=/);
+    expect(screen.getByRole('link', { name: /Official document \(PDF\)/ }).getAttribute('href')).toBe('https://fulton.legistar1.com/fulton/attachments/33fdfcba-9c65-4638-a7e7-fe97647f2695.pdf');
     expect(screen.getByText(/failed for lack of a second/)).toBeInTheDocument();
   });
 

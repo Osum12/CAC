@@ -1,6 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import { getDocumentsForIssue, getIssueById, getMeetingsForIssue } from '../services/civicData';
-import { formatDate, formatTime, humanize, meetingStatusLabel, meetingTypeLabel, sourceLabel } from '../services/format';
+import { formatDate, formatTime, humanize, isRetiredLegistarDetail, meetingStatusLabel, meetingTypeLabel, safeUrl, sourceLabel } from '../services/format';
 import { getValidCoordinates } from '../services/nearMe';
 import { useAsync } from '../services/useAsync';
 import { usePageTitle } from '../services/usePageTitle';
@@ -31,6 +31,11 @@ export function IssueDetailPage() {
   if (!state.data) return <NotFound kind="issue" />;
 
   const { issue, meetings, documents } = state.data;
+  const relatedDocuments = documents.filter((document) => document.issueIds.includes(issue.id) && safeUrl(document.url));
+  const relatedDocumentUrl = (relatedDocuments.find((document) => document.issueIds.length === 1) ?? relatedDocuments[0])?.url ?? null;
+  const sourceLinks = Array.from(
+    new Set(issue.sourceUrls.map((url) => (isRetiredLegistarDetail(url) && relatedDocumentUrl ? relatedDocumentUrl : url))),
+  );
   const missingMeetings = issue.meetingIds.filter((id) => !meetings.some((m) => m.id === id)).length;
   const missingDocs = issue.documentIds.filter((id) => !documents.some((d) => d.id === id)).length;
 
@@ -64,11 +69,11 @@ export function IssueDetailPage() {
         <aside className="detail__side">
           <section className="panel" aria-labelledby="sources-h">
             <h2 id="sources-h">Official sources</h2>
-            {issue.sourceUrls.length ? (
+            {sourceLinks.length ? (
               <ul className="plain-list">
-                {issue.sourceUrls.map((url, i) => (
+                {sourceLinks.map((url, i) => (
                   <li key={i}>
-                    <SourceAction url={url} label={numberedSourceLabel(issue.sourceUrls, i)} unavailableText="Source link is not valid" />
+                    <SourceAction url={url} label={numberedSourceLabel(sourceLinks, i)} unavailableText="Source link is not valid" />
                   </li>
                 ))}
               </ul>
