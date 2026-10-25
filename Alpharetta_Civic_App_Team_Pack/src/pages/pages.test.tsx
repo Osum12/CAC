@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router-dom';
 import { AppRoutes } from '../App';
 import { setDataLoader } from '../services/civicData';
 import { splitMeetings } from './CitywidePage';
+import { meetingsForMonth } from './CalendarPage';
 import type { MapPoint } from '../components/IssueMap';
 import type { Meeting } from '../types/civic';
 import { mockLoader } from '../test/mockDataset';
@@ -70,6 +71,26 @@ describe('Citywide', () => {
     const { upcoming, recent } = splitMeetings([m('old', '2026-10-27', 'scheduled'), m('tbd', null, 'scheduled')], '2026-11-01');
     expect(upcoming.map((x) => x.id)).toEqual(['tbd']);
     expect(recent.map((x) => x.id)).toEqual(['old']);
+  });
+});
+
+describe('Meeting calendar', () => {
+  it('filters meetings by month and type in chronological order', () => {
+    const meetings = [
+      { id: 'late', date: '2026-10-28', meetingType: 'board' },
+      { id: 'early', date: '2026-10-03', meetingType: 'board' },
+      { id: 'other', date: '2026-10-12', meetingType: 'committee' },
+    ] as Meeting[];
+    expect(meetingsForMonth(meetings, '2026-10', 'board').map((meeting) => meeting.id)).toEqual(['early', 'late']);
+    expect(meetingsForMonth(meetings, '2026-11', '')).toEqual([]);
+  });
+
+  it('renders the calendar route with month controls and meeting links', async () => {
+    renderAt('/county/fulton/calendar?month=2026-10');
+    expect(await screen.findByRole('heading', { name: 'Meeting calendar' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Show September 2026/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Show November 2026/ })).toBeInTheDocument();
+    expect(within(screen.getByRole('grid', { name: /October 2026 meeting calendar/ })).getByRole('link', { name: /Sample City Council Meeting/ })).toHaveAttribute('href', '/county/fulton/meetings/meeting-mock-001');
   });
 });
 

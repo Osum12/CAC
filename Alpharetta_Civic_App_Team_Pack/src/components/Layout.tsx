@@ -8,6 +8,7 @@ const COUNTY_NAV = [
   { path: '/', label: 'Countywide', end: true },
   { path: '/near-me', label: 'Near Me', end: false },
   { path: '/archive', label: 'Archive', end: false },
+  { path: '/calendar', label: 'Calendar', end: true },
 ];
 
 /** The place the current URL is about, if any: /county/fulton/… is a county, /roswell a city. */

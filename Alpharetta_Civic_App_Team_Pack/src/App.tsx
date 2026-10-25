@@ -10,6 +10,7 @@ import { IssueDetailPage } from './pages/IssueDetailPage';
 import { MeetingDetailPage } from './pages/MeetingDetailPage';
 import { DocumentDetailPage } from './pages/DocumentDetailPage';
 import { ArchivePage } from './pages/ArchivePage';
+import { CalendarPage } from './pages/CalendarPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PAGE_SECTIONS } from './services/jurisdictions';
 
@@ -52,6 +53,7 @@ export function AppRoutes() {
             }
           />
           <Route path="archive" element={<ArchivePage />} />
+          <Route path="calendar" element={<CalendarPage />} />
           <Route path="issues/:issueId" element={<IssueDetailPage />} />
           <Route path="meetings/:meetingId" element={<MeetingDetailPage />} />
           <Route path="documents/:documentId" element={<DocumentDetailPage />} />
