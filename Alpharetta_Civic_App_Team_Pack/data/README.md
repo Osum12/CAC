@@ -1,25 +1,53 @@
-# Alpharetta Civic App — Mock Data Pack
+# Georgia Civic — Data
 
-**IMPORTANT: Every record in this pack is fictional test data. None of the sample titles, dates, locations, statuses, summaries, or documents represents a verified City of Alpharetta record.** Do not present these records as official civic information.
+The records in this folder are what the app shows. As of 2026-10-22 they are **curated real records** (`dataMode: "curated"`, `mockOnly: false`) from the **Fulton County Board of Commissioners**: 8 meetings (August 3 to October 7, 2026), 24 agenda items ("issues"), and 18 documents (8 agendas and 10 supporting PDFs). That is 50 records.
 
-## Files
-- `data/meetings.json` — sample meeting records
-- `data/issues.json` — sample civic issues
-- `data/documents.json` — sample document metadata
+The earlier City of Alpharetta records were removed from the app on 2026-10-22 at the team's request; they remain in the git history. The fictional fixture pack in `src/test/fixtures/` is used only by the automated tests.
 
-## Intended use
-Use these files to build and test layout, navigation, filtering, data relations, loading states, and feed/map interactions before the real research dataset is ready. Every record has `dataMode: "mock"` and `mockOnly: true`. Mock map coordinates are visual test points only.
+## Where the facts come from
 
-## Replacement rules
-1. Preserve the record types and IDs/relationship pattern, or update all relationships when IDs change.
-2. Replace fictional titles, dates, summaries, statuses, and map values with verified information.
-3. Add official source URLs for real records. Do not fabricate URLs.
-4. Mark a source as verified only after checking the original document or official page.
-5. Change `dataMode` to `curated` (or another explicit mode agreed by the project) only for real records that were manually collected and verified. `mockOnly` should be `false` for those real records.
-6. Keep the user-facing app honest about whether data is sample, curated, or live.
+Everything comes from Fulton County's official agenda system, Legistar (https://fulton.legistar.com/), read through its public web API on 2026-10-22:
 
-## Recommended development pattern
-Build a small data-access module that reads these JSON files and exposes functions such as `getMeetings`, `getIssues`, `getDocuments`, `getIssueById`, and `getDocumentsForMeeting`. UI pages should call those functions, not import the JSON files independently. This makes swapping the data source easier.
+- Meetings: `https://webapi.legistar.com/v1/fulton/events` (Board of Commissioners, August 1 to November 15, 2026). No later meetings were listed.
+- Agenda items, motions and results: `https://webapi.legistar.com/v1/fulton/events/{id}/eventitems`, and roll-call votes from `/eventitems/{id}/votes`.
+- Agendas: the official agenda PDF for each meeting. These are issued before the meeting, so they list items but not results.
+- Supporting documents: the PDFs attached to each item (resolutions, fact sheets, presentations). Amounts, addresses and unit counts in the summaries come from these.
+- Recordings: each meeting's video in the county's Granicus player, linked from Legistar.
+
+Statuses come from the recorded motions, not from the item titles:
+- "Approved" means a motion to approve passed. Vote counts are from the roll call.
+- "Denied" is used for items whose motion to approve failed (26-0601, 26-0678; 26-0679 is described inside the AI policy issue).
+- "Under consideration" is used for items that were held (26-0604, 26-0674) and for the ethics code, which was introduced but still needs an adopting ordinance.
+
+Minutes for these meetings were not yet published on 2026-10-22. When they are, check each result against them.
+
+All 62 URLs in the data returned HTTP 200 on 2026-10-22.
+
+## Map locations
+
+Six items have a street address in their documents: the county jail (901 Rice Street NW), St. Mark AME Church (491 James P. Brawley Dr NW), and four affordable housing sites (834 Thurmond St NW, 280 James P. Brawley Dr NW, 383 Paines Ave NW, 404 Oliver St NW). Their coordinates were looked up with the U.S. Census Bureau geocoder on 2026-10-22, so they are `locationType: "approximate"` and `verified: false`. All other items are countywide or have no single address, so they have no pin.
+
+Near Me measures distance from one public place, the Fulton County Government Center (141 Pryor Street SW, Atlanta), also geocoded with the Census geocoder. The app never asks for or stores anyone's own address.
+
+## Adding or updating a record
+
+1. Find the item on https://fulton.legistar.com/ and open its item record, agenda and attachments.
+2. Write the summary using only what the documents and the recorded motion say. Distinguish what was discussed from what was decided.
+3. Use only URLs you have opened. Set `lastVerifiedAt` (meetings) and `statusAsOf` (issues).
+4. Keep IDs stable and update relationships in both directions (issue ↔ meeting, issue ↔ document, meeting → agenda document).
+5. Run `npm run validate:data` and `npm test`.
 
 ## Status values
-Suggested issue statuses: `proposed`, `under_consideration`, `approved`, `denied`, `withdrawn`, `completed`, `unknown`. Only use a status when source evidence supports it.
+
+`proposed`, `under_consideration`, `approved`, `denied`, `withdrawn`, `completed`, `unknown`. Only use a status when source evidence supports it.
+
+## Georgia location directory (`georgia/`)
+
+`georgia/directory.json` lists Georgia's 159 counties and 538 incorporated places (cities, towns and consolidated governments). It is geography only and has no civic records. It is generated by `npm run build:directory` from two U.S. Census Bureau files kept unchanged in `georgia/source/`:
+
+- https://www2.census.gov/geo/docs/reference/codes2020/cou/st13_ga_cou2020.txt (counties)
+- https://www2.census.gov/geo/docs/reference/codes2020/place/st13_ga_place2020.txt (places, with the counties each one is in)
+
+Census-designated places (unincorporated communities) are left out. The two "(balance)" rows for Athens-Clarke and Augusta-Richmond are kept under the government's name. A place can be in several counties (Atlanta is in DeKalb and Fulton). The list is as of 2020, so places incorporated since then aren't in it yet.
+
+Which places have civic records is decided only in `src/config/coverage.ts`. Today that is Fulton County, whose page shows the Board of Commissioners records in this folder. Cities have no pages of their own yet. To add a place, first build and verify its own dataset; never copy or relabel another place's records.

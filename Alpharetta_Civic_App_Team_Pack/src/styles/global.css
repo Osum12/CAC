@@ -1,0 +1,2695 @@
+/* =========================================================================
+   Georgia Civic: "Status Board"
+   A Swiss public register. One strict grid on every page:
+     12 columns at 1024px and up, 8 at 600-1023px, 4 below 600px.
+     Three axes repeat everywhere: column 1, column 5 and column 9.
+     Rails (titles, tools) take columns 1-4; content takes 5-12.
+   One vertical scale on an 8px base. One signal colour (Georgia peach).
+   Inter Tight for everything; numbers set in tabular figures.
+   ========================================================================= */
+
+:root {
+  color-scheme: light;
+  /* Palette */
+  --paper: #f3f3ed;
+  --paper-2: #e8e8e0;
+  --ink: #1e1e1c;
+  --ink-2: #4a4a45; /* 8.0:1 on paper */
+  --rule: #1e1e1c;
+  --rule-soft: #c4c4ba; /* decorative dividers only */
+  --signal: #f6a23c; /* Georgia peach. Fills only; text on it is always --ink (8.1:1) */
+  --on-signal: #1e1e1c;
+  --focus: #1e1e1c;
+
+  /* Status (dot colours; the word next to each dot stays in --ink) */
+  --st-approved: #1b6e3e;
+  --st-denied: #b3261e;
+  --st-pending: #9a5800;
+  --st-proposed: #2b55b0;
+  --st-neutral: #6b6b64;
+
+  /* Type */
+  --font: 'Inter Tight', 'Helvetica Neue', Arial, system-ui, sans-serif;
+
+  /* Grid */
+  --content: 1312px; /* 1440 minus two 64px margins */
+  --margin: clamp(16px, 4.45vw, 64px);
+  --cols: 4;
+  --gap: 16px;
+
+  /* Vertical scale (8px base). Every margin and padding below uses one of these. */
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+  --s5: 48px;
+  --s6: 64px;
+  --s7: 96px;
+  /* Between page sections, and between a section's rule and its content. */
+  --section: var(--s5);
+  --block: var(--s3);
+
+  /* Rules */
+  --heavy: 2px;
+
+  /* Visible height of the sticky masthead (border included). Measured per breakpoint
+     at the end of this file; scroll padding and sticky rails use it. */
+  --head-h: 77px;
+
+  /* Motion */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur: 0.22s;
+}
+@media (min-width: 600px) {
+  :root {
+    --cols: 8;
+    --gap: 24px;
+    --section: var(--s6);
+    --block: var(--s4);
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --cols: 12;
+    --section: var(--s7);
+    --block: var(--s5);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --paper: #1e1e1c;
+    --paper-2: #2a2a27;
+    --ink: #f3f3ed;
+    --ink-2: #bdbdb4;
+    --rule: #f3f3ed;
+    --rule-soft: #4a4a45;
+    --focus: #f6a23c;
+    --st-approved: #5cc98a;
+    --st-denied: #ff7a6e;
+    --st-pending: #f0b54a;
+    --st-proposed: #8db0ff;
+    --st-neutral: #a8a8a0;
+  }
+}
+
+/* ---------- Base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: calc(var(--head-h) + 16px);
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.55;
+  font-feature-settings: 'ss01' on, 'cv11' on;
+  -webkit-font-smoothing: antialiased;
+  overflow-wrap: break-word;
+}
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  text-wrap: pretty;
+}
+p {
+  margin: 0;
+  text-wrap: pretty;
+}
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+a {
+  color: inherit;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+button,
+input,
+select {
+  font: inherit;
+  color: inherit;
+}
+img,
+svg {
+  max-width: 100%;
+}
+time {
+  font-variant-numeric: tabular-nums;
+}
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
+[tabindex='-1']:focus {
+  outline: none;
+}
+::selection {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: absolute;
+  left: var(--margin);
+  top: -100px;
+  z-index: 100;
+  background: var(--ink);
+  color: var(--paper);
+  padding: 12px 18px;
+  font-weight: 600;
+  text-decoration: none;
+}
+.skip-link:focus {
+  top: 12px;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+.main {
+  flex: 1;
+  outline: none;
+}
+/* The page frame: the same content width and side margins as the masthead. */
+.page {
+  max-width: calc(var(--content) + 2 * var(--margin));
+  margin: 0 auto;
+  padding: var(--section) var(--margin);
+}
+/* Pages that open with a hero let the hero set its own top space. */
+.page:has(> .hero:first-child),
+.page:has(> .soon:first-child) {
+  padding-top: 0;
+}
+
+.muted {
+  color: var(--ink-2);
+}
+.fine-print {
+  color: var(--ink-2);
+  font-size: 1rem;
+  line-height: 1.55;
+  max-width: 72ch;
+}
+.prose {
+  max-width: 68ch;
+  font-size: 1.1875rem;
+  line-height: 1.6;
+}
+.text-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.22em;
+}
+.text-link:hover {
+  text-decoration-thickness: 2px;
+}
+.icon-lead {
+  display: inline-block;
+  margin-right: 0.4em;
+}
+.plain-list {
+  list-style: none;
+}
+.plain-list li + li {
+  margin-top: var(--s1);
+}
+
+/* =========================================================================
+   The grid. Every page-level block below is one of these.
+   ========================================================================= */
+.hero__inner,
+.steps__inner,
+.nowband__inner,
+.board,
+.page-header,
+.toolbar,
+.nearme,
+.detail__head,
+.detail__grid,
+.soon__inner,
+.soon-more,
+.state--page {
+  display: grid;
+  grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+  column-gap: var(--gap);
+}
+.hero__inner > *,
+.steps__inner > *,
+.nowband__inner > *,
+.board > *,
+.page-header > *,
+.toolbar > *,
+.nearme > *,
+.detail__head > *,
+.detail__grid > *,
+.soon__inner > *,
+.soon-more > *,
+.state--page > *,
+.hero__main > *,
+.soon__main > * {
+  grid-column: 1 / -1;
+  min-width: 0;
+}
+
+/* Shared type roles */
+.display {
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.96;
+}
+.section-title,
+.steps__title,
+.board__label h2,
+.soon-more__title {
+  font-size: clamp(1.5rem, 2.6vw, 2.5rem);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+/* The label that names the place above a headline: a peach square and the name. */
+.hero__place,
+.soon__where {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.125rem;
+  letter-spacing: -0.01em;
+  margin-bottom: var(--s2);
+}
+.hero__place::before,
+.soon__where::before {
+  content: '';
+  width: 12px;
+  height: 12px;
+  background: var(--signal);
+  outline: 1px solid var(--ink);
+  flex: none;
+}
+
+/* ---------- Masthead ---------- */
+.masthead {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+}
+.masthead__inner {
+  max-width: calc(var(--content) + 2 * var(--margin));
+  margin: 0 auto;
+  padding: 12px var(--margin);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px var(--s4);
+  min-height: 76px;
+}
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  margin-right: auto;
+  min-height: 44px;
+}
+.brand__mark {
+  width: 36px;
+  height: 36px;
+  flex: none;
+}
+.brand__mark rect {
+  fill: var(--ink);
+}
+.brand__mark path {
+  fill: var(--signal);
+}
+.brand__text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+.brand__name {
+  font-weight: 800;
+  font-size: 1.25rem;
+  letter-spacing: -0.03em;
+}
+.brand__tag {
+  font-size: 0.875rem;
+  color: var(--ink-2);
+  margin-top: 3px;
+}
+.placebar {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.placebar__icon {
+  flex: none;
+}
+.placebar__change {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.placebar__change:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.primary-nav {
+  display: flex;
+  gap: 4px;
+}
+.primary-nav__link {
+  display: inline-flex;
+  flex: none;
+  white-space: nowrap;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 14px;
+  font-weight: 600;
+  font-size: 1.0625rem;
+  text-decoration: none;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  transition: border-color var(--dur) var(--ease);
+}
+.primary-nav__link:hover {
+  border-color: var(--rule);
+}
+.primary-nav__link[aria-current='page'] {
+  background: var(--signal);
+  color: var(--on-signal);
+  border-color: var(--on-signal);
+}
+
+/* ---------- Data banner (test fixtures only) ---------- */
+.data-banner {
+  background: var(--ink);
+  color: var(--paper);
+  font-size: 1rem;
+  padding: 10px var(--margin);
+  text-align: center;
+}
+.data-banner strong {
+  color: var(--signal);
+}
+
+/* =========================================================================
+   Hero: label, headline across all columns, a heavy rule, then one row
+   whose blocks share a top line (cols 1-4 | 5-12).
+   ========================================================================= */
+.hero {
+  padding-top: var(--section);
+}
+.hero__inner {
+  row-gap: 0;
+}
+.hero__main {
+  display: contents;
+}
+.hero__title {
+  font-size: clamp(2.6rem, 6.6vw, 6rem);
+  font-weight: 700;
+  line-height: 0.96;
+  letter-spacing: -0.045em;
+  text-wrap: initial;
+  padding-bottom: var(--block);
+  border-bottom: var(--heavy) solid var(--rule);
+  margin-bottom: var(--s3);
+}
+.hero__line {
+  display: block;
+}
+.hero__lede {
+  font-size: clamp(1.1875rem, 1.6vw, 1.5rem);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  max-width: 34ch;
+}
+.hero__note {
+  margin-top: var(--s2);
+  color: var(--ink-2);
+  font-size: 1rem;
+  max-width: 62ch;
+}
+.hero-search {
+  margin-top: var(--s3);
+}
+@media (min-width: 1024px) {
+  .hero__lede {
+    grid-column: 1 / span 4;
+    grid-row: 3;
+  }
+  .hero-search {
+    grid-column: 5 / -1;
+    grid-row: 3;
+    margin-top: 0;
+    align-self: start;
+  }
+  .hero--cover:not(.hero--state) .hero__inner {
+    grid-template-rows: auto auto auto 1fr;
+  }
+  .hero--cover:not(.hero--state) .hero__lede {
+    grid-row: 3 / span 2;
+  }
+  .hero--cover:not(.hero--state) .hero__note {
+    grid-column: 5 / -1;
+    grid-row: 4;
+  }
+}
+
+/* Statewide home. The headline sizes itself from its own width (see the end of this file). */
+.hero--state .hero__inner > .chooser {
+  margin-top: var(--s4);
+}
+.statewide__note {
+  margin-top: var(--s4);
+}
+@media (min-width: 1024px) {
+  .hero--state .hero__inner {
+    grid-template-rows: auto auto auto 1fr;
+  }
+  .hero--state .hero__inner > .chooser {
+    grid-column: 5 / -1;
+    grid-row: 3 / span 2;
+    margin-top: 0;
+  }
+  .hero--state .statewide__note {
+    grid-column: 1 / span 4;
+    grid-row: 4;
+    align-self: end;
+    margin-top: var(--s4);
+  }
+}
+
+/* ---------- Search ---------- */
+.hero-search {
+  display: flex;
+  border: var(--heavy) solid var(--rule);
+  background: var(--paper);
+}
+.hero-search input {
+  flex: 1;
+  min-width: 0;
+  min-height: 56px;
+  padding: 0 16px;
+  border: 0;
+  background: transparent;
+  font-size: 1.125rem;
+}
+.hero-search input:focus-visible {
+  outline-offset: -5px;
+}
+.hero-search__button {
+  border: 0;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.hero-search__button:hover {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+input::placeholder {
+  color: var(--ink-2);
+  opacity: 1;
+}
+
+/* ---------- Chooser (statewide home) ----------
+   No box: it sits on the hero rule like everything else. Two equal columns with the page
+   gutter, so County starts on column 5 and City on column 9. */
+.chooser {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--s2) var(--gap);
+  align-content: start;
+}
+.chooser__title {
+  font-size: 1.375rem;
+  letter-spacing: -0.02em;
+}
+.chooser__field {
+  display: grid;
+  gap: 6px;
+}
+.chooser__field label {
+  font-weight: 600;
+  font-size: 1.0625rem;
+}
+.chooser__optional {
+  font-weight: 400;
+  color: var(--ink-2);
+}
+.chooser__control {
+  position: relative;
+}
+.chooser__icon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.chooser__icon + select {
+  padding-left: 42px;
+}
+.chooser__status {
+  font-size: 1rem;
+  color: var(--ink-2);
+  min-height: 3.1em;
+}
+.chooser__status--error {
+  color: var(--st-denied);
+  font-weight: 600;
+}
+.chooser__go {
+  min-height: 56px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  font-size: 1.125rem;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.chooser__go:hover {
+  background: var(--signal);
+  color: var(--on-signal);
+}
+@media (min-width: 600px) {
+  .chooser {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .chooser__title {
+    grid-column: 1 / -1;
+  }
+  .chooser__status {
+    align-self: center;
+    min-height: 0;
+  }
+}
+
+/* ---------- Form controls ---------- */
+select,
+input[type='search'] {
+  width: 100%;
+  min-height: 52px;
+  border: 1.5px solid var(--rule);
+  border-radius: 0;
+  background-color: var(--paper);
+  padding: 0 14px;
+  font-size: 1.0625rem;
+}
+select {
+  appearance: none;
+  padding-right: 44px;
+  background-image: linear-gradient(45deg, transparent 50%, currentColor 50%), linear-gradient(135deg, currentColor 50%, transparent 50%);
+  background-position: calc(100% - 22px) 50%, calc(100% - 16px) 50%;
+  background-size: 6px 6px;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+select:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+input[type='search']::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+.filters {
+  display: grid;
+  gap: var(--s2);
+  margin-top: var(--s3);
+}
+.filters__field {
+  display: grid;
+  gap: 6px;
+}
+.filters__field label {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.filters__clear {
+  justify-self: start;
+}
+.results-count {
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+  margin-top: var(--s2);
+  color: var(--ink-2);
+}
+
+/* ---------- Buttons, chips, tags ---------- */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 1.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--ink);
+  color: var(--paper);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease), border-color var(--dur) var(--ease);
+}
+.button:hover {
+  background: var(--signal);
+  border-color: var(--on-signal);
+  color: var(--on-signal);
+}
+.button--ghost {
+  background: transparent;
+  color: var(--ink);
+}
+.button--ghost:hover {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.button--small {
+  min-height: 40px;
+  padding: 0 16px;
+  font-size: 1rem;
+}
+.button-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: var(--s3);
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--s1);
+  margin-top: var(--s3);
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 1.5px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  font-weight: 600;
+  font-size: 1.0625rem;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.chip:hover {
+  background: var(--paper-2);
+}
+.chip[aria-pressed='true'] {
+  background: var(--ink);
+  color: var(--paper);
+}
+.chip:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+.chip__count {
+  font-weight: 500;
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 1px 12px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1.3;
+  white-space: normal;
+  max-width: 100%;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 28px;
+  padding: 1px 12px;
+  border-radius: 999px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+.badge--mock {
+  background: var(--signal);
+  color: var(--on-signal);
+  border: 1px dashed var(--on-signal);
+}
+.badge--curated {
+  border: 1px solid var(--rule-soft);
+  color: var(--ink-2);
+  font-weight: 500;
+}
+.badge--lg {
+  min-height: 32px;
+  font-size: 1rem;
+}
+.mock-notice {
+  margin-top: var(--s3);
+  padding: 16px 20px;
+  background: var(--signal);
+  color: var(--on-signal);
+  max-width: 80ch;
+  font-size: 1.0625rem;
+}
+
+/* ---------- Status: shaped dot + word ---------- */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--ink);
+  white-space: nowrap;
+  --st: var(--st-neutral);
+}
+.status__dot {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--st);
+  border: 2px solid var(--st);
+}
+.status--approved,
+.status--completed {
+  --st: var(--st-approved);
+}
+.status--denied {
+  --st: var(--st-denied);
+}
+.status--denied .status__dot {
+  border-radius: 2px;
+  transform: rotate(45deg) scale(0.85);
+}
+.status--under_consideration {
+  --st: var(--st-pending);
+}
+.status--under_consideration .status__dot {
+  background: linear-gradient(90deg, var(--st) 50%, transparent 50%);
+}
+.status--proposed {
+  --st: var(--st-proposed);
+}
+.status--proposed .status__dot {
+  background: transparent;
+}
+.status--withdrawn .status__dot,
+.status--meeting-canceled .status__dot {
+  height: 4px;
+  width: 14px;
+  border-radius: 2px;
+  border-width: 0;
+}
+.status--unknown .status__dot,
+.status--meeting-unknown .status__dot {
+  background: transparent;
+  border-style: dashed;
+}
+.status--meeting-scheduled {
+  --st: var(--st-proposed);
+}
+.status--meeting-scheduled .status__dot {
+  background: transparent;
+}
+/* Held is a fact about the meeting, not a vote outcome: a neutral ink disc with a check mark,
+   never the green used for Approved. */
+.status--meeting-completed {
+  --st: var(--ink);
+}
+.status--meeting-completed .status__dot {
+  width: 14px;
+  height: 14px;
+  border: 0;
+  background: var(--ink);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath fill-rule='evenodd' d='M7 0a7 7 0 1 1 0 14A7 7 0 0 1 7 0Zm3.3 4.3-4.1 4.2-2-2-1 1 3 3 5.2-5.2Z'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Cpath fill-rule='evenodd' d='M7 0a7 7 0 1 1 0 14A7 7 0 0 1 7 0Zm3.3 4.3-4.1 4.2-2-2-1 1 3 3 5.2-5.2Z'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+.status--meeting-canceled {
+  --st: var(--st-denied);
+}
+
+/* =========================================================================
+   The register: full-width rows on 1px rules.
+   ========================================================================= */
+.register,
+.issue-list,
+.card-grid,
+.archive-list,
+.feed,
+.stack {
+  list-style: none;
+  border-bottom: 1px solid var(--rule);
+}
+.register-head {
+  display: none;
+}
+
+.card {
+  position: relative;
+}
+.card__link {
+  text-decoration: none;
+}
+.card__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.card__actions a,
+.card__actions button,
+.card__foot a,
+.card__foot button,
+.card__actions .badge {
+  position: relative;
+  z-index: 2;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    'topic status'
+    'topic date'
+    'main main';
+  gap: 2px var(--s2);
+  padding: var(--s3) 0;
+  border-top: 1px solid var(--rule);
+  transition: background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.row:hover,
+.feed-item:hover,
+.soon-place:hover {
+  background: var(--paper-2);
+  box-shadow: -12px 0 0 var(--paper-2), 12px 0 0 var(--paper-2);
+}
+.row__topic {
+  grid-area: topic;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+}
+.row__main {
+  grid-area: main;
+  min-width: 0;
+  margin-top: var(--s1);
+}
+.row__date {
+  grid-area: date;
+  justify-self: end;
+  text-align: right;
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.row__status {
+  grid-area: status;
+  justify-self: end;
+}
+.row__aside {
+  grid-area: aside;
+}
+
+.card__title {
+  font-size: clamp(1.1875rem, 1.5vw, 1.375rem);
+  font-weight: 650;
+  line-height: 1.25;
+  letter-spacing: -0.012em;
+}
+/* Hover reveals an underline and an arrow on the row title. */
+.card__title .card__link {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 2px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s var(--ease);
+}
+.card__title::after {
+  content: '';
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  /* Zero net advance: the hidden arrow never pushes a full-width title onto an extra line. */
+  margin-left: 0.35em;
+  margin-right: -1.15em;
+  vertical-align: -0.04em;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 8h12M8.5 3l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 8h12M8.5 3l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity var(--dur) var(--ease), transform 0.3s var(--ease);
+}
+.card:hover .card__title .card__link,
+.card:focus-within .card__title .card__link {
+  background-size: 100% 2px;
+}
+.card:hover .card__title::after,
+.card:focus-within .card__title::after {
+  opacity: 1;
+  transform: none;
+}
+
+.card__summary {
+  margin-top: var(--s1);
+  max-width: 64ch;
+  font-size: 1.0625rem;
+  line-height: 1.55;
+}
+.row__where,
+.row__when,
+.card__when {
+  margin-top: var(--s1);
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+.row__key {
+  font-weight: 600;
+  color: var(--ink);
+  margin-right: 4px;
+}
+.card__actions,
+.card__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px var(--s3);
+  margin-top: var(--s1);
+}
+.card__action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  min-height: 32px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+}
+.card__action--muted {
+  font-weight: 400;
+  text-decoration: none;
+  color: var(--ink-2);
+}
+.card__note {
+  margin-top: var(--s2);
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+
+/* Issue rows */
+.card--issue.row {
+  row-gap: 0;
+}
+.card--issue .row__main {
+  display: contents;
+}
+.card--issue .card__title {
+  grid-area: title;
+  margin-top: var(--s1);
+}
+.card--issue .card__summary {
+  grid-area: sum;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.card--issue .row__where {
+  grid-area: where;
+  margin-top: 6px;
+}
+.card--issue .card__actions {
+  grid-area: act;
+  margin-top: 6px;
+}
+.card--issue .row__where--none {
+  display: none;
+}
+.card--issue.row {
+  grid-template-areas:
+    'topic status'
+    'topic date'
+    'title title'
+    'sum sum'
+    'where where'
+    'act act';
+}
+
+/* Meeting rows: a date block on the left. */
+.row--meeting {
+  grid-template-columns: 4.75rem minmax(0, 1fr);
+  grid-template-areas:
+    'date main'
+    'date status';
+}
+.row--meeting .row__status {
+  justify-self: start;
+  margin-top: var(--s1);
+}
+.row--meeting .row__main {
+  margin-top: 0;
+}
+.row--meeting .tag {
+  margin-bottom: var(--s1);
+}
+.datechip {
+  grid-area: date;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+}
+.datechip__month {
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.datechip__day {
+  font-weight: 700;
+  font-size: 2.5rem;
+  letter-spacing: -0.04em;
+  line-height: 1;
+  margin: 2px 0;
+}
+.datechip__weekday {
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+}
+
+/* Document rows */
+.row--document {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'topic' 'main' 'aside';
+}
+.row--document .card__actions {
+  margin-top: var(--s1);
+}
+
+/* Archive rows */
+.archive-row .row__topic {
+  align-items: center;
+  flex-wrap: nowrap;
+}
+.archive-row .tag {
+  white-space: nowrap;
+}
+.archive-row.row {
+  grid-template-areas:
+    'topic topic'
+    'main main'
+    'date date'
+    'status status';
+}
+.archive-row .row__status {
+  justify-self: start;
+  margin-top: var(--s1);
+}
+.archive-row__time {
+  white-space: nowrap;
+}
+.archive-row__published {
+  display: block;
+}
+.archive-row .row__date {
+  text-align: left;
+  justify-self: start;
+  margin-top: var(--s1);
+}
+.archive-row__icon {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+}
+.archive-row .row__status:empty {
+  display: none;
+}
+
+/* Register layouts respond to the width of their own column, not the viewport. */
+.board__rows,
+.detail__main > section,
+.issue-list,
+.card-grid,
+.stack,
+.archive-list {
+  container-type: inline-size;
+}
+@container (max-width: 420px) {
+  .row--meeting {
+    grid-template-columns: 3.75rem minmax(0, 1fr);
+  }
+}
+/* Wide registers sit on the page grid: a register column is eight page columns wide, so eight
+   equal tracks with the page gutter land on the same lines as the page (cols 5, 9 and 11). The
+   record takes the first four tracks, the date the next two, the status the last two. */
+@container (min-width: 640px) {
+  .row,
+  .register-head {
+    grid-template-columns: repeat(8, minmax(0, 1fr));
+    column-gap: var(--gap);
+    row-gap: var(--s1);
+  }
+  .row {
+    grid-template-areas:
+      'topic topic topic topic topic topic topic topic'
+      'main main main main date date status status';
+  }
+  .row__main,
+  .archive-row .row__date {
+    margin-top: 0;
+  }
+  .row__date {
+    justify-self: stretch;
+    text-align: left;
+    padding-top: 0.2em;
+  }
+  .row__status {
+    justify-self: start;
+    padding-top: 0.1em;
+  }
+  /* Narrow registers: the status sits over the date in the right half (cols 9-12), so a long
+     status never runs past the edge. */
+  .card--issue.row {
+    grid-template-areas:
+      'topic topic topic topic . . . .'
+      'title title title title meta meta meta meta'
+      'sum sum sum sum meta meta meta meta'
+      'where where where where . . . .'
+      'act act act act . . . .';
+  }
+  /* Status and date share one cell, stacked, so the date sits right under the status. */
+  .card--issue .row__status,
+  .card--issue .row__date {
+    grid-area: meta;
+    align-self: start;
+  }
+  .card--issue.row .row__date {
+    margin-top: calc(var(--s1) + 1.9rem);
+  }
+  .card--issue .card__title,
+  .card--issue .row__date,
+  .card--issue .row__status {
+    margin-top: var(--s1);
+  }
+  /* Meetings: the date block on the first track, the meeting across five, status on the last two. */
+  .row--meeting {
+    grid-template-areas: 'date main main main main main status status';
+  }
+  .row--meeting .row__status {
+    margin-top: 0;
+  }
+  .row--document {
+    grid-template-areas:
+      'topic topic topic topic topic topic topic topic'
+      'main main main main main main aside aside';
+  }
+  .row--document .row__aside {
+    padding-top: 0.15em;
+    margin-top: 0;
+  }
+  /* Archive: date and status share the right half (cols 9-12), so long dates never wrap word by word. */
+  .archive-row.row {
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+      'topic topic topic topic topic topic topic topic'
+      'main main main main date date date date'
+      'main main main main status status status status';
+  }
+  .archive-row .row__status {
+    padding-top: 0;
+  }
+  .register-head {
+    display: grid;
+    padding: 0 0 var(--s1);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ink-2);
+  }
+  .register-head span:first-child {
+    display: none;
+  }
+  .register-head span:nth-child(2) {
+    grid-column: 1 / span 4;
+  }
+  .register-head span:nth-child(3) {
+    display: none;
+  }
+  .register-head span:nth-child(4) {
+    grid-column: 5 / -1;
+  }
+  .register-head--archive span:nth-child(3) {
+    display: block;
+    grid-column: 5 / -1;
+  }
+}
+/* Wide registers (800px and up, room for the longest status): date and status get their own columns (cols 9-10 and 11-12). */
+@container (min-width: 800px) {
+  .card--issue.row {
+    grid-template-areas:
+      'topic topic topic topic . . . .'
+      'title title title title date date status status'
+      'sum sum sum sum . . . .'
+      'where where where where . . . .'
+      'act act act act . . . .';
+  }
+  .card--issue .row__status {
+    grid-area: status;
+  }
+  .card--issue.row .row__date {
+    grid-area: date;
+    margin-top: var(--s1);
+  }
+  .row__date {
+    padding-top: 0.2em;
+  }
+  .register-head span:nth-child(3) {
+    display: block;
+    grid-column: 5 / span 2;
+  }
+  .register-head span:nth-child(4) {
+    grid-column: 7 / span 2;
+  }
+  .register-head--archive span:nth-child(3) {
+    grid-column: 5 / -1;
+  }
+}
+
+/* Load-in: one orchestrated stagger of register rows (under 400ms in total). */
+@media (prefers-reduced-motion: no-preference) {
+  .register > li,
+  .soon-places > li,
+  .steps__list > li {
+    animation: row-in 0.38s var(--ease) both;
+  }
+  .register > li:nth-child(2),
+  .soon-places > li:nth-child(2),
+  .steps__list > li:nth-child(2) {
+    animation-delay: 40ms;
+  }
+  .register > li:nth-child(3),
+  .soon-places > li:nth-child(3),
+  .steps__list > li:nth-child(3) {
+    animation-delay: 80ms;
+  }
+  .register > li:nth-child(4),
+  .soon-places > li:nth-child(4) {
+    animation-delay: 120ms;
+  }
+  .register > li:nth-child(n + 5),
+  .soon-places > li:nth-child(n + 5) {
+    animation-delay: 160ms;
+  }
+  .nowband__inner {
+    animation: band-in 0.5s var(--ease) both;
+  }
+}
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes band-in {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* =========================================================================
+   Statewide steps: three equal columns on the 1 | 5 | 9 axes.
+   ========================================================================= */
+.steps {
+  padding-top: var(--section);
+}
+.steps__title {
+  padding-top: var(--s3);
+  border-top: var(--heavy) solid var(--rule);
+  margin-bottom: var(--block);
+}
+.steps__list {
+  list-style: none;
+  counter-reset: step;
+  display: grid;
+  gap: var(--s4) var(--gap);
+}
+.steps__item {
+  counter-increment: step;
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  column-gap: var(--s2);
+  row-gap: var(--s1);
+  align-content: start;
+}
+/* The steps are a real sequence, so they are numbered. */
+.steps__item::before {
+  content: counter(step);
+  grid-row: span 2;
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.steps__name {
+  font-size: clamp(1.25rem, 1.8vw, 1.625rem);
+  letter-spacing: -0.02em;
+}
+.steps__text {
+  color: var(--ink-2);
+  max-width: 44ch;
+}
+@media (min-width: 768px) {
+  .steps__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .steps__item {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--s2);
+  }
+  .steps__item::before {
+    grid-row: auto;
+    font-size: clamp(2.5rem, 4vw, 3.5rem);
+    padding-bottom: var(--s1);
+  }
+}
+
+/* =========================================================================
+   Countywide: "Right now" band and the two boards.
+   ========================================================================= */
+.nowband {
+  background: var(--signal);
+  color: var(--on-signal);
+  --focus: var(--on-signal);
+  --ink: var(--on-signal);
+  --ink-2: var(--on-signal);
+  --rule: var(--on-signal);
+  margin-inline: calc(50% - 50vw);
+  margin-top: var(--section);
+  padding: var(--block) 0;
+  border-block: 1px solid var(--on-signal);
+}
+.nowband__inner {
+  max-width: calc(var(--content) + 2 * var(--margin));
+  margin: 0 auto;
+  padding: 0 var(--margin);
+  row-gap: var(--s3);
+}
+.nowband__label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+.nowband__beacon {
+  flex: none;
+  width: 12px;
+  height: 12px;
+  background: var(--ink);
+}
+.docket__block {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+.docket__kicker {
+  font-size: 1rem;
+  font-weight: 600;
+}
+.docket__date {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  align-items: baseline;
+}
+.docket__time {
+  font-weight: 500;
+  font-size: 1rem;
+}
+.docket__title {
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+  text-wrap: pretty;
+}
+.docket__title a {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 0.12em;
+}
+.docket__title a:hover {
+  text-decoration-thickness: 4px;
+}
+.docket__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  font-size: 1rem;
+}
+.docket__meta .status {
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid #1e1e1c;
+}
+/* Dark mode: the band keeps its peach as rules and the marker, on a dark ground. */
+@media (prefers-color-scheme: dark) {
+  .nowband {
+    background: var(--paper-2);
+    color: #f3f3ed;
+    --ink: #f3f3ed;
+    --ink-2: #f3f3ed;
+    --rule: #f6a23c;
+    --focus: #f6a23c;
+    border-block: var(--heavy) solid #f6a23c;
+  }
+  .nowband__beacon {
+    background: #f6a23c;
+  }
+}
+.nowband .status {
+  background: #f3f3ed;
+  color: #1e1e1c;
+  --st: #6b6b64;
+}
+.nowband .status--approved,
+.nowband .status--completed {
+  --st: #1b6e3e;
+}
+.nowband .status--denied {
+  --st: #b3261e;
+}
+.docket__label {
+  font-weight: 700;
+  margin-top: 4px;
+}
+.docket__list {
+  list-style: none;
+  border-top: 1px solid var(--rule);
+}
+.docket__list li {
+  border-bottom: 1px solid var(--rule);
+  padding: var(--s1) 0;
+}
+.docket__source {
+  font-weight: 700;
+  min-height: 32px;
+  display: inline-flex;
+  align-items: center;
+}
+/* With one block on the band, it has eight columns: set its title larger. */
+.nowband__inner:not(:has(> .docket__block + .docket__block)) .docket__title {
+  font-size: clamp(1.75rem, 3.4vw, 3rem);
+}
+@media (min-width: 1024px) {
+  .nowband__label {
+    grid-column: 1 / span 4;
+    align-self: start;
+    padding-top: 0.2em;
+  }
+  .docket__block {
+    grid-column: 5 / -1;
+  }
+  .nowband__inner:has(> .docket__block + .docket__block) > .docket__block:not(.docket__block--decided) {
+    grid-column: 5 / span 4;
+  }
+  .nowband__inner:has(> .docket__block + .docket__block) > .docket__block--decided {
+    grid-column: 9 / -1;
+  }
+}
+
+/* Boards: a heavy rule, the label rail (cols 1-4) and the rows (cols 5-12). */
+.citywide-grid {
+  display: grid;
+  gap: var(--section);
+  margin-top: var(--section);
+}
+.board {
+  border-top: var(--heavy) solid var(--rule);
+  padding-top: var(--s3);
+}
+.board__label .section__source {
+  margin-top: var(--s1);
+  color: var(--ink-2);
+  font-size: 1rem;
+}
+.board__label .text-link {
+  margin-top: 4px;
+}
+.board__rows {
+  margin-top: var(--block);
+  min-width: 0;
+}
+.subhead {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: var(--s4) 0 var(--s2);
+}
+.board__rows > .subhead:first-child {
+  margin-top: 0;
+}
+@media (min-width: 600px) and (max-width: 1023px) {
+  .board__label .filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gap);
+  }
+}
+@media (min-width: 1024px) {
+  .board__label {
+    grid-column: 1 / span 4;
+    grid-row: 1;
+    align-self: start;
+    padding-right: var(--s4);
+  }
+  .board__rows {
+    grid-column: 5 / -1;
+    grid-row: 1 / span 3;
+    margin-top: 0;
+  }
+  .board--archive .board__label {
+    position: sticky;
+    top: calc(var(--head-h) + var(--s3));
+  }
+}
+
+/* Issue groups: one heading per status, in a fixed order. */
+.issue-group + .issue-group {
+  margin-top: var(--s5);
+}
+.issue-group__title {
+  font-size: 1.375rem;
+  letter-spacing: -0.02em;
+  padding-bottom: var(--s2);
+}
+.issue-group__count {
+  margin-left: 4px;
+  font-weight: 500;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Meetings: a compact index. After the filters on phones; in the left rail on wide screens,
+   where it stays in view beside the issue list. */
+.board__meetings {
+  margin-top: var(--block);
+  border-top: var(--heavy) solid var(--rule);
+  padding-top: var(--s3);
+}
+.board__meetings h2 {
+  font-size: 1.5rem;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
+}
+.board__meetings .section__source {
+  margin-top: 4px;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+}
+.board__meetings > .text-link {
+  margin-top: var(--s2);
+}
+.meeting-index__title {
+  margin-top: var(--s3);
+  padding-bottom: var(--s1);
+  font-size: 1rem;
+  font-weight: 700;
+  border-bottom: 1px solid var(--rule);
+}
+.meeting-index {
+  list-style: none;
+}
+.meeting-index__item {
+  padding: 8px 0 10px;
+  border-bottom: 1px solid var(--rule-soft);
+}
+.meeting-index__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 2px 12px;
+  font-size: 0.9375rem;
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.meeting-index__meta time {
+  font-weight: 600;
+  color: var(--ink);
+}
+.meeting-index__meta .status {
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+.meeting-index__name {
+  margin-top: 2px;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+  letter-spacing: -0.005em;
+}
+.meeting-index__name a {
+  text-decoration: none;
+}
+.meeting-index__name a:hover {
+  text-decoration: underline;
+}
+.meeting-index__meta .card__action {
+  min-height: 24px;
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+.meeting-index__empty {
+  margin-top: var(--s2);
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+.board__meetings + .board__rows {
+  margin-top: var(--section);
+}
+@media (min-width: 1024px) {
+  .board__meetings {
+    grid-column: 1 / span 4;
+    grid-row: 2;
+    align-self: start;
+    margin-top: var(--s5);
+    margin-right: var(--s4);
+  }
+  .board__meetings + .board__rows {
+    margin-top: 0;
+  }
+}
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .board__meetings {
+    margin-right: 0;
+  }
+}
+/* Sticky at every desktop height; the index is short, and scrolls inside itself if a screen is very short. */
+@media (min-width: 1024px) and (min-height: 700px) {
+  .board__meetings {
+    position: sticky;
+    top: calc(var(--head-h) + var(--s3));
+    max-height: calc(100dvh - var(--head-h) - 32px);
+    overflow: auto;
+  }
+  /* Focus rings drawn inside, so the scroll box never clips them. */
+  .board__meetings :focus-visible {
+    outline-offset: -3px;
+  }
+}
+
+/* =========================================================================
+   Page header (Near Me, Archive): title on cols 1-8, the lede on cols 9-12,
+   both sitting on the heavy rule.
+   ========================================================================= */
+.page-header {
+  row-gap: var(--s3);
+  padding-bottom: var(--s3);
+  border-bottom: var(--heavy) solid var(--rule);
+}
+.page-header h1 {
+  font-size: clamp(2.75rem, 6.6vw, 6rem);
+  letter-spacing: -0.045em;
+  line-height: 0.96;
+}
+.page-header__lede {
+  max-width: 58ch;
+  font-size: 1.0625rem;
+}
+@media (min-width: 1024px) {
+  .page-header h1 {
+    grid-column: 1 / span 8;
+    align-self: end;
+  }
+  .page-header__lede {
+    grid-column: 9 / -1;
+    align-self: end;
+  }
+}
+
+/* Tools under a page header: on the same 1 | 5 | 9 axes. */
+.toolbar {
+  row-gap: var(--s2);
+  margin-top: var(--s3);
+  align-items: end;
+}
+@media (min-width: 1024px) {
+  .toolbar > :nth-child(1) {
+    grid-column: 1 / span 4;
+    align-self: start;
+  }
+  .toolbar > :nth-child(2) {
+    grid-column: 5 / -1;
+  }
+}
+
+/* ---------- Near Me ---------- */
+.nearme__start {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 1rem;
+  max-width: 60ch;
+}
+.nearme__start-icon {
+  flex: none;
+  margin-top: 4px;
+}
+.nearme__filters {
+  margin-top: 0;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: end;
+}
+.nearme__count {
+  margin-top: 0;
+}
+@media (min-width: 600px) {
+  .nearme__filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gap);
+  }
+  .nearme__count {
+    padding-bottom: 14px;
+  }
+}
+.nearme {
+  row-gap: var(--s4);
+  margin-top: var(--block);
+}
+.nearme__map .fine-print {
+  margin-top: var(--s2);
+}
+@media (min-width: 1024px) {
+  .nearme {
+    align-items: start;
+  }
+  .nearme__map {
+    grid-column: 1 / span 8;
+    position: sticky;
+    top: calc(var(--head-h) + var(--s3));
+  }
+  .nearme__feed {
+    grid-column: 9 / -1;
+  }
+}
+.map {
+  position: relative;
+  border: var(--heavy) solid var(--rule);
+  /* Leaflet's panes use z-index 400-1000; keep them inside the map so the sticky header always wins. */
+  isolation: isolate;
+  z-index: 0;
+}
+.map__canvas {
+  isolation: isolate;
+  height: clamp(260px, 50vh, 420px);
+  background: var(--paper-2);
+}
+@media (min-width: 1024px) {
+  .map__canvas {
+    height: min(640px, calc(100vh - var(--head-h) - 180px));
+    min-height: 420px;
+  }
+}
+.map__notices {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 12px;
+  z-index: 500;
+  display: grid;
+  gap: 8px;
+  pointer-events: none;
+}
+.map__notice {
+  background: var(--paper);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  padding: 8px 12px;
+  font-size: 1rem;
+}
+.leaflet-container {
+  font-family: var(--font);
+  font-size: 1rem;
+}
+.leaflet-container a {
+  color: #1e1e1c;
+}
+.leaflet-bar a {
+  width: 34px !important;
+  height: 34px !important;
+  line-height: 34px !important;
+}
+.pin {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: #f6a23c;
+  border: 2px solid #1e1e1c;
+  transition: transform 0.18s var(--ease);
+}
+.pin span {
+  transform: rotate(45deg);
+  color: #1e1e1c;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+}
+.pin--unverified {
+  border-style: dashed;
+}
+.pin--selected {
+  background: #1e1e1c;
+  border-color: #f6a23c;
+  transform: rotate(-45deg) scale(1.22);
+}
+.pin--selected span {
+  color: #f3f3ed;
+}
+.origin-dot {
+  display: block;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #1e1e1c;
+  border: 4px solid #f3f3ed;
+  box-shadow: 0 0 0 2px #1e1e1c;
+}
+.leaflet-marker-icon:focus-visible {
+  outline: 3px solid #1e1e1c;
+  outline-offset: 4px;
+}
+/* Dark mode: dim the map tiles, not the pins. */
+@media (prefers-color-scheme: dark) {
+  .leaflet-tile-pane {
+    filter: brightness(0.7) contrast(1.1);
+  }
+}
+
+.nearme__feed-title {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+  padding-bottom: var(--s2);
+}
+.feed {
+  list-style: none;
+}
+.feed-group {
+  margin-top: var(--s5);
+}
+.feed-group__title {
+  font-size: 1.25rem;
+  letter-spacing: -0.02em;
+}
+.feed-group__intro {
+  margin: var(--s1) 0 var(--s2);
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+.nearme__feed-title + .feed-group {
+  margin-top: 0;
+}
+.feed-item {
+  display: grid;
+  grid-template-columns: 2.75rem minmax(0, 1fr);
+  gap: var(--s2);
+  padding: var(--s3) 0;
+  border-top: 1px solid var(--rule);
+  transition: background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.feed-item__num {
+  display: grid;
+  place-items: center;
+  width: 2.75rem;
+  height: 2.75rem;
+  border: 1.5px solid var(--rule);
+  font-weight: 700;
+  font-size: 1.0625rem;
+  font-variant-numeric: tabular-nums;
+}
+.feed-item__num--none {
+  border-style: dashed;
+  color: var(--ink-2);
+}
+.feed-item--selected,
+.feed-item--selected:hover {
+  background: var(--paper-2);
+  box-shadow: -12px 0 0 var(--paper-2), 12px 0 0 var(--paper-2), -16px 0 0 var(--ink);
+}
+.feed-item--selected .feed-item__num {
+  background: var(--ink);
+  color: var(--paper);
+}
+.feed-item .card__top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  align-items: center;
+}
+.feed-item__title {
+  margin-top: var(--s1);
+  font-size: 1.1875rem;
+  font-weight: 650;
+  line-height: 1.25;
+}
+.feed-item__title a {
+  text-decoration: none;
+}
+.feed-item__title a:hover {
+  text-decoration: underline;
+}
+.feed-item__reason {
+  margin-top: 4px;
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+
+/* ---------- Archive: the same rail + rows board as Countywide ---------- */
+.board--archive {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: var(--s3);
+}
+.board--archive .filters {
+  margin-top: 0;
+  grid-template-columns: minmax(0, 1fr);
+}
+.board--archive .filter-bar {
+  margin-top: var(--s2);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: var(--gap);
+}
+.board--archive .chip {
+  justify-content: space-between;
+  padding: 0 14px;
+  font-size: 1rem;
+}
+.board--archive .board__rows > .state:first-child {
+  margin-top: 0;
+}
+@media (min-width: 1024px) {
+  .board--archive .board__label {
+    padding-right: 0;
+  }
+}
+
+/* =========================================================================
+   Detail pages (issue, meeting, document): title on cols 1-8, the record
+   on cols 1-8 and the sources rail on cols 9-12.
+   ========================================================================= */
+.backlink {
+  margin-bottom: var(--s3);
+}
+.backlink a,
+.backlink__button {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 16px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: transparent;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.backlink a:hover,
+.backlink__button:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+.detail__header {
+  border-bottom: var(--heavy) solid var(--rule);
+  padding-bottom: var(--s3);
+}
+.detail__header .card__top {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: var(--s2);
+}
+.detail__title {
+  font-size: clamp(2.125rem, 4.6vw, 4.25rem);
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+  max-width: 22ch;
+}
+.detail__status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  margin-top: var(--s3);
+}
+.detail__status .status {
+  font-size: 1.0625rem;
+  padding: 6px 14px;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+}
+.detail__status .muted,
+.detail__header > .muted {
+  font-size: 1rem;
+  font-variant-numeric: tabular-nums;
+}
+.detail__header > .muted {
+  margin-top: var(--s2);
+}
+.detail__grid {
+  row-gap: 0;
+}
+.detail__main > section {
+  display: grid;
+  gap: var(--s2);
+  padding: var(--s4) 0;
+  border-bottom: 1px solid var(--rule);
+}
+.detail__main > section:last-child {
+  border-bottom: 0;
+}
+.detail__main h2 {
+  font-size: clamp(1.375rem, 2vw, 1.75rem);
+  letter-spacing: -0.025em;
+}
+.detail__main > section > :not(h2) {
+  min-width: 0;
+}
+.detail__main .fine-print {
+  margin-top: 0;
+}
+.callout .prose {
+  background: var(--paper-2);
+  border-left: 4px solid var(--signal);
+  padding: 18px 22px;
+}
+.detail__side {
+  display: grid;
+  gap: var(--s3);
+  align-content: start;
+  padding: var(--s4) 0;
+}
+.panel {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+  border-top: var(--heavy) solid var(--rule);
+  padding-top: var(--s2);
+}
+.panel h2 {
+  font-size: 1.25rem;
+}
+/* The first panel opens on the same line as the first section of the record. */
+.detail__side > .panel:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+/* Lists inside a record section end on the section's own rule. */
+.detail__main > section > .card-grid,
+.detail__main > section > .issue-list {
+  border-bottom: 0;
+}
+.panel .muted {
+  font-size: 1rem;
+}
+.panel__strong {
+  font-weight: 700;
+}
+.panel .button {
+  justify-self: start;
+}
+.source-action {
+  display: inline;
+  line-height: 1.6;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+}
+.source-action--unavailable {
+  font-weight: 400;
+  text-decoration: none;
+  color: var(--ink-2);
+}
+.detail__grid--aside-first > .detail__side {
+  border-bottom: 1px solid var(--rule);
+}
+@media (min-width: 1024px) {
+  .detail__main {
+    grid-column: 1 / span 8;
+  }
+  .detail__grid--aside-first > .detail__main {
+    grid-row: 1;
+  }
+  .detail__grid--aside-first > .detail__side {
+    grid-row: 1;
+    border-bottom: 0;
+  }
+  .detail__side {
+    grid-column: 9 / -1;
+    position: sticky;
+    top: calc(var(--head-h) + var(--s3));
+  }
+}
+
+/* Timeline: a dated register with a rail. */
+.timeline {
+  list-style: none;
+  border-left: 2px solid var(--rule);
+  margin-left: 6px;
+}
+.timeline__item {
+  position: relative;
+  padding: 4px 0 var(--s3) var(--s3);
+}
+.timeline__item::before {
+  content: '';
+  position: absolute;
+  left: -8px;
+  top: 10px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid var(--ink);
+  background: var(--ink);
+}
+.timeline__item--upcoming::before {
+  background: var(--paper);
+}
+.timeline__date {
+  font-size: 0.9375rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+}
+.timeline__title {
+  font-size: 1.1875rem;
+  font-weight: 650;
+  margin-top: 2px;
+}
+.timeline__meta {
+  color: var(--ink-2);
+  font-size: 1rem;
+  margin-top: 2px;
+}
+
+/* =========================================================================
+   Coming soon: the hero composition, then the county's places in two
+   columns (cols 5-8 and 9-12) beside their title.
+   ========================================================================= */
+.soon {
+  padding-top: var(--section);
+}
+.soon__main {
+  display: contents;
+}
+.soon__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-self: start;
+  gap: 8px;
+  padding: 4px 14px;
+  border-radius: 999px;
+  background: var(--signal);
+  color: var(--on-signal);
+  border: 1px solid var(--on-signal);
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: var(--s2);
+}
+.soon__where {
+  font-weight: 600;
+  font-size: 1rem;
+}
+.soon__where::before {
+  display: none;
+}
+.soon__title {
+  font-size: clamp(2.6rem, 6.6vw, 6rem);
+  letter-spacing: -0.045em;
+  line-height: 0.96;
+  padding-bottom: var(--block);
+  border-bottom: var(--heavy) solid var(--rule);
+  margin-bottom: var(--s3);
+}
+.soon__lede {
+  font-size: clamp(1.1875rem, 1.6vw, 1.5rem);
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+  max-width: 34ch;
+}
+.soon__detail {
+  font-weight: 600;
+  font-size: 1.1875rem;
+  max-width: 40ch;
+}
+.soon__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-content: start;
+}
+.soon__why {
+  max-width: 44ch;
+}
+.soon__inner > .soon__detail,
+.soon__inner > .soon__actions,
+.soon__inner > .soon__why,
+.soon__main > .soon__detail,
+.soon__main > .soon__actions,
+.soon__main > .soon__why {
+  margin-top: var(--s3);
+}
+.soon__primary,
+.soon__secondary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 52px;
+  padding: 0 24px;
+  border-radius: 999px;
+  border: 1.5px solid var(--ink);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+.soon__primary {
+  background: var(--ink);
+  color: var(--paper);
+}
+.soon__primary:hover {
+  background: var(--signal);
+  color: var(--on-signal);
+  border-color: var(--on-signal);
+}
+.soon__secondary:hover {
+  background: var(--ink);
+  color: var(--paper);
+}
+@media (min-width: 1024px) {
+  /* Row 4 takes the height of the middle block; the lede and actions span rows 4-5. */
+  .soon__inner {
+    grid-template-rows: auto auto auto auto 1fr;
+  }
+  .soon__lede {
+    grid-column: 1 / span 4;
+    grid-row: 4 / span 2;
+  }
+  .soon__main > .soon__detail,
+  .soon__main > .soon__why {
+    grid-column: 5 / span 4;
+    grid-row: 4;
+    margin-top: 0;
+  }
+  .soon__main > .soon__actions {
+    grid-column: 9 / -1;
+    grid-row: 4 / span 2;
+    margin-top: 0;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  /* A city in a covered county shows both the detail line and the note: stack them. */
+  .soon__main:has(> .soon__detail) > .soon__why {
+    grid-row: 5;
+    margin-top: var(--s3);
+  }
+}
+
+.soon-more {
+  margin-top: var(--section);
+  border-top: var(--heavy) solid var(--rule);
+  padding-top: var(--s3);
+  row-gap: var(--block);
+}
+.soon-places {
+  list-style: none;
+  display: grid;
+  column-gap: var(--gap);
+}
+.soon-places > li {
+  border-bottom: 1px solid var(--rule);
+}
+.soon-place {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 4px var(--s3);
+  min-height: 60px;
+  padding: 14px 0;
+  text-decoration: none;
+  transition: background var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+}
+.soon-place__name {
+  font-size: 1.25rem;
+  font-weight: 650;
+  letter-spacing: -0.012em;
+}
+.soon-place__name::after {
+  content: '';
+  display: inline-block;
+  width: 0.8em;
+  height: 0.8em;
+  margin-left: 0.35em;
+  vertical-align: -0.04em;
+  background: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 8h12M8.5 3l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M1 8h12M8.5 3l5 5-5 5' fill='none' stroke='%23000' stroke-width='2'/%3E%3C/svg%3E") center / contain no-repeat;
+  opacity: 0;
+  transform: translateX(-8px);
+  transition: opacity var(--dur) var(--ease), transform 0.3s var(--ease);
+}
+.soon-place:hover .soon-place__name::after,
+.soon-place:focus-visible .soon-place__name::after {
+  opacity: 1;
+  transform: none;
+}
+.soon-place__status {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+.soon-place__dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid var(--st-neutral);
+  flex: none;
+}
+@media (min-width: 600px) {
+  .soon-places {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1024px) {
+  .soon-more__title {
+    grid-column: 1 / span 4;
+  }
+  .soon-more > ul,
+  .soon-more > .muted {
+    grid-column: 5 / -1;
+  }
+  .soon-places > li:nth-child(-n + 2) {
+    border-top: 0;
+  }
+  .soon-place {
+    padding-top: 0;
+    padding-bottom: 14px;
+    min-height: 48px;
+  }
+  .soon-places > li:nth-child(n + 3) .soon-place {
+    padding-top: 14px;
+  }
+}
+
+/* ---------- States ---------- */
+.state {
+  margin-top: var(--s3);
+}
+.state--empty,
+.state--error {
+  border: 1.5px dashed var(--rule);
+  padding: var(--s3);
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+}
+.state__title {
+  font-weight: 700;
+  font-size: 1.1875rem;
+}
+.state__body {
+  color: var(--ink-2);
+  max-width: 62ch;
+}
+.state--error {
+  border-style: solid;
+  border-color: var(--st-denied);
+}
+/* Not Found: the hero composition. */
+.state--page {
+  border: 0;
+  padding: 0;
+  margin-top: 0;
+  column-gap: var(--gap);
+  row-gap: 0;
+  justify-items: stretch;
+}
+.state--page .state__title {
+  font-size: clamp(2.6rem, 6.6vw, 6rem);
+  letter-spacing: -0.045em;
+  line-height: 0.96;
+  padding-bottom: var(--block);
+  border-bottom: var(--heavy) solid var(--rule);
+  margin-bottom: var(--s3);
+}
+.state--page .state__body {
+  font-size: clamp(1.1875rem, 1.6vw, 1.5rem);
+  line-height: 1.45;
+  color: var(--ink);
+  max-width: 34ch;
+}
+.state--page .button-row {
+  align-content: start;
+  margin-top: var(--s4);
+}
+@media (min-width: 1024px) {
+  .state--page .state__body {
+    grid-column: 1 / span 4;
+  }
+  .state--page .button-row {
+    grid-column: 5 / -1;
+    margin-top: 4px;
+  }
+}
+.skeleton {
+  height: 92px;
+  border-top: 1px solid var(--rule);
+  background: linear-gradient(90deg, var(--paper-2) 0 30%, transparent 30% 100%) 0 24px / 100% 18px no-repeat;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .skeleton {
+    animation: pulse 1.2s ease-in-out infinite alternate;
+  }
+}
+@keyframes pulse {
+  to {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* =========================================================================
+   Home headline: always two set lines ("Know what’s happening / in your
+   community."). Each line is sized from the headline's own width, so the
+   longer line always fits.
+   ========================================================================= */
+.hero--state .hero__title {
+  container-type: inline-size;
+}
+.hero--state .hero__title .hero__line {
+  display: block;
+  font-size: clamp(1.5rem, 9.8cqi, 8.25rem);
+  /* In em on the line itself, so smaller lines aren’t set as tight as the full-size title. */
+  letter-spacing: -0.045em;
+}
+
+/* Countywide headline: the lines break where they read best. */
+.hero--cover:not(.hero--state) .hero__line {
+  text-wrap: balance;
+}
+
+/* =========================================================================
+   Masthead: phones and tablets. Heights are measured; --head-h feeds
+   scroll-padding-top and the sticky rails.
+   ========================================================================= */
+/* Tablet: brand and place on one row, the section nav on a second. */
+@media (min-width: 600px) and (max-width: 1023px) {
+  .primary-nav {
+    flex-basis: 100%;
+  }
+  :root:has(.primary-nav) {
+    --head-h: 121px;
+  }
+}
+/* Phones: compact rows, the nav on one row inside the page margins. On county pages only
+   the nav row stays pinned; the brand and place rows scroll away (negative sticky top). */
+@media (max-width: 599px) {
+  .brand__tag {
+    display: none;
+  }
+  .masthead__inner {
+    gap: 2px 12px;
+    padding-block: 6px;
+    min-height: 0;
+  }
+  .brand {
+    min-height: 36px;
+    gap: 10px;
+  }
+  .brand__mark {
+    width: 28px;
+    height: 28px;
+  }
+  .placebar {
+    flex-basis: 100%;
+    min-height: 28px;
+    font-size: 0.9375rem;
+  }
+  .placebar__change {
+    min-height: 28px;
+    padding: 0 10px;
+  }
+  .primary-nav {
+    width: 100%;
+    gap: 2px;
+  }
+  .primary-nav__link {
+    min-height: 40px;
+    padding: 0 11px;
+    font-size: 1rem;
+  }
+  .masthead:has(.primary-nav) .masthead__inner {
+    padding-bottom: 4px;
+  }
+  /* 6px padding + 36px brand + 2px gap + 28px place row = 72px scroll away. */
+  .masthead:has(.primary-nav) {
+    top: -72px;
+  }
+  :root {
+    --head-h: 49px;
+  }
+  :root:has(.placebar) {
+    --head-h: 79px;
+  }
+  :root:has(.primary-nav) {
+    --head-h: 47px;
+  }
+  .hero-search input {
+    font-size: 1rem;
+    padding: 0 12px;
+  }
+  .hero-search__button {
+    padding: 0 16px;
+  }
+  .chooser__title {
+    font-size: 1.25rem;
+  }
+  .steps__name {
+    font-size: 1.125rem;
+  }
+}
+@media (max-width: 359px) {
+  .primary-nav__link {
+    padding: 0 9px;
+  }
+  /* Too narrow for a pill: the topic is set as plain bold text, which can wrap cleanly. */
+  .tag {
+    border: 0;
+    padding: 0;
+    min-height: 24px;
+    font-weight: 600;
+    white-space: normal;
+  }
+}
