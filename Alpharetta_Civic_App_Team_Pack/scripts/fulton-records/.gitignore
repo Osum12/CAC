@@ -1,0 +1,10 @@
+# Generated when the pipeline runs (see README.md); rebuilt from the county's records.
+raw/
+docs/
+dossiers/
+norm.json
+filtered.json
+out-*.json
+urlcheck.json
+pagecheck.json
+*.log

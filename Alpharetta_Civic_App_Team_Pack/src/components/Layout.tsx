@@ -4,11 +4,10 @@ import { chooserPath, countyPath, getCounty, getMunicipality, placeLabel } from 
 import { PinIcon } from './PinIcon';
 import { ThemeToggle, useTheme } from './ThemeToggle';
 
-const COUNTY_NAV: { path: string; label: string; end: boolean; tint?: boolean }[] = [
+const COUNTY_NAV = [
   { path: '/', label: 'Countywide', end: true },
   { path: '/near-me', label: 'Near Me', end: false },
-  // Tinted light indigo so the calendar stands out among the sections.
-  { path: '/calendar', label: 'Calendar', end: false, tint: true },
+  { path: '/calendar', label: 'Calendar', end: false },
   { path: '/archive', label: 'Archive', end: false },
 ];
 
@@ -117,11 +116,11 @@ export function Layout() {
             <nav aria-label={`${covered.name} pages`} className="primary-nav">
               {COUNTY_NAV.map((n) =>
                 section === n.path ? (
-                  <Link key={n.path} to={countyPath(covered, n.path)} className={`primary-nav__link${n.tint ? ' primary-nav__link--tint' : ''}`} aria-current="page">
+                  <Link key={n.path} to={countyPath(covered, n.path)} className="primary-nav__link" aria-current="page">
                     {n.label}
                   </Link>
                 ) : (
-                  <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className={`primary-nav__link${n.tint ? ' primary-nav__link--tint' : ''}`}>
+                  <NavLink key={n.path} to={countyPath(covered, n.path)} end={n.end} className="primary-nav__link">
                     {n.label}
                   </NavLink>
                 ),

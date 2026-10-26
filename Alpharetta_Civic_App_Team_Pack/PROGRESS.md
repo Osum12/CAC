@@ -5,8 +5,8 @@ Durable record of the AI-assisted build session (Claude Code) started 2026-10-21
 ## Decisions (from the person running the session, GitHub user Osum12)
 
 - Claude acts in all roles (lead, Near Me, Archive) for the **P0 demo path on all pages**. P1 extras (search UI, topic/date filters) are out of scope.
-- One shared branch: `integration` (created from `main` at `63840ae`), pushed to GitHub. No merge to `main`.
-- Stack: React + TypeScript + Vite, React Router, Leaflet + OpenStreetMap tiles, Vitest + Testing Library, ESLint.
+- One shared branch: `integration` (created from `main` at `63840ae`), pushed to GitHub. No merge to `main` (later changed: `integration` was merged into `main` on 2026-10-25).
+- Stack: React + TypeScript + Vite, React Router, Leaflet + map tiles (OpenStreetMap at first; now Esri World Street Map), Vitest + Testing Library, ESLint.
 - The app lives inside `Alpharetta_Civic_App_Team_Pack/`, next to the existing `data/` fixtures, which were not modified.
 
 ## Status
@@ -20,6 +20,9 @@ Durable record of the AI-assisted build session (Claude Code) started 2026-10-21
 | Automated checks (test, typecheck, lint, build) | Passing, see below |
 | Browser review at desktop and mobile widths | Done (Playwright + Edge, 375px and 1366px, light and dark) |
 | Independent final review | Done: 13 findings, 0 critical, all fixed |
+| Georgia chooser (159 counties, 538 municipalities; only Fulton County has records) | Done |
+| Calendar: month grid of every Board meeting | Done |
+| Full Fulton County Board of Commissioners records (Jan 8, 2025 – Oct 21, 2026) | Done, see `data/README.md` |
 | README, AI-assistance record, CAC checklist | Done; student sections still to be filled in by the team |
 
 ## Verification log
@@ -57,18 +60,25 @@ Durable record of the AI-assisted build session (Claude Code) started 2026-10-21
 | 2026-10-22 | Simplified UI for the demo video | Removed shortcut tiles and date filters; Near Me uses one public start (Fulton County Government Center), no address box; SVG row icons; standalone links at least 24px tall |
 | 2026-10-22 | `npm test`, typecheck, lint, build | 8 files, 120 tests passed; all others passed |
 | 2026-10-22 | Sweep: 13 routes x 320/375/430/768/1024/1440 (Edge), plus dark mode | 0 horizontal overflow, 0 console errors |
+| 2026-10-24 | Full Fulton County import (`scripts/fulton-records/`) | Every substantive Board of Commissioners agenda item from 51 meetings, Jan 8, 2025 – Oct 21, 2026: 1,303 issues, 4,098 documents, 47 recordings, 125 approximate map pins. All links checked 2026-10-24 (see `data/README.md`) |
+| 2026-10-24 | Near Me | Limited to the 20 nearest issues from the Fulton County Government Center; starting point made more visible |
+| 2026-10-25 | Calendar page | Month grid of every Board meeting; Calendar nav button |
+| 2026-10-25 | `npm test`, typecheck, lint, build | 9 files, 130 tests passed; all others passed |
+| 2026-10-25 | `npm run validate:data` | 16 tests passed |
+| 2026-10-25 | Meetings vs Legistar (web API and public calendar) | Matched one-to-one: 26 meetings in 2025, 25 in Jan–Oct 2026 |
+| 2026-10-25 | Fresh clone of GitHub `main` | `npm ci`: 0 vulnerabilities; 11 routes x 375/1440px: 0 console errors, 0 horizontal overflow |
 
 ## Known limitations
 
-- Only Fulton County has a page, with 50 Fulton County Board of Commissioners records (Aug 3 – Oct 7, 2026). City governments in Fulton have no records yet. Every other county and every city shows Coming Soon.
-- Minutes for these meetings were not published on 2026-10-22, so results come from Legistar's recorded motions and roll calls. Check them against the minutes when published.
+- Only Fulton County has a page, with every substantive Fulton County Board of Commissioners agenda item from 51 meetings (Jan 8, 2025 – Oct 21, 2026): 1,303 issues, 4,098 documents, 47 recordings. It is a snapshot (links checked 2026-10-24), not live. City governments in Fulton have no records yet. Every other county and every city shows Coming Soon.
+- Results come from Legistar's recorded motions and roll calls. The October 21, 2026 results come from the clerk's draft record, which the board is scheduled to ratify on November 4, 2026; check them against the minutes then.
 - The Georgia directory is the Census 2020 list: places incorporated since (e.g. Mableton, 2023; Mulberry, 2024) are missing.
 
 - 2026-10-22: replaced the fictional records with 19 curated real records (see `data/README.md`). The fictional pack moved to `src/test/fixtures/` for tests. Each fact was checked against downloaded official minutes, agendas or packets. The team should still open every source link themselves.
-- Map points for real issues are approximate (U.S. Census geocoder, from addresses in city documents) and labelled as such.
-- No geocoding in the app. Near Me measures from one public place, the Fulton County Government Center.
-- Map tiles come from the public OpenStreetMap server and need internet access. The list still works offline.
-- Citywide has keyword, topic, status and "Updated" date filters; the Archive has keyword search, date and type filters. Date ranges are relative to today, so results change as time passes. Issues are dated by `statusAsOf`, and records with no date never match a date range.
+- Map points for real issues are approximate (U.S. Census geocoder, from addresses in county documents; 125 issues have a pin) and labelled as such.
+- No geocoding in the app and no address entry. Near Me lists the 20 nearest issues from one public place, the Fulton County Government Center, with a category filter.
+- Map tiles come from Esri World Street Map and need internet access. The list still works offline.
+- Countywide groups issues by result and has keyword search with topic and status filters; the Archive has keyword search and type chips; the Calendar shows every meeting in a month grid. The date filters were removed on 2026-10-22 (the unused helpers remain in `src/services/filters.ts`).
 
 - Browser checks used headless Edge through Playwright. The Claude in Chrome extension was not connected, so no manual click-through in a real Chrome window was done.
 

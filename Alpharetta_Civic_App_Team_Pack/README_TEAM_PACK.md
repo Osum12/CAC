@@ -20,4 +20,6 @@ The file `TEAM_START_PROMPTS.md` contains ready-to-copy role prompts for the lea
 
 ## Mock data warning
 
-Everything in `data/` is synthetic. Use it for UI and interaction development only. It must not be presented as verified Alpharetta civic information. Replace mock factual examples used in the final demonstration with checked, source-linked records wherever feasible.
+The original synthetic records from this pack now live in `src/test/fixtures/` (`mock-meetings.json`, `mock-issues.json`, `mock-documents.json`) and are used only by the automated tests. They must not be presented as real civic information.
+
+`data/` no longer holds mock data. Since 2026-10-24 it holds real, source-linked records: every substantive Fulton County Board of Commissioners agenda item from 51 meetings between January 8, 2025 and October 21, 2026 (1,303 issues, 4,098 documents, 47 recordings), taken from the county's Legistar system. They are a snapshot, not live. See `data/README.md` for how they were built and checked.

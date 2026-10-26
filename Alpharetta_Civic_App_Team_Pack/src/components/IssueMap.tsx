@@ -86,7 +86,7 @@ export function IssueMap({ points, origin, selectedId, onSelect }: Props) {
     const tiles = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
       maxZoom: 19,
       attribution:
-        '&copy; <a href="https://www.esri.com/en-us/legal/terms-of-use">Esri</a> contributors',
+        'Tiles &copy; <a href="https://www.esri.com/en-us/legal/terms-of-use">Esri</a> &mdash; Sources: Esri, HERE, Garmin, USGS, Intermap, INCREMENT P, NRCan, Esri Japan, METI, Esri China (Hong Kong), Esri Korea, Esri (Thailand), NGCC, &copy; OpenStreetMap contributors, and the GIS User Community',
     });
     let errors = 0;
     tiles.on('tileerror', () => {

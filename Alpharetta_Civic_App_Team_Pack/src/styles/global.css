@@ -4,7 +4,7 @@
    tonal base toned from the primary (no per-page hue bands), topics are one
    neutral pill system with a small glyph, and status is the only other hue
    (always with a shape glyph and a written label).
-   Contrast for every token pair is proved in scratchpad/d4r3/contrast.cjs.
+   Every text/background token pair was checked for WCAG AA contrast.
    Type: Bricolage Grotesque (display) + Atkinson Hyperlegible Next (text).
    ========================================================================== */
 
@@ -4714,33 +4714,11 @@ time {
     width: 34px;
   }
 }
-/* The Calendar button: a light indigo fill, in both themes. Its current-page state keeps the
-   indigo edge and the dot (or underline on phones). */
-.primary-nav__link--tint,
-.primary-nav__link--tint[aria-current='page'] {
-  background: #d4d9f7;
-  color: #232c70;
-  --btn-edge: rgb(47 58 143 / 0.35);
-}
-.primary-nav__link--tint:hover {
-  background: #c3caf3;
-  color: #161b3d;
-  --btn-edge: var(--link);
-}
-.primary-nav__link--tint[aria-current='page'] {
-  --btn-edge: var(--link);
-}
-:root[data-theme='dark'] .primary-nav__link--tint,
-:root[data-theme='dark'] .primary-nav__link--tint[aria-current='page'] {
-  background: #3a4aa6;
-  color: #ffffff;
-  --btn-edge: rgb(157 184 255 / 0.55);
-}
-:root[data-theme='dark'] .primary-nav__link--tint:hover {
-  background: #4657bd;
-  color: #ffffff;
-  --btn-edge: var(--link);
-}
-:root[data-theme='dark'] .primary-nav__link--tint[aria-current='page'] {
-  --btn-edge: var(--link);
+/* The map credit (Esri's full source list) stays complete, set small on phones so it covers less of the map. */
+@media (max-width: 599px) {
+  .leaflet-control-attribution {
+    padding: 2px 14px;
+    font-size: 0.625rem;
+    line-height: 1.35;
+  }
 }
