@@ -234,7 +234,7 @@ The website needs only Node.js and npm. It does not need Python, Poppler, a brow
 - Node.js 22.12 or later (Vite 8 requires `^20.19.0 || >=22.12.0`). To run the tests, use Node.js 22.22.2 or later on the 22 line, 24.15 or later, or 26 or later: the jsdom 30 test environment requires one of these. `package.json` has no `engines` field, so npm will only warn on an older version.
 - npm (the one that ships with Node.js). Dependencies are pinned by `package-lock.json`.
 
-**Commands** (from `Alpharetta_Civic_App_Team_Pack/`)
+**Commands** (from `Council Lens/`)
 
 | Command | What it does |
 | --- | --- |

@@ -1,4 +1,4 @@
-# Alpharetta Civic App — Product Requirements Document
+# Council Lens — Product Requirements Document
 
 **Version:** 1.0 · **Status:** Development baseline · **Date:** October 21, 2026
 
@@ -6,7 +6,7 @@
 
 ## 1. Executive summary
 
-The Alpharetta Civic App helps residents understand local government by combining a citywide dashboard, address-based local relevance, and a searchable archive of public meeting recordings and documents. The initial product is a front-end demonstrator built around a small, curated dataset. The interface and data contracts must be designed so mock records can be replaced by verified Alpharetta records without rewriting screens.
+Council Lens helps residents understand local government by combining a citywide dashboard, address-based local relevance, and a searchable archive of public meeting recordings and documents. The initial product is a front-end demonstrator built around a small, curated dataset. The interface and data contracts must be designed so mock records can be replaced by verified Alpharetta records without rewriting screens.
 
 > **Prototype integrity rule: the included dataset is synthetic and exists only to develop and test the app. Every mock record must be visibly identified as sample data during development. Do not present invented meetings, projects, decisions, source links, or map locations as official records.**
 
@@ -49,7 +49,7 @@ Provide one locally focused experience that summarizes civic activity in plain l
 - Live alerts for meetings running late or newly posted records.
 - Precise parcel-level impact predictions or legal/land-use conclusions.
 - Multi-city support, accounts, complex preferences sync, or production-scale backend unless separately prioritized.
-- An AI answer engine that responds without grounding and source citations.
+- A question-answering feature that responds without grounding and source citations.
 
 ### Success criteria
 
@@ -437,7 +437,7 @@ Initial ranking should remain explainable, conservative, and bounded by availabl
 
 - P0: required for a coherent demonstrator and safe handling of source/data truth.
 - P1: valuable if time permits; should not block the core Citywide → issue → source → Archive flow.
-- P2: post-demo/future work, including full ingestion, notifications, live monitoring, and open-ended AI Q&A.
+- P2: post-demo/future work, including full ingestion, notifications, live monitoring, and open-ended Q&A.
 
 Schedule caution: this project has a short submission window. Verify the official challenge submission date/time and required materials in the current submission portal rather than relying on informal messages or this document.
 
@@ -481,7 +481,7 @@ Schedule caution: this project has a short submission window. Verify the officia
 
 ## Appendix A. Mock-data pack
 
-Companion file: `alpharetta_civic_app_mock_data.zip`. It contains `data/meetings.json`, `data/issues.json`, `data/documents.json`, and a README with safe replacement instructions.
+Companion file: `council_lens_mock_data.zip`. It contains `data/meetings.json`, `data/issues.json`, `data/documents.json`, and a README with safe replacement instructions.
 
 All included records are fictional UI fixtures. Their dates/titles/locations are not claims about actual City of Alpharetta proceedings. Mock map coordinates are only for visual testing. Official URL fields are null.
 

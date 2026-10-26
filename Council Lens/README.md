@@ -49,7 +49,7 @@ There is no backend, database, API key or secret.
 Prerequisites: Node.js 22.12 or newer to run the app, and npm. The tests need Node.js 22.22+, 24.15+ or 26+ (required by jsdom 30).
 
 ```bash
-cd Alpharetta_Civic_App_Team_Pack
+cd "Council Lens"
 npm ci
 npm run dev          # opens on http://localhost:5173
 ```

@@ -6,7 +6,7 @@ Council Lens helps residents find, understand, and verify the decisions their lo
 
 Built for the Congressional App Challenge 2026.
 
-![Council Lens home page](Alpharetta_Civic_App_Team_Pack/docs/images/home.png)
+![Council Lens home page](Council%20Lens/docs/images/home.png)
 
 ## What it covers
 
@@ -28,8 +28,8 @@ Built for the Congressional App Challenge 2026.
 The app also has light and dark themes, works on phones and desktops, and supports keyboard navigation.
 
 <p>
-  <img src="Alpharetta_Civic_App_Team_Pack/docs/images/issue.png" alt="An issue page: 2026 county property tax rates, approved October 7, 2026, with a plain-language explanation and links to the official records" width="49%">
-  <img src="Alpharetta_Civic_App_Team_Pack/docs/images/near-me.png" alt="Near Me: a map of the 20 issues nearest the Fulton County Government Center, with a numbered list" width="49%">
+  <img src="Council%20Lens/docs/images/issue.png" alt="An issue page: 2026 county property tax rates, approved October 7, 2026, with a plain-language explanation and links to the official records" width="49%">
+  <img src="Council%20Lens/docs/images/near-me.png" alt="Near Me: a map of the 20 issues nearest the Fulton County Government Center, with a numbered list" width="49%">
 </p>
 
 ## How it works
@@ -51,7 +51,7 @@ Two engineering problems shaped the pipeline:
 - **Reading outcomes correctly.** A motion that passed is not always an approval: a passed motion to *hold* an item means it is still being decided, and items often have failed substitute motions before a final vote. The pipeline reads the clerk's written motion text first, because Legistar's separate pass/fail field disagreed with that text in 11 places in this period.
 - **Links that really open the record.** Legistar's web API uses different item IDs from its public website, so links built from API IDs open an error page that still returns a success code. The pipeline reads each meeting's public page to get every item's real link, then opens every item page in a browser to confirm it shows the right file number.
 
-Full details, including how to rebuild the dataset: [docs/PIPELINE_ARCHITECTURE.md](Alpharetta_Civic_App_Team_Pack/docs/PIPELINE_ARCHITECTURE.md).
+Full details, including how to rebuild the dataset: [docs/PIPELINE_ARCHITECTURE.md](Council%20Lens/docs/PIPELINE_ARCHITECTURE.md).
 
 ## Tools and languages
 
@@ -62,10 +62,10 @@ Full details, including how to rebuild the dataset: [docs/PIPELINE_ARCHITECTURE.
 
 ## Run it
 
-The app is in [`Alpharetta_Civic_App_Team_Pack/`](Alpharetta_Civic_App_Team_Pack/). It needs Node.js 22.12 or newer (running the tests needs Node 22.22+, 24.15+, or 26+).
+The app is in [`Council Lens/`](Council%20Lens/). It needs Node.js 22.12 or newer (running the tests needs Node 22.22+, 24.15+, or 26+).
 
 ```bash
-cd Alpharetta_Civic_App_Team_Pack
+cd "Council Lens"
 npm ci
 npm run dev        # development server, http://localhost:5173
 npm run build      # production build into dist/
@@ -85,7 +85,7 @@ The website runs entirely from the committed dataset; no account, key, or server
 
 ### Hosting
 
-There is no public deployment of this snapshot; run it locally with the commands above. Any static host can serve the `dist/` folder built in `Alpharetta_Civic_App_Team_Pack/`, as long as every path falls back to `index.html` (the app uses browser routing, for example `/county/fulton/issues/...`): on Netlify, a `_redirects` file with `/* /index.html 200`; on Vercel, a rewrite of all paths to `/index.html`. Serving from a sub-path such as a GitHub Pages project site would also need Vite's `base` and the router's basename set, which this snapshot does not do.
+There is no public deployment of this snapshot; run it locally with the commands above. Any static host can serve the `dist/` folder built in `Council Lens/`, as long as every path falls back to `index.html` (the app uses browser routing, for example `/county/fulton/issues/...`): on Netlify, a `_redirects` file with `/* /index.html 200`; on Vercel, a rewrite of all paths to `/index.html`. Serving from a sub-path such as a GitHub Pages project site would also need Vite's `base` and the router's basename set, which this snapshot does not do.
 
 ## Limits
 
@@ -105,11 +105,11 @@ There is no public deployment of this snapshot; run it locally with the commands
 
 ## Documentation
 
-- [Application README](Alpharetta_Civic_App_Team_Pack/README.md): features, code layout, tests, and credits
-- [Pipeline architecture](Alpharetta_Civic_App_Team_Pack/docs/PIPELINE_ARCHITECTURE.md)
-- [Dataset notes](Alpharetta_Civic_App_Team_Pack/data/README.md)
-- [Data contract](Alpharetta_Civic_App_Team_Pack/docs/DATA_CONTRACT.md)
+- [Application README](Council%20Lens/README.md): features, code layout, tests, and credits
+- [Pipeline architecture](Council%20Lens/docs/PIPELINE_ARCHITECTURE.md)
+- [Dataset notes](Council%20Lens/data/README.md)
+- [Data contract](Council%20Lens/docs/DATA_CONTRACT.md)
 
 ## Credits
 
-Records: Fulton County Board of Commissioners, via the county's Legistar system. Map tiles: Esri. Geocoding and the Georgia place directory: U.S. Census Bureau. Fonts: Bricolage Grotesque, Atkinson Hyperlegible Next, and Outfit (SIL Open Font License). Open-source software: see the [application README](Alpharetta_Civic_App_Team_Pack/README.md#credits-and-open-source-software).
+Records: Fulton County Board of Commissioners, via the county's Legistar system. Map tiles: Esri. Geocoding and the Georgia place directory: U.S. Census Bureau. Fonts: Bricolage Grotesque, Atkinson Hyperlegible Next, and Outfit (SIL Open Font License). Open-source software: see the [application README](Council%20Lens/README.md#credits-and-open-source-software).

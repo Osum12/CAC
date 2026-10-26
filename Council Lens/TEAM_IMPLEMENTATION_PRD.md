@@ -1,16 +1,16 @@
-# Alpharetta Civic App — Team Implementation PRD
+# Council Lens — Team Implementation PRD
 
 **Version:** 1.0  
-**Purpose:** Repository context and execution contract for the student team and AI coding agents  
+**Purpose:** Repository context and execution contract for the student team  
 **Project mode:** CAC demonstrator / prototype, not a production civic platform  
 **Geographic scope:** Alpharetta, Georgia only  
 **Status:** Working implementation baseline; the project lead may revise it
 
-> **Read this first:** This document coordinates implementation. `PRODUCT_PRD.md` defines what the product should do. `docs/DATA_CONTRACT.md` defines how data is represented. `AGENTS.md` and `CLAUDE.md` tell coding agents how to work in this repo. Read the task file for the feature you have been assigned before changing code.
+> **Read this first:** This document coordinates implementation. `PRODUCT_PRD.md` defines what the product should do. `docs/DATA_CONTRACT.md` defines how data is represented. Read the task file for the feature you have been assigned before changing code.
 
 ## 1. Purpose and product target
 
-Build a polished, interactive, repeatable demonstration of an Alpharetta civic information app. The user should be able to browse citywide civic activity, explore locally relevant issues using a demo location, and navigate a curated archive of meeting records and documents.
+Build a polished, interactive, repeatable demonstration of Council Lens, a civic information app. The user should be able to browse citywide civic activity, explore locally relevant issues using a demo location, and navigate a curated archive of meeting records and documents.
 
 The project is intentionally **demo-first**. It must not attempt to become a complete civic data platform before the CAC submission. Build the P0 workflows against the supplied local JSON fixtures, keep the records replaceable, and defer automation that is not required to demonstrate the user experience.
 
@@ -104,8 +104,6 @@ Adapt these paths to the existing framework rather than forcing this exact tree 
 
 ```text
 /
-  AGENTS.md
-  CLAUDE.md
   TEAM_IMPLEMENTATION_PRD.md
   PRODUCT_PRD.md
   docs/
@@ -168,7 +166,7 @@ During development, mock data must be visible as mock data. For a final presenta
 - Eshan: Near Me feed/map/location interactions.
 - Shalin: Archive and meeting details.
 
-Each feature should read the same service and record types. Work on separate branches or worktrees so agents do not edit the same working directory concurrently.
+Each feature should read the same service and record types. Work on separate branches or worktrees so two people do not edit the same working directory at once.
 
 ### Phase 2 — Integration
 
@@ -179,7 +177,7 @@ Each feature should read the same service and record types. Work on separate bra
 5. Test the demo path from a fresh app start.
 6. Merge the verified release from `integration` to `main`.
 
-## 8. Git and parallel-agent workflow
+## 8. Git and parallel workflow
 
 ### Branches
 
@@ -205,7 +203,7 @@ Use the current agreed branch names if the repository already has an established
 
 ### Worktrees / parallel compute
 
-A Git branch is the logical line of work; a worktree is a separate working directory for a branch. On one machine, give each concurrent Codex/Claude agent its own worktree and branch. If teammates use separate computers/clones, a worktree is optional. Never let multiple agents modify the same physical working directory at the same time. Do not run multiple agents on the same shared files unless that work is explicitly coordinated.
+A Git branch is the logical line of work; a worktree is a separate working directory for a branch. If more than one line of work happens on the same machine, give each its own worktree and branch. If teammates use separate computers/clones, a worktree is optional. Never let two lines of work modify the same physical working directory at the same time, or the same shared files unless that work is explicitly coordinated.
 
 ## 9. Feature acceptance criteria
 
@@ -259,11 +257,11 @@ A task is done only when all relevant points below are true:
 - The branch can be reviewed and merged without depending on undocumented local edits.
 - The owner provides a short handoff: changed files, behavior, verification performed, known limitations, and next step.
 
-## 11. AI coding-agent operating rules
+## 11. Working rules
 
-Every Codex/Claude session must:
+Every work session must:
 
-1. Read the root instructions (`AGENTS.md` for Codex-compatible tools; `CLAUDE.md` for Claude Code), this PRD, `PRODUCT_PRD.md`, the data contract, and the assigned task file.
+1. Read this PRD, `PRODUCT_PRD.md`, the data contract, and the assigned task file.
 2. Inspect the repository before editing. Do not assume a framework, file tree, script name, or route convention that is not present.
 3. State its short plan, then implement only the assigned task.
 4. Prefer small changes and use the project's existing libraries and patterns.
@@ -271,14 +269,14 @@ Every Codex/Claude session must:
 6. Never invent official civic facts, real source URLs, approvals, coordinates, or data provenance.
 7. Never describe mock/simulated functionality as live or automated.
 8. Run available checks and distinguish “passed,” “failed,” and “not run.” Never claim a test was run when it was not.
-9. Summarize changed files, manual steps needed, known issues, and what the next agent needs to know.
+9. Summarize changed files, manual steps needed, known issues, and what the next person needs to know.
 10. Do not deploy, publish, alter secrets, rewrite shared history, or merge to `main` unless explicitly asked by the project lead.
 
-Agents should not run broad formatting or rewrite unrelated files. Do not add new dependencies before checking if existing packages cover the need. If blocked by a missing shared contract or ambiguous product decision, report the smallest specific blocker rather than making a large unilateral choice.
+Do not run broad formatting or rewrite unrelated files. Do not add new dependencies before checking if existing packages cover the need. If blocked by a missing shared contract or ambiguous product decision, report the smallest specific blocker rather than making a large unilateral choice.
 
 ## 12. Demo presentation integrity
 
-The demonstrator may use prepared content and local JSON fixtures. For the Congressional App Challenge presentation, describe what genuinely works and what remains planned accurately. Do not call mocked source ingestion “live ingestion,” prepared summaries “automatic AI analysis,” sample map markers real projects, or a selected set of records a complete official archive. Use source-linked, verified records for factual claims in the submitted demo wherever feasible.
+The demonstrator may use prepared content and local JSON fixtures. For the Congressional App Challenge presentation, describe what genuinely works and what remains planned accurately. Do not call mocked source ingestion “live ingestion,” prepared summaries “automatic analysis,” sample map markers real projects, or a selected set of records a complete official archive. Use source-linked, verified records for factual claims in the submitted demo wherever feasible.
 
 ## 13. Final demo checklist
 
