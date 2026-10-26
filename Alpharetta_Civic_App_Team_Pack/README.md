@@ -10,7 +10,7 @@ A student project for the Congressional App Challenge 2026. It helps Georgia res
 
 | Page | Route | What it does |
 |---|---|---|
-| Georgia home | `/` | Location chooser: county (all 159), then an optional city or town filtered to that county, with "All of <county>" first. The selection is kept in the URL (`/?county=fulton`), so refresh and Back keep it, and changing the county clears the city. Shows no records. |
+| Georgia home | `/` | An "Explore Fulton County" button straight into the county with records, with a note of what that snapshot covers; then a location chooser: county (all 159), then an optional city or town filtered to that county, with "All of <county>" first. The selection is kept in the URL (`/?county=fulton`), so refresh and Back keep it, and changing the county clears the city. Shows no records. |
 | Other counties | `/county/:countyId` | "Coming soon" on every sub-path (e.g. `/county/cobb/archive?q=…`), with links to the cities and towns in the county. No records. Unknown ids show "Location not found". |
 | Cities | `/:cityId/*` | Every city shows "Coming soon" on every sub-path; cities in Fulton County point to the Fulton County page. No records. |
 | Countywide (Fulton) | `/county/fulton` | Cover hero ("What's on the table in Fulton County") with an issue search and a panel showing the next meeting (when one is scheduled) and the latest decision; issues grouped by result, with keyword search and topic and status filters (kept in the URL, e.g. `/county/fulton?topic=transportation&status=approved`); issue and meeting lists are labelled "From the Fulton County Board of Commissioners"; each issue card links to its official record and, when it has a map point, to Near Me with that issue selected; upcoming and recent meetings with agenda PDF links. |
@@ -107,7 +107,7 @@ Follow `data/README.md`. In short, for each record:
 
 ## Testing
 
-`npm test` runs the whole suite: 9 test files, 130 tests. Most use the fictional fixture pack in `src/test/fixtures/`, so they don't depend on which real records are in `data/`:
+`npm test` runs the whole suite: 9 test files, 132 tests. Most use the fictional fixture pack in `src/test/fixtures/`, so they don't depend on which real records are in `data/`:
 - data integrity for both the real records and the fixtures: unique IDs, relationships that resolve, provenance flags, valid statuses and dates, URL and coordinate rules
 - a check that the real data renders with no sample labels and that every issue card's official-record link points to the county's Legistar site
 - search and filter behavior, the calendar, hero actions, map links, the issue timeline, and archive search
@@ -120,10 +120,10 @@ Follow `data/README.md`. In short, for each record:
 
 ## Project documents
 
-- `PRODUCT_PRD.md`, `TEAM_IMPLEMENTATION_PRD.md`, `docs/`: requirements and data contract
-- `PROGRESS.md`: build log and verification results
-- `AI_ASSISTANCE.md`: what AI tools did, for CAC disclosure
-- `CAC_READINESS.md`: competition checklist and the tasks the student team must still do
+- [`docs/PIPELINE_ARCHITECTURE.md`](docs/PIPELINE_ARCHITECTURE.md): how the record-processing pipeline turns the county's records into the app's dataset, and how to run the site or rebuild the data
+- [`docs/DATA_CONTRACT.md`](docs/DATA_CONTRACT.md): the meeting, issue and document record formats
+- [`data/README.md`](data/README.md): what the dataset contains, how results were determined, and its limits
+- [`scripts/fulton-records/README.md`](scripts/fulton-records/README.md): the pipeline scripts, step by step
 
 ## Credits and open-source software
 
@@ -141,6 +141,6 @@ Follow `data/README.md`. In short, for each record:
 | Outfit (SIL Open Font License 1.1) | Outlined for the Council Lens wordmark |
 | Fulton County Legistar: public web API (`webapi.legistar.com/v1/fulton`) and public site ([fulton.legistar.com](https://fulton.legistar.com)) | Meetings, agenda items, documents, recordings and links |
 | U.S. Census Bureau geocoder | Approximate map points from street addresses in county documents, and the Near Me starting point |
+| [Playwright](https://playwright.dev), Microsoft Edge, Poppler `pdftotext`, Python | Record pipeline only: reading public meeting pages, link checks, and extracting text from county PDFs and DOCX files |
 | U.S. Census Bureau 2020 FIPS reference files for Georgia counties and places (`data/georgia/source/`) | The Georgia county and municipality directory |
 
-AI use is disclosed in `AI_ASSISTANCE.md`.

@@ -23,3 +23,16 @@ export const CIVIC_DATA_COVERAGE: Readonly<Record<string, RecordSource[]>> = {
 
 /** The county whose pages the app's original links (/archive, /alpharetta/…, /issues/…) now point to. */
 export const LEGACY_COUNTY_ID = 'fulton';
+
+/**
+ * What the Fulton County snapshot in data/ contains, for the home page's coverage note. The
+ * records are a prepared snapshot, not a live feed; dataIntegrity.test.ts fails if these
+ * figures stop matching data/.
+ */
+export const FULTON_SNAPSHOT = {
+  countyId: 'fulton',
+  issues: 1303,
+  meetings: 51,
+  firstMeeting: '2025-01-08',
+  lastMeeting: '2026-10-21',
+} as const;

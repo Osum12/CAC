@@ -1,11 +1,11 @@
 # Shared Civic Data Contract
 
-This document and the JSON fixtures in `/data/` define the common record shape. All features must use these shared fields. If a change is truly necessary, the project lead must update this contract and all affected fixtures together before feature branches diverge.
+This document defines the common record shape used by the records in `/data/` (real Fulton County Board of Commissioners records) and the fictional test fixtures in `src/test/fixtures/`. All features must use these shared fields. If a change is truly necessary, the project lead must update this contract and all affected fixtures together before feature branches diverge.
 
 ## Data-mode rules
 
 - `dataMode: "mock"` and `mockOnly: true`: fictional test data. Must have visible MOCK / SAMPLE identification.
-- `dataMode: "curated"` and `mockOnly: false`: manually collected data that was checked against an original source. `lastVerifiedAt` or equivalent verification metadata should be populated where applicable.
+- `dataMode: "curated"` and `mockOnly: false`: data taken from an original official source and checked against it (see `docs/PIPELINE_ARCHITECTURE.md`). `lastVerifiedAt` or equivalent verification metadata should be populated where applicable.
 - A live/API mode must not be introduced until there is a real integration. Never use a `live` label just because the UI is interactive.
 
 ## Meeting

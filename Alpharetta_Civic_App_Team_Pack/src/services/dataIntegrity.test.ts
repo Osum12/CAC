@@ -7,6 +7,7 @@ import documents from '../../data/documents.json';
 import { mockDataset } from '../test/mockDataset';
 import { findBrokenRelationships, type Dataset } from './civicData';
 import type { CivicDocument, Issue, Meeting } from '../types/civic';
+import { FULTON_SNAPSHOT } from '../config/coverage';
 
 const realDataset: Dataset = { meetings: meetings as Meeting[], issues: issues as Issue[], documents: documents as CivicDocument[] };
 
@@ -98,5 +99,22 @@ describe.each([
       if (locationType !== 'verified') expect(verified).toBe(false);
       if (i.dataMode === 'mock') expect(verified).toBe(false);
     }
+  });
+});
+
+describe('the home page coverage note', () => {
+  it('matches the records in data/', () => {
+    const dates = (meetings as Meeting[]).map((m) => m.date!).sort();
+    expect({
+      issues: issues.length,
+      meetings: meetings.length,
+      firstMeeting: dates[0],
+      lastMeeting: dates[dates.length - 1],
+    }).toEqual({
+      issues: FULTON_SNAPSHOT.issues,
+      meetings: FULTON_SNAPSHOT.meetings,
+      firstMeeting: FULTON_SNAPSHOT.firstMeeting,
+      lastMeeting: FULTON_SNAPSHOT.lastMeeting,
+    });
   });
 });

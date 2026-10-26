@@ -29,7 +29,7 @@ Vote counts come from the roll call. Results from the **October 21, 2026** meeti
 - **Titles** are short plain-language names written from each item's official wording. Every number in a title was checked against that wording.
 - **169 notable items** (large contracts, budget and tax items, ordinances, and commissioners' resolutions, including every one that failed, was held, filed or withdrawn) have a plain-language summary written from the attached documents. Each fact in those summaries is backed by an exact quote from the county's documents, and every number was re-checked against the sources (amounts like "$2.24 million" are roundings of figures such as $2,239,975.02). Where the documents disagree with each other, the summary leaves the disputed detail out.
 - **All other items** show the recorded result and then the agenda's own wording, quoted and labeled as the county's wording (not presented as a rewrite).
-- The 24 records written by hand earlier keep their text; their links were corrected (see below).
+- The 24 records from the earlier version of the dataset keep their text; their links were corrected (see below).
 
 ### Links
 

@@ -1,17 +1,24 @@
+import { Link } from 'react-router-dom';
 import { LocationSelector } from '../components/LocationSelector';
 import { LensArtwork } from '../components/LensArtwork';
-import { COUNTIES, DIRECTORY_SOURCE, MUNICIPALITIES } from '../services/jurisdictions';
+import { FULTON_SNAPSHOT } from '../config/coverage';
+import { COUNTIES, DIRECTORY_SOURCE, MUNICIPALITIES, countyPath } from '../services/jurisdictions';
+import { formatDate } from '../services/format';
 import { usePageTitle } from '../services/usePageTitle';
 import { ArrowLabel } from '../components/SourceAction';
 
-// What Council Lens does, in order. Describes the app, not any place's records.
+// How Council Lens turns public records into something readable, in order. Describes the app,
+// not any place's records.
 const STEPS = [
-  { title: 'Discover', text: 'Find local proposals, decisions, and public meetings.' },
-  { title: 'Understand', text: 'Read clear summaries of complex civic information.' },
-  { title: 'Verify', text: 'Go directly to the original government records.' },
+  { title: 'Collect', text: 'Official agendas, votes, and documents from the county’s own records.' },
+  { title: 'Organize', text: 'Each agenda item becomes one issue, linked to its meetings and documents.' },
+  { title: 'Understand', text: 'Readable titles, the recorded result, and plain-language explanations of notable items.' },
+  { title: 'Verify', text: 'Every issue links back to the original government record.' },
 ];
 
-/** Statewide front door: choose a county and, optionally, a city. Shows no civic records itself. */
+const monthYear = (iso: string) => formatDate(iso).replace(/ \d{1,2},/, '');
+
+/** Statewide front door: a direct way into the county with records, then a county and city chooser. */
 export function GeorgiaHomePage() {
   usePageTitle(null);
   return (
@@ -24,8 +31,17 @@ export function GeorgiaHomePage() {
               <span className="hero__line">Know what’s happening</span> <span className="hero__line">in your community.</span>
             </h1>
             <p className="hero__lede">
-              Explore local proposals, public meetings, and decisions that shape the places you call home.
+              Find, understand, and verify the decisions your local government makes, with a link to the official record every time.
             </p>
+            <div className="pilot">
+              <Link to={countyPath({ id: FULTON_SNAPSHOT.countyId })} className="pilot__go">
+                Explore Fulton County <span aria-hidden="true">→</span>
+              </Link>
+              <p className="pilot__note">
+                <strong>Available now:</strong> the Fulton County Board of Commissioners, {FULTON_SNAPSHOT.issues.toLocaleString('en-US')} agenda items
+                from {FULTON_SNAPSHOT.meetings} meetings, {monthYear(FULTON_SNAPSHOT.firstMeeting)} to {monthYear(FULTON_SNAPSHOT.lastMeeting)}.
+              </p>
+            </div>
           </div>
           <LocationSelector />
         </div>
@@ -33,7 +49,7 @@ export function GeorgiaHomePage() {
 
       <section className="howto" aria-labelledby="howto-title">
         <h2 id="howto-title" className="howto__title">
-          A clearer view of local government.
+          From public records to public understanding.
         </h2>
         <ol className="howto__list">
           {STEPS.map((s, i) => (
@@ -55,7 +71,8 @@ export function GeorgiaHomePage() {
           <ArrowLabel text="U.S. Census Bureau’s 2020 place list" />
           <span className="visually-hidden"> (opens in a new tab)</span>
         </a>
-        . Places incorporated since 2020 aren’t listed yet.
+        . Records are available for Fulton County today; other places show “coming soon” until their own records are added. The records are a
+        prepared snapshot of official sources, not a live feed.
       </p>
     </div>
   );
