@@ -87,22 +87,6 @@ The website runs entirely from the committed dataset; no account, key, or server
 
 There is no public deployment of this snapshot; run it locally with the commands above. Any static host can serve the `dist/` folder built in `Council Lens/`, as long as every path falls back to `index.html` (the app uses browser routing, for example `/county/fulton/issues/...`): on Netlify, a `_redirects` file with `/* /index.html 200`; on Vercel, a rewrite of all paths to `/index.html`. Serving from a sub-path such as a GitHub Pages project site would also need Vite's `base` and the router's basename set, which this snapshot does not do.
 
-## Limits
-
-- One government body (the Fulton County Board of Commissioners), January 2025 to October 2026. City governments inside Fulton County are not included.
-- A snapshot: new meetings are not added automatically.
-- Plain-language explanations cover 193 notable items; other items show the county's official agenda wording.
-- Map pins are approximate and exist only for items whose documents quote a street address (125 issues).
-- Council Lens is an independent project, not affiliated with or endorsed by Fulton County.
-
-## Possible future work
-
-- Records for Fulton's cities and for other Georgia counties.
-- Scheduled updates that add new meetings and re-run the checks.
-- Plain-language explanations for more items.
-- Faster loading on slow phone connections.
-- Links from each issue to the moment it was discussed in the meeting video.
-
 ## Documentation
 
 - [Application README](Council%20Lens/README.md): features, code layout, tests, and credits
@@ -113,3 +97,5 @@ There is no public deployment of this snapshot; run it locally with the commands
 ## Credits
 
 Records: Fulton County Board of Commissioners, via the county's Legistar system. Map tiles: Esri. Geocoding and the Georgia place directory: U.S. Census Bureau. Fonts: Bricolage Grotesque, Atkinson Hyperlegible Next, and Outfit (SIL Open Font License). Open-source software: see the [application README](Council%20Lens/README.md#credits-and-open-source-software).
+
+Council Lens is an independent project, not affiliated with or endorsed by Fulton County.
