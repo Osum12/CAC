@@ -49,6 +49,17 @@ On 2026-10-22, also at the session runner's request, Claude Code did a UI/UX ref
 
 - Added a Category filter to Near Me, and restyled the app following the team-linked "frontend-design" skill: the Public Sans typeface, a light hero with the latest decision as the one marked element, and flat record cards. At the team's request it kept the original color palette (warm paper, evergreen, brick).
 
+From 2026-10-23 to 2026-10-25, at the session runner's request, Claude Code also:
+- Built several full design options and implemented the one the team chose ("design 4"). It renamed the app (Georgia Civic → Porchlight → Council Lens), drew the lens-over-courthouse logo and its offset frame, and added the dark mode toggle, header hover states and the landing page redesign from the team's brief.
+- Replaced the 50 selected records with every substantive Board of Commissioners agenda item from January 8, 2025 to October 21, 2026: 51 meetings, 1,303 issues and 4,098 documents. The team chose the date range, "substantive items only", and plain-language summaries for notable items only.
+  - Claude Code wrote the pipeline in `scripts/fulton-records/`. It downloads from the Legistar web API, works out each result from the clerk's motion text, and drafts a short title for every item and plain-language summaries for 169 notable items, each fact tied to an exact quote.
+  - It also matches addresses with the U.S. Census geocoder and reads the public item links from the county's meeting pages.
+  - It checked the work with scripts: every quote and number in the summaries against the sources, all 5,499 links, and every item page in a browser. See `data/README.md`.
+- Made long lists show a set at a time ("Show more"), quoted the county's agenda wording on items without a summary, and fixed audit findings (document types, empty explanation boxes, count formatting).
+- Researched wordmark design. It built three wordmark concepts and then five title styles; the team chose one each time, most recently style 1 "Field · Point", now in the header and in `public/brand`.
+- Limited Near Me to the 20 nearest issues and made the starting point more visible, at the team's request.
+- Drafted the written answers for the CAC submission form from the repository's facts and had an independent AI agent fact-check them.
+
 The AI did not change the PRDs and did not deploy anything.
 
 ## Student contributions (TO BE COMPLETED BY THE TEAM)
