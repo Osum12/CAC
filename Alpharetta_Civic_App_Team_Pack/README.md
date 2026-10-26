@@ -107,7 +107,7 @@ Follow `data/README.md`. In short, for each record:
 
 ## Testing
 
-`npm test` runs the whole suite: 9 test files, 132 tests. Most use the fictional fixture pack in `src/test/fixtures/`, so they don't depend on which real records are in `data/`:
+`npm test` runs the whole suite: 9 test files, 130 tests. Most use the fictional fixture pack in `src/test/fixtures/`, so they don't depend on which real records are in `data/`:
 - data integrity for both the real records and the fixtures: unique IDs, relationships that resolve, provenance flags, valid statuses and dates, URL and coordinate rules
 - a check that the real data renders with no sample labels and that every issue card's official-record link points to the county's Legistar site
 - search and filter behavior, the calendar, hero actions, map links, the issue timeline, and archive search
