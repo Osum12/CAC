@@ -6,7 +6,7 @@ The records in this folder are what the app shows. As of 2026-10-24 they are **c
 - **1,303 agenda items** ("issues"): every substantive item on those agendas. Left out: adoption of the agenda, ratification of minutes, proclamations and certificates, public comment, closed (executive) sessions, and presentations or discussions where the board decided nothing.
 - **4,098 documents**: the 51 agendas and every published attachment of those items (resolutions, agreements, reports, fact sheets, exhibits).
 
-The earlier City of Alpharetta records were removed from the app on 2026-10-22 at the team's request; they remain in the git history. The fictional fixture pack in `src/test/fixtures/` is used only by the automated tests.
+The earlier City of Alpharetta records were removed from the app on 2026-10-22 at the team's request. The fictional fixture pack in `src/test/fixtures/` is used only by the automated tests.
 
 ## Where the facts come from
 
@@ -27,9 +27,10 @@ Vote counts come from the roll call. Results from the **October 21, 2026** meeti
 ### Titles and summaries
 
 - **Titles** are short plain-language names written from each item's official wording. Every number in a title was checked against that wording.
-- **169 notable items** (large contracts, budget and tax items, ordinances, and commissioners' resolutions, including every one that failed, was held, filed or withdrawn) have a plain-language summary written from the attached documents. Each fact in those summaries is backed by an exact quote from the county's documents, and every number was re-checked against the sources (amounts like "$2.24 million" are roundings of figures such as $2,239,975.02). Where the documents disagree with each other, the summary leaves the disputed detail out.
+- **169 notable items** (large contracts, budget and tax items, ordinances, and commissioners' resolutions, including most items that failed, were held, filed or withdrawn) have a plain-language summary written from the attached documents. Each fact in those summaries is backed by an exact quote from the county's documents, and every number was re-checked against the sources (amounts like "$2.24 million" are roundings of figures such as $2,239,975.02). Where the documents disagree with each other, the summary leaves the disputed detail out.
 - **All other items** show the recorded result and then the agenda's own wording, quoted and labeled as the county's wording (not presented as a rewrite).
 - The 24 records from the earlier version of the dataset keep their text; their links were corrected (see below).
+- In all, **193 items** have a plain-language explanation: the 169 notable items and the 24 earlier records. The other 1,110 show the county's wording.
 
 ### Links
 

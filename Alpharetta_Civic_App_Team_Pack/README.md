@@ -46,7 +46,7 @@ There is no backend, database, API key or secret.
 
 ## Run it locally
 
-Prerequisites: Node.js 22.12 or newer (required by Vitest 5 and jsdom 30), and npm.
+Prerequisites: Node.js 22.12 or newer to run the app, and npm. The tests need Node.js 22.22+, 24.15+ or 26+ (required by jsdom 30).
 
 ```bash
 cd Alpharetta_Civic_App_Team_Pack
@@ -58,7 +58,7 @@ npm run dev          # opens on http://localhost:5173
 |---|---|
 | `npm run dev` | Development server with hot reload |
 | `npm test` | Run all tests once |
-| `npm run validate:data` | Check only the JSON fixtures against the data contract |
+| `npm run validate:data` | Check the dataset in `data/` (and the test fixtures) against the data contract |
 | `npm run build:directory` | Rebuild `data/georgia/directory.json` from the Census files in `data/georgia/source/` |
 | `npm run typecheck` | TypeScript type check |
 | `npm run lint` | ESLint |

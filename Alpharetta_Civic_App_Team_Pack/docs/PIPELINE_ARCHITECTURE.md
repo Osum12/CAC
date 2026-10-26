@@ -43,7 +43,7 @@ This document describes how the pipeline works, as verified against the scripts 
           +--> pagecheck.cjs ---> pagecheck.json  (every Legistar page: content check)
           |
           v
-  copied by hand to data/meetings.json, data/issues.json, data/documents.json
+  copied to data/meetings.json, data/issues.json, data/documents.json
           |
           v
   src/services/civicData.ts  (lazy dynamic import of the three JSON files)
@@ -151,7 +151,7 @@ It drops:
 
 There is no script in this repository that creates the title input batches or merges the finished batches into `titles/all.json`. That step was done outside the scripts, and the reviewed file is kept in `scripts/fulton-records/reviewed/titles/all.json`. `build.cjs` also applies two hand corrections (`TITLE_FIX` and `CATEGORY_FIX`).
 
-**Selected plain-language explanations.** 169 items, listed by file number in `notable.json`, have a plain-language explanation of 2 to 4 sentences, plus an optional "why it may matter" sentence. They cover large contracts, budget and tax items, ordinances, commissioners' resolutions, and every item that failed, was held, filed or withdrawn. The list itself was chosen by hand. No script selects it.
+**Selected plain-language explanations.** 169 items, listed by file number in `notable.json`, have a plain-language explanation of 2 to 4 sentences, plus an optional "why it may matter" sentence. They cover large contracts, budget and tax items, ordinances, commissioners' resolutions, and most items that failed, were held, filed or withdrawn. No script selects the list; it was chosen item by item.
 
 The steps were:
 
@@ -163,10 +163,10 @@ The steps were:
 **What `checksum.cjs` checks, and its limits.**
 
 - Each evidence quote must appear in the item's official title or extracted document text. Whitespace and letter case are ignored.
-- Each number in the description and "why it may matter" text must appear in the same sources, with or without thousands separators. A rounded amount followed by "million" or "billion" (for example "$5.65 million" for $5,650,169.00) is accepted when its leading digits appear in a source figure. This is a loose match: it confirms the digits, not that the rounding is correct, so rounded amounts were also checked by hand.
+- Each number in the description and "why it may matter" text must appear in the same sources, with or without thousands separators. A rounded amount followed by "million" or "billion" (for example "$5.65 million" for $5,650,169.00) is accepted when its leading digits appear in a source figure. This is a loose match: it confirms the digits, not that the rounding is correct, so rounded amounts were also checked separately against the source figures.
 - A description fails if it states an outcome (for example "was approved", "voted", "motion passed") or is longer than 650 characters.
 
-The check cannot confirm that a sentence's meaning matches its quote. It only confirms that the quoted words and the numbers exist in the sources. Explanations exist for the 169 selected items only. For every other item, the app shows the recorded result followed by the county's own agenda wording, quoted and labeled as such.
+The check cannot confirm that a sentence's meaning matches its quote. It only confirms that the quoted words and the numbers exist in the sources. Explanations exist for these 169 selected items and for the 24 earlier records (193 in all). For every other item, the app shows the recorded result followed by the county's own agenda wording, quoted and labeled as such.
 
 ### 2.6 Supporting documents
 
@@ -214,7 +214,7 @@ Every record is written with `dataMode: "curated"` and `mockOnly: false`, and me
 
 Some dates are written into `build.cjs` as constants. A new rebuild must update them: `VERIFIED = '2026-10-24'`, `LATEST_MEETING = '2026-10-21'`, and the November 4, 2026 ratification date in the draft-record sentences.
 
-The three `out-*.json` files are then copied by hand to `data/meetings.json`, `data/issues.json` and `data/documents.json`. No script does this.
+The three `out-*.json` files are then copied to `data/meetings.json`, `data/issues.json` and `data/documents.json`. No script does this step.
 
 ### 2.10 Frontend integration
 
@@ -234,7 +234,7 @@ The website needs only Node.js and npm. It does not need Python, Poppler, a brow
 - Node.js 22.12 or later (Vite 8 requires `^20.19.0 || >=22.12.0`). To run the tests, use Node.js 22.22.2 or later on the 22 line, 24.15 or later, or 26 or later: the jsdom 30 test environment requires one of these. `package.json` has no `engines` field, so npm will only warn on an older version.
 - npm (the one that ships with Node.js). Dependencies are pinned by `package-lock.json`.
 
-**Commands** (from the repository root)
+**Commands** (from `Alpharetta_Civic_App_Team_Pack/`)
 
 | Command | What it does |
 | --- | --- |
@@ -326,14 +326,14 @@ Run from the working folder:
 | 3 | `node filter.cjs` | none (prints counts and items with no result) | Yes: check what was kept and dropped. |
 | 4 | `node docs.cjs` | `docs/<file>/<attachmentId>.pdf\|.docx` and `.txt` | Yes: check the printed download and extraction failures. |
 | 5 | `node dossiers.cjs` | `summaries/dossiers/<file>.md`, `summaries/batch-1.json` … `batch-6.json` | |
-| 6 | (prepared outside the scripts) | `titles/all.json`, `summaries/out-1.json` … `out-6.json` | Yes: prepared and reviewed against the sources. Needed only for new or changed items; the reviewed files can be reused. `notable.json` is also chosen by hand. |
-| 7 | `node checksum.cjs` | none (prints problems) | Yes: fix every reported problem; check rounded amounts by hand. |
+| 6 | (prepared outside the scripts) | `titles/all.json`, `summaries/out-1.json` … `out-6.json` | Yes: prepared and reviewed against the sources. Needed only for new or changed items; the reviewed files can be reused. `notable.json` is also chosen item by item, not by a script. |
+| 7 | `node checksum.cjs` | none (prints problems) | Yes: fix every reported problem; check rounded amounts against the source figures. |
 | 8 | `node itemlinks.cjs` | `itemlinks.json` | Yes: check the printed per-meeting counts, and any meeting marked PAGED. |
 | 9 | `node geocode.cjs` | `geocode.json` | |
 | 10 | `node build.cjs base` | `out-meetings.json`, `out-issues.json`, `out-documents.json` | Yes: check "STATUS CHANGED" and "NOT REBUILT" lines. First update `VERIFIED`, `LATEST_MEETING` and the ratification date in `build.cjs`. |
 | 11 | `node urlcheck.cjs` | `urlcheck.json` | Yes: every link must pass. |
 | 12 | `node pagecheck.cjs` | `pagecheck.json` | Yes: every page must pass. |
-| 13 | copy by hand | `out-meetings.json` → `data/meetings.json`, `out-issues.json` → `data/issues.json`, `out-documents.json` → `data/documents.json` | Yes: then run `npm run validate:data` and `npm test`, and update the counts and dates in `data/README.md`. |
+| 13 | copy the files | `out-meetings.json` → `data/meetings.json`, `out-issues.json` → `data/issues.json`, `out-documents.json` → `data/documents.json` | Yes: then run `npm run validate:data` and `npm test`, and update the counts and dates in `data/README.md`. |
 
 Steps 4 to 7 depend on step 2. Step 8 must finish before step 10, because `build.cjs` stops if any kept item has no public link. Steps 11 and 12 need step 10's output.
 
@@ -345,7 +345,7 @@ Steps 4 to 7 depend on step 2. Step 8 must finish before step 10, because `build
 - **One government body.** Only the Fulton County Board of Commissioners is covered (January 8, 2025 to October 21, 2026: 51 meetings, 1,303 issues, 4,098 documents). There are no city councils, other county bodies, or other counties. The Georgia location directory is geography only.
 - **Draft results for the latest meeting.** Results from October 21, 2026 come from the clerk's draft record, which was not yet ratified. The app says so on those records.
 - **Approximate pins.** Map points come from addresses quoted in the records, matched by the Census geocoder. They are approximate and unverified. Most items have no single address and so no pin.
-- **Explanations for selected items only.** 169 items have a plain-language explanation. Every other item shows its result and the county's own wording.
+- **Explanations for selected items only.** 193 items have a plain-language explanation (169 selected items plus the 24 earlier records). Every other item shows its result and the county's own wording.
 - **Rule-based interpretation.** Results, filtering and document types come from pattern rules over the clerk's wording. Unusual wording can be misread. The cross-check output helps with this, but it is not a guarantee.
 - **Rebuild not re-tested end to end** on a clean machine for this release (see section B).
 

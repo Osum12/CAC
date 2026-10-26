@@ -1,5 +1,5 @@
 // Builds data/meetings.json, data/issues.json and data/documents.json for the app from the
-// normalized Legistar records, the reviewed titles, the PDF-backed summaries, and the hand-written
+// normalized Legistar records, the reviewed titles, the PDF-backed summaries, and the earlier
 // records already in the app (kept, with IDs unchanged). Usage: node build.cjs <appDataDir>
 const fs = require('fs');
 const path = require('path');
@@ -7,7 +7,7 @@ const T = require('./text.cjs');
 const { keep } = require('./filter.cjs');
 const norm = require('./norm.json');
 const RAW = path.join(__dirname, 'raw');
-// argv[2]: the hand-written records the app had before this import (kept, with IDs unchanged).
+// argv[2]: the records the app had before this import (kept, with IDs unchanged).
 const OUT = process.argv[2];
 const read = (p) => JSON.parse(fs.readFileSync(p, 'utf8'));
 const VERIFIED = '2026-10-24';
@@ -66,6 +66,10 @@ function voteText(v) {
   if (c.Recused) extra.push(`${c.Recused} recused`);
   return `${y}–${n}${extra.length ? `, with ${extra.join(' and ')}` : ''}`;
 }
+// "4–1, with 2 not voting" mid-sentence needs a closing comma: "voted 4–1, with 2 not voting, to deny it".
+const withPause = (t) => (t.includes(', with ') ? `${t},` : t);
+// "a 5–0 vote, with 1 absent" rather than "a 5–0, with 1 absent vote".
+const voteWithRest = (t) => { const [tally, rest] = t.split(', with '); return rest ? `${tally} vote, with ${rest}` : `${tally} vote`; };
 // "3 yes, 0 no, 2 absent, 1 not voting": spelled out where a short tally could look like a typo.
 function tallyWords(v) {
   if (!v) return null;
@@ -115,17 +119,17 @@ function resultSentence(m, a) {
     case 'denied': {
       const x = decidingMotion(a, /\bto (deny|reject)/i, true);
       const v = x && voteText(x.votes);
-      return v ? `The board voted ${v} on ${d} to deny it.` : `Denied on ${d}.`;
+      return v ? `On ${d} the board voted ${withPause(v)} to deny it.` : `Denied on ${d}.`;
     }
     case 'held': {
       const x = decidingMotion(a, /\bto (hold|table|defer)/i, true);
       const v = x && voteText(x.votes);
-      return `Held on ${d}${v ? ` by a ${v} vote` : ''}. It had not come back for a vote as of the board’s ${fmtDate(LATEST_MEETING)} meeting.`;
+      return `Held on ${d}${v ? ` by a ${voteWithRest(v)}` : ''}. It had not come back for a vote as of the board’s ${fmtDate(LATEST_MEETING)} meeting.`;
     }
     case 'filed': {
       const x = decidingMotion(a, /\bto file/i, true);
       const v = x && voteText(x.votes);
-      return `The board voted${v ? ` ${v}` : ''} on ${d} to file this item, which closes it without approving it.`;
+      return v ? `On ${d} the board voted ${withPause(v)} to file this item, which closes it without approving it.` : `The board voted on ${d} to file this item, which closes it without approving it.`;
     }
     case 'removed': {
       const who = requestedBy(a.title);
@@ -146,7 +150,7 @@ function historySentence(m, last) {
 const STATUS = { approved: 'approved', failed: 'denied', denied: 'denied', held: 'under_consideration', filed: 'withdrawn', removed: 'withdrawn', hearing: 'completed' };
 
 // Identical requests filed more than once (e.g. re-filed for a later meeting) point at each other.
-// Records already hand-written in the app are always kept, even if the filter would drop them.
+// Records the app already had are always kept, even if the filter would drop them.
 for (const m of norm) if (oldIssueByFile.has(m.file) && !keep.includes(m)) keep.push(m);
 const officialOf = new Map(keep.map((m) => [m.file, T.cleanOfficial(m.title)]));
 const sameAs = new Map();
@@ -232,7 +236,7 @@ for (const m of keep) {
   parts.push([hist, result, twinText, draft].filter(Boolean).join(' '));
   if (!s) parts.push(`The agenda describes it as: “${T.stripSponsors(official)}”`);
 
-  // Hand-written records outside the filtered set have no generated title; theirs is kept below.
+  // Earlier records outside the filtered set have no generated title; theirs is kept below.
   const t = titles[m.file] || { title: oldIssueByFile.get(m.file)?.title, category: oldIssueByFile.get(m.file)?.category };
   const addr = T.addressOf(official);
   const g = addr && geocodes[addr];
@@ -278,7 +282,7 @@ for (const m of keep) {
     featured: false,
   };
   if (prior) {
-    // Hand-written records stay as written unless a later meeting shows a different result
+    // Earlier records stay as written unless a later meeting shows a different result
     // (their statuses were set by reading the documents, e.g. a resolution that only starts a process).
     const changed = prior.status !== record.status && record.statusAsOf > prior.statusAsOf;
     if (!changed) record.status = prior.status;

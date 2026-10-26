@@ -1,6 +1,6 @@
 # Shared Civic Data Contract
 
-This document defines the common record shape used by the records in `/data/` (real Fulton County Board of Commissioners records) and the fictional test fixtures in `src/test/fixtures/`. All features must use these shared fields. If a change is truly necessary, the project lead must update this contract and all affected fixtures together before feature branches diverge.
+This document defines the common record shape used by the records in `/data/` (real Fulton County Board of Commissioners records) and the fictional test fixtures in `src/test/fixtures/`. All features must use these shared fields. A change to the record shape must update this contract, `src/types/civic.ts` and the fixtures together.
 
 ## Data-mode rules
 
@@ -100,7 +100,7 @@ getRelatedIssuesForDocument(documentId)
 searchRecords(query, filters?)
 ```
 
-`getIssuesForLocation(locationContext)` is optional until there is a meaningful matching implementation. The initial demo may use a preset location and transparent demo ranking, not real geocoding or predictions.
+Near Me ranks issues by straight-line distance from one fixed public starting point. It never asks for or geocodes anyone's address.
 
 ## Data rules
 
