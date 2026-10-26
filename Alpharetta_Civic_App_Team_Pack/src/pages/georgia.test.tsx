@@ -57,16 +57,9 @@ describe('Location chooser', () => {
     expect(options[1]).toHaveTextContent('Appling County');
     expect(options[159]).toHaveTextContent('Worth County');
     expect(city()).toBeDisabled();
+    expect(screen.queryByText(/Currently available|Available now/)).toBeNull();
   });
 
-  it('offers a direct way into Fulton County, the place with records, and says what it covers', () => {
-    renderAt('/');
-    expect(screen.getByRole('link', { name: /^Explore Fulton County/ })).toHaveAttribute('href', '/county/fulton');
-    expect(screen.getByText(/Available now:/).parentElement).toHaveTextContent(
-      'Available now: the Fulton County Board of Commissioners, 1,303 agenda items from 51 meetings, January 2025 to October 2026.',
-    );
-    expect(screen.getByText(/not a live feed/)).toBeInTheDocument();
-  });
 
   it('fills the city list from the chosen county, with "All of" the county first', async () => {
     renderAt('/');

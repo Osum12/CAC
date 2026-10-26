@@ -18,7 +18,7 @@ Built for the Congressional App Challenge 2026.
 
 | Page | What it does |
 |---|---|
-| Home | "Explore Fulton County" leads straight to the county with records; a county and city chooser covers the rest of Georgia. |
+| Home | A county and city chooser for all of Georgia; choosing Fulton County opens the county with records. |
 | Countywide | Every issue grouped by result (still being decided, approved, denied, withdrawn), with search and topic and status filters. |
 | Issue page | A readable title, the recorded result and vote, the meetings where it came up, a plain-language explanation for 193 notable items (the county's own agenda wording, labeled as a quote, for the rest), its documents, and links to the official records. |
 | Near Me | The 20 issues nearest one public starting point (the Fulton County Government Center) on a map and a numbered list. Pins are approximate, placed from street addresses in county documents. The app never asks for anyone's address or location. |

@@ -1,9 +1,6 @@
-import { Link } from 'react-router-dom';
 import { LocationSelector } from '../components/LocationSelector';
 import { LensArtwork } from '../components/LensArtwork';
-import { FULTON_SNAPSHOT } from '../config/coverage';
-import { COUNTIES, DIRECTORY_SOURCE, MUNICIPALITIES, countyPath } from '../services/jurisdictions';
-import { formatDate } from '../services/format';
+import { COUNTIES, DIRECTORY_SOURCE, MUNICIPALITIES } from '../services/jurisdictions';
 import { usePageTitle } from '../services/usePageTitle';
 import { ArrowLabel } from '../components/SourceAction';
 
@@ -16,9 +13,7 @@ const STEPS = [
   { title: 'Verify', text: 'Every issue links back to the original government record.' },
 ];
 
-const monthYear = (iso: string) => formatDate(iso).replace(/ \d{1,2},/, '');
-
-/** Statewide front door: a direct way into the county with records, then a county and city chooser. */
+/** Statewide front door: choose a county and, optionally, a city. Shows no civic records itself. */
 export function GeorgiaHomePage() {
   usePageTitle(null);
   return (
@@ -33,15 +28,6 @@ export function GeorgiaHomePage() {
             <p className="hero__lede">
               Find, understand, and verify the decisions your local government makes, with a link to the official record every time.
             </p>
-            <div className="pilot">
-              <Link to={countyPath({ id: FULTON_SNAPSHOT.countyId })} className="pilot__go">
-                Explore Fulton County <span aria-hidden="true">→</span>
-              </Link>
-              <p className="pilot__note">
-                <strong>Available now:</strong> the Fulton County Board of Commissioners, {FULTON_SNAPSHOT.issues.toLocaleString('en-US')} agenda items
-                from {FULTON_SNAPSHOT.meetings} meetings, {monthYear(FULTON_SNAPSHOT.firstMeeting)} to {monthYear(FULTON_SNAPSHOT.lastMeeting)}.
-              </p>
-            </div>
           </div>
           <LocationSelector />
         </div>
