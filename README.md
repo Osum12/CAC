@@ -17,4 +17,3 @@ npm run dev          # opens on http://localhost:5173
 ## More
 
 - [App README](Alpharetta_Civic_App_Team_Pack/README.md): features, code layout, data, tests and credits
-- [AI_ASSISTANCE.md](Alpharetta_Civic_App_Team_Pack/AI_ASSISTANCE.md): how AI tools were used

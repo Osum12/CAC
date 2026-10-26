@@ -121,8 +121,6 @@ Follow `data/README.md`. In short, for each record:
 ## Project documents
 
 - `PRODUCT_PRD.md`, `TEAM_IMPLEMENTATION_PRD.md`, `docs/`: requirements and data contract
-- `PROGRESS.md`: build log and verification results
-- `AI_ASSISTANCE.md`: what AI tools did, for CAC disclosure
 - `CAC_READINESS.md`: competition checklist and the tasks the student team must still do
 
 ## Credits and open-source software
@@ -143,4 +141,3 @@ Follow `data/README.md`. In short, for each record:
 | U.S. Census Bureau geocoder | Approximate map points from street addresses in county documents, and the Near Me starting point |
 | U.S. Census Bureau 2020 FIPS reference files for Georgia counties and places (`data/georgia/source/`) | The Georgia county and municipality directory |
 
-AI use is disclosed in `AI_ASSISTANCE.md`.

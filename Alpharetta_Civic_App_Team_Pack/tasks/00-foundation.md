@@ -2,7 +2,7 @@
 
 **Owner:** Project lead  
 **Branch:** `feature/foundation` from `integration`; if `integration` does not exist, create it from the current stable branch first (do not commit feature work directly to `main`)  
-**Read first:** `AGENTS.md`, `TEAM_IMPLEMENTATION_PRD.md`, `PRODUCT_PRD.md`, `docs/DATA_CONTRACT.md`, `docs/BRANCH_WORKFLOW.md`
+**Read first:** `TEAM_IMPLEMENTATION_PRD.md`, `PRODUCT_PRD.md`, `docs/DATA_CONTRACT.md`, `docs/BRANCH_WORKFLOW.md`
 
 ## Goal
 
