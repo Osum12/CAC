@@ -49,7 +49,7 @@ Provide one locally focused experience that summarizes civic activity in plain l
 - Live alerts for meetings running late or newly posted records.
 - Precise parcel-level impact predictions or legal/land-use conclusions.
 - Multi-city support, accounts, complex preferences sync, or production-scale backend unless separately prioritized.
-- An AI answer engine that responds without grounding and source citations.
+- A question-answering feature that responds without grounding and source citations.
 
 ### Success criteria
 
@@ -437,7 +437,7 @@ Initial ranking should remain explainable, conservative, and bounded by availabl
 
 - P0: required for a coherent demonstrator and safe handling of source/data truth.
 - P1: valuable if time permits; should not block the core Citywide → issue → source → Archive flow.
-- P2: post-demo/future work, including full ingestion, notifications, live monitoring, and open-ended AI Q&A.
+- P2: post-demo/future work, including full ingestion, notifications, live monitoring, and open-ended Q&A.
 
 Schedule caution: this project has a short submission window. Verify the official challenge submission date/time and required materials in the current submission portal rather than relying on informal messages or this document.
 

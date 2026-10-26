@@ -2,7 +2,7 @@
 
 **Owner:** Eshan  
 **Branch:** `feature/near-me` from latest `integration`, after foundation merge  
-**Read first:** `AGENTS.md`, `TEAM_IMPLEMENTATION_PRD.md`, `PRODUCT_PRD.md`, `docs/DATA_CONTRACT.md`, `docs/BRANCH_WORKFLOW.md`
+**Read first:** `TEAM_IMPLEMENTATION_PRD.md`, `PRODUCT_PRD.md`, `docs/DATA_CONTRACT.md`, `docs/BRANCH_WORKFLOW.md`
 
 ## Goal
 

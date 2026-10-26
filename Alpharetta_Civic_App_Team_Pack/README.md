@@ -102,7 +102,7 @@ Follow `data/README.md` and the checklist in `PRODUCT_PRD.md` (Appendix A). In s
 
 ## Testing
 
-`npm test` runs the whole suite (see `PROGRESS.md` for the latest count). They use the fictional fixture pack in `src/test/fixtures/`, so they don't depend on which real records are in `data/`:
+`npm test` runs the whole suite. They use the fictional fixture pack in `src/test/fixtures/`, so they don't depend on which real records are in `data/`:
 - data integrity for both the real records and the fixtures: unique IDs, relationships that resolve, provenance flags, valid statuses and dates, URL and coordinate rules
 - a check that the real data renders with no sample labels and that every source link points to the city's document server
 - search and filter behavior, hero actions, map links, the issue timeline, and archive search
@@ -116,6 +116,4 @@ Follow `data/README.md` and the checklist in `PRODUCT_PRD.md` (Appendix A). In s
 ## Project documents
 
 - `PRODUCT_PRD.md`, `TEAM_IMPLEMENTATION_PRD.md`, `docs/`: requirements and data contract
-- `PROGRESS.md`: build log and verification results
-- `AI_ASSISTANCE.md`: what AI tools did, for CAC disclosure
 - `CAC_READINESS.md`: competition checklist and the tasks the student team must still do

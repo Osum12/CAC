@@ -1,4 +1,4 @@
-# Git Branch and Parallel-Agent Workflow
+# Git Branch and Parallel Workflow
 
 ## Branch layout
 
@@ -23,7 +23,7 @@ If an established branch layout already exists, keep it unless the project lead 
 
 ## Worktrees
 
-Use one worktree per concurrent agent if multiple agents operate on the same machine/repository. Each worktree must have its own branch. Never have two coding agents modify one physical working directory simultaneously. Teammates working in separate clones do not need worktrees, but still need feature branches and regular pulls from `integration`.
+Use one worktree per concurrent line of work if more than one happens on the same machine/repository. Each worktree must have its own branch. Never have two lines of work modify one physical working directory simultaneously. Teammates working in separate clones do not need worktrees, but still need feature branches and regular pulls from `integration`.
 
 ## Pull request checklist
 
