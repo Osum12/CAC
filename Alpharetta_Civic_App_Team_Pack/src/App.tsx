@@ -10,6 +10,7 @@ import { IssueDetailPage } from './pages/IssueDetailPage';
 import { MeetingDetailPage } from './pages/MeetingDetailPage';
 import { DocumentDetailPage } from './pages/DocumentDetailPage';
 import { ArchivePage } from './pages/ArchivePage';
+import { CalendarPage } from './pages/CalendarPage';
 import { NotFoundPage } from './pages/NotFoundPage';
 import { PAGE_SECTIONS } from './services/jurisdictions';
 
@@ -39,7 +40,7 @@ export function AppRoutes() {
       <Route element={<Layout />}>
         <Route index element={<Home />} />
         {PAGE_SECTIONS.map((s) => (
-          <Route key={s} path={s === 'near-me' || s === 'archive' ? s : `${s}/:id`} element={<LegacyRedirect />} />
+          <Route key={s} path={s === 'near-me' || s === 'archive' || s === 'calendar' ? s : `${s}/:id`} element={<LegacyRedirect />} />
         ))}
         <Route path="county/:countyId" element={<CountyScope />}>
           <Route index element={<CitywidePage />} />
@@ -51,6 +52,7 @@ export function AppRoutes() {
               </Suspense>
             }
           />
+          <Route path="calendar" element={<CalendarPage />} />
           <Route path="archive" element={<ArchivePage />} />
           <Route path="issues/:issueId" element={<IssueDetailPage />} />
           <Route path="meetings/:meetingId" element={<MeetingDetailPage />} />

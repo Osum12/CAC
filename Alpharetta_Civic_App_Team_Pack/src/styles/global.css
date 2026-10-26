@@ -4493,3 +4493,254 @@ time {
 .detail__main .prose + .prose {
   margin-top: 12px;
 }
+
+/* ==========================================================================
+   Calendar: the board's meetings, month by month
+   ========================================================================== */
+.calendar__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 14px;
+  margin-bottom: 18px;
+}
+.calendar__step {
+  min-width: 48px;
+  padding-inline: 14px;
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.calendar__month {
+  min-width: 11ch;
+  margin: 0;
+  text-align: center;
+  font-size: 1.75rem;
+}
+.calendar__jump {
+  flex: 0 1 300px;
+  margin-left: auto;
+  margin-top: -28px; /* the label sits above the row; the select lines up with the arrows */
+}
+.calendar__grid {
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 6px;
+  margin: 0 -6px;
+  width: calc(100% + 12px);
+}
+.calendar__grid th {
+  padding: 4px 0 6px 10px;
+  font-weight: 700;
+  color: var(--ink-soft);
+  text-align: left;
+}
+.calendar__grid abbr {
+  text-decoration: none;
+}
+.calendar__day {
+  height: 108px;
+  padding: 8px 8px 10px;
+  vertical-align: top;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+.calendar__day--blank {
+  background: transparent;
+  border-color: transparent;
+}
+.calendar__day--meeting {
+  border-color: var(--primary);
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+.calendar__day--today {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+.calendar__date {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 700;
+  color: var(--heading);
+}
+.calendar__today {
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-size: 0.75rem;
+}
+.calendar__event {
+  display: grid;
+  gap: 1px;
+  margin-top: 6px;
+  padding: 6px 8px;
+  border-radius: 7px;
+  background: var(--primary);
+  color: var(--primary-ink);
+  text-decoration: none;
+  font-size: 0.8125rem;
+  line-height: 1.25;
+}
+.calendar__event:hover,
+.calendar__event:focus-visible {
+  background: var(--primary-hover);
+  color: var(--primary-ink);
+}
+.calendar__event-time {
+  font-weight: 700;
+}
+.calendar__list-title {
+  margin: 30px 0 12px;
+  font-size: 1.375rem;
+}
+.calendar__list {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+.calendar-item {
+  padding: 16px 18px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+}
+.calendar-item__when {
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+.calendar-item__title {
+  margin: 4px 0 10px;
+  font-size: 1.25rem;
+}
+.calendar-item__meta {
+  color: var(--ink-soft);
+}
+/* Phones: the grid keeps its shape, each meeting becomes a dot, and the list below carries the detail. */
+@media (max-width: 699px) {
+  .calendar__jump {
+    flex-basis: 100%;
+    margin-left: 0;
+    margin-top: 0;
+  }
+  .calendar__month {
+    flex: 1;
+    font-size: 1.375rem;
+  }
+  .calendar__grid {
+    border-spacing: 3px;
+    margin: 0 -3px;
+    width: calc(100% + 6px);
+  }
+  .calendar__grid th {
+    padding-left: 0;
+    text-align: center;
+    font-size: 0.8125rem;
+  }
+  .calendar__day {
+    height: 52px;
+    padding: 5px 2px;
+    text-align: center;
+    border-radius: 8px;
+  }
+  .calendar__date {
+    justify-content: center;
+    font-size: 0.9375rem;
+  }
+  .calendar__today {
+    display: none;
+  }
+  .calendar__event {
+    display: block;
+    width: 16px;
+    height: 16px;
+    margin: 4px auto 0;
+    padding: 0;
+    border-radius: 50%;
+  }
+  .calendar__event-time,
+  .calendar__event-title {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+@media (forced-colors: active) {
+  .calendar__event {
+    border: 1px solid LinkText;
+  }
+}
+/* Phones: four section buttons and the theme toggle share one row. The labels tighten, and the
+   current page is marked by its tonal pill and an underline instead of the dot. */
+@media (max-width: 599px) {
+  .primary-nav__link,
+  .primary-nav__link:hover {
+    padding: 0 4px;
+    font-size: 0.875rem;
+  }
+  .primary-nav__link[aria-current='page']::before {
+    display: none;
+  }
+  .primary-nav__link[aria-current='page'] {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 0.3em;
+  }
+}
+@media (max-width: 374px) {
+  .primary-nav__link,
+  .primary-nav__link:hover {
+    padding: 0 2px;
+    font-size: 0.8125rem;
+  }
+}
+@media (max-width: 359px) {
+  .primary-nav {
+    gap: 2px;
+  }
+  .primary-nav__link,
+  .primary-nav__link:hover {
+    padding: 0 1px;
+    font-size: 0.8125rem;
+    letter-spacing: -0.01em;
+  }
+  .primary-nav > .theme-toggle {
+    width: 34px;
+  }
+}
+/* The Calendar button: a light indigo fill, in both themes. Its current-page state keeps the
+   indigo edge and the dot (or underline on phones). */
+.primary-nav__link--tint,
+.primary-nav__link--tint[aria-current='page'] {
+  background: #d4d9f7;
+  color: #232c70;
+  --btn-edge: rgb(47 58 143 / 0.35);
+}
+.primary-nav__link--tint:hover {
+  background: #c3caf3;
+  color: #161b3d;
+  --btn-edge: var(--link);
+}
+.primary-nav__link--tint[aria-current='page'] {
+  --btn-edge: var(--link);
+}
+:root[data-theme='dark'] .primary-nav__link--tint,
+:root[data-theme='dark'] .primary-nav__link--tint[aria-current='page'] {
+  background: #3a4aa6;
+  color: #ffffff;
+  --btn-edge: rgb(157 184 255 / 0.55);
+}
+:root[data-theme='dark'] .primary-nav__link--tint:hover {
+  background: #4657bd;
+  color: #ffffff;
+  --btn-edge: var(--link);
+}
+:root[data-theme='dark'] .primary-nav__link--tint[aria-current='page'] {
+  --btn-edge: var(--link);
+}

@@ -79,7 +79,7 @@ export function chooserPath(place?: Jurisdiction | null): string {
 }
 
 /** Sections of a county's pages; also the app's original top-level links, which redirect. */
-export const PAGE_SECTIONS = ['near-me', 'archive', 'issues', 'meetings', 'documents'] as const;
+export const PAGE_SECTIONS = ['near-me', 'calendar', 'archive', 'issues', 'meetings', 'documents'] as const;
 
 /** First path segments the app uses for itself; a municipality id may never be one of these. */
 export const RESERVED_SEGMENTS: readonly string[] = ['county', ...PAGE_SECTIONS];
