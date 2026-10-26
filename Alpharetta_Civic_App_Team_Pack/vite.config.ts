@@ -9,5 +9,8 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
     css: false,
+    // Several page tests render all 1,303 real records; on a slower machine they can need more than
+    // the default 5 seconds, which would fail them for time rather than for behavior.
+    testTimeout: 30000,
   },
 });
